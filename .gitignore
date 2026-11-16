@@ -30,8 +30,8 @@ __pycache__/
 ehthumbs.db
 Thumbs.db
 
-# Local convenience symlinks
-geotech-2
+# Local convenience symlinks (root only)
+/geotech-2
 
 # IDE & Editor settings
 .vscode/

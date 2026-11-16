@@ -63,7 +63,28 @@ exam/
 
 ---
 
-## 2. Multi-Subject System
+## 2. Quickstart: Run the App Fully
+
+To run the application with a single terminal command:
+
+```bash
+./run
+```
+
+This single command automatically:
+1. Re-compiles and validates the active subject dashboard (`generate_dashboard.py`).
+2. Starts a local HTTP server on port `3000` (or the next available port).
+3. Automatically launches the full application in your default browser.
+4. Provides live links to the Question Bank, PYQ Checklist, Formula Hub, and local Timetable.
+
+#### Optional Run Flags:
+- Custom port: `./run 8080`
+- Headless (no auto browser launch): `./run --no-open`
+- Skip re-compilation: `./run --no-build`
+
+---
+
+## 3. Multi-Subject System
 
 Each academic subject is fully self-contained inside `subjects/<subject_id>/`.
 

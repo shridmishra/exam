@@ -67,9 +67,10 @@ def build_unit_checklist_html(questions, unit_titles=None):
                     </a>
         ''')
 
+    count_2023 = sum(len(tree['2023'][u]) for u in tree['2023']) if '2023' in tree else 28
     html.append(f'''
-                    <button class="checklist-toggle-2022-pill" id="checklistToggle2022Btn" onclick="toggleHide2022()" title="Include 2022 Paper in checklist" style="display: none;">
-                        + Include 2022 Paper (25 Qs)
+                    <button class="checklist-toggle-2023-pill" id="checklistToggle2023Btn" onclick="toggleHide2023()" title="Include 2023 Paper in checklist" style="display: none;">
+                        + Include 2023 Paper ({count_2023} Qs)
                     </button>
                 </div>
             </div>
@@ -270,6 +271,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
     canonical_json_str = json.dumps(canonical_topics).replace("</script>", r"<\/script>")
     raw_json_str = json.dumps(raw_questions).replace("</script>", r"<\/script>")
+
+    from core.progress import get_subject_progress
+    sub_prog = get_subject_progress(ctx.id)
+    embedded_completed_json = json.dumps(sub_prog.get("completed_questions", [])).replace("</script>", r"<\/script>")
+    subject_id_str = ctx.id
 
     unit_checklist_html = build_unit_checklist_html(raw_questions, unit_titles)
 
@@ -721,7 +727,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         /* ----------------------------------------------------
-           2022 VISIBILITY TOGGLE (HEADER NAVBAR & CONTROL PANEL)
+           2023 VISIBILITY TOGGLE (HEADER NAVBAR & CONTROL PANEL)
            ---------------------------------------------------- */
         .year-toggle-btn {{
             display: inline-flex;
@@ -794,7 +800,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .year-toggle-btn.is-active .toggle-switch-track,
         .panel-year-toggle-btn.is-active .toggle-switch-track {{
-            background-color: var(--pastel-sand-foreground);
+            background-color: var(--pastel-lavender-foreground);
             opacity: 1;
         }}
 
@@ -822,21 +828,23 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             line-height: 1;
         }}
 
+        .checklist-toggle-2023-pill,
         .checklist-toggle-2022-pill {{
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
             padding: 0.35rem 0.75rem;
-            background-color: var(--pastel-sand-bg);
-            color: var(--pastel-sand-foreground);
+            background-color: var(--pastel-lavender-bg);
+            color: var(--pastel-lavender-foreground);
             border-radius: var(--radius-full);
-            border: 1px dashed var(--pastel-sand-foreground);
+            border: 1px dashed var(--pastel-lavender-foreground);
             cursor: pointer;
             font-size: 0.75rem;
             font-weight: 600;
             transition: background-color 0.2s ease, transform 0.15s ease;
         }}
 
+        .checklist-toggle-2023-pill:hover,
         .checklist-toggle-2022-pill:hover {{
             background-color: var(--secondary-hover);
             transform: translateY(-1px);
@@ -1268,6 +1276,42 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .progress-pill-badge:active {{
             transform: scale(0.97);
+        }}
+
+        .sync-indicator-badge {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            background-color: var(--secondary);
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+            height: 30px;
+            box-sizing: border-box;
+            line-height: 1;
+            user-select: none;
+            transition: all 0.2s ease;
+        }}
+
+        .sync-dot {{
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #10b981;
+            display: inline-block;
+            transition: background-color 0.2s ease;
+            flex-shrink: 0;
+        }}
+
+        .sync-indicator-badge.saving .sync-dot {{
+            background-color: #f59e0b;
+        }}
+
+        .sync-indicator-badge.local .sync-dot {{
+            background-color: #0ea5e9;
         }}
 
         .clear-completed-btn {{
@@ -2768,12 +2812,12 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     </div>
 
                     <div class="control-panel-actions">
-                        <button class="panel-year-toggle-btn is-active" id="panelToggle2022Btn" onclick="toggleHide2022()" title="Toggle 2022 exam questions (Click to show/hide 2022 questions)">
+                        <button class="panel-year-toggle-btn is-active" id="panelToggle2023Btn" onclick="toggleHide2023()" title="Toggle 2023 exam questions (Click to show/hide 2023 questions)">
                             <span class="toggle-switch-track" aria-hidden="true">
                                 <span class="toggle-switch-thumb"></span>
                             </span>
-                            <span class="year-toggle-text" id="panelToggle2022Text">
-                                <span class="badge badge-year-2022">2022</span> Shown
+                            <span class="year-toggle-text" id="panelToggle2023Text">
+                                <span class="badge badge-year-2023">2023</span> Shown
                             </span>
                         </button>
 
@@ -2782,6 +2826,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                         <div class="progress-pill-badge" id="completionProgressBadge" title="Click to view completed questions">
                             <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                             <span id="completedCounterText">0 / {len(raw_questions)} Done</span>
+                        </div>
+
+                        <div class="sync-indicator-badge" id="syncStatusBadge" title="Progress saved automatically to user_progress.json on disk">
+                            <span class="sync-dot"></span>
+                            <span id="syncStatusText">Saved to JSON</span>
                         </div>
 
                         <button class="clear-completed-btn" id="clearCompletedBtn" title="Unmark all completed questions" style="display: none;">
@@ -2806,8 +2855,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                                 <button class="filter-pill-btn active" data-year="all">All</button>
                                 <button class="filter-pill-btn" data-year="2025">2025</button>
                                 <button class="filter-pill-btn" data-year="2024">2024</button>
-                                <button class="filter-pill-btn" data-year="2023">2023</button>
-                                <button class="filter-pill-btn" data-year="2022" id="filterPill2022">2022</button>
+                                <button class="filter-pill-btn" data-year="2023" id="filterPill2023">2023</button>
+                                <button class="filter-pill-btn" data-year="2022">2022</button>
                             </div>
                         </div>
 
@@ -2875,7 +2924,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
 
             <!-- Dynamic Question List Container -->
@@ -3079,75 +3127,76 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         const STORAGE_KEY_FILTERS = '{storage_prefix}_filters';
         const STORAGE_KEY_COMPLETED = '{storage_prefix}_completed_questions';
         const STORAGE_KEY_VIEW = '{storage_prefix}_active_view';
-        const STORAGE_KEY_HIDE_2022 = '{storage_prefix}_hide_2022';
+        const STORAGE_KEY_HIDE_2023 = '{storage_prefix}_hide_2023';
 
-        let hide2022 = false;
+        let hide2023 = false;
         try {{
-            const savedHide = localStorage.getItem(STORAGE_KEY_HIDE_2022);
+            const savedHide = localStorage.getItem(STORAGE_KEY_HIDE_2023);
             if (savedHide !== null) {{
-                hide2022 = (savedHide === 'true');
+                hide2023 = (savedHide === 'true');
             }}
         }} catch (e) {{
-            console.error('Error loading hide2022 setting:', e);
+            console.error('Error loading hide2023 setting:', e);
         }}
 
-        function setHide2022(val) {{
-            hide2022 = Boolean(val);
+        function setHide2023(val) {{
+            hide2023 = Boolean(val);
             try {{
-                localStorage.setItem(STORAGE_KEY_HIDE_2022, String(hide2022));
+                localStorage.setItem(STORAGE_KEY_HIDE_2023, String(hide2023));
             }} catch (e) {{}}
 
-            if (hide2022 && currentYear === '2022') {{
+            if (hide2023 && currentYear === '2023') {{
                 currentYear = 'all';
                 saveFilters();
                 syncFilterUI();
             }}
 
-            sync2022ToggleUI();
+            sync2023ToggleUI();
             renderQuestions();
             updateMetrics();
             syncChecklistUI();
         }}
 
-        window.toggleHide2022 = function() {{
-            setHide2022(!hide2022);
+        window.toggleHide2023 = function() {{
+            setHide2023(!hide2023);
         }};
+        window.toggleHide2022 = window.toggleHide2023;
 
-        function sync2022ToggleUI() {{
-            const panelBtn = document.getElementById('panelToggle2022Btn');
-            const panelText = document.getElementById('panelToggle2022Text');
-            const filterPill2022 = document.getElementById('filterPill2022');
-            const checklistToggleBtn = document.getElementById('checklistToggle2022Btn');
-            const checklistPill2022 = document.getElementById('checklistYearPill-2022');
-            const yearSection2022 = document.getElementById('year-section-2022');
+        function sync2023ToggleUI() {{
+            const panelBtn = document.getElementById('panelToggle2023Btn');
+            const panelText = document.getElementById('panelToggle2023Text');
+            const filterPill2023 = document.getElementById('filterPill2023');
+            const checklistToggleBtn = document.getElementById('checklistToggle2023Btn');
+            const checklistPill2023 = document.getElementById('checklistYearPill-2023');
+            const yearSection2023 = document.getElementById('year-section-2023');
 
-            const isShown = !hide2022;
+            const isShown = !hide2023;
 
             if (panelBtn) {{
                 panelBtn.classList.toggle('is-active', isShown);
                 panelBtn.classList.toggle('is-hidden', !isShown);
-                panelBtn.title = isShown ? '2022 PYQs are included (Click to hide 2022)' : '2022 PYQs are hidden (Click to include 2022)';
+                panelBtn.title = isShown ? '2023 PYQs are included (Click to hide 2023)' : '2023 PYQs are hidden (Click to include 2023)';
             }}
             if (panelText) {{
                 panelText.innerHTML = isShown 
-                    ? '<span class="badge badge-year-2022">2022</span> Shown'
-                    : '<span class="badge badge-subtle">2022</span> Hidden';
+                    ? '<span class="badge badge-year-2023">2023</span> Shown'
+                    : '<span class="badge badge-subtle">2023</span> Hidden';
             }}
 
-            if (filterPill2022) {{
-                filterPill2022.style.display = isShown ? 'inline-flex' : 'none';
+            if (filterPill2023) {{
+                filterPill2023.style.display = isShown ? 'inline-flex' : 'none';
             }}
 
             if (checklistToggleBtn) {{
-                checklistToggleBtn.style.display = hide2022 ? 'inline-flex' : 'none';
+                checklistToggleBtn.style.display = hide2023 ? 'inline-flex' : 'none';
             }}
 
-            if (checklistPill2022) {{
-                checklistPill2022.style.display = isShown ? 'inline-flex' : 'none';
+            if (checklistPill2023) {{
+                checklistPill2023.style.display = isShown ? 'inline-flex' : 'none';
             }}
 
-            if (yearSection2022) {{
-                yearSection2022.style.display = isShown ? 'block' : 'none';
+            if (yearSection2023) {{
+                yearSection2023.style.display = isShown ? 'block' : 'none';
             }}
         }}
 
@@ -3159,23 +3208,109 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         let currentStatus = 'all';
         let searchQuery = '';
 
+        const EMBEDDED_COMPLETED = {embedded_completed_json};
+        const CURRENT_SUBJECT_ID = '{subject_id_str}';
+
         let completedQuestions = new Set();
         try {{
+            // 1. Initial seed from disk-saved user_progress.json (embedded directly in HTML)
+            if (Array.isArray(EMBEDDED_COMPLETED) && EMBEDDED_COMPLETED.length > 0) {{
+                EMBEDDED_COMPLETED.forEach(qid => completedQuestions.add(qid));
+            }}
+            // 2. Merge any existing items from browser localStorage
             const savedDone = JSON.parse(localStorage.getItem(STORAGE_KEY_COMPLETED) || '[]');
             if (Array.isArray(savedDone)) {{
-                completedQuestions = new Set(savedDone);
+                savedDone.forEach(qid => completedQuestions.add(qid));
             }}
         }} catch (e) {{
             console.error('Error loading completed questions:', e);
         }}
 
+        function setSyncStatus(state, msg) {{
+            const badge = document.getElementById('syncStatusBadge');
+            const txt = document.getElementById('syncStatusText');
+            if (!badge || !txt) return;
+            badge.className = 'sync-indicator-badge ' + state;
+            txt.textContent = msg;
+        }}
+
+        let diskSyncTimeout = null;
         function saveCompleted() {{
             try {{
                 localStorage.setItem(STORAGE_KEY_COMPLETED, JSON.stringify([...completedQuestions]));
             }} catch (e) {{
-                console.error('Error saving completed questions:', e);
+                console.error('Error saving completed questions to localStorage:', e);
             }}
             updateMetrics();
+
+            // Background async sync to user_progress.json on disk
+            setSyncStatus('saving', 'Saving...');
+            if (diskSyncTimeout) clearTimeout(diskSyncTimeout);
+            diskSyncTimeout = setTimeout(syncProgressToDisk, 300);
+        }}
+
+        async function syncProgressToDisk() {{
+            try {{
+                const payload = {{
+                    subject: CURRENT_SUBJECT_ID,
+                    completed_questions: [...completedQuestions],
+                    filters: {{
+                        year: currentYear,
+                        unit: currentUnit,
+                        type: currentType,
+                        marks: currentMarks,
+                        repeat: currentRepeat,
+                        status: currentStatus,
+                        search: searchQuery
+                    }},
+                    active_view: (typeof activeView !== 'undefined' ? activeView : 'questions'),
+                    hide_2023: hide2023
+                }};
+                const res = await fetch('/api/progress', {{
+                    method: 'POST',
+                    headers: {{ 'Content-Type': 'application/json' }},
+                    body: JSON.stringify(payload)
+                }});
+                if (res.ok) {{
+                    setSyncStatus('saved', 'Saved to JSON');
+                }} else {{
+                    setSyncStatus('local', 'Local Storage');
+                }}
+            }} catch (err) {{
+                setSyncStatus('local', 'Local Storage');
+            }}
+        }}
+
+        async function initProgressSync() {{
+            try {{
+                const res = await fetch('/api/progress');
+                if (res.ok) {{
+                    const data = await res.json();
+                    const subData = data.subjects && data.subjects[CURRENT_SUBJECT_ID];
+                    if (subData && Array.isArray(subData.completed_questions)) {{
+                        const prevSize = completedQuestions.size;
+                        subData.completed_questions.forEach(qid => completedQuestions.add(qid));
+
+                        // If localStorage had extra questions not yet on disk, sync back to disk
+                        if (completedQuestions.size > subData.completed_questions.length) {{
+                            syncProgressToDisk();
+                        }}
+                        if (completedQuestions.size !== prevSize) {{
+                            try {{
+                                localStorage.setItem(STORAGE_KEY_COMPLETED, JSON.stringify([...completedQuestions]));
+                            }} catch (e) {{}}
+                            renderQuestions();
+                            syncChecklistUI();
+                            updateMetrics();
+                        }}
+                    }}
+                    setSyncStatus('saved', 'Saved to JSON');
+                }} else {{
+                    setSyncStatus('local', 'Local Storage');
+                }}
+            }} catch (e) {{
+                setSyncStatus('local', 'Local Storage');
+            }}
         }}
 
         function loadSavedFilters() {{
@@ -3248,7 +3383,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         function updateMetrics() {{
             const completedText = document.getElementById('completedCounterText');
             const clearBtn = document.getElementById('clearCompletedBtn');
-            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2022');
+            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2023');
             const total = visibleQuestions.length;
             const doneCount = visibleQuestions.filter(q => completedQuestions.has(q.id)).length;
             const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
@@ -3282,7 +3417,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         let checklistSearchQuery = '';
 
         function syncChecklistUI() {{
-            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2022');
+            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2023');
             const total = visibleQuestions.length;
             const completedCount = visibleQuestions.filter(q => completedQuestions.has(q.id)).length;
             const totalPct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
@@ -3341,7 +3476,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     cardEl.classList.toggle('is-completed', isDone);
 
                     let visible = true;
-                    if (hide2022 && y === '2022') visible = false;
+                    if (hide2022 && y === '2023') visible = false;
                     if (currentChecklistStatus === 'incomplete' && isDone) visible = false;
                     if (currentChecklistStatus === 'completed' && !isDone) visible = false;
 
@@ -3388,7 +3523,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
                     const subGroup = document.getElementById(`unit-subgroup-${{y}}-${{u}}`);
                     if (subGroup) {{
-                        if (hide2022 && y === '2022') {{
+                        if (hide2022 && y === '2023') {{
                             subGroup.style.display = 'none';
                         }} else {{
                             const visibleCards = subGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
@@ -3399,7 +3534,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
                 const yearGroup = document.getElementById(`year-section-${{y}}`);
                 if (yearGroup) {{
-                    if (hide2022 && y === '2022') {{
+                    if (hide2022 && y === '2023') {{
                         yearGroup.style.display = 'none';
                     }} else {{
                         const visibleInYear = yearGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
@@ -3408,7 +3543,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 }}
             }});
 
-            const checklistPill2022 = document.getElementById('checklistYearPill-2022');
+            const checklistPill2022 = document.getElementById('checklistYearPill-2023');
             if (checklistPill2022) {{
                 checklistPill2022.style.display = hide2022 ? 'none' : 'inline-flex';
             }}
@@ -3466,8 +3601,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             const qObj = RAW_QUESTIONS.find(q => q.id === questionId);
             if (!qObj) return;
 
-            if (String(qObj.year) === '2022' && hide2022) {{
-                setHide2022(false);
+            if (String(qObj.year) === '2023' && hide2022) {{
+                setHide2023(false);
             }}
 
             let filtersNeedReset = false;
@@ -3586,7 +3721,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         window.addEventListener('DOMContentLoaded', () => {{
             loadSavedFilters();
             syncFilterUI();
-            sync2022ToggleUI();
+            sync2023ToggleUI();
+            initProgressSync();
 
             let hash = window.location.hash.replace('#', '');
             if (hash === 'checklist') hash = 'syllabus';
@@ -4032,8 +4168,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 const visibleDone = RAW_QUESTIONS.filter(q => (!hide2022 || String(q.year) !== '2022') && completedQuestions.has(q.id));
                 if (visibleDone.length === 0) return;
                 const promptMsg = hide2022
-                    ? `Unmark ${{visibleDone.length}} completed questions in 2024 & 2023?`
-                    : `Unmark all ${{completedQuestions.size}} completed questions?`;
+                    ? ('Unmark ' + visibleDone.length + ' completed questions in 2025, 2024 & 2023?')
+                    : ('Unmark all ' + completedQuestions.size + ' completed questions?');
                 if (confirm(promptMsg)) {{
                     visibleDone.forEach(q => completedQuestions.delete(q.id));
                     saveCompleted();

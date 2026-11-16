@@ -446,7 +446,7 @@
         }
 
         /* ----------------------------------------------------
-           2022 VISIBILITY TOGGLE (HEADER NAVBAR & CONTROL PANEL)
+           2023 VISIBILITY TOGGLE (HEADER NAVBAR & CONTROL PANEL)
            ---------------------------------------------------- */
         .year-toggle-btn {
             display: inline-flex;
@@ -519,7 +519,7 @@
 
         .year-toggle-btn.is-active .toggle-switch-track,
         .panel-year-toggle-btn.is-active .toggle-switch-track {
-            background-color: var(--pastel-sand-foreground);
+            background-color: var(--pastel-lavender-foreground);
             opacity: 1;
         }
 
@@ -547,21 +547,23 @@
             line-height: 1;
         }
 
+        .checklist-toggle-2023-pill,
         .checklist-toggle-2022-pill {
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
             padding: 0.35rem 0.75rem;
-            background-color: var(--pastel-sand-bg);
-            color: var(--pastel-sand-foreground);
+            background-color: var(--pastel-lavender-bg);
+            color: var(--pastel-lavender-foreground);
             border-radius: var(--radius-full);
-            border: 1px dashed var(--pastel-sand-foreground);
+            border: 1px dashed var(--pastel-lavender-foreground);
             cursor: pointer;
             font-size: 0.75rem;
             font-weight: 600;
             transition: background-color 0.2s ease, transform 0.15s ease;
         }
 
+        .checklist-toggle-2023-pill:hover,
         .checklist-toggle-2022-pill:hover {
             background-color: var(--secondary-hover);
             transform: translateY(-1px);
@@ -993,6 +995,42 @@
 
         .progress-pill-badge:active {
             transform: scale(0.97);
+        }
+
+        .sync-indicator-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            background-color: var(--secondary);
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+            height: 30px;
+            box-sizing: border-box;
+            line-height: 1;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .sync-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #10b981;
+            display: inline-block;
+            transition: background-color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .sync-indicator-badge.saving .sync-dot {
+            background-color: #f59e0b;
+        }
+
+        .sync-indicator-badge.local .sync-dot {
+            background-color: #0ea5e9;
         }
 
         .clear-completed-btn {
@@ -2893,12 +2931,12 @@
                     </div>
 
                     <div class="control-panel-actions">
-                        <button class="panel-year-toggle-btn is-active" id="panelToggle2022Btn" onclick="toggleHide2022()" title="Toggle 2022 exam questions (Click to show/hide 2022 questions)">
+                        <button class="panel-year-toggle-btn is-active" id="panelToggle2022Btn" onclick="toggleHide2023()" title="Toggle 2023 exam questions (Click to show/hide 2023 questions)">
                             <span class="toggle-switch-track" aria-hidden="true">
                                 <span class="toggle-switch-thumb"></span>
                             </span>
-                            <span class="year-toggle-text" id="panelToggle2022Text">
-                                <span class="badge badge-year-2022">2022</span> Shown
+                            <span class="year-toggle-text" id="panelToggle2023Text">
+                                <span class="badge badge-year-2023">2023</span> Shown
                             </span>
                         </button>
 
@@ -2907,6 +2945,11 @@
                         <div class="progress-pill-badge" id="completionProgressBadge" title="Click to view completed questions">
                             <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                             <span id="completedCounterText">0 / 106 Done</span>
+                        </div>
+
+                        <div class="sync-indicator-badge" id="syncStatusBadge" title="Progress saved automatically to user_progress.json on disk">
+                            <span class="sync-dot"></span>
+                            <span id="syncStatusText">Saved to JSON</span>
                         </div>
 
                         <button class="clear-completed-btn" id="clearCompletedBtn" title="Unmark all completed questions" style="display: none;">
@@ -2931,8 +2974,8 @@
                                 <button class="filter-pill-btn active" data-year="all">All</button>
                                 <button class="filter-pill-btn" data-year="2025">2025</button>
                                 <button class="filter-pill-btn" data-year="2024">2024</button>
-                                <button class="filter-pill-btn" data-year="2023">2023</button>
-                                <button class="filter-pill-btn" data-year="2022" id="filterPill2022">2022</button>
+                                <button class="filter-pill-btn" data-year="2023" id="filterPill2022">2023</button>
+                                <button class="filter-pill-btn" data-year="2022">2022</button>
                             </div>
                         </div>
 
@@ -3001,7 +3044,6 @@
                     </div>
                 </div>
             </div>
-            </div>
 
             <!-- Dynamic Question List Container -->
             <div class="questions-list-wrapper" id="questionsContainer">
@@ -3053,8 +3095,8 @@
                         <span class="unit-pill-count" id="yearPillCount-2022">0/25</span>
                     </a>
         
-                    <button class="checklist-toggle-2022-pill" id="checklistToggle2022Btn" onclick="toggleHide2022()" title="Include 2022 Paper in checklist" style="display: none;">
-                        + Include 2022 Paper (25 Qs)
+                    <button class="checklist-toggle-2023-pill" id="checklistToggle2022Btn" onclick="toggleHide2023()" title="Include 2023 Paper in checklist" style="display: none;">
+                        + Include 2023 Paper (28 Qs)
                     </button>
                 </div>
             </div>
@@ -13354,23 +13396,109 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
         let currentStatus = 'all';
         let searchQuery = '';
 
+        const EMBEDDED_COMPLETED = ["2024-Q1a", "2022-Q2b", "2023-Q1a", "2024-Q1b", "2022-Q1c", "2024-Q2c", "2023-Q3biii", "2024-Q2a", "2023-Q2bi", "2024-Q2b", "2025-Q1a", "2025-Q2bi", "2025-Q2a", "2025-Q4a", "2025-Q3biii", "2023-Q4a", "2025-Q4bi", "2024-Q3a", "2023-Q4bi", "2023-Q2bii", "2025-Q2bii", "2022-Q3c", "2023-Q2a", "2025-Q5a", "2023-Q5a", "2025-Q3a", "2023-Q3a", "2025-Q4bii"];
+        const CURRENT_SUBJECT_ID = 'geotech-2';
+
         let completedQuestions = new Set();
         try {
+            // 1. Initial seed from disk-saved user_progress.json (embedded directly in HTML)
+            if (Array.isArray(EMBEDDED_COMPLETED) && EMBEDDED_COMPLETED.length > 0) {
+                EMBEDDED_COMPLETED.forEach(qid => completedQuestions.add(qid));
+            }
+            // 2. Merge any existing items from browser localStorage
             const savedDone = JSON.parse(localStorage.getItem(STORAGE_KEY_COMPLETED) || '[]');
             if (Array.isArray(savedDone)) {
-                completedQuestions = new Set(savedDone);
+                savedDone.forEach(qid => completedQuestions.add(qid));
             }
         } catch (e) {
             console.error('Error loading completed questions:', e);
         }
 
+        function setSyncStatus(state, msg) {
+            const badge = document.getElementById('syncStatusBadge');
+            const txt = document.getElementById('syncStatusText');
+            if (!badge || !txt) return;
+            badge.className = 'sync-indicator-badge ' + state;
+            txt.textContent = msg;
+        }
+
+        let diskSyncTimeout = null;
         function saveCompleted() {
             try {
                 localStorage.setItem(STORAGE_KEY_COMPLETED, JSON.stringify([...completedQuestions]));
             } catch (e) {
-                console.error('Error saving completed questions:', e);
+                console.error('Error saving completed questions to localStorage:', e);
             }
             updateMetrics();
+
+            // Background async sync to user_progress.json on disk
+            setSyncStatus('saving', 'Saving...');
+            if (diskSyncTimeout) clearTimeout(diskSyncTimeout);
+            diskSyncTimeout = setTimeout(syncProgressToDisk, 300);
+        }
+
+        async function syncProgressToDisk() {
+            try {
+                const payload = {
+                    subject: CURRENT_SUBJECT_ID,
+                    completed_questions: [...completedQuestions],
+                    filters: {
+                        year: currentYear,
+                        unit: currentUnit,
+                        type: currentType,
+                        marks: currentMarks,
+                        repeat: currentRepeat,
+                        status: currentStatus,
+                        search: searchQuery
+                    },
+                    active_view: (typeof activeView !== 'undefined' ? activeView : 'questions'),
+                    hide_2022: hide2022
+                };
+                const res = await fetch('/api/progress', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    setSyncStatus('saved', 'Saved to JSON');
+                } else {
+                    setSyncStatus('local', 'Local Storage');
+                }
+            } catch (err) {
+                setSyncStatus('local', 'Local Storage');
+            }
+        }
+
+        async function initProgressSync() {
+            try {
+                const res = await fetch('/api/progress');
+                if (res.ok) {
+                    const data = await res.json();
+                    const subData = data.subjects && data.subjects[CURRENT_SUBJECT_ID];
+                    if (subData && Array.isArray(subData.completed_questions)) {
+                        const prevSize = completedQuestions.size;
+                        subData.completed_questions.forEach(qid => completedQuestions.add(qid));
+
+                        // If localStorage had extra questions not yet on disk, sync back to disk
+                        if (completedQuestions.size > subData.completed_questions.length) {
+                            syncProgressToDisk();
+                        }
+                        if (completedQuestions.size !== prevSize) {
+                            try {
+                                localStorage.setItem(STORAGE_KEY_COMPLETED, JSON.stringify([...completedQuestions]));
+                            } catch (e) {}
+                            renderQuestions();
+                            syncChecklistUI();
+                            updateMetrics();
+                        }
+                    }
+                    setSyncStatus('saved', 'Saved to JSON');
+                } else {
+                    setSyncStatus('local', 'Local Storage');
+                }
+            } catch (e) {
+                setSyncStatus('local', 'Local Storage');
+            }
         }
 
         function loadSavedFilters() {
@@ -13443,7 +13571,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
         function updateMetrics() {
             const completedText = document.getElementById('completedCounterText');
             const clearBtn = document.getElementById('clearCompletedBtn');
-            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2022');
+            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2023');
             const total = visibleQuestions.length;
             const doneCount = visibleQuestions.filter(q => completedQuestions.has(q.id)).length;
             const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
@@ -13477,7 +13605,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
         let checklistSearchQuery = '';
 
         function syncChecklistUI() {
-            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2022');
+            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2023');
             const total = visibleQuestions.length;
             const completedCount = visibleQuestions.filter(q => completedQuestions.has(q.id)).length;
             const totalPct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
@@ -13536,7 +13664,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
                     cardEl.classList.toggle('is-completed', isDone);
 
                     let visible = true;
-                    if (hide2022 && y === '2022') visible = false;
+                    if (hide2022 && y === '2023') visible = false;
                     if (currentChecklistStatus === 'incomplete' && isDone) visible = false;
                     if (currentChecklistStatus === 'completed' && !isDone) visible = false;
 
@@ -13583,7 +13711,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
 
                     const subGroup = document.getElementById(`unit-subgroup-${y}-${u}`);
                     if (subGroup) {
-                        if (hide2022 && y === '2022') {
+                        if (hide2022 && y === '2023') {
                             subGroup.style.display = 'none';
                         } else {
                             const visibleCards = subGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
@@ -13594,7 +13722,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
 
                 const yearGroup = document.getElementById(`year-section-${y}`);
                 if (yearGroup) {
-                    if (hide2022 && y === '2022') {
+                    if (hide2022 && y === '2023') {
                         yearGroup.style.display = 'none';
                     } else {
                         const visibleInYear = yearGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
@@ -13603,7 +13731,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
                 }
             });
 
-            const checklistPill2022 = document.getElementById('checklistYearPill-2022');
+            const checklistPill2022 = document.getElementById('checklistYearPill-2023');
             if (checklistPill2022) {
                 checklistPill2022.style.display = hide2022 ? 'none' : 'inline-flex';
             }
@@ -13661,8 +13789,8 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
             const qObj = RAW_QUESTIONS.find(q => q.id === questionId);
             if (!qObj) return;
 
-            if (String(qObj.year) === '2022' && hide2022) {
-                setHide2022(false);
+            if (String(qObj.year) === '2023' && hide2022) {
+                setHide2023(false);
             }
 
             let filtersNeedReset = false;
@@ -13781,7 +13909,8 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedFilters();
             syncFilterUI();
-            sync2022ToggleUI();
+            sync2023ToggleUI();
+            initProgressSync();
 
             let hash = window.location.hash.replace('#', '');
             if (hash === 'checklist') hash = 'syllabus';
@@ -14227,8 +14356,8 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
                 const visibleDone = RAW_QUESTIONS.filter(q => (!hide2022 || String(q.year) !== '2022') && completedQuestions.has(q.id));
                 if (visibleDone.length === 0) return;
                 const promptMsg = hide2022
-                    ? `Unmark ${visibleDone.length} completed questions in 2024 & 2023?`
-                    : `Unmark all ${completedQuestions.size} completed questions?`;
+                    ? ('Unmark ' + visibleDone.length + ' completed questions in 2025, 2024 & 2023?')
+                    : ('Unmark all ' + completedQuestions.size + ' completed questions?');
                 if (confirm(promptMsg)) {
                     visibleDone.forEach(q => completedQuestions.delete(q.id));
                     saveCompleted();

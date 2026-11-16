@@ -65,7 +65,7 @@ class SubjectContext:
         self.output_filename = meta.get("output_filename", f"{subject_id}_pyq_analysis.html")
         self.unit_titles = {int(k): v for k, v in meta.get("unit_titles", {}).items()}
         self.exam_years = meta.get("exam_years", [2025, 2024, 2023, 2022])
-        self.hide_year_toggle = meta.get("hide_year_toggle", 2022)
+        self.hide_year_toggle = meta.get("hide_year_toggle", 2023)
         
         # Data containers
         self.canonical_topics = []
