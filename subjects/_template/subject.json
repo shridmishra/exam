@@ -1,0 +1,29 @@
+{
+  "id": "new-subject",
+  "name": "Subject Full Name",
+  "short_name": "SHORT",
+  "code": "CE 00000",
+  "alt_codes": [],
+  "branch": "Civil Engineering",
+  "semester": "Final Year",
+  "academic_year": "2026",
+  "description": "Previous Year Questions analysis, repeat trends, formula guides, and solutions for Subject Full Name.",
+  "storage_prefix": "new_subject",
+  "output_filename": "new_subject_pyq_analysis.html",
+  "unit_titles": {
+    "1": "Unit 1 Title",
+    "2": "Unit 2 Title",
+    "3": "Unit 3 Title",
+    "4": "Unit 4 Title",
+    "5": "Unit 5 Title"
+  },
+  "units": [
+    {"num": 1, "title": "Unit 1 Full Title", "short_title": "Unit 1 Title", "co": "CO1"},
+    {"num": 2, "title": "Unit 2 Full Title", "short_title": "Unit 2 Title", "co": "CO2"},
+    {"num": 3, "title": "Unit 3 Full Title", "short_title": "Unit 3 Title", "co": "CO3"},
+    {"num": 4, "title": "Unit 4 Full Title", "short_title": "Unit 4 Title", "co": "CO4"},
+    {"num": 5, "title": "Unit 5 Full Title", "short_title": "Unit 5 Title", "co": "CO5"}
+  ],
+  "exam_years": [2025, 2024, 2023, 2022],
+  "hide_year_toggle": null
+}

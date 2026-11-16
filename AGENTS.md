@@ -197,3 +197,35 @@ Adhere strictly to the project typography hierarchy specification:
   - November and December month headers display context-sensitive `Today: [Day] [Month]` pills when active.
 - **Real-Time Client Synchronization (`initCurrentDateTracker`)**:
   - Client-side JavaScript detects `new Date()`, calculates day offsets to remaining schedule papers, marks matching `[data-date]` cells, and preserves the active session reference when testing outside the timetable range.
+
+---
+
+## 11. Modular Multi-Subject Architecture & Directory Governance
+
+- **Modular Subject Hierarchy (`subjects/`)**:
+  - Every academic subject lives self-contained under `subjects/<subject_id>/` (e.g. `subjects/geotech-2/`, `subjects/rcc/`, `subjects/dhs/`, `subjects/water/`, `subjects/sa-2/`).
+  - **Required Subject Files**:
+    1. `subject.json`: Course code, name, short name, storage prefix, and unit titles.
+    2. `canonical_data.json`: Deduplicated topic clusters and frequency metadata.
+    3. `compile_data.py`: Verified questions array containing verbatim paper questions, solutions, marks, and taxonomy.
+    4. `master_formulas.json`: Governing equations, LaTeX strings, parameters, and engineering notes.
+    5. `formula_showcase.py`: Subject-specific LaTeX enhancements and formula display post-processing.
+    6. `papers/`: High-resolution question paper scans and raw sources.
+  - **Subject Registry (`subjects/registry.json`)**: Central catalog of all registered subjects, build status, and the `active_subject` pointer.
+  - **Template Scaffold (`subjects/_template/`)**: Rapid onboarding scaffold for any new subject.
+- **Root Compatibility Proxies**:
+  - Root `compile_data.py` and `formula_showcase.py` proxy directly to `subjects/geotech-2/` so legacy tools and imports continue to function without disruption.
+- **Local-Only Timetable Policy (Gitignored)**:
+  - The exam timetable is **local-only** and must never be committed to git.
+  - `timetable.html`, `build_timetable.py`, `tools/timetable/`, and timetable PDFs/OCR files are strictly listed in `.gitignore`.
+  - `timetable.html` remains at the workspace root so local navigation from `index.html` resolves seamlessly in browsers.
+- **Master CLI Generation Engine (`generate_dashboard.py`)**:
+  - Default build: `python3 generate_dashboard.py` (builds active default subject `geotech-2` -> `index.html` & `geotech_pyq_analysis.html`).
+  - Specific subject: `python3 generate_dashboard.py <subject_id>`.
+  - List registered subjects: `python3 generate_dashboard.py --list`.
+  - Batch build all ready subjects: `python3 generate_dashboard.py --all`.
+  - Scaffold new subject: `python3 generate_dashboard.py --new <id> "<name>" "<code>"`.
+- **Clean Workspace Rule**:
+  - Tests reside in `tests/`.
+  - Archived/legacy scripts reside in `archive/`.
+  - No loose scratch or test scripts in the root directory.

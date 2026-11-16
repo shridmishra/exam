@@ -1,0 +1,17 @@
+[
+  {
+    "id": "f1-example",
+    "unit": 1,
+    "title": "Example Governing Formula",
+    "frequency": "Core Formula",
+    "freq_badge": "badge-repeated",
+    "latex_main": "y = f(x)",
+    "latex_sub": "x \\in \\mathbb{R}",
+    "latex_raw": "y = f(x)",
+    "params": [
+      {"sym": "y", "name": "Output response parameter", "unit": "unit"},
+      {"sym": "x", "name": "Input control variable", "unit": "unit"}
+    ],
+    "notes": "Engineering design notes and validity assumptions."
+  }
+]

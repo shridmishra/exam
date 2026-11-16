@@ -1,0 +1,54 @@
+{
+  "id": "geotech-2",
+  "name": "Geotechnical Engineering - II",
+  "short_name": "Geo-2",
+  "code": "CE 41007",
+  "alt_codes": ["CE 4107", "CE 4151"],
+  "branch": "Civil Engineering",
+  "semester": "Final Year / 7th Sem",
+  "academic_year": "2026",
+  "description": "Previous Year Questions analysis, repeat trends, formula guides, and solutions for Geotechnical Engineering - II.",
+  "storage_prefix": "geotech",
+  "output_filename": "geotech_pyq_analysis.html",
+  "unit_titles": {
+    "1": "Lateral Earth Pressure",
+    "2": "Shear Strength & Slope Stability",
+    "3": "Shallow Foundations",
+    "4": "Deep Foundations (Piles)",
+    "5": "Soil Exploration & Testing"
+  },
+  "units": [
+    {
+      "num": 1,
+      "title": "Lateral Earth Pressure & Retaining Walls",
+      "short_title": "Lateral Earth Pressure",
+      "co": "CO1"
+    },
+    {
+      "num": 2,
+      "title": "Stability of Earth Slopes",
+      "short_title": "Shear Strength & Slope Stability",
+      "co": "CO2"
+    },
+    {
+      "num": 3,
+      "title": "Shallow Foundations & Bearing Capacity",
+      "short_title": "Shallow Foundations",
+      "co": "CO3"
+    },
+    {
+      "num": 4,
+      "title": "Deep Foundations & Pile Load Capacity",
+      "short_title": "Deep Foundations (Piles)",
+      "co": "CO4"
+    },
+    {
+      "num": 5,
+      "title": "Soil Exploration, Sampling & Machine Foundations",
+      "short_title": "Soil Exploration & Testing",
+      "co": "CO5"
+    }
+  ],
+  "exam_years": [2025, 2024, 2023, 2022],
+  "hide_year_toggle": 2022
+}

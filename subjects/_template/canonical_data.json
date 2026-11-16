@@ -1,0 +1,13 @@
+[
+  {
+    "id": "u1-topic-example",
+    "unit": 1,
+    "title": "Example Canonical Topic Title",
+    "rep_frequency": "100% Guaranteed (4/4 Papers)",
+    "priority": "HIGH",
+    "master_solution": "<strong>Definition:</strong> Crisp single-sentence definition of the concept.<br><em>Example:</em> Real-world engineering application.",
+    "questions": [
+      "2025-Q1a"
+    ]
+  }
+]

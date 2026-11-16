@@ -171,3 +171,12 @@
 - **Calendar Grid Day Highlight**: The active day's cell in the November/December grid must be styled with the blue palette token (`.cal-cell.today` / `.cal-cell.current-date`), rendering `<span>[Day]</span><span class="cal-cell-tag">Today</span>` alongside the existing green (Regular) and peach (Old Syllabus) exam boxes.
 - **Color Token Compliance**: Never hardcode hex values. Use `var(--pastel-sky-bg)`, `var(--pastel-sky-border)`, and `var(--pastel-sky-foreground)` across all current date indicators.
 - **Automatic Client Synchronization**: `initCurrentDateTracker()` must dynamically match `new Date()` against `[data-date]` attributes while safely handling fallbacks.
+
+---
+
+### [RULE 15] Modular Multi-Subject Architecture & Local Timetable Isolation
+- **Self-Contained Subject Units**: All academic subjects must reside under `subjects/<subject_id>/` containing `subject.json`, `canonical_data.json`, `compile_data.py`, `master_formulas.json`, `formula_showcase.py`, and `papers/`.
+- **Subject State Isolation**: Each subject must declare a unique `storage_prefix` in `subject.json` (e.g. `geotech`, `rcc`) so user completion data and filters do not collide, while maintaining the shared `geotech_theme` key for global light/dark theme preference.
+- **Local Timetable Policy (Gitignored)**: The examination timetable is local-only. `timetable.html`, `build_timetable.py`, `tools/timetable/`, and source PDFs must remain in `.gitignore` and never be committed to git.
+- **Master CLI Generation Engine**: `python3 generate_dashboard.py` builds the active default subject (`geotech-2`) into `index.html` and `geotech_pyq_analysis.html`. Passing `<subject_id>` builds that subject, `--list` inspects the registry, and `--new <id> "<name>" "<code>"` scaffolds a new subject module.
+- **Root Proxy Immutability**: Root `compile_data.py` and `formula_showcase.py` proxy directly to `subjects/geotech-2/` ensuring 100% backward compatibility for all scripts and agents.

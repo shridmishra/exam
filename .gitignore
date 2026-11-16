@@ -1,0 +1,46 @@
+# ==============================================================================
+# Exam Intelligence & PYQ Platform (.gitignore)
+# ==============================================================================
+
+# Local Exam Timetable (Local-only per project directive)
+timetable.html
+build_timetable.py
+*timetable*.html
+*Timetable*.pdf
+*timetable*.pdf
+ocr_*.txt
+ocr_*.swift
+tools/timetable/
+local/
+
+# Python runtime & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.bak
+*.py.bak
+.pytest_cache/
+
+# macOS / OS-generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local convenience symlinks
+geotech-2
+
+# IDE & Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary scratch & intermediate working files
+scratch/
+tmp/
+*.tmp

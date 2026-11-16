@@ -1,178 +1,25 @@
+import sys
 import json
 import re
-import compile_data
-import formula_showcase
+import argparse
+from pathlib import Path
 
-# Load canonical topics
-with open("canonical_data.json", "r", encoding="utf-8") as f:
-    canonical_topics = json.load(f)
+# Add repo root to sys.path
+repo_root = Path(__file__).resolve().parent
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
 
-raw_questions = compile_data.questions
+from core.subjects import (
+    load_subject,
+    list_subjects,
+    get_active_subject_id,
+    scaffold_new_subject,
+)
+from core.formatter import format_solution, clean_num
 
-def clean_num(raw):
-    if not raw:
-        return ""
-    if raw == "&bull;":
-        return "&bull;"
-    return re.sub(r"[\.\)]+$", "", raw) + "."
-
-def format_solution(html):
-    if not html:
-        return ""
-    html = formula_showcase.enhance_solution_math(html)
-    html = html.replace("•", "&bull;").replace("·", "&bull;")
-    html = html.replace("<br>\n<br>", "<br>").replace("<br><br>", "<br>")
-    
-    split_pattern = r'<br>\s*(?=(?:<strong>|\d+\.\s*|[a-zA-Z]\)\s*|[a-zA-Z]\.\s*|&bull;\s*|\(\d+\)\s*|\([a-zA-Z]\)\s*))'
-    parts = re.split(split_pattern, html)
-    formatted = []
-    
-    for p in parts:
-        p = p.strip()
-        if not p:
-            continue
-            
-        m_num_outer = re.match(r"^(\d+\.|[a-zA-Z]\)|[a-zA-Z]\.|\(\d+\)|\([a-zA-Z]\)|&bull;)\s*", p)
-        m_num_inner = re.match(r"^<strong>(\d+\.|[a-zA-Z]\)|[a-zA-Z]\.|\(\d+\)|\([a-zA-Z]\)|&bull;)\s*", p)
-        
-        num_str = ""
-        if m_num_outer:
-            num_str = clean_num(m_num_outer.group(1))
-        elif m_num_inner:
-            num_str = clean_num(m_num_inner.group(1))
-            
-        m_title_desc = re.match(r"^(?:(?:\d+\.|[a-zA-Z]\)|[a-zA-Z]\.|\(\d+\)|\([a-zA-Z]\)|&bull;)\s*)?<strong>(.*?)</strong>:?\s*(.*)$", p, re.DOTALL)
-        m_num_only = re.match(r"^(\d+\.|[a-zA-Z]\)|[a-zA-Z]\.|\(\d+\)|\([a-zA-Z]\)|&bull;)\s+(.+)$", p, re.DOTALL)
-        
-        if m_title_desc:
-            raw_title = m_title_desc.group(1).strip()
-            raw_desc = m_title_desc.group(2).strip()
-            
-            title_clean = re.sub(r"^(\d+\.|[a-zA-Z]\)|[a-zA-Z]\.|\(\d+\)|\([a-zA-Z]\)|&bull;)\s*", "", raw_title).rstrip(":")
-            desc_clean = re.sub(r"^(?:<br\s*/?>|\s)+", "", raw_desc)
-            
-            example_html = ""
-            m_ex = re.search(r'(?:<br\s*/?>|\s)*<em>Example:?</em>\s*(.*?)(?=(?:<br\s*/?>\s*<strong>|<br\s*/?>\s*&bull;|$))', desc_clean, flags=re.IGNORECASE | re.DOTALL)
-            if m_ex:
-                desc_clean = desc_clean[:m_ex.start()].strip()
-                example_text = m_ex.group(1).strip()
-                example_html = f'<div class="sol-item-example"><span class="example-label">Example:</span> {example_text}</div>'
-            else:
-                desc_clean = re.sub(r'<em>Example:?</em>', '<span class="example-label">Example:</span>', desc_clean, flags=re.IGNORECASE)
-
-            if not desc_clean and not example_html:
-                if num_str and num_str != "&bull;" and not title_clean.startswith(num_str):
-                    heading_text = f"{num_str} {title_clean}:"
-                else:
-                    heading_text = f"{title_clean}:"
-                formatted.append(f'<div class="sol-heading">{heading_text}</div>')
-            elif not num_str and len(title_clean) > 30:
-                formatted.append(f'<div class="sol-heading">{title_clean}:</div><div class="sol-body-text">{desc_clean}{example_html}</div>')
-            elif not num_str and raw_desc.startswith("<br>"):
-                formatted.append(f'<div class="sol-heading">{title_clean}:</div><div class="sol-body-text">{desc_clean}{example_html}</div>')
-            else:
-                num_html = f'<span class="sol-item-num">{num_str}</span>' if num_str else ""
-                formatted.append(f"""<div class="sol-item-row">
-    {num_html}
-    <div class="sol-item-content">
-        <span class="sol-item-title">{title_clean}:</span> 
-        <span class="sol-item-text">{desc_clean}</span>
-        {example_html}
-    </div>
-</div>""")
-        elif m_num_only and m_num_only.group(2).strip():
-            num = clean_num(m_num_only.group(1))
-            desc_clean = re.sub(r"^(?:<br\s*/?>|\s)+", "", m_num_only.group(2).strip())
-            
-            example_html = ""
-            m_ex = re.search(r'(?:<br\s*/?>|\s)*<em>Example:?</em>\s*(.*?)(?=(?:<br\s*/?>\s*<strong>|<br\s*/?>\s*&bull;|$))', desc_clean, flags=re.IGNORECASE | re.DOTALL)
-            if m_ex:
-                desc_clean = desc_clean[:m_ex.start()].strip()
-                example_text = m_ex.group(1).strip()
-                example_html = f'<div class="sol-item-example"><span class="example-label">Example:</span> {example_text}</div>'
-            else:
-                desc_clean = re.sub(r'<em>Example:?</em>', '<span class="example-label">Example:</span>', desc_clean, flags=re.IGNORECASE)
-
-            formatted.append(f"""<div class="sol-item-row">
-    <span class="sol-item-num">{num}</span>
-    <div class="sol-item-content">
-        <span class="sol-item-text">{desc_clean}</span>
-        {example_html}
-    </div>
-</div>""")
-        else:
-            p_clean = re.sub(r"^(\d+\.|[a-zA-Z]\)|[a-zA-Z]\.|\(\d+\)|\([a-zA-Z]\)|&bull;)\s*", r'<span class="sol-item-num">\1</span> ', p)
-            formatted.append(f'<div class="sol-step">{p_clean}</div>')
-            
-    return "".join(formatted)
-
-q_order = {q['id']: idx for idx, q in enumerate(raw_questions)}
-
-cluster_first_seen = {}
-for t in canonical_topics:
-    q_ids = [q['id'] if isinstance(q, dict) else q for q in t.get('questions', [])]
-    indices = [q_order[qid] for qid in q_ids if qid in q_order]
-    cluster_first_seen[t['id']] = min(indices) if indices else 999
-
-unit_titles = {
-    1: 'Lateral Earth Pressure',
-    2: 'Shear Strength & Slope Stability',
-    3: 'Shallow Foundations',
-    4: 'Deep Foundations (Piles)',
-    5: 'Soil Exploration & Testing'
-}
-
-cluster_map = {}
-for idx, t in enumerate(canonical_topics):
-    q_items = t.get('questions', [])
-    q_ids = [q['id'] if isinstance(q, dict) else q for q in q_items]
-    years = sorted(list(set(str(raw_questions[q_order[qid]]['year']) for qid in q_ids if qid in q_order)), reverse=True)
-    is_4x = len(years) >= 4
-    is_3x = len(years) == 3
-    is_2x = len(years) == 2
-    rank = 1 if is_4x else (2 if is_3x else (3 if is_2x else 4))
-    count_str = "4x" if is_4x else ("3x" if is_3x else ("2x" if is_2x else ""))
-    first_idx = cluster_first_seen.get(t['id'], 999)
-    for qid in q_ids:
-        cluster_map[qid] = {
-            'cluster_id': t['id'],
-            'cluster_title': t['title'],
-            'cluster_unit': t.get('unit', 1),
-            'cluster_rep_frequency': t.get('rep_frequency', ''),
-            'cluster_is_repeated': is_4x or is_3x or is_2x,
-            'cluster_rank': rank,
-            'cluster_order': first_idx,
-            'repeat_count_str': count_str
-        }
-
-for q in raw_questions:
-    q['formatted_solution'] = format_solution(q['solution'])
-    c_info = cluster_map.get(q['id'], {})
-    q['cluster_id'] = c_info.get('cluster_id', '')
-    q['cluster_title'] = c_info.get('cluster_title', q.get('topic', ''))
-    q['cluster_unit'] = c_info.get('cluster_unit', q.get('unit', 1))
-    q['unit'] = q['cluster_unit']
-    q['cluster_rep_frequency'] = c_info.get('cluster_rep_frequency', q.get('rep_frequency', ''))
-    q['cluster_is_repeated'] = c_info.get('cluster_is_repeated', False)
-    q['cluster_rank'] = c_info.get('cluster_rank', 4)
-    q['cluster_order'] = c_info.get('cluster_order', 999)
-    q['repeat_count_str'] = c_info.get('repeat_count_str', '')
-    q['unit_name'] = unit_titles.get(q['cluster_unit'], '')
-
-for c in canonical_topics:
-    c['formatted_solution'] = format_solution(c['master_solution'])
-
-canonical_json_str = json.dumps(canonical_topics).replace("</script>", "<\\/script>")
-raw_json_str = json.dumps(raw_questions).replace("</script>", "<\\/script>")
-
-def build_unit_checklist_html(questions):
-    unit_titles = {
-        1: 'Lateral Earth Pressure',
-        2: 'Shear Strength & Slope Stability',
-        3: 'Shallow Foundations',
-        4: 'Deep Foundations (Piles)',
-        5: 'Soil Exploration & Testing'
-    }
+def build_unit_checklist_html(questions, unit_titles=None):
+    if not unit_titles:
+        unit_titles = {}
 
     from collections import defaultdict
     tree = defaultdict(lambda: defaultdict(list))
@@ -288,8 +135,12 @@ def build_unit_checklist_html(questions):
             for q in u_qs:
                 b_class = f'badge-repeat-{q["repeat_count_str"]}' if q.get("repeat_count_str") in ['4x', '3x', '2x'] else 'badge-subtle'
                 rep_badge = f'<span class="badge {b_class}">{q["repeat_count_str"]}</span>' if q.get("repeat_count_str") else ''
-                safe_question = q['question']
+                safe_question = q.get('question', '')
                 formatted_sol = q.get('formatted_solution', '')
+                q_no_label = q.get('q_no') or q.get('qno', '')
+                raw_marks = str(q.get('marks', ''))
+                q_marks_label = (raw_marks + 'M') if raw_marks and not raw_marks.endswith('M') else (raw_marks or '2M')
+                q_type = q.get('type', 'Theory')
 
                 html.append(f'''
                                 <div class="checklist-card" id="chk-card-{q['id']}" data-id="{q['id']}" data-year="{y}" data-unit="{u}" onclick="toggleChecklistSolution('{q['id']}', event)" title="Click to view answer">
@@ -307,10 +158,10 @@ def build_unit_checklist_html(questions):
                                     <div class="checklist-card-content">
                                         <div class="checklist-card-header-row">
                                             <div class="checklist-card-meta">
-                                                <span class="badge badge-subtle font-mono">{q['q_no']}</span>
+                                                <span class="badge badge-subtle font-mono">{q_no_label}</span>
                                                 <span class="badge badge-year-{y}">{y}</span>
-                                                <span class="badge badge-subtle">{q['marks']}M</span>
-                                                <span class="badge badge-subtle">{q['type']}</span>
+                                                <span class="badge badge-subtle">{q_marks_label}</span>
+                                                <span class="badge badge-subtle">{q_type}</span>
                                                 {rep_badge}
                                             </div>
                                             <div class="checklist-card-actions">
@@ -350,9 +201,79 @@ def build_unit_checklist_html(questions):
     ''')
     return ''.join(html)
 
-unit_checklist_html = build_unit_checklist_html(raw_questions)
+def build_dashboard_for_subject(subject_id=None, write_index=True):
+    ctx = load_subject(subject_id)
+    canonical_topics = ctx.canonical_topics
+    raw_questions = ctx.raw_questions
+    unit_titles = ctx.unit_titles or {
+        1: 'Lateral Earth Pressure',
+        2: 'Shear Strength & Slope Stability',
+        3: 'Shallow Foundations',
+        4: 'Deep Foundations (Piles)',
+        5: 'Soil Exploration & Testing'
+    }
+    subject_name = ctx.name
+    subject_code = ctx.code
+    storage_prefix = ctx.storage_prefix
 
-html_template = f"""<!DOCTYPE html>
+    math_enhancer = None
+    if ctx.formula_module and hasattr(ctx.formula_module, "enhance_solution_math"):
+        math_enhancer = ctx.formula_module.enhance_solution_math
+
+    q_order = {q['id']: idx for idx, q in enumerate(raw_questions)}
+
+    cluster_first_seen = {}
+    for t in canonical_topics:
+        q_ids = [q['id'] if isinstance(q, dict) else q for q in t.get('questions', [])]
+        indices = [q_order[qid] for qid in q_ids if qid in q_order]
+        cluster_first_seen[t['id']] = min(indices) if indices else 999
+
+    cluster_map = {}
+    for idx, t in enumerate(canonical_topics):
+        q_items = t.get('questions', [])
+        q_ids = [q['id'] if isinstance(q, dict) else q for q in q_items]
+        years = sorted(list(set(str(raw_questions[q_order[qid]]['year']) for qid in q_ids if qid in q_order)), reverse=True)
+        is_4x = len(years) >= 4
+        is_3x = len(years) == 3
+        is_2x = len(years) == 2
+        rank = 1 if is_4x else (2 if is_3x else (3 if is_2x else 4))
+        count_str = "4x" if is_4x else ("3x" if is_3x else ("2x" if is_2x else ""))
+        first_idx = cluster_first_seen.get(t['id'], 999)
+        for qid in q_ids:
+            cluster_map[qid] = {
+                'cluster_id': t['id'],
+                'cluster_title': t['title'],
+                'cluster_unit': t.get('unit', 1),
+                'cluster_rep_frequency': t.get('rep_frequency', ''),
+                'cluster_is_repeated': is_4x or is_3x or is_2x,
+                'cluster_rank': rank,
+                'cluster_order': first_idx,
+                'repeat_count_str': count_str
+            }
+
+    for q in raw_questions:
+        q['formatted_solution'] = format_solution(q['solution'], math_enhancer=math_enhancer)
+        c_info = cluster_map.get(q['id'], {})
+        q['cluster_id'] = c_info.get('cluster_id', '')
+        q['cluster_title'] = c_info.get('cluster_title', q.get('topic', ''))
+        q['cluster_unit'] = c_info.get('cluster_unit', q.get('unit', 1))
+        q['unit'] = q['cluster_unit']
+        q['cluster_rep_frequency'] = c_info.get('cluster_rep_frequency', q.get('rep_frequency', ''))
+        q['cluster_is_repeated'] = c_info.get('cluster_is_repeated', False)
+        q['cluster_rank'] = c_info.get('cluster_rank', 4)
+        q['cluster_order'] = c_info.get('cluster_order', 999)
+        q['repeat_count_str'] = c_info.get('repeat_count_str', '')
+        q['unit_name'] = unit_titles.get(q['cluster_unit'], '')
+
+    for c in canonical_topics:
+        c['formatted_solution'] = format_solution(c.get('master_solution', ''), math_enhancer=math_enhancer)
+
+    canonical_json_str = json.dumps(canonical_topics).replace("</script>", r"<\/script>")
+    raw_json_str = json.dumps(raw_questions).replace("</script>", r"<\/script>")
+
+    unit_checklist_html = build_unit_checklist_html(raw_questions, unit_titles)
+
+    html_template = f"""<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -362,7 +283,7 @@ html_template = f"""<!DOCTYPE html>
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" id="metaThemeColor" content="#09090b">
     <meta name="format-detection" content="telephone=no">
-    <title>Geotechnical Engineering - II (CE-41007) | PYQ Analysis &amp; High-Yield Solutions</title>
+    <title>{subject_name} ({subject_code}) | PYQ Analysis &amp; High-Yield Solutions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -2775,8 +2696,8 @@ html_template = f"""<!DOCTYPE html>
     <!-- STICKY HEADER NAVBAR (WITH TABS VIEW) -->
     <header class="header">
         <div class="container nav">
-            <div class="brand" onclick="switchPageView('questions')" title="Geotechnical Engineering - II">
-                <span class="brand-title">Geotechnical Engineering - II</span>
+            <div class="brand" onclick="switchPageView('questions')" title="{subject_name}">
+                <span class="brand-title">{subject_name}</span>
             </div>
 
             <!-- Nav links with badge view -->
@@ -3155,10 +3076,10 @@ html_template = f"""<!DOCTYPE html>
         const CANONICAL_TOPICS = {canonical_json_str};
         const RAW_QUESTIONS = {raw_json_str};
 
-        const STORAGE_KEY_FILTERS = 'geotech_filters';
-        const STORAGE_KEY_COMPLETED = 'geotech_completed_questions';
-        const STORAGE_KEY_VIEW = 'geotech_active_view';
-        const STORAGE_KEY_HIDE_2022 = 'geotech_hide_2022';
+        const STORAGE_KEY_FILTERS = '{storage_prefix}_filters';
+        const STORAGE_KEY_COMPLETED = '{storage_prefix}_completed_questions';
+        const STORAGE_KEY_VIEW = '{storage_prefix}_active_view';
+        const STORAGE_KEY_HIDE_2022 = '{storage_prefix}_hide_2022';
 
         let hide2022 = false;
         try {{
@@ -4239,13 +4160,54 @@ html_template = f"""<!DOCTYPE html>
 </body>
 </html>"""
 
-import formula_showcase
-html_template = formula_showcase.enhance_html(html_template)
+    if ctx.formula_module and hasattr(ctx.formula_module, "enhance_html"):
+        html_template = ctx.formula_module.enhance_html(html_template)
 
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_template)
+    out_file = repo_root / ctx.output_filename
+    with open(out_file, "w", encoding="utf-8") as f:
+        f.write(html_template)
 
-with open("geotech_pyq_analysis.html", "w", encoding="utf-8") as f:
-    f.write(html_template)
+    if write_index:
+        with open(repo_root / "index.html", "w", encoding="utf-8") as f:
+            f.write(html_template)
+        print(f"Updated index.html & {ctx.output_filename}: {ctx.name} ({ctx.code}) dashboard generated successfully!")
+    else:
+        print(f"Updated {ctx.output_filename}: {ctx.name} ({ctx.code}) dashboard generated successfully!")
 
-print("Updated index.html & geotech_pyq_analysis.html: KaTeX mathematical formulas & formula showcase integrated successfully!")
+    return html_template
+
+def main():
+    parser = argparse.ArgumentParser(description="Exam Intelligence & PYQ Platform Dashboard Generator")
+    parser.add_argument("subject", nargs="?", default=None, help="Subject ID to build (default: active subject from subjects/registry.json)")
+    parser.add_argument("--list", action="store_true", help="List all registered subjects")
+    parser.add_argument("--all", action="store_true", help="Build dashboards for all ready subjects")
+    parser.add_argument("--new", nargs=3, metavar=("ID", "NAME", "CODE"), help="Scaffold a new subject (e.g. --new rcc 'Design of Reinforced Concrete Structures' 'CE 41001')")
+    args = parser.parse_args()
+
+    if args.list:
+        subjects = list_subjects()
+        print(f"{'ID':<15} {'CODE':<12} {'STATUS':<12} {'NAME'}")
+        print("-" * 65)
+        for s in subjects:
+            print(f"{s.get('id', ''):<15} {s.get('code', ''):<12} {s.get('status', 'planned'):<12} {s.get('name', '')}")
+        return
+
+    if args.new:
+        sub_id, name, code = args.new
+        target = scaffold_new_subject(sub_id, name, code)
+        print(f"Successfully scaffolded new subject '{sub_id}' at {target}")
+        return
+
+    if args.all:
+        subjects = list_subjects()
+        for s in subjects:
+            if s.get("status") == "ready":
+                is_default = s.get("is_default", False)
+                build_dashboard_for_subject(s["id"], write_index=is_default)
+        return
+
+    # Default build
+    build_dashboard_for_subject(args.subject, write_index=True)
+
+if __name__ == "__main__":
+    main()
