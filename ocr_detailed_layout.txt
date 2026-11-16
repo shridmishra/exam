@@ -1,0 +1,715 @@
+----------------------------------------------------------------------
+PAGE: WhatsApp Image 2026-11-13 at 22.57.59 (1).jpeg
+----------------------------------------------------------------------
+[y:0.846 x:0.375 w:0.039] OR
+[y:0.828 x:0.103 w:0.585] A rectangular footing 3 m × 2 m carries a load of 1500 kN with
+[y:0.810 x:0.100 w:0.585] eccentricity of 0.3 m along the length and 0.2 m along the width.
+[y:0.784 x:0.098 w:0.590] = 25°, y = 19 kN/m?. Calculate the maximum pressure at the base
+[y:0.798 x:0.100 w:0.587] The footing is located at 1.5 m depth in soil with c = 20 kN/m?, c
+[y:0.801 x:0.724 w:0.026] 06
+[y:0.799 x:0.798 w:0.013] 2
+[y:0.799 x:0.902 w:0.044] 2.3.1
+[y:0.762 x:0.000 w:0.013] a
+[y:0.776 x:0.098 w:0.190] and check for safety.
+[y:0.744 x:0.047 w:0.034] Q.3
+[y:0.715 x:0.047 w:0.031] (b)
+[y:0.730 x:0.052 w:0.026] (a)
+[y:0.741 x:0.098 w:0.432] Discuss Coulomb's law of shear strength of soil
+[y:0.734 x:0.724 w:0.026] 02
+[y:0.735 x:0.858 w:0.013] 2
+[y:0.734 x:0.902 w:0.047] 1.3.1
+[y:0.703 x:0.054 w:0.013] i
+[y:0.717 x:0.098 w:0.253] Answer any two questions
+[y:0.701 x:0.095 w:0.290] The shear stress and normal
+[y:0.686 x:0.096 w:0.594] cohesionless soil mass were found to be 4kPa and 10 kPa
+[y:0.698 x:0.393 w:0.245] stress at a failure plane
+[y:0.699 x:0.641 w:0.049] in a
+[y:0.669 x:0.093 w:0.597] respectively. Determine the resultant stress on failure plane and
+[y:0.677 x:0.724 w:0.026] 03
+[y:0.679 x:0.801 w:0.013] 3
+[y:0.676 x:0.902 w:0.052] 2.1.3
+[y:0.644 x:0.049 w:0.016] ii
+[y:0.651 x:0.090 w:0.590] inclination of failure plane. Also compute the shear parameters.
+[y:0.641 x:0.090 w:0.599] The deviator force to shear the soil specimen of 38mm diameter
+[y:0.626 x:0.093 w:0.597] and 76 mm height under a confining pressure of 100 kN/m* is
+[y:0.599 x:0.090 w:0.602] confining pressure of 200 kN/m?. The deformation at the time of
+[y:0.613 x:0.093 w:0.597] 251 N while it shears under a deviator force of 327 N at a
+[y:0.597 x:0.726 w:0.026] 03
+[y:0.599 x:0.804 w:0.013] 3
+[y:0.599 x:0.863 w:0.013] 3
+[y:0.568 x:0.090 w:0.599] parameters. Determine the deviator stress under a confining
+[y:0.583 x:0.090 w:0.599] failure is respectively 2.0 mm and 5.2 mm. Determine the shear
+[y:0.597 x:0.907 w:0.049] 2.1.3
+[y:0.557 x:0.090 w:0.186] pressure of 250 kPa.
+[y:0.541 x:0.041 w:0.023] iii
+[y:0.538 x:0.088 w:0.605] Explain various kinds of triaxial tests. Which test is best suited
+[y:0.528 x:0.088 w:0.178] for the cohesive
+[y:0.510 x:0.088 w:0.380] immediately below the foundation level?
+[y:0.525 x:0.276 w:0.416] soil deposit having a permeable layer
+[y:0.525 x:0.726 w:0.028] 03
+[y:0.526 x:0.806 w:0.013] 3
+[y:0.525 x:0.866 w:0.013] 3
+[y:0.523 x:0.910 w:0.052] 2.1.3
+[y:0.494 x:0.036 w:0.028] (c)
+[y:0.496 x:0.090 w:0.429] Derive a relationship between effective she
+[y:0.496 x:0.517 w:0.173] at parameters and
+[y:0.480 x:0.088 w:0.165] principal stresses.
+[y:0.487 x:0.729 w:0.028] 06
+[y:0.488 x:0.809 w:0.013] 3
+[y:0.488 x:0.868 w:0.013] 4
+[y:0.487 x:0.912 w:0.049] 2.3.1
+[y:0.462 x:0.370 w:0.044] OR
+[y:0.446 x:0.085 w:0.307] The following data refers to
+[y:0.446 x:0.400 w:0.104] a triaxial
+[y:0.446 x:0.514 w:0.178] compression tests
+[y:0.428 x:0.085 w:0.610] performed on a soil sample. Determine the total and effective
+[y:0.432 x:0.729 w:0.028] 06
+[y:0.433 x:0.811 w:0.013] 3
+[y:0.433 x:0.871 w:0.013] 4
+[y:0.416 x:0.085 w:0.230] shear parameters of soil.
+[y:0.430 x:0.915 w:0.052] 2.3.1
+[y:0.406 x:0.096 w:0.101] Observation
+[y:0.392 x:0.132 w:0.026] No
+[y:0.392 x:0.232 w:0.075] Pressure
+[y:0.406 x:0.253 w:0.036] Cell
+[y:0.402 x:0.367 w:0.088] Maximum
+[y:0.379 x:0.245 w:0.049] (kPa)
+[y:0.391 x:0.351 w:0.127] Deviator Stress
+[y:0.392 x:0.499 w:0.160] maximum deviator
+[y:0.403 x:0.499 w:0.140] Pore pressure at
+[y:0.350 x:0.137 w:0.013] 2
+[y:0.360 x:0.137 w:0.010] 1
+[y:0.365 x:0.253 w:0.028] 80
+[y:0.378 x:0.385 w:0.052] (kPa)
+[y:0.365 x:0.390 w:0.041] 175
+[y:0.379 x:0.499 w:0.101] stress (kPa)
+[y:0.365 x:0.532 w:0.028] 45
+[y:0.349 x:0.248 w:0.039] 150
+[y:0.349 x:0.390 w:0.041] 240
+[y:0.349 x:0.532 w:0.028] 50
+[y:0.333 x:0.390 w:0.041] 300
+[y:0.334 x:0.532 w:0.028] 60
+[y:0.299 x:0.028 w:0.028] Q4
+[y:0.285 x:0.031 w:0.023] (a)
+[y:0.283 x:0.075 w:0.220] sketch of strap footing.
+[y:0.298 x:0.080 w:0.620] What are different types of shallow foundations? Draw neat
+[y:0.294 x:0.734 w:0.028] 02
+[y:0.295 x:0.817 w:0.013] 4
+[y:0.295 x:0.876 w:0.016] 2
+[y:0.294 x:0.922 w:0.049] 1.3.1
+[y:0.269 x:0.031 w:0.023] (b)
+[y:0.267 x:0.080 w:0.264] Answer any two questions
+[y:0.250 x:0.078 w:0.530] Enumerate the requirements of satisfactory foundations.
+[y:0.254 x:0.736 w:0.026] 03
+[y:0.254 x:0.879 w:0.013] 2
+[y:0.238 x:0.034 w:0.016] ii
+[y:0.253 x:0.922 w:0.052] 2.1.3
+[y:0.233 x:0.075 w:0.625] Two buildings are to be constructed at two different sites. First
+[y:0.217 x:0.075 w:0.625] site shows the low compressive cohesive soil profile up to 10m
+[y:0.200 x:0.072 w:0.628] depth followed by good quality rock up to 15m depth below the
+[y:0.186 x:0.075 w:0.625] ground while the second site is having expansive soil up to 5
+[y:0.153 x:0.072 w:0.628] story building is to be constructed at the first site while at the
+[y:0.168 x:0.072 w:0.628] depth followed by good rock up to 10m below the ground. G+ 4
+[y:0.174 x:0.739 w:0.026] 03
+[y:0.177 x:0.822 w:0.013] 4
+[y:0.176 x:0.881 w:0.013] 3
+[y:0.174 x:0.928 w:0.049] 4.1.1
+[y:0.138 x:0.072 w:0.630] second site G+15 story building is to be constructed. Suggest the
+[y:0.123 x:0.075 w:0.628] type of foundation at two different sites for the structures to be
+[y:0.096 x:0.026 w:0.023] Tii
+[y:0.109 x:0.075 w:0.109] constructed
+[y:0.088 x:0.072 w:0.631] Using the soil properties (y = 17.5 kN/m', c = 20 kN/m?, ¢ =
+[y:0.096 x:0.739 w:0.028] 03
+[y:0.097 x:0.928 w:0.052] 2.1.3
+----------------------------------------------------------------------
+PAGE: WhatsApp Image 2026-11-13 at 22.57.59.jpeg
+----------------------------------------------------------------------
+[y:0.838 x:0.307 w:0.463] NOVEMBER- DECEMBER EXAMINATION
+[y:0.824 x:0.408 w:0.245] IV B.E. (4YDC) EXAM
+[y:0.793 x:0.072 w:0.134] Time: 3 Hrs.]
+[y:0.808 x:0.230 w:0.621] CE- 41007/4107/4151: GEOTECHNICAL ENGINEERING - II
+[y:0.799 x:0.783 w:0.124] Max. Marks
+[y:0.744 x:0.057 w:0.933] if missing. Use of graph papers is permitted. For finding bearing capacity factors
+[y:0.758 x:0.059 w:0.939] Note: Attempt all questions. All questions carry equal marks. Assume suitable dat
+[y:0.726 x:0.057 w:0.365] use the Table 1 given at the end
+[y:0.705 x:0.752 w:0.067] Marke
+[y:0.706 x:0.837 w:0.039] CO
+[y:0.703 x:0.894 w:0.039] BL
+[y:0.705 x:0.953 w:0.028] PI
+[y:0.680 x:0.065 w:0.036] Q.1
+[y:0.650 x:0.065 w:0.034] (b)
+[y:0.664 x:0.067 w:0.031] (a)
+[y:0.668 x:0.121 w:0.264] theories of Earth Pressures?
+[y:0.678 x:0.124 w:0.613] What are different Types of Earth Pressure and what are different
+[y:0.683 x:0.770 w:0.028] 02
+[y:0.685 x:0.855 w:0.013] 1
+[y:0.685 x:0.912 w:0.016] 2
+[y:0.683 x:0.959 w:0.031] 1.3
+[y:0.638 x:0.124 w:0.615] A smooth vertical wall, 6m high supports an inclined non
+[y:0.650 x:0.124 w:0.261] Answer any two questions
+[y:0.617 x:0.118 w:0.619] cohesive backfill (® =32°; y = 21 kN/m?) at an angle 10° with
+[y:0.624 x:0.775 w:0.028] 03
+[y:0.625 x:0.920 w:0.013] 3
+[y:0.621 x:0.964 w:0.034] 2.1.
+[y:0.603 x:0.119 w:0.621] horizontal. Compute the total active & passive pressure at the
+[y:0.593 x:0.119 w:0.145] bottom of wall.
+[y:0.577 x:0.072 w:0.016] ii
+[y:0.561 x:0.116 w:0.623] backfill. If the angle of internal friction and angle of wall friction
+[y:0.573 x:0.119 w:0.621] A rough vertical wall of 7.5m height supports a hotizontal
+[y:0.561 x:0.778 w:0.028] 03
+[y:0.564 x:0.925 w:0.013] 3
+[y:0.561 x:0.966 w:0.031] 2.1
+[y:0.540 x:0.113 w:0.626] are respectively 33° and 12°, compute the passive carth pressure
+[y:0.517 x:0.065 w:0.023] 111
+[y:0.532 x:0.114 w:0.509] at the bottom of wall. Assume density of 18.5 kN/m
+[y:0.513 x:0.116 w:0.626] A retaining wall of 4.5 m height carries a horizontal backfill with
+[y:0.495 x:0.113 w:0.371] c=35 kN/m?, $ =10°; y = 17.2 kN/m?
+[y:0.498 x:0.474 w:0.268] The water table is located
+[y:0.493 x:0.783 w:0.028] 03
+[y:0.493 x:0.868 w:0.013] 1
+[y:0.494 x:0.930 w:0.013] 3
+[y:0.463 x:0.111 w:0.634] earth pressure. Assume the value of angle of internal friction is
+[y:0.477 x:0.111 w:0.632] at 1.50 m below the ground. Sketch the distribution of active
+[y:0.491 x:0.972 w:0.026] 2.1
+[y:0.453 x:0.111 w:0.577] 14°; and cohesion c = 50 kN/m? in the submerged condition
+[y:0.438 x:0.054 w:0.036] (c).
+[y:0.421 x:0.108 w:0.147] sliding wedge.
+[y:0.433 x:0.111 w:0.634] Derive the condition of maximum active earth pressure from
+[y:0.436 x:0.786 w:0.028] 06
+[y:0.438 x:0.873 w:0.013] 1
+[y:0.436 x:0.930 w:0.018] 4
+[y:0.407 x:0.408 w:0.041] OR
+[y:0.386 x:0.108 w:0.237] Explain the Rebhann's
+[y:0.389 x:0.367 w:0.380] aphical construction for active earth
+[y:0.369 x:0.106 w:0.643] pressure and prove that it satisfy the condition of maximum earth
+[y:0.376 x:0.788 w:0.031] 06
+[y:0.378 x:0.879 w:0.010] 1
+[y:0.378 x:0.941 w:0.013] 4
+[y:0.378 x:0.982 w:0.013] 2
+[y:0.358 x:0.109 w:0.083] pressure
+[y:0.323 x:0.044 w:0.044] Q.2
+[y:0.324 x:0.106 w:0.646] What do you mean by bearing capacity? What are the different
+[y:0.308 x:0.047 w:0.036] (a)
+[y:0.308 x:0.103 w:0.432] suffixes to be used before bearing capacity?
+[y:0.318 x:0.793 w:0.028] 02
+[y:0.317 x:0.941 w:0.018] 2
+[y:0.292 x:0.047 w:0.034] (b)
+[y:0.278 x:0.057 w:0.010] i
+[y:0.291 x:0.106 w:0.274] Answer any to questions
+[y:0.273 x:0.103 w:0.651] Describe the three modes of shear failure in soil. Draw load-
+[y:0.255 x:0.101 w:0.657] settlement curves for each mode and explain which type of soil
+[y:0.257 x:0.796 w:0.031] 03
+[y:0.259 x:0.886 w:0.016] 2
+[y:0.227 x:0.049 w:0.018] ii
+[y:0.241 x:0.101 w:0.284] exhibits each failure pattern.
+[y:0.209 x:0.044 w:0.028] iii
+[y:0.221 x:0.101 w:0.607] Explain the effect of water table on bearing capacity of soils.
+[y:0.222 x:0.798 w:0.031] 03
+[y:0.222 x:0.886 w:0.018] 2
+[y:0.225 x:0.951 w:0.013] 3
+[y:0.203 x:0.098 w:0.659] Compute the net safe bearing capacity of a square footing of size
+[y:0.186 x:0.098 w:0.661] 2.5m provided at 2.0m depth in a purely cohesive soil with
+[y:0.156 x:0.095 w:0.350] KN/m/. Use factor of safety as 2.5.
+[y:0.168 x:0.096 w:0.664] Unconfined Shear Strength of 150 kN/m? and density being 18
+[y:0.179 x:0.801 w:0.031] 03
+[y:0.179 x:0.891 w:0.016] 2
+[y:0.180 x:0.953 w:0.013] 3
+[y:0.133 x:0.095 w:0.665] A square footing of 3.5 m is resting at 3 m below the ground
+[y:0.115 x:0.090 w:0.673] Jevel. The shear parameters of soil are respectively40 kN/m? and
+[y:0.099 x:0.092 w:0.671] 12°. The density of soil is 20 kN/m?. The water table lies at 2 m
+[y:0.099 x:0.806 w:0.031] 06
+[y:0.100 x:0.897 w:0.013] 2
+[y:0.103 x:0.959 w:0.013] 4
+[y:0.080 x:0.092 w:0.671] below the base of footing. Calculate the net safe bearing
+[y:0.068 x:0.092 w:0.412] capacity. Assume factor of safety of 3.0.
+----------------------------------------------------------------------
+PAGE: WhatsApp Image 2026-11-13 at 22.58.00 (1).jpeg
+----------------------------------------------------------------------
+[y:0.833 x:0.858 w:0.039] 122
+[y:0.788 x:0.258 w:0.439] CE41007: GEOTECHNICAL ENGINEERING-II
+[y:0.802 x:0.313 w:0.328] IV B.TECH. - CIVIL (4YDC) EXAM.
+[y:0.817 x:0.328 w:0.300] NOV-DEC 2024 EXAMINATION
+[y:0.759 x:0.041 w:0.191] [Time: 180 Minutes]
+[y:0.766 x:0.718 w:0.163] [Max. Marks: 70]
+[y:0.734 x:0.057 w:0.739] Note: Attempt all the questions. Each question has given an internal choice
+[y:0.749 x:0.245 w:0.463] TOTAL NO. OF QUESTIONS IN THIS PAPER: 5
+[y:0.721 x:0.057 w:0.677] Answers should be brief & precise. Assume suitable data if required.
+[y:0.695 x:0.044 w:0.034] S.N.
+[y:0.699 x:0.341 w:0.096] Questions
+[y:0.702 x:0.698 w:0.075] Marks
+[y:0.702 x:0.773 w:0.034] CO
+[y:0.682 x:0.047 w:0.031] Q. 1
+[y:0.686 x:0.098 w:0.525] List out the three types of earth pressure by giving examples.
+[y:0.690 x:0.713 w:0.023] 02
+[y:0.703 x:0.824 w:0.028] BL
+[y:0.693 x:0.873 w:0.044] 1.4.1
+[y:0.705 x:0.884 w:0.021] PI
+[y:0.653 x:0.041 w:0.034] (b)
+[y:0.667 x:0.052 w:0.021] (a)
+[y:0.660 x:0.098 w:0.393] List out the assumptions of Coulomb's theory.
+[y:0.663 x:0.713 w:0.026] 02
+[y:0.666 x:0.786 w:0.013] 1
+[y:0.629 x:0.047 w:0.028] (d)
+[y:0.642 x:0.047 w:0.028] (c)
+[y:0.632 x:0.098 w:0.541] A gravity retaining wall retains 12 m of a backfill. y = 18 kN/m3
+[y:0.647 x:0.098 w:0.489] Derive an expression for earth pressure at-rest condition.
+[y:0.651 x:0.713 w:0.026] 03
+[y:0.666 x:0.835 w:0.013] 1
+[y:0.620 x:0.098 w:0.582] 30° with a uniform horizontal backfill. Assuming the wall interface to
+[y:0.635 x:0.628 w:0.049] . Ф-
+[y:0.640 x:0.713 w:0.026] 07
+[y:0.654 x:0.837 w:0.013] 6
+[y:0.667 x:0.871 w:0.047] 1.4.1
+[y:0.654 x:0.873 w:0.044] 1.4.1
+[y:0.642 x:0.876 w:0.044] 2.1.2
+[y:0.596 x:0.098 w:0.559] pressure. Assume the angle of wall friction to be 20°. Determine
+[y:0.609 x:0.098 w:0.582] be vertical, determine the magnitude of active and passive earth
+[y:0.584 x:0.096 w:0.199] the point of action also
+[y:0.577 x:0.377 w:0.028] OR
+[y:0.555 x:0.047 w:0.026] (e)
+[y:0.547 x:0.098 w:0.543] at an angle of 15° with the vertical. Height of the wallis 6m. The
+[y:0.561 x:0.098 w:0.543] A retaining wall is battered away from the fill from bottom to top
+[y:0.567 x:0.718 w:0.026] 07
+[y:0.570 x:0.793 w:0.016] 1
+[y:0.570 x:0.842 w:0.013] 3
+[y:0.571 x:0.884 w:0.044] 2.1.2
+[y:0.535 x:0.095 w:0.546] fill slopes upwards at an angle 15° away from the rest of the
+[y:0.523 x:0.098 w:0.543] wall. The friction angle is 30° and wall friction angle is 15°. Using
+[y:0.512 x:0.098 w:0.165] Coulomb's wedge
+[y:0.511 x:0.274 w:0.368] theory, determine the total active and
+[y:0.484 x:0.093 w:0.065] kN/m?.
+[y:0.496 x:0.095 w:0.549] passive thrusts on the wall, per lineal metre assuming y = 20
+[y:0.458 x:0.044 w:0.031] Q.2
+[y:0.445 x:0.044 w:0.026] (a)
+[y:0.460 x:0.095 w:0.592] List the factors affecting the factor of safety of an infinite slope in a
+[y:0.469 x:0.726 w:0.023] 02
+[y:0.468 x:0.796 w:0.018] 2
+[y:0.471 x:0.850 w:0.023] 1
+[y:0.471 x:0.876 w:0.059] 1.4.1
+[y:0.432 x:0.044 w:0.028] (b)
+[y:0.433 x:0.093 w:0.531] What are different types of shear failure? Draw the sketches
+[y:0.446 x:0.096 w:0.078] clay soil.
+[y:0.430 x:0.724 w:0.031] 03
+[y:0.417 x:0.726 w:0.028] 07
+[y:0.417 x:0.798 w:0.018] 2
+[y:0.432 x:0.801 w:0.016] 2
+[y:0.446 x:0.850 w:0.016] 1
+[y:0.419 x:0.850 w:0.021] -3-
+[y:0.433 x:0.853 w:0.013] 2
+[y:0.445 x:0.889 w:0.049] 1.4.1
+[y:0.407 x:0.034 w:0.039] - (d).
+[y:0.421 x:0.095 w:0.592] Explain the classification of sheal lests based on drainage condition.
+[y:0.419 x:0.891 w:0.049] 1.4.1
+[y:0.430 x:0.891 w:0.047] 1.4.1
+[y:0.409 x:0.095 w:0.551] Illustrate different methods for improving the stability of slopes.
+[y:0.381 x:0.041 w:0.031] (e)
+[y:0.355 x:0.090 w:0.606] vertical displacement was 2 mm, the soil failed. The stresses at
+[y:0.369 x:0.092 w:0.600] was subjected to axial and radial effective stresses. When the
+[y:0.382 x:0.093 w:0.600] A cylindrical sample of soil of 50 mm in diameter and 100mm long
+[y:0.392 x:0.721 w:0.072] 07.-
+[y:0.394 x:0.804 w:0.016] 2
+[y:0.394 x:0.855 w:0.016] 3
+[y:0.394 x:0.894 w:0.049] 2.1.2
+[y:0.343 x:0.090 w:0.603] failure are 01 = 280 kPa and 03 = 100 kPa. The change in soil volume
+[y:0.327 x:0.087 w:0.611] at failure was 800 mm/. Determine (a) Axial and volumetric strain at
+[y:0.311 x:0.087 w:0.609] failure (b) Friction angle (c) The inclination of the slip plane to the
+[y:0.304 x:0.090 w:0.094] horizontal.
+[y:0.278 x:0.039 w:0.031] Q.3
+[y:0.276 x:0.092 w:0.606] List out the major criteria to be satisfied in the design of the
+[y:0.288 x:0.734 w:0.028] 02
+[y:0.289 x:0.811 w:0.016] 3
+[y:0.289 x:0.860 w:0.016] 1
+[y:0.291 x:0.904 w:0.044] 1.4.1
+[y:0.250 x:0.041 w:0.026] (b)
+[y:0.263 x:0.044 w:0.023] (a)
+[y:0.248 x:0.087 w:0.422] Write brief notes on 'Settlement of foundation'.
+[y:0.261 x:0.088 w:0.104] foundation.
+[y:0.263 x:0.739 w:0.023] 02
+[y:0.250 x:0.739 w:0.023] 03
+[y:0.262 x:0.866 w:0.013] 1
+[y:0.250 x:0.866 w:0.013] 2
+[y:0.263 x:0.902 w:0.049] 1.4.1
+[y:0.237 x:0.044 w:0.021] (с)
+[y:0.251 x:0.907 w:0.044] 1.4.1
+[y:0.235 x:0.087 w:0.422] Explain the failures in the shallow foundations.
+[y:0.218 x:0.039 w:0.028] (d)
+[y:0.218 x:0.090 w:0.611] Two load tests were conducted at a site-one with a 0.5 m square
+[y:0.230 x:0.736 w:0.028] 07
+[y:0.230 x:0.809 w:0.021] 3
+[y:0.231 x:0.904 w:0.049] 2.1.2
+[y:0.189 x:0.087 w:0.611] settlement of 25 mm, the loads were found to be 60 kN and 180 kN
+[y:0.202 x:0.087 w:0.613] lest plate and the other with a 1.0 m square test plate. For a
+[y:0.164 x:0.087 w:0.614] pressure of the sand and the load which a square footing, 2m × 2
+[y:0.177 x:0.087 w:0.614] respectively in the two tests. Determine the allowable bearing
+[y:0.147 x:0.087 w:0.503] my can carry with the settlement not exceeding 25 mm.
+[y:0.135 x:0.491 w:0.013] 1
+----------------------------------------------------------------------
+PAGE: WhatsApp Image 2026-11-13 at 22.58.00.jpeg
+----------------------------------------------------------------------
+[y:0.894 x:0.113 w:0.627] 20°, and assuming the square footing (3.415 m x 3.415 m)
+[y:0.879 x:0.113 w:0.626] located at a depth of 1.5 m carries a total load of 2000 kN.
+[y:0.868 x:0.113 w:0.626] Calculate the immediate settlement of the footing using the
+[y:0.838 x:0.111 w:0.628] with a Poisson's ratio of 0.3 and Young's modulus of 50,000
+[y:0.851 x:0.113 w:0.626] elastic theory. Assume the soil is homogeneous and isotropic
+[y:0.824 x:0.111 w:0.540] KN/m?. (assume influence factor 0.88 for square footing)
+[y:0.807 x:0.054 w:0.034] (c)
+[y:0.807 x:0.111 w:0.625] Design a square pile group to carry 500 kN load in clay with an
+[y:0.790 x:0.108 w:0.628] unconfined compressive strength of 50 kN/m?. Assume pile
+[y:0.789 x:0.775 w:0.036] 06
+[y:0.792 x:0.922 w:0.018] 4
+[y:0.794 x:0.972 w:0.026] 4.
+[y:0.765 x:0.109 w:0.121] taken as 0.6.
+[y:0.778 x:0.109 w:0.628] diameter of 400 mm and 6.0 m length. Adhesion factor may be
+[y:0.746 x:0.395 w:0.044] OR
+[y:0.725 x:0.106 w:0.631] Design a strip footing resting at 2.0 m below the ground and to
+[y:0.698 x:0.101 w:0.638] kN/m?and angle of internal friction is 22° while the density is of
+[y:0.709 x:0.103 w:0.634] carrying a load of 1000 kN/m, the shear parameters c= 50
+[y:0.711 x:0.775 w:0.031] 06
+[y:0.711 x:0.860 w:0.018] 4
+[y:0.712 x:0.925 w:0.016] 4
+[y:0.712 x:0.977 w:0.021] 4.
+[y:0.683 x:0.101 w:0.161] soil is 20 kN/m?
+[y:0.680 x:0.253 w:0.375] . The factor of safety to be used is 2.5.
+[y:0.651 x:0.041 w:0.039] Q.5
+[y:0.637 x:0.041 w:0.034] (a)
+[y:0.648 x:0.101 w:0.636] Discuss different types of soil samples. How will you obtain
+[y:0.619 x:0.041 w:0.034] (b)
+[y:0.634 x:0.098 w:0.209] undisturbed samples?
+[y:0.648 x:0.775 w:0.031] 03
+[y:0.648 x:0.925 w:0.018] 2
+[y:0.645 x:0.977 w:0.021] 1.
+[y:0.618 x:0.098 w:0.638] What do you understand by geotechnical exploration? What are
+[y:0.615 x:0.778 w:0.028] 04
+[y:0.618 x:0.866 w:0.016] 5
+[y:0.618 x:0.930 w:0.016] 3
+[y:0.589 x:0.039 w:0.031] (c)
+[y:0.602 x:0.096 w:0.444] the different methods of subsoil explorations?
+[y:0.615 x:0.977 w:0.018] 4
+[y:0.586 x:0.096 w:0.641] Discuss Rock Mass Rating. How is it useful in finding the
+[y:0.555 x:0.090 w:0.646] from 6.00 m to 7.50 m below the ground level shows the 10 rock
+[y:0.570 x:0.093 w:0.643] bearing capacity of rocks? The drilling carried out in a borehole
+[y:0.539 x:0.088 w:0.649] pieces of size 6,8,9,10,15,18,22 and 32 (all in centimeters).
+[y:0.551 x:0.778 w:0.028] 07
+[y:0.552 x:0.868 w:0.013] 5
+[y:0.552 x:0.933 w:0.016] 4
+[y:0.549 x:0.979 w:0.018] 4.
+[y:0.509 x:0.088 w:0.315] Comment on the quality of rock.
+[y:0.523 x:0.088 w:0.649] Determine the rock core recovery and rock quality designation.
+[y:0.474 x:0.083 w:0.654] Explain the Standard Penetration Test What are the different
+[y:0.442 x:0.080 w:0.346] Following the observations of
+[y:0.456 x:0.080 w:0.486] corrections to be applied to observed SPT value?
+[y:0.440 x:0.421 w:0.315] Standard Penetration Tests
+[y:0.422 x:0.077 w:0.621] conducted at a site on sandy soil. Pind the corrected N values.
+[y:0.397 x:0.075 w:0.070] 1.50 m
+[y:0.410 x:0.078 w:0.062] Depth
+[y:0.407 x:0.212 w:0.395] Observed SPT Value Density (kN/m?)
+[y:0.381 x:0.072 w:0.072] 3.00 m
+[y:0.392 x:0.488 w:0.049] 15.5
+[y:0.407 x:0.778 w:0.031] 07
+[y:0.407 x:0.871 w:0.016] 5
+[y:0.406 x:0.938 w:0.016] 4
+[y:0.406 x:0.982 w:0.016] 4
+[y:0.365 x:0.070 w:0.072] 4.50 m
+[y:0.378 x:0.282 w:0.028] 18
+[y:0.376 x:0.488 w:0.047] 17.2
+[y:0.349 x:0.070 w:0.072] 6.00 m
+[y:0.359 x:0.488 w:0.047] 19.0
+[y:0.342 x:0.486 w:0.049] 20.5
+[y:0.309 x:0.483 w:0.104] Table 1
+[y:0.288 x:0.209 w:0.023] Ф
+[y:0.283 x:0.388 w:0.036] Ne
+[y:0.275 x:0.607 w:0.047] Ng
+[y:0.256 x:0.377 w:0.054] 5.14
+[y:0.267 x:0.848 w:0.039] Ny
+[y:0.227 x:0.199 w:0.034] 10
+[y:0.241 x:0.837 w:0.059] 0.00
+[y:0.221 x:0.375 w:0.057] 6.49
+[y:0.212 x:0.599 w:0.057] 1.57
+[y:0.192 x:0.199 w:0.031] 15
+[y:0.203 x:0.837 w:0.059] 0.45
+[y:0.186 x:0.372 w:0.057] 8.35
+[y:0.174 x:0.599 w:0.059] 2.47
+[y:0.157 x:0.194 w:0.034] 20
+[y:0.167 x:0.840 w:0.057] 1.22
+[y:0.141 x:-0.000 w:0.093] S
+[y:0.150 x:0.364 w:0.067] 10.98
+[y:0.140 x:0.597 w:0.062] 3.94
+[y:0.124 x:0.191 w:0.034] 25
+[y:0.115 x:0.367 w:0.057] 20.2
+[y:0.128 x:0.837 w:0.060] 2.65
+[y:0.089 x:0.189 w:0.034] 30
+[y:0.103 x:0.589 w:0.075] 10.66
+[y:0.078 x:0.359 w:0.070] 30.14
+[y:0.092 x:0.832 w:0.072] 10.88
+[y:0.065 x:0.589 w:0.075] 18.40
+[y:0.055 x:0.829 w:0.075] 22.40
+----------------------------------------------------------------------
+PAGE: WhatsApp Image 2026-11-13 at 22.58.01 (1).jpeg
+----------------------------------------------------------------------
+[y:0.839 x:0.328 w:0.341] DECEMBER 2022 EXAMINATION
+[y:0.853 x:0.910 w:0.039] 300
+[y:0.810 x:0.178 w:0.638] CE41007/CE4107/CE4151: GEOTECHNICAL ENGINEERING-II
+[y:0.823 x:0.326 w:0.349] IV B.TECH. - CIVIL (4YDC) EXAM.
+[y:0.780 x:0.026 w:0.207] [Time: 180 Minutes]
+[y:0.785 x:0.757 w:0.173] [Max. Marks: 70]
+[y:0.754 x:0.041 w:0.804] Note: Attempt all the questions. Each question has given an internal choice.
+[y:0.769 x:0.251 w:0.494] TOTAL NO. OF QUESTIONS IN THIS PAPER: 5
+[y:0.743 x:0.041 w:0.729] Answers should be brief & precise. Assume suitable data if required.
+[y:0.715 x:0.028 w:0.034] S.N.
+[y:0.702 x:0.031 w:0.034] Q.1
+[y:0.717 x:0.736 w:0.072] Marks
+[y:0.721 x:0.817 w:0.028] CO
+[y:0.705 x:0.752 w:0.041] 02
+[y:0.709 x:0.824 w:0.013] 1
+[y:0.722 x:0.871 w:0.026] BL
+[y:0.705 x:0.088 w:0.535] Determine the depth of tension cracks developed
+[y:0.709 x:0.876 w:0.016] 3
+[y:0.709 x:0.920 w:0.047] 1.4.1
+[y:0.721 x:0.930 w:0.026] PI
+[y:0.688 x:0.034 w:0.028] (a)
+[y:0.692 x:0.088 w:0.566] unsupported excavation is to be made in a soil layer of having
+[y:0.663 x:0.031 w:0.031] (b)
+[y:0.677 x:0.088 w:0.349] YE= 15kN/m3, C= 30 kN/m2 and ф=10°
+[y:0.667 x:0.088 w:0.667] Calculate the increase in active earth pressure intensity at the bottom p
+[y:0.670 x:0.752 w:0.031] 02
+[y:0.670 x:0.827 w:0.013] 1
+[y:0.672 x:0.876 w:0.016] 3
+[y:0.670 x:0.917 w:0.049] 1.4.1
+[y:0.641 x:0.085 w:0.630] to the application of surcharge of 45 kN/m at the top of the soil mass
+[y:0.654 x:0.088 w:0.633] of 5 m retaining wall, retaining the soil of =30° and y/= 18kN/m due
+[y:0.624 x:0.031 w:0.031] (c)
+[y:0.626 x:0.088 w:0.633] Explain the various assumptions made in Rankine's earth pressure
+[y:0.631 x:0.755 w:0.028] 03
+[y:0.631 x:0.920 w:0.049] 1.4.1
+[y:0.597 x:0.031 w:0.031] (d)
+[y:0.599 x:0.085 w:0.639] A gravity retaining wall retains 15 m of a backfill yi= 20kN/m° and
+[y:0.603 x:0.757 w:0.026] 07
+[y:0.606 x:0.881 w:0.013] 3
+[y:0.606 x:0.922 w:0.049] 2.1.2
+[y:0.587 x:0.085 w:0.638] ф=30° with a uniform horizontal backfill. Assuming the wall interface to
+[y:0.571 x:0.085 w:0.639] be vertical, determine the magnitude of active and passive earth
+[y:0.549 x:0.083 w:0.222] of wall friction to be 20°
+[y:0.561 x:0.085 w:0.639] pressure and the point of action of total pressure. Assume the angle
+[y:0.535 x:0.388 w:0.036] OR
+[y:0.517 x:0.028 w:0.028] (e)
+[y:0.519 x:0.080 w:0.600] Illustrate Rebhann's graphical construction melhod to evaluate
+[y:0.528 x:0.762 w:0.026] 07
+[y:0.529 x:0.886 w:0.013] 4
+[y:0.529 x:0.930 w:0.049] 2.1.2
+[y:0.508 x:0.080 w:0.354] the earth pressure on a retaining wall.
+[y:0.480 x:0.026 w:0.034] Q.2
+[y:0.483 x:0.083 w:0.429] List the basic differences between a bax shear
+[y:0.485 x:0.509 w:0.220] test and a triaxial shear
+[y:0.485 x:0.760 w:0.028] 02
+[y:0.487 x:0.835 w:0.016] 2
+[y:0.488 x:0.933 w:0.049] 1.4.1
+[y:0.465 x:0.028 w:0.026] (a)
+[y:0.438 x:0.028 w:0.023] (c)
+[y:0.452 x:0.031 w:0.023] (b)
+[y:0.467 x:0.078 w:0.124] test for soils.
+[y:0.453 x:0.078 w:0.556] Describe unconsolidated undrained test and a drained test.
+[y:0.446 x:0.752 w:0.039] • 03
+[y:0.459 x:0.762 w:0.028] 02
+[y:0.446 x:0.835 w:0.018] 2
+[y:0.446 x:0.933 w:0.052] 2.1.2
+[y:0.459 x:0.933 w:0.049] 1.4.1
+[y:0.437 x:0.080 w:0.649] A vane, 10.8 cm long, 7.2 cm in diameter, was pressed into a soft clay
+[y:0.413 x:0.075 w:0.654] failure was 45 Nm. Calculate the shear strength of the clay on a
+[y:0.427 x:0.080 w:0.651] at the bottom of a bore hole. Torque was applied and the value at
+[y:0.384 x:0.026 w:0.028] (d)
+[y:0.398 x:0.078 w:0.155] horizontal plane
+[y:0.387 x:0.078 w:0.654] A consolidated-drained maxial test was conducted on a normally
+[y:0.391 x:0.765 w:0.028] 07
+[y:0.392 x:0.935 w:0.052] 2.1.2
+[y:0.368 x:0.074 w:0.657] consolidated clay yielding the following data: 03= 250 kN/m?: 0d= 275
+[y:0.355 x:0.075 w:0.657] kN/m?. Determine (i) The angle of friction (ii) Angle which the failure
+[y:0.337 x:0.072 w:0.660] plane makes with the major principal plane (i)Normal stress and
+[y:0.323 x:0.072 w:0.662] shear stress on the failure plane (iv) Normal stress on the plane of Tax
+[y:0.301 x:0.021 w:0.031] (e)
+[y:0.289 x:0.072 w:0.664] of this material. if a factor of safety of 1.15 is needed against failure,
+[y:0.301 x:0.077 w:0.657] A granular soil has G- 2,70, e=0.5 and = 35°. A slope has to be made
+[y:0.310 x:0.773 w:0.044] 07 .
+[y:0.311 x:0.845 w:0.013] 2
+[y:0.310 x:0.941 w:0.052] 2.1:2
+[y:0.259 x:0.072 w:0.665] submerged without seepage. (i) If seepage occurs at and parallel to
+[y:0.273 x:0.075 w:0.662] determine the safe angle of slope when (i) The slope is dry or
+[y:0.246 x:0.070 w:0.667] the surface of the slope. (i) If seepage occurs parallel to the slope
+[y:0.229 x:0.069 w:0.668] with the water table at a depth of 1.5 m, what is the factor of safety
+[y:0.216 x:0.069 w:0.668] available on a slip plane parallel to the ground surface at a depth of 4
+[y:0.205 x:0.070 w:0.292] m. Assume slope angle is 30°
+[y:0.179 x:0.018 w:0.034] Q.3
+[y:0.183 x:0.775 w:0.028] 02
+[y:0.166 x:0.026 w:0.021] a)
+[y:0.176 x:0.070 w:0.670] List the assumptions made in Terzaghi's analysis of bearing capacity
+[y:0.188 x:0.907 w:0.008] 1
+[y:0.185 x:0.948 w:0.049] 1.4.1
+[y:0.150 x:0.023 w:0.018] (b
+[y:0.163 x:0.072 w:0.220] of a continuous footing
+[y:0.134 x:0.070 w:0.147] shallow footing
+[y:0.147 x:0.072 w:0.667] Discuss the various factors that affect the bearing capacity of a
+[y:0.156 x:0.775 w:0.028] 02
+[y:0.157 x:0.948 w:0.049] 1.4.1
+[y:0.119 x:0.070 w:0.584] Mustrate the effect of ground water table on the safe bearing
+[y:0.126 x:0.775 w:0.028] 03
+[y:0.129 x:0.853 w:0.013] 3
+[y:0.129 x:0.907 w:0.016] 3
+[y:0.128 x:0.948 w:0.049] 1.4.1
+[y:0.103 x:0.067 w:0.088] capacity.
+----------------------------------------------------------------------
+PAGE: WhatsApp Image 2026-11-13 at 22.58.01 (2).jpeg
+----------------------------------------------------------------------
+[y:0.919 x:0.863 w:0.028] 07
+[y:0.875 x:0.124 w:0.031] (d)
+[y:0.813 x:0.166 w:0.327] water table rises to the ground level.
+[y:0.823 x:0.860 w:0.026] 07
+[y:0.788 x:0.111 w:0.028] (e)
+[y:0.777 x:0.160 w:0.663] KN/m?. The depth of foundation is 2 m. Determine the diameter of the
+[y:0.788 x:0.163 w:0.660] A circular footing is resting on a stiff saturated clay with qu = 250
+[y:0.766 x:0.158 w:0.665] footing if the column load is 600 kN. Assume a factor of safety as 2.5.
+[y:0.749 x:0.156 w:0.358] The bulk unit weight of soil is 20 kN/m?
+[y:0.753 x:0.855 w:0.031] 02
+[y:0.712 x:0.098 w:0.031] (a)
+[y:0.727 x:0.098 w:0.036] Q.4
+[y:0.725 x:0.154 w:0.346] Explain the function of pile foundation.
+[y:0.722 x:0.855 w:0.028] 02
+[y:0.699 x:0.096 w:0.031] (b)
+[y:0.700 x:0.151 w:0.669] Discuss the basic difference in the bearing capacity computation of
+[y:0.673 x:0.093 w:0.028] (c)
+[y:0.675 x:0.146 w:0.672] A pile is driven in a uniform clay of large depth. The clay has an
+[y:0.687 x:0.149 w:0.273] shallow and deep foundations.
+[y:0.693 x:0.855 w:0.028] 03
+[y:0.656 x:0.141 w:0.590] unconfined compression strength of 90 kN/m?. The pile is
+[y:0.633 x:0.138 w:0.674] pile, assuming a factor of safety of 3. Assume the adhesion factor a -
+[y:0.648 x:0.141 w:0.674] diameter and 6 m long. Determine the safe frictional resistance of the
+[y:0.609 x:0.085 w:0.026] (d)
+[y:0.593 x:0.131 w:0.678] sand (ø = 40°). The water table is at a great depth and is not likely to
+[y:0.606 x:0.134 w:0.681] A 12 m long, 300 mm diameter pile is driven in a uniform deposit of
+[y:0.619 x:0.850 w:0.031] 07
+[y:0.583 x:0.129 w:0.682] rise. The average dry unit weight of sand is 18 kN/m* Using Na= 137,
+[y:0.566 x:0.129 w:0.683] calculate the safe load capacity of the pile with a factor of safety of
+[y:0.544 x:0.421 w:0.041] OR
+[y:0.526 x:0.067 w:0.031] (e)
+[y:0.526 x:0.121 w:0.685] A square group of 9 piles was driven into soft clay extending to a large
+[y:0.513 x:0.121 w:0.685] depth. The diameter and length of the piles were 30 cm and 9 m
+[y:0.526 x:0.848 w:0.028] 07
+[y:0.523 x:0.917 w:0.013] 4
+[y:0.490 x:0.116 w:0.688] respectively. If the unconfined compression strength of the clay is 90
+[y:0.467 x:0.114 w:0.690] capacity of the pile group? Assume a factor of safety of 2.5 and
+[y:0.481 x:0.116 w:0.687] kN/m?, and the pile spacing is 90 cm centre to centre. Calculate the
+[y:0.456 x:0.111 w:0.214] adhesion factor of 0.75
+[y:0.430 x:0.049 w:0.036] Q.5
+[y:0.401 x:0.049 w:0.028] (b)
+[y:0.416 x:0.054 w:0.026] (a)
+[y:0.415 x:0.108 w:0.686] List the laboratory and field tests used for the soil investigation work.
+[y:0.414 x:0.842 w:0.031] 02
+[y:0.413 x:0.915 w:0.013] 5
+[y:0.387 x:0.044 w:0.028] (C)
+[y:0.390 x:0.102 w:0.394] Describe the purpose of soil invesligation.
+[y:0.382 x:0.842 w:0.028] 02
+[y:0.364 x:0.100 w:0.700] Calculate the area ratia of a thin walled tube samples having an
+[y:0.366 x:0.840 w:0.031] 03
+[y:0.347 x:0.092 w:0.288] recommend the sampler for
+[y:0.340 x:0.093 w:0.057] Why?
+[y:0.347 x:0.097 w:0.703] external diameter of 6cm and a wall thickness of 2.25mm. Do you
+[y:0.326 x:0.031 w:0.036] (d)
+[y:0.331 x:0.376 w:0.424] obtaining undisturbed soil samples?
+[y:0.328 x:0.953 w:0.034] 2.3
+[y:0.295 x:0.089 w:0.709] Illustrate the standard penetration test used in soil exploration. List the
+[y:0.298 x:0.840 w:0.031] 07
+[y:0.301 x:0.912 w:0.016] 5
+[y:0.280 x:0.086 w:0.708] information that can be obtained by the test when made in (a) clay (0)
+[y:0.253 x:0.021 w:0.034] (e)
+[y:0.262 x:0.084 w:0.711] sand. Comment on the correction factors to be used for calculating N
+[y:0.249 x:0.390 w:0.036] OR
+[y:0.201 x:0.072 w:0.483] circumstances under which each is best situated
+[y:0.207 x:0.077 w:0.718] Classify the various methods of soil exploration and mention the
+[y:0.198 x:0.311 w:0.192] *********************
+[y:0.212 x:0.837 w:0.028] 07
+[y:0.215 x:0.910 w:0.016] 5
+----------------------------------------------------------------------
+PAGE: WhatsApp Image 2026-11-13 at 22.58.01.jpeg
+----------------------------------------------------------------------
+[y:0.846 x:0.098 w:0.616] A strip footing of 2.2 m width is to be founded at a depth of 1.2 m
+[y:0.820 x:0.098 w:0.616] water table at the site is estimated to be at 0.8 m below GL. The soil
+[y:0.831 x:0.100 w:0.611] below GL. The soil profile shows the highest possible location of the
+[y:0.788 x:0.095 w:0.616] kN/m*), which is underlain by a deep sand stratum having the
+[y:0.801 x:0.098 w:0.614] profile shows the presence of 0.5 thick layer of fill material (y = 14.8
+[y:0.760 x:0.093 w:0.267] Angle of internal friction = 25°
+[y:0.775 x:0.093 w:0.258] following average properties:
+[y:0.747 x:0.093 w:0.145] Void ratio = 0.99
+[y:0.717 x:0.090 w:0.344] Water content above water table = 5%
+[y:0.730 x:0.093 w:0.276] Specific gravity of solids = 2.72
+[y:0.686 x:0.085 w:0.194] factor of safety of 2.5.
+[y:0.701 x:0.090 w:0.618] Determine the safe bearing capacity of the footing with respect to a
+[y:0.709 x:0.762 w:0.187] ent
+[y:0.645 x:0.028 w:0.031] (a)
+[y:0.660 x:0.028 w:0.041] Q.4
+[y:0.658 x:0.072 w:0.393] - Write short notes on group action of piles.
+[y:0.660 x:0.747 w:0.036] 02
+[y:0.664 x:0.891 w:0.016] 1
+[y:0.660 x:0.938 w:0.054] 1.4.1
+[y:0.619 x:0.023 w:0.028] (c)
+[y:0.632 x:0.026 w:0.031] (b)
+[y:0.619 x:0.080 w:0.625] Explain an 'Open Caisson' with a neat sketch showing all the
+[y:0.632 x:0.083 w:0.419] Describe about under-reamed pile foundation.
+[y:0.622 x:0.749 w:0.028] 03
+[y:0.635 x:0.749 w:0.028] 02
+[y:0.624 x:0.894 w:0.013] 2
+[y:0.638 x:0.894 w:0.013] 1
+[y:0.634 x:0.941 w:0.049] 1.4.1
+[y:0.606 x:0.078 w:0.152] component parts
+[y:0.618 x:0.938 w:0.054] 1.4.1
+[y:0.577 x:0.075 w:0.628] large depth. The diameter and length of the piles were 30 cm and 9
+[y:0.590 x:0.075 w:0.630] A square group of 9 piles was driven into soft clay extending to a
+[y:0.594 x:0.749 w:0.028] 07
+[y:0.596 x:0.835 w:0.016] 4
+[y:0.596 x:0.894 w:0.016] 3
+[y:0.592 x:0.941 w:0.049] 2.1.2
+[y:0.564 x:0.072 w:0.630] m respectively. If the unconfined compression strength of the clay is
+[y:0.539 x:0.070 w:0.633] the capacity of the pile group? Assume a factor of safety of 2.5 and
+[y:0.552 x:0.072 w:0.630] 90 kN/m?, and the pile spacing is 90 cm centre to centre, determine
+[y:0.526 x:0.067 w:0.218] adhesion factor of 0.75.
+[y:0.512 x:0.359 w:0.036] OR
+[y:0.496 x:0.062 w:0.455] A 16-pile group has to be arranged in the for
+[y:0.494 x:0.514 w:0.189] of a square in soft
+[y:0.497 x:0.747 w:0.031] 07
+[y:0.499 x:0.837 w:0.013] 4
+[y:0.497 x:0.897 w:0.013] 3
+[y:0.478 x:0.059 w:0.644] clay with uniform spacing. Neglecting end-bearing, determine the
+[y:0.493 x:0.943 w:0.044] 2.1.2
+[y:0.453 x:0.057 w:0.507] diameter, assuming a shear mobilisation factor of 0.6.
+[y:0.468 x:0.059 w:0.644] optimum value of the spacing of the piles in terms of the pile
+[y:0.433 x:-0.000 w:0.039] Q.5
+[y:0.406 x:0.000 w:0.026] (b)
+[y:0.419 x:0.000 w:0.028] (a)
+[y:0.427 x:0.051 w:0.383] List out the objectives of soil exploration.
+[y:0.424 x:0.747 w:0.031] 02
+[y:0.426 x:0.837 w:0.016] 5
+[y:0.424 x:0.897 w:0.016] 1
+[y:0.422 x:0.928 w:0.059] 1.4.1
+[y:0.391 x:0.000 w:0.021] e)
+[y:0.395 x:0.048 w:0.477] Sketch a typical borelog and describe its features.
+[y:0.376 x:0.000 w:0.021] d)
+[y:0.382 x:0.049 w:0.562] Explain inside clearance, cutside clearance and area ratio.
+[y:0.381 x:0.747 w:0.031] 03
+[y:0.395 x:0.747 w:0.031] 02
+[y:0.381 x:0.837 w:0.016] 5
+[y:0.395 x:0.837 w:0.016] 5
+[y:0.391 x:0.943 w:0.047] 1.4.1
+[y:0.359 x:0.044 w:0.214] structures/foundations.
+[y:0.363 x:0.046 w:0.658] Describe about the depth of exploration requires for various types of
+[y:0.365 x:0.747 w:0.031] 07
+[y:0.365 x:0.840 w:0.013] 5
+[y:0.363 x:0.897 w:0.016] 2
+[y:0.376 x:0.943 w:0.044] 1.4.1
+[y:0.360 x:0.943 w:0.047] 1.4.1
+[y:0.317 x:0.036 w:0.085] applied?
+[y:0.331 x:0.041 w:0.207] Describe a standard
+[y:0.320 x:0.286 w:0.415] letration test. What are the corrections
+[y:0.320 x:0.744 w:0.054] 07
+[y:0.318 x:0.829 w:0.039] 5
+[y:0.317 x:0.891 w:0.039] 2
+[y:0.315 x:0.938 w:0.059] 1.4.1°
+[y:0.288 x:0.335 w:0.117] *************
+[y:0.137 x:-0.010 w:0.283] GSIT
+[y:0.083 x:0.450 w:0.013] 2

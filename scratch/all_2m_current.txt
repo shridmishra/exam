@@ -1,0 +1,524 @@
+=== [1] ID: 2024-Q1a | Year: 2024 | Q: Q.1 (a) | Unit: 1 ===
+QUESTION: List out the three types of earth pressure by giving examples.
+SOLUTION:
+<strong>Three Types of Earth Pressure with Examples:</strong><br>
+1. <strong>Active Earth Pressure:</strong> Pressure exerted by soil when the retaining wall moves slightly away from the backfill. Soil expands and relaxes, so lateral pressure drops to a minimum.<br>
+<em>Example:</em> A retaining wall tilting away from soil.<br>
+2. <strong>Passive Earth Pressure:</strong> Resistance offered by soil when the retaining wall moves towards or is pushed into the backfill. Soil compresses, mobilizing maximum resistance.<br>
+<em>Example:</em> Soil resisting the movement of a sheet pile wall or anchor deadman block.<br>
+3. <strong>Earth Pressure at Rest:</strong> Pressure exerted by soil when the retaining wall does not move at all (zero movement). Soil remains in its natural undisturbed state.<br>
+<em>Example:</em> Basement walls restrained by rigid floor slabs or bridge abutments resting on rock.<br>
+<code>P_a < P_0 < P_p \qquad (K_a < K_0 < K_p)</code>
+
+=== [2] ID: 2024-Q1b | Year: 2024 | Q: Q.1 (b) | Unit: 1 ===
+QUESTION: List out the assumptions of Coulomb's theory.
+SOLUTION:
+<strong>Assumptions of Coulomb's Earth Pressure Theory (1776):</strong><br>
+1. Soil is homogeneous, isotropic, dry, and cohesionless (c = 0, possessing only friction angle φ).<br>
+2. Backfill surface is a plane (horizontal or inclined).<br>
+3. Failure surface is a plane passing through the heel of the wall.<br>
+4. Wall back is straight, rigid, and inclined at angle α.<br>
+5. Friction develops between the wall and soil (wall friction angle δ).<br>
+6. Failing soil wedge behaves as a rigid body and moves as a single unit.
+
+=== [3] ID: 2024-Q2a | Year: 2024 | Q: Q.2 (a) | Unit: 2 ===
+QUESTION: List the factors affecting the factor of safety of an infinite slope in a clay soil.
+SOLUTION:
+<strong>Factors Affecting Factor of Safety of Infinite Slope in Clay:</strong><br>
+1. <strong>Slope Angle (β):</strong> Steeper slope increases gravitational sliding stress, directly reducing FOS.<br>
+2. <strong>Soil Cohesion (c'):</strong> Primary resisting force in clay; higher cohesion directly increases FOS.<br>
+3. <strong>Depth of Slip Plane (H):</strong> In clay, safety decreases with depth because driving weight grows faster than cohesive strength.<br>
+4. <strong>Groundwater Seepage:</strong> Water seepage creates pore pressure and reduces effective stress, reducing slope safety by up to 50%.<br>
+<code>FOS = \frac{c'}{\gamma z \sin\beta \cos\beta} + \frac{\tan\phi'}{\tan\beta}</code>
+
+=== [4] ID: 2024-Q2b | Year: 2024 | Q: Q.2 (b) | Unit: 2 ===
+QUESTION: What are different types of shear failure? Draw the sketches.
+SOLUTION:
+<strong>Three Types of Shear Failure in Soil:</strong><br>
+1. <strong>General Shear Failure:</strong> Occurs in dense sand and stiff clay. Continuous failure surface reaches ground surface with clear ground heaving/bulging on both sides. Sudden failure with distinct peak load.<br>
+2. <strong>Local Shear Failure:</strong> Occurs in medium dense sand and medium clay. Failure surfaces stop inside the soil mass. Slight surface bulging with gradual settlement.<br>
+3. <strong>Punching Shear Failure:</strong> Occurs in loose sand and soft clay. Footing sinks vertically straight down by perimeter shear. Zero surface bulging with continuous plunging settlement.<br>
+<div class="sol-diagram-box">
+  <div class="sol-diagram-title">Figure: Modes of Shear Failure &amp; Rupture Surfaces</div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 230" class="sol-diagram-svg" width="100%" style="max-width:680px;height:auto;display:block;">
+    <rect width="680" height="230" fill="var(--card)" rx="8" />
+    
+    <!-- Panel 1: General Shear -->
+    <g transform="translate(15, 10)">
+      <rect x="0" y="0" width="205" height="210" fill="var(--secondary)" rx="6" opacity="0.5" />
+      <text x="102" y="22" fill="var(--foreground)" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">General Shear Failure</text>
+      <text x="102" y="37" fill="var(--muted-foreground)" font-size="10" text-anchor="middle" font-family="system-ui, sans-serif">Dense Sand (Dr &gt; 70%) / Stiff Clay</text>
+      
+      <!-- Heave profiles -->
+      <path d="M 15 90 Q 45 75 75 90" fill="none" stroke="var(--muted-foreground)" stroke-width="1.5" stroke-dasharray="2 2" />
+      <path d="M 130 90 Q 160 75 190 90" fill="none" stroke="var(--muted-foreground)" stroke-width="1.5" stroke-dasharray="2 2" />
+      <line x1="10" y1="90" x2="195" y2="90" stroke="var(--muted-foreground)" stroke-width="1" />
+      
+      <!-- Footing -->
+      <rect x="75" y="72" width="55" height="18" fill="var(--foreground)" opacity="0.85" rx="2" />
+      <text x="102" y="84" fill="var(--primary-foreground)" font-size="9" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Footing (B)</text>
+      
+      <!-- Elastic wedge -->
+      <polygon points="75,90 130,90 102.5,120" fill="var(--muted-foreground)" opacity="0.2" stroke="var(--foreground)" stroke-width="1.2" />
+      
+      <!-- Continuous failure planes reaching surface -->
+      <path d="M 102.5 120 Q 50 125 15 90" fill="none" stroke="var(--foreground)" stroke-width="1.8" />
+      <path d="M 102.5 120 Q 155 125 190 90" fill="none" stroke="var(--foreground)" stroke-width="1.8" />
+      
+      <!-- Features bullets -->
+      <text x="15" y="150" fill="var(--foreground)" font-size="10" font-family="system-ui, sans-serif">• Continuous well-defined rupture</text>
+      <text x="15" y="168" fill="var(--foreground)" font-size="10" font-family="system-ui, sans-serif">• Significant surface heave/bulging</text>
+      <text x="15" y="186" fill="var(--foreground)" font-size="10" font-family="system-ui, sans-serif">• Sudden, catastrophic tilting</text>
+      <text x="15" y="202" fill="var(--pastel-peach-foreground, #f97316)" font-size="9.5" font-weight="bold" font-family="system-ui, sans-serif">Distinct peak load (qu)</text>
+    </g>
+
+    <!-- Panel 2: Local Shear -->
+    <g transform="translate(235, 10)">
+      <rect x="0" y="0" width="205" height="210" fill="var(--secondary)" rx="6" opacity="0.5" />
+      <text x="102" y="22" fill="var(--foreground)" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Local Shear Failure</text>
+      <text x="102" y="37" fill="var(--muted-foreground)" font-size="10" text-anchor="middle" font-family="system-ui, sans-serif">Medium Sand (35% &lt; Dr &lt; 70%)</text>
+      
+      <!-- Slight heave -->
+      <path d="M 25 90 Q 50 82 75 90" fill="none" stroke="var(--muted-foreground)" stroke-width="1.5" stroke-dasharray="2 2" />
+      <path d="M 130 90 Q 155 82 180 90" fill="none" stroke="var(--muted-foreground)" stroke-width="1.5" stroke-dasharray="2 2" />
+      <line x1="10" y1="90" x2="195" y2="90" stroke="var(--muted-foreground)" stroke-width="1" />
+      
+      <!-- Footing -->
+      <rect x="75" y="72" width="55" height="18" fill="var(--foreground)" opacity="0.85" rx="2" />
+      <text x="102" y="84" fill="var(--primary-foreground)" font-size="9" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Footing (B)</text>
+      
+      <!-- Elastic wedge -->
+      <polygon points="75,90 130,90 102.5,115" fill="var(--muted-foreground)" opacity="0.2" stroke="var(--foreground)" stroke-width="1.2" />
+      
+      <!-- Slip surfaces ending in soil -->
+      <path d="M 102.5 115 Q 60 120 35 105" fill="none" stroke="var(--foreground)" stroke-width="1.8" stroke-dasharray="4 2" />
+      <path d="M 102.5 115 Q 145 120 170 105" fill="none" stroke="var(--foreground)" stroke-width="1.8" stroke-dasharray="4 2" />
+      
+      <!-- Features bullets -->
+      <text x="15" y="150" fill="var(--foreground)" font-size="10" font-family="system-ui, sans-serif">• Rupture ends inside soil mass</text>
+      <text x="15" y="168" fill="var(--foreground)" font-size="10" font-family="system-ui, sans-serif">• Minor / slight ground heave</text>
+      <text x="15" y="186" fill="var(--foreground)" font-size="10" font-family="system-ui, sans-serif">• Significant progressive settlement</text>
+      <text x="15" y="202" fill="var(--pastel-sky-foreground, #0ea5e9)" font-size="9.5" font-weight="bold" font-family="system-ui, sans-serif">No distinct peak on curve</text>
+    </g>
+
+    <!-- Panel 3: Punching Shear -->
+    <g transform="translate(455, 10)">
+      <rect x="0" y="0" width="210" height="210" fill="var(--secondary)" rx="6" opacity="0.5" />
+      <text x="105" y="22" fill="var(--foreground)" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Punching Shear Failure</text>
+      <text x="105" y="37" fill="var(--muted-foreground)" font-size="10" text-anchor="middle" font-family="system-ui, sans-serif">Loose Sand (Dr &lt; 35%) / Soft Clay</text>
+      
+      <!-- Flat ground (zero heave) -->
+      <line x1="10" y1="75" x2="200" y2="75" stroke="var(--muted-foreground)" stroke-width="1" />
+      
+      <!-- Footing plunged down -->
+      <rect x="77" y="88" width="55" height="18" fill="var(--foreground)" opacity="0.85" rx="2" />
+      <text x="105" y="100" fill="var(--primary-foreground)" font-size="9" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Footing (B)</text>
+      
+      <!-- Vertical shear failure lines -->
+      <line x1="77" y1="75" x2="77" y2="135" stroke="var(--foreground)" stroke-width="1.8" stroke-dasharray="3 3" />
+      <line x1="132" y1="75" x2="132" y2="135" stroke="var(--foreground)" stroke-width="1.8" stroke-dasharray="3 3" />
+      <polygon points="77,106 132,106 104.5,125" fill="var(--muted-foreground)" opacity="0.15" stroke="var(--foreground)" stroke-width="1" />
+      
+      <!-- Features bullets -->
+      <text x="15" y="150" fill="var(--foreground)" font-size="10" font-family="system-ui, sans-serif">• Vertical shearing around edges</text>
+      <text x="15" y="168" fill="var(--foreground)" font-size="10" font-family="system-ui, sans-serif">• Zero heave / no surface bulging</text>
+      <text x="15" y="186" fill="var(--foreground)" font-size="10" font-family="system-ui, sans-serif">• Continuous plunging settlement</text>
+      <text x="15" y="202" fill="var(--pastel-lavender-foreground, #a855f7)" font-size="9.5" font-weight="bold" font-family="system-ui, sans-serif">Linear-elastic then plunge</text>
+    </g>
+  </svg>
+</div>
+
+=== [5] ID: 2024-Q3a | Year: 2024 | Q: Q.3 (a) | Unit: 3 ===
+QUESTION: List out the major criteria to be satisfied in the design of the foundation.
+SOLUTION:
+<strong>Major Design Criteria for Foundations:</strong><br>
+<span class="is-code-chip">IS: 1904 &amp; IS: 6403</span><br>
+1. <strong>Safety Against Shear Failure:</strong> Applied foundation pressure must not exceed safe bearing capacity, maintaining a factor of safety FOS ≥ 2.5 to 3.0.<br>
+2. <strong>Settlement Limits:</strong> Total and differential settlements must stay within safe limits (IS: 1904: max 40 mm in sand, 65 mm in clay; angular distortion ≤ 1/500) to avoid building damage.<br>
+3. <strong>Adequate Depth:</strong> Foundation must be placed below topsoil, frost line, and seasonal moisture swelling zone (minimum depth 0.5 m to 1.0 m).
+
+=== [6] ID: 2024-Q3b | Year: 2024 | Q: Q.3 (b) | Unit: 3 ===
+QUESTION: Write brief notes on 'Settlement of foundation'.
+SOLUTION:
+<strong>Settlement of Foundation (IS: 1904):</strong><br>
+Total settlement consists of three parts:<br>
+<code>S_{total} = S_i + S_c + S_s</code><br>
+1. <strong>Immediate Settlement (S<sub>i</sub>):</strong> Elastic deformation occurring instantly upon loading without volume change.<br>
+2. <strong>Consolidation Settlement (S<sub>c</sub>):</strong> Time-dependent settlement in saturated clay as pore water squeezes out under load.<br>
+3. <strong>Secondary Settlement (S<sub>s</sub>):</strong> Very slow plastic realignment of clay particles after excess pore pressure is gone.<br>
+Permissible total settlement: 40 mm in sand, 65 mm in clay.
+
+=== [7] ID: 2024-Q4a | Year: 2024 | Q: Q.4 (a) | Unit: 4 ===
+QUESTION: Write short notes on group action of piles.
+SOLUTION:
+<strong>Group Action of Piles (IS: 2911):</strong><br>
+1. <strong>Group Action:</strong> Piles are installed in clusters connected by a rigid pile cap. Due to overlapping stress zones, group capacity is not always equal to single pile capacity × n.<br>
+2. <strong>Failure Modes in Clay:</strong> Piles can fail individually (Q = n · Q<sub>u</sub>) or as one large solid block (Q<sub>block</sub>). Actual capacity is the <strong>smaller</strong> of the two.<br>
+3. <strong>Group Efficiency (η<sub>g</sub>):</strong> η<sub>g</sub> = Q<sub>group</sub> / (n · Q<sub>single</sub>) × 100%. In sands η<sub>g</sub> &gt; 100% due to soil compaction; in clays η<sub>g</sub> ≤ 100%.<br>
+4. <strong>Standard Spacing:</strong> Center-to-center pile spacing is 2.5 d to 3.0 d for friction piles.
+
+=== [8] ID: 2024-Q4b | Year: 2024 | Q: Q.4 (b) | Unit: 4 ===
+QUESTION: Describe about under-reamed pile foundation.
+SOLUTION:
+<strong>Under-Reamed Pile Foundation (IS: 2911 Pt 3):</strong><br>
+1. <strong>Purpose:</strong> Bored concrete piles with enlarged bulbs, specifically designed for expansive soils (Black Cotton Soil) that shrink and swell.<br>
+2. <strong>Bulb Dimensions:</strong> Bulb diameter D = 2.0 to 2.5 times the stem diameter d.<br>
+3. <strong>Bulb Depth:</strong> Placed at depth &gt; 1.5 m to 3.5 m, well below the active seasonal moisture zone.<br>
+4. <strong>Function:</strong> Bulb anchors the pile against upward swelling forces and provides large bearing area for downward loads.
+
+=== [9] ID: 2024-Q5a | Year: 2024 | Q: Q.5 (a) | Unit: 5 ===
+QUESTION: List out the objectives of soil exploration.
+SOLUTION:
+<strong>Objectives of Soil Exploration (IS: 1892):</strong><br>
+1. <strong>Soil Profile:</strong> Determine the depth, thickness, and types of soil and rock layers.<br>
+2. <strong>Water Table:</strong> Locate groundwater level and observe seasonal fluctuations.<br>
+3. <strong>Engineering Properties:</strong> Collect samples to test shear strength (c, φ), compressibility (C<sub>c</sub>), and permeability.<br>
+4. <strong>Foundation Selection:</strong> Select the safest and most economical foundation type and depth.<br>
+5. <strong>Construction Safety:</strong> Anticipate excavation cave-ins, dewatering needs, and expansive clay problems.
+
+=== [10] ID: 2024-Q5b | Year: 2024 | Q: Q.5 (b) | Unit: 5 ===
+QUESTION: Sketch a typical borelog and describe its features.
+SOLUTION:
+<strong>Typical Borelog Layout &amp; Features (IS: 1892):</strong><br>
+1. <strong>Header Information:</strong> Project name, Borehole No (BH-01), ground elevation (RL), date, and drilling method.<br>
+2. <strong>Key Columns:</strong> Depth range (m), standard soil hatch symbol, soil description (CLAY, SAND, ROCK), water table marker (GWT), and SPT N-values.<br>
+<div class="sol-diagram-box">
+  <div class="sol-diagram-title">Figure: Typical Soil Investigation Borelog Layout (IS: 1892)</div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 280" class="sol-diagram-svg" width="100%" style="max-width:520px;height:auto;display:block;">
+    <rect width="520" height="280" fill="var(--card)" rx="8" />
+    <g transform="translate(20, 15)">
+      <rect x="0" y="0" width="480" height="32" fill="var(--secondary)" rx="4" />
+      <text x="10" y="20" fill="var(--foreground)" font-size="10.5" font-weight="bold" font-family="system-ui, sans-serif">BORELOG: BH-01 | Location: Pier P2 | GL: +100.00 m | Method: Rotary / Wash Boring (IS: 1892)</text>
+      
+      <g transform="translate(0, 40)">
+        <rect x="0" y="0" width="480" height="24" fill="var(--muted)" />
+        <text x="25" y="16" fill="var(--foreground)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Depth</text>
+        <text x="75" y="16" fill="var(--foreground)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Soil Hatch</text>
+        <text x="190" y="16" fill="var(--foreground)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Strata Description (IS Classification)</text>
+        <text x="345" y="16" fill="var(--foreground)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Water Table</text>
+        <text x="435" y="16" fill="var(--foreground)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">SPT N (N1)</text>
+        
+        <line x1="0" y1="24" x2="480" y2="24" stroke="var(--foreground)" stroke-width="1" />
+        
+        <!-- Layer 1: 0 - 2.5m -->
+        <rect x="50" y="24" width="50" height="36" fill="var(--secondary)" opacity="0.6" />
+        <text x="25" y="46" fill="var(--foreground)" font-size="9" text-anchor="middle" font-family="system-ui, sans-serif">0.0 - 2.5 m</text>
+        <text x="75" y="46" fill="var(--muted-foreground)" font-size="11" text-anchor="middle" font-family="system-ui, sans-serif">≡ ≡ ≡</text>
+        <text x="120" y="42" fill="var(--foreground)" font-size="9" font-weight="bold" font-family="system-ui, sans-serif">Firm Brown Silty CLAY (CI)</text>
+        <text x="120" y="54" fill="var(--muted-foreground)" font-size="8" font-family="system-ui, sans-serif">Medium plasticity, LL=38%, PL=21%</text>
+        <text x="435" y="46" fill="var(--foreground)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">6 (8)</text>
+        <line x1="0" y1="60" x2="480" y2="60" stroke="var(--muted-foreground)" stroke-width="0.5" />
+        
+        <!-- Layer 2: 2.5 - 6.0m -->
+        <rect x="50" y="60" width="50" height="44" fill="var(--secondary)" opacity="0.4" />
+        <text x="25" y="85" fill="var(--foreground)" font-size="9" text-anchor="middle" font-family="system-ui, sans-serif">2.5 - 6.0 m</text>
+        <text x="75" y="85" fill="var(--muted-foreground)" font-size="9" text-anchor="middle" font-family="system-ui, sans-serif">∴ ∴ ∴</text>
+        <text x="120" y="80" fill="var(--foreground)" font-size="9" font-weight="bold" font-family="system-ui, sans-serif">Medium Dense Grey SAND (SP-SM)</text>
+        <text x="120" y="92" fill="var(--muted-foreground)" font-size="8" font-family="system-ui, sans-serif">Sub-angular quartz grains, Dr ≈ 48%</text>
+        
+        <!-- GWT -->
+        <polygon points="345,63 340,69 350,69" fill="var(--pastel-sky-foreground, #0ea5e9)" />
+        <line x1="337" y1="71" x2="353" y2="71" stroke="var(--pastel-sky-foreground, #0ea5e9)" stroke-width="1.5" />
+        <line x1="340" y1="73" x2="350" y2="73" stroke="var(--pastel-sky-foreground, #0ea5e9)" stroke-width="1" />
+        <text x="345" y="86" fill="var(--pastel-sky-foreground, #0ea5e9)" font-size="8.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">GWT -2.5m</text>
+        
+        <text x="435" y="85" fill="var(--foreground)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">18 (19)</text>
+        <line x1="0" y1="104" x2="480" y2="104" stroke="var(--muted-foreground)" stroke-width="0.5" />
+        
+        <!-- Layer 3: 6.0 - 10.0m -->
+        <rect x="50" y="104" width="50" height="44" fill="var(--secondary)" opacity="0.5" />
+        <text x="25" y="128" fill="var(--foreground)" font-size="9" text-anchor="middle" font-family="system-ui, sans-serif">6.0 - 10.0 m</text>
+        <text x="75" y="128" fill="var(--muted-foreground)" font-size="9" text-anchor="middle" font-family="system-ui, sans-serif">o o ∴</text>
+        <text x="120" y="123" fill="var(--foreground)" font-size="9" font-weight="bold" font-family="system-ui, sans-serif">Dense Coarse SAND &amp; GRAVEL (GW)</text>
+        <text x="120" y="135" fill="var(--muted-foreground)" font-size="8" font-family="system-ui, sans-serif">Compacted stratum, Dr ≈ 76%</text>
+        <text x="435" y="128" fill="var(--foreground)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">34 (31)</text>
+        <line x1="0" y1="148" x2="480" y2="148" stroke="var(--muted-foreground)" stroke-width="0.5" />
+        
+        <!-- Layer 4: > 10.0m -->
+        <rect x="50" y="148" width="50" height="40" fill="var(--muted)" />
+        <text x="25" y="172" fill="var(--foreground)" font-size="9" text-anchor="middle" font-family="system-ui, sans-serif">&gt; 10.0 m</text>
+        <text x="75" y="172" fill="var(--foreground)" font-size="9.5" text-anchor="middle" font-family="system-ui, sans-serif">// // //</text>
+        <text x="120" y="167" fill="var(--foreground)" font-size="9" font-weight="bold" font-family="system-ui, sans-serif">Sandstone BEDROCK (Competent Rock)</text>
+        <text x="120" y="179" fill="var(--muted-foreground)" font-size="8" font-family="system-ui, sans-serif">TCR = 85%, RQD = 72%</text>
+        <text x="435" y="172" fill="var(--pastel-peach-foreground, #f97316)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">&gt; 50 (Refusal)</text>
+        <line x1="0" y1="188" x2="480" y2="188" stroke="var(--foreground)" stroke-width="1" />
+      </g>
+      
+      <text x="240" y="252" fill="var(--muted-foreground)" font-size="8.5" text-anchor="middle" font-family="system-ui, sans-serif">Standard Subsurface Investigation Borelog Format (IS: 1892-1979)</text>
+    </g>
+  </svg>
+</div>
+
+=== [11] ID: 2023-Q1a | Year: 2023 | Q: Q.1 (a) | Unit: 1 ===
+QUESTION: What are different Types of Earth Pressure and what are different theories of Earth Pressures?
+SOLUTION:
+<strong>Types of Earth Pressure and Classical Theories:</strong><br>
+1. <strong>Three Types of Earth Pressure:</strong><br>
+• <strong>Active Pressure (P<sub>a</sub>):</strong> Wall moves away from soil; pressure drops to minimum.<br>
+• <strong>Passive Pressure (P<sub>p</sub>):</strong> Wall is pushed into soil; pressure reaches maximum.<br>
+• <strong>At-Rest Pressure (P<sub>0</sub>):</strong> Wall undergoes zero movement.<br>
+<code>P_a < P_0 < P_p</code><br>
+2. <strong>Two Classical Theories:</strong><br>
+• <strong>Rankine's Theory (1857):</strong> Considers plastic equilibrium of a semi-infinite soil mass. Assumes vertical, smooth (frictionless) wall back (δ = 0).<br>
+• <strong>Coulomb's Theory (1776):</strong> Considers equilibrium of a sliding rigid wedge. Accounts for wall friction (δ &gt; 0) and inclined wall back.
+
+=== [12] ID: 2023-Q2a | Year: 2023 | Q: Q.2 (a) | Unit: 3 ===
+QUESTION: What do you mean by bearing capacity? What are the different suffixes to be used before bearing capacity?
+SOLUTION:
+<strong>Bearing Capacity Definitions &amp; Common Suffixes:</strong><br>
+<strong>Bearing Capacity:</strong> Load-carrying ability of soil per unit area without shear failure or excessive settlement.<br>
+1. <strong>Ultimate (q<sub>ult</sub>):</strong> Minimum gross contact pressure causing soil shear failure.<br>
+2. <strong>Net Ultimate (q<sub>net_ult</sub>):</strong> Failure pressure minus overburden pressure (q<sub>ult</sub> - γD<sub>f</sub>).<br>
+3. <strong>Safe (q<sub>safe</sub>):</strong> Safe gross pressure including factor of safety: q<sub>net_ult</sub> / FOS + γD<sub>f</sub> (FOS = 2.5 to 3.0).<br>
+4. <strong>Allowable Bearing Pressure (q<sub>a</sub>):</strong> Design pressure satisfying <strong>both</strong> shear safety (FOS ≥ 2.5) and permissible settlement limits.
+
+=== [13] ID: 2023-Q3a | Year: 2023 | Q: Q.3 (a) | Unit: 2 ===
+QUESTION: Discuss Coulomb's law of shear strength of soil.
+SOLUTION:
+<strong>Coulomb's Law of Shear Strength of Soil:</strong><br>
+1. <strong>Historical Total Stress Equation (1776):</strong> Shear strength consists of cohesion and internal friction:<br>
+<code>\tau = c + \sigma \tan\phi</code><br>
+Where c = cohesion, σ = normal stress, φ = friction angle.<br>
+2. <strong>Terzaghi's Effective Stress Equation (1925):</strong> Shear strength depends strictly on effective stress between soil grains:<br>
+<code>\tau_f = c' + \sigma' \tan\phi' = c' + (\sigma - u) \tan\phi'</code><br>
+Where c' = effective cohesion, σ' = effective stress, u = pore water pressure, φ' = effective friction angle.
+
+=== [14] ID: 2023-Q4a | Year: 2023 | Q: Q.4 (a) | Unit: 3 ===
+QUESTION: What are different types of shallow foundations? Draw neat sketch of strap footing.
+SOLUTION:
+<strong>Types of Shallow Foundations &amp; Strap Footing:</strong><br>
+1. <strong>Types:</strong> Isolated pad footing, Strip/wall footing, Combined footing, Strap footing, Raft (mat) foundation.<br>
+2. <strong>Strap Footing:</strong> Used when an exterior column sits on a property line where footing cannot extend outside. A rigid RCC strap beam connects the eccentric exterior footing to an adjacent interior footing.<br>
+3. <strong>Key Rule:</strong> The strap beam is suspended above ground (no contact with soil underneath) so it only transfers bending moment and shear.<br>
+<div class="sol-diagram-box">
+  <div class="sol-diagram-title">Figure: Elevation &amp; Structural Action of Strap (Cantilever) Footing</div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 220" class="sol-diagram-svg" width="100%" style="max-width:520px;height:auto;display:block;">
+    <rect width="520" height="220" fill="var(--card)" rx="8" />
+    <g transform="translate(25, 20)">
+      <!-- Property Line -->
+      <line x1="25" y1="10" x2="25" y2="180" stroke="var(--pastel-peach-foreground, #f97316)" stroke-width="2" stroke-dasharray="6 3" />
+      <text x="20" y="20" fill="var(--pastel-peach-foreground, #f97316)" font-size="10" font-weight="bold" text-anchor="end" font-family="system-ui, sans-serif">Property Line</text>
+      <text x="20" y="32" fill="var(--muted-foreground)" font-size="8.5" text-anchor="end" font-family="system-ui, sans-serif">(Zero encroachment)</text>
+      
+      <!-- Exterior Column (Column 1) -->
+      <rect x="25" y="35" width="24" height="45" fill="var(--foreground)" opacity="0.9" />
+      <text x="37" y="28" fill="var(--foreground)" font-size="10.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Col 1 (P1)</text>
+      
+      <!-- Exterior Footing (Eccentric) -->
+      <rect x="25" y="80" width="85" height="28" fill="var(--secondary)" stroke="var(--foreground)" stroke-width="1.5" />
+      <text x="67" y="98" fill="var(--foreground)" font-size="10" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Eccentric Footing</text>
+      
+      <!-- Interior Column (Column 2) -->
+      <rect x="350" y="35" width="26" height="45" fill="var(--foreground)" opacity="0.9" />
+      <text x="363" y="28" fill="var(--foreground)" font-size="10.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Col 2 (P2)</text>
+      
+      <!-- Interior Footing (Concentric) -->
+      <rect x="305" y="80" width="115" height="28" fill="var(--secondary)" stroke="var(--foreground)" stroke-width="1.5" />
+      <text x="363" y="98" fill="var(--foreground)" font-size="10" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Concentric Footing</text>
+      
+      <!-- Rigid Strap Beam -->
+      <rect x="35" y="60" width="330" height="22" fill="var(--muted)" stroke="var(--foreground)" stroke-width="1.8" rx="2" />
+      <text x="200" y="75" fill="var(--foreground)" font-size="10.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Rigid Strap Beam (Cantilever Moment Transfer)</text>
+      
+      <!-- Air Gap / No soil pressure indicator -->
+      <rect x="110" y="82" width="195" height="18" fill="none" stroke="var(--muted-foreground)" stroke-width="1" stroke-dasharray="3 3" />
+      <text x="207" y="95" fill="var(--muted-foreground)" font-size="9" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">AIR GAP: No contact with soil underneath</text>
+      <text x="207" y="106" fill="var(--muted-foreground)" font-size="8" text-anchor="middle" font-family="system-ui, sans-serif">(Transfers shear &amp; moment only; zero upward bearing)</text>
+      
+      <!-- Soil Reaction Arrows -->
+      <line x1="45" y1="130" x2="45" y2="110" stroke="var(--foreground)" stroke-width="1.5" />
+      <polygon points="45,108 42,115 48,115" fill="var(--foreground)" />
+      <line x1="67" y1="130" x2="67" y2="110" stroke="var(--foreground)" stroke-width="1.5" />
+      <polygon points="67,108 64,115 70,115" fill="var(--foreground)" />
+      <line x1="90" y1="130" x2="90" y2="110" stroke="var(--foreground)" stroke-width="1.5" />
+      <polygon points="90,108 87,115 93,115" fill="var(--foreground)" />
+      <text x="67" y="145" fill="var(--foreground)" font-size="9.5" text-anchor="middle" font-family="system-ui, sans-serif">Soil Reaction R1</text>
+      
+      <line x1="325" y1="130" x2="325" y2="110" stroke="var(--foreground)" stroke-width="1.5" />
+      <polygon points="325,108 322,115 328,115" fill="var(--foreground)" />
+      <line x1="363" y1="130" x2="363" y2="110" stroke="var(--foreground)" stroke-width="1.5" />
+      <polygon points="363,108 360,115 366,115" fill="var(--foreground)" />
+      <line x1="400" y1="130" x2="400" y2="110" stroke="var(--foreground)" stroke-width="1.5" />
+      <polygon points="400,108 397,115 403,115" fill="var(--foreground)" />
+      <text x="363" y="145" fill="var(--foreground)" font-size="9.5" text-anchor="middle" font-family="system-ui, sans-serif">Soil Reaction R2</text>
+      
+      <!-- Design Criterion Note -->
+      <text x="235" y="175" fill="var(--foreground)" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Key Mechanism: Strap beam restrains rotation of eccentric exterior footing</text>
+    </g>
+  </svg>
+</div>
+
+=== [15] ID: 2022-Q1a | Year: 2022 | Q: Q.1 (a) | Unit: 1 ===
+QUESTION: Determine the depth of tension cracks developed if unsupported excavation is to be made in a soil layer of having &gamma; = 15 kN/m&sup3;, c = 30 kN/m² and &phi; = 10&deg;.
+SOLUTION:
+<strong>Given Parameters:</strong><br>
+&gamma; = 15 kN/m&sup3;, c = 30 kN/m&sup2;, &phi; = 10&deg;.<br>
+<strong>1. Rankine Active Earth Pressure Coefficient (K<sub>a</sub>):</strong><br>
+<code>K<sub>a</sub> = tan&sup2;(45&deg; - &phi;/2) = tan&sup2;(45&deg; - 5&deg;) = tan&sup2;(40&deg;) = 0.8391&sup2; = <strong>0.7041</strong></code>.<br>
+<code>&radic;K<sub>a</sub> = 0.8391</code>.<br>
+<strong>2. Depth of Tension Cracks (z<sub>c</sub>):</strong><br>
+Tensile stress at ground surface is <code>-2 c &radic;K<sub>a</sub></code>. Stress becomes zero at depth:<br>
+<code>z<sub>c</sub> = 2 c / (&gamma; &radic;K<sub>a</sub>) = 2(30) / [ 15 &times; 0.8391 ] = 60 / 12.586 = <strong>4.77 m</strong></code>.<br>
+<strong>Depth of tension cracks developed = 4.77 m</strong>.<br>
+<em>(Critical unsupported excavation depth H<sub>c</sub> = 2 z<sub>c</sub> = 9.53 m).</em>
+
+=== [16] ID: 2022-Q1b | Year: 2022 | Q: Q.1 (b) | Unit: 1 ===
+QUESTION: Calculate the increase in active earth pressure intensity at the bottom of 5 m retaining wall, retaining the soil of &phi; = 30&deg; and &gamma; = 18 kN/m&sup3; due to the application of surcharge of 45 kN/m² at the top of the soil mass.
+SOLUTION:
+<strong>Given Parameters:</strong><br>
+Wall height H = 5 m, &phi; = 30&deg;, &gamma; = 18 kN/m&sup3;, Surcharge q = 45 kN/m&sup2;.<br>
+<strong>1. Rankine Active Pressure Coefficient:</strong><br>
+<code>K<sub>a</sub> = (1 - sin 30&deg;) / (1 + sin 30&deg;) = (1 - 0.5) / (1 + 0.5) = 1/3 = 0.3333</code>.<br>
+<strong>2. Increase in Active Earth Pressure Intensity:</strong><br>
+A uniform surface surcharge q transmits a constant horizontal stress increment across the full height of the wall:<br>
+<code>&Delta;p<sub>a</sub> = K<sub>a</sub> &middot; q = (1/3) &times; 45 = <strong>15.0 kN/m&sup2; (15 kPa)</strong></code>.<br>
+The active earth pressure intensity at the bottom increases by exactly <strong>15 kN/m&sup2;</strong>.
+
+=== [17] ID: 2022-Q2a | Year: 2022 | Q: Q.2 (a) | Unit: 2 ===
+QUESTION: List the basic differences between a box shear test and a triaxial shear test for soils.
+SOLUTION:
+<strong>Differences Between Direct Shear Box Test and Triaxial Shear Test:</strong><br>
+<div class="sol-table-wrap">
+<table class="sol-table">
+<thead>
+<tr>
+<th>Feature</th>
+<th>Direct Shear Test (IS: 2720 Pt 13)</th>
+<th>Triaxial Shear Test (IS: 2720 Pt 12)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Failure Plane</strong></td>
+<td>Forced along fixed horizontal plane.</td>
+<td>Fails along natural weakest plane (45° + φ/2).</td>
+</tr>
+<tr>
+<td><strong>2. Drainage Control</strong></td>
+<td>Poor drainage control; cannot measure pore pressure.</td>
+<td>Complete drainage control; measures pore pressure u accurately.</td>
+</tr>
+<tr>
+<td><strong>3. Stress Distribution</strong></td>
+<td>Non-uniform with stress concentrations at edges.</td>
+<td>Uniform 3D stress throughout cylindrical sample.</td>
+</tr>
+<tr>
+<td><strong>4. Best Suited For</strong></td>
+<td>Clean sands and gravels.</td>
+<td>All soils (clays, silts, sands) under UU, CU, and CD.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+=== [18] ID: 2022-Q2b | Year: 2022 | Q: Q.2 (b) | Unit: 2 ===
+QUESTION: Describe unconsolidated undrained test and a drained test.
+SOLUTION:
+<strong>Comparison of UU and CD Shear Tests:</strong><br>
+1. <strong>Unconsolidated Undrained (UU) Test:</strong><br>
+• Drainage valve closed during both confining pressure and shearing.<br>
+• Very fast test (5 to 10 minutes); excess pore pressure does not escape.<br>
+• Measures undrained shear strength (c<sub>u</sub>).<br>
+<em>Example:</em> Foundation stability right after rapid construction on clay.<br>
+2. <strong>Consolidated Drained (CD) Test:</strong><br>
+• Drainage valve open during both stages.<br>
+• Very slow test (days to weeks); zero excess pore pressure builds up.<br>
+• Measures drained effective strength parameters (c', φ').<br>
+<em>Example:</em> Long-term permanent slope stability after decades.
+
+=== [19] ID: 2022-Q3a | Year: 2022 | Q: Q.3 (a) | Unit: 3 ===
+QUESTION: List the assumptions made in Terzaghi's analysis of bearing capacity of a continuous footing.
+SOLUTION:
+<strong>Assumptions Made in Terzaghi's Bearing Capacity Theory:</strong><br>
+1. Footing is a continuous strip with infinite length (L/B → ∞).<br>
+2. Shallow foundation: Depth D<sub>f</sub> ≤ Width B.<br>
+3. Base of footing is rough and rigid (no slipping at base).<br>
+4. Soil above base level is replaced by equivalent surcharge q = γD<sub>f</sub> (its shear strength is neglected).<br>
+5. General shear failure occurs in soil.<br>
+6. Soil is homogeneous, isotropic, and obeys Mohr-Coulomb law (τ = c + σ tanφ).
+
+=== [20] ID: 2022-Q3b | Year: 2022 | Q: Q.3 (b) | Unit: 3 ===
+QUESTION: Discuss the various factors that affect the bearing capacity of a shallow footing.
+SOLUTION:
+<strong>Factors Affecting Bearing Capacity of a Shallow Footing:</strong><br>
+1. <strong>Soil Strength (c and φ):</strong> Higher cohesion and friction angle exponentially increase bearing capacity.<br>
+2. <strong>Footing Width (B):</strong> In sand, wider footings provide higher bearing capacity (0.5 γ B N<sub>γ</sub>).<br>
+3. <strong>Depth of Embedment (D<sub>f</sub>):</strong> Deeper footing has higher confining surcharge (γ D<sub>f</sub> N<sub>q</sub>).<br>
+4. <strong>Water Table:</strong> Rising water table submerges soil, reducing bearing capacity by up to 50%.<br>
+5. <strong>Footing Shape:</strong> Circular and square footings have higher capacities than strip footings.
+
+=== [21] ID: 2022-Q4a | Year: 2022 | Q: Q.4 (a) | Unit: 4 ===
+QUESTION: Explain the function of pile foundation.
+SOLUTION:
+<strong>Functions of Pile Foundation:</strong><br>
+1. <strong>End-Bearing:</strong> Transfers heavy building loads through weak soft soil down to hard bedrock or dense gravel.<br>
+2. <strong>Skin Friction:</strong> Distributes load through friction along the pile shaft in deep uniform clay or sand.<br>
+3. <strong>Resist Uplift:</strong> Anchors transmission towers and tall chimneys against wind overturning.<br>
+4. <strong>Resist Lateral Loads:</strong> Resists water wave and impact forces in bridge piers and harbour docks.<br>
+5. <strong>Soil Compaction:</strong> Driven piles compact loose sand deposits, preventing earthquake liquefaction.
+
+=== [22] ID: 2022-Q4b | Year: 2022 | Q: Q.4 (b) | Unit: 4 ===
+QUESTION: Discuss the basic difference in the bearing capacity computation of shallow and deep foundations.
+SOLUTION:
+<strong>Difference in Bearing Capacity of Shallow and Deep Foundations:</strong><br>
+<div class="sol-table-wrap">
+<table class="sol-table">
+<thead>
+<tr>
+<th>Feature</th>
+<th>Shallow Foundation (IS: 6403)</th>
+<th>Deep Foundation / Piles (IS: 2911)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Load Transfer</strong></td>
+<td>Base contact bearing pressure only (q<sub>u</sub>).</td>
+<td>Dual components: Base end-bearing (Q<sub>b</sub>) PLUS shaft friction (Q<sub>s</sub>): Q<sub>u</sub> = Q<sub>b</sub> + Q<sub>s</sub>.</td>
+</tr>
+<tr>
+<td><strong>2. Surcharge Effect</strong></td>
+<td>Flat surface surcharge q = γD<sub>f</sub>.</td>
+<td>Vertical stress increases up to critical depth (10d-20d), then stays constant.</td>
+</tr>
+<tr>
+<td><strong>3. Clay Factor (N<sub>c</sub>)</strong></td>
+<td>Terzaghi N<sub>c</sub> = 5.7 (strip footing).</td>
+<td>Deep spherical cavity expansion N<sub>c</sub>* = 9.0 (Skempton).</td>
+</tr>
+<tr>
+<td><strong>4. Failure Surface</strong></td>
+<td>Failure planes burst out to ground surface with heave.</td>
+<td>Localized failure confined around the pile tip and shaft.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+=== [23] ID: 2022-Q5a | Year: 2022 | Q: Q.5 (a) | Unit: 5 ===
+QUESTION: List the laboratory and field tests used for the soil investigation work.
+SOLUTION:
+<strong>Laboratory and Field Tests in Soil Investigation:</strong><br>
+<span class="is-code-chip">IS: 1892 &amp; IS: 2720</span><br>
+1. <strong>Field (In-Situ) Tests:</strong><br>
+• Standard Penetration Test (SPT, IS: 2131)<br>
+• Cone Penetration Test (CPT, IS: 4968)<br>
+• Plate Load Test (PLT, IS: 1888)<br>
+• Field Vane Shear Test (IS: 4434, for soft clay)<br>
+2. <strong>Laboratory Tests:</strong><br>
+• Grain Size Sieve Analysis &amp; Atterberg Limits (LL, PL, PI)<br>
+• Direct Shear Box Test (IS: 2720 Pt 13)<br>
+• Triaxial Shear Test (UU, CU, CD per Pt 12)<br>
+• 1D Oedometer Consolidation Test (IS: 2720 Pt 15)
+
+=== [24] ID: 2022-Q5b | Year: 2022 | Q: Q.5 (b) | Unit: 5 ===
+QUESTION: Describe the purpose of soil investigation.
+SOLUTION:
+<strong>Purpose of Soil Investigation (IS: 1892):</strong><br>
+1. <strong>Foundation Selection:</strong> Decides whether shallow footings, raft, or deep piles are required.<br>
+2. <strong>Safe Bearing Capacity:</strong> Provides measured shear parameters (c, φ) to calculate safe bearing capacity without risk of shear failure.<br>
+3. <strong>Settlement Prediction:</strong> Predicts total and differential settlements, verifying they stay within safe structural limits (IS: 1904).<br>
+4. <strong>Earth Pressure Design:</strong> Provides soil properties (K<sub>a</sub>, K<sub>p</sub>) to design retaining walls and basement shoring.<br>
+5. <strong>Groundwater Conditions:</strong> Locates water table and identifies dewatering needs during construction.
+

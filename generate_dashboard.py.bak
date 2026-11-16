@@ -1,0 +1,1998 @@
+import json
+import re
+import compile_data
+
+# Load canonical topics
+with open("canonical_data.json", "r", encoding="utf-8") as f:
+    canonical_topics = json.load(f)
+
+raw_questions = compile_data.questions
+
+def format_solution(html):
+    if not html:
+        return ""
+    html = html.replace("<br>\n<br>", "<br>").replace("<br><br>", "<br>")
+    
+    parts = re.split(r'<br>\s*(?=<strong>)', html)
+    formatted = []
+    for p in parts:
+        p = p.strip()
+        if not p:
+            continue
+        p = re.sub(r'<em>Example:?</em>', '<span class="example-tag">Example</span>', p)
+        
+        # Detect numbered/bullet lists inside this step block
+        lines = [line.strip() for line in re.split(r'<br\s*/?>|\n', p) if line.strip()]
+        if len(lines) > 1 and any(re.match(r'^(\d+\.|[a-z]\)|[•\-\*])\s+', l) for l in lines):
+            output_parts = []
+            in_list = False
+            for l in lines:
+                m = re.match(r'^(\d+\.|[a-z]\)|[•\-\*])\s+(.*)', l)
+                if m:
+                    if not in_list:
+                        output_parts.append('<ul class="sol-list">')
+                        in_list = True
+                    output_parts.append(f'<li><span class="sol-item-num">{m.group(1)}</span> {m.group(2)}</li>')
+                else:
+                    if in_list:
+                        output_parts.append('</ul>')
+                        in_list = False
+                    output_parts.append(f'<div class="sol-text-block">{l}</div>')
+            if in_list:
+                output_parts.append('</ul>')
+            step_html = "".join(output_parts)
+        else:
+            step_html = "<br>".join(lines)
+            
+        formatted.append(f'<div class="sol-step">{step_html}</div>')
+    return "".join(formatted)
+
+for q in raw_questions:
+    q['formatted_solution'] = format_solution(q['solution'])
+
+for c in canonical_topics:
+    c['formatted_solution'] = format_solution(c['master_solution'])
+
+canonical_json_str = json.dumps(canonical_topics).replace("</script>", "<\\/script>")
+raw_json_str = json.dumps(raw_questions).replace("</script>", "<\\/script>")
+
+html_template = f"""<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geotechnical Engineering - II (CE-41007) | PYQ Analysis &amp; High-Yield Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ----------------------------------------------------
+           STRICT DESIGN SYSTEM TOKENS & PURE BG SEPARATION
+           (ZERO BORDERS THROUGHOUT ENTIRE APPLICATION)
+           ---------------------------------------------------- */
+        :root {{
+            /* Strict Custom Typography System Tokens */
+            --font-size-h1: 56px;
+            --line-height-h1: 72px;
+            --font-size-h2: 40px;
+            --line-height-h2: 56px;
+            --font-size-h3: 28px;
+            --line-height-h3: 40px;
+            --font-size-h4: 26px;
+            --line-height-h4: 32px;
+            --font-size-h5: 22px;
+            --line-height-h5: 32px;
+            --font-size-h6: 20px;
+            --line-height-h6: 28px;
+            --font-size-body-large: 16px;
+            --line-height-body-large: 27px;
+            --font-size-body-medium: 14.5px;
+            --line-height-body-medium: 22px;
+            --font-size-body-small: 13px;
+            --line-height-body-small: 18px;
+            --font-size-button: 14px;
+            --line-height-button: 21px;
+
+            /* Specific component scale constraints */
+            --font-size-stat: 24px;
+            --line-height-stat: 32px;
+            --font-size-overline: 11px;
+
+            /* Neutral Color Palette (Light Mode - Pure Background Separation) */
+            --background: #f1f5f9;
+            --foreground: #0f172a;
+            --card: #ffffff;
+            --card-foreground: #0f172a;
+            --popover: #ffffff;
+            --popover-foreground: #0f172a;
+            --primary: #0f172a;
+            --primary-foreground: #ffffff;
+            --secondary: #e2e8f0;
+            --secondary-hover: #cbd5e1;
+            --secondary-foreground: #0f172a;
+            --muted: #e2e8f0;
+            --muted-foreground: #64748b;
+            --input-bg: #e2e8f0;
+
+            /* Neutral Pastel Accents */
+            --pastel-sage-bg: #dcfce7;
+            --pastel-sage-foreground: #14532d;
+
+            --pastel-lavender-bg: #f3e8ff;
+            --pastel-lavender-foreground: #581c87;
+
+            --pastel-peach-bg: #ffedd5;
+            --pastel-peach-foreground: #7c2d12;
+
+            --pastel-sky-bg: #e0f2fe;
+            --pastel-sky-foreground: #0c4a6e;
+
+            --pastel-rose-bg: #ffe4e6;
+            --pastel-rose-foreground: #881337;
+
+            --pastel-sand-bg: #fef9c3;
+            --pastel-sand-foreground: #713f12;
+
+            --table-header-bg: #e2e8f0;
+            --table-row-hover: #f8fafc;
+            --table-row-alt: #fafafa;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+
+            --font-family-sans: "Aeonik", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-family-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }}
+
+        [data-theme="dark"] {{
+            /* Neutral Color Palette (Dark Mode - Pure Background Separation) */
+            --background: #080c14;
+            --foreground: #f8fafc;
+            --card: #121826;
+            --card-foreground: #f8fafc;
+            --popover: #121826;
+            --popover-foreground: #f8fafc;
+            --primary: #f8fafc;
+            --primary-foreground: #080c14;
+            --secondary: #1b2438;
+            --secondary-hover: #26334d;
+            --secondary-foreground: #f8fafc;
+            --muted: #1b2438;
+            --muted-foreground: #94a3b8;
+            --input-bg: #1b2438;
+
+            --pastel-sage-bg: rgba(34, 197, 94, 0.18);
+            --pastel-sage-foreground: #86efac;
+
+            --pastel-lavender-bg: rgba(168, 85, 247, 0.18);
+            --pastel-lavender-foreground: #d8b4fe;
+
+            --pastel-peach-bg: rgba(249, 115, 22, 0.18);
+            --pastel-peach-foreground: #fdba74;
+
+            --pastel-sky-bg: rgba(14, 165, 233, 0.18);
+            --pastel-sky-foreground: #7dd3fc;
+
+            --pastel-rose-bg: rgba(244, 63, 94, 0.18);
+            --pastel-rose-foreground: #fca5a5;
+
+            --pastel-sand-bg: rgba(234, 179, 8, 0.18);
+            --pastel-sand-foreground: #fde047;
+
+            --table-header-bg: #192236;
+            --table-row-hover: #161f30;
+            --table-row-alt: #0e1422;
+
+            --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.25);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.45);
+        }}
+
+        /* ZERO BORDERS ENFORCEMENT */
+        *, *::before, *::after {{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border: none !important;
+            outline: none;
+        }}
+
+        body {{
+            font-family: var(--font-family-sans);
+            background-color: var(--background);
+            color: var(--foreground);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }}
+
+        .container {{
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }}
+
+        @media (min-width: 640px) {{
+            .container {{
+                padding: 0 4.5rem;
+            }}
+        }}
+
+        @media (min-width: 1024px) {{
+            .container {{
+                padding: 0 6rem;
+            }}
+        }}
+
+        @media (min-width: 1440px) {{
+            .container {{
+                padding: 0 8rem;
+            }}
+        }}
+
+        /* Typography */
+        .text-h1 {{ font-size: var(--font-size-h1); line-height: var(--line-height-h1); font-weight: 700; color: var(--foreground); }}
+        .text-h2 {{ font-size: var(--font-size-h2); line-height: var(--line-height-h2); font-weight: 700; color: var(--foreground); }}
+        .text-h3 {{ font-size: var(--font-size-h3); line-height: var(--line-height-h3); font-weight: 500; color: var(--foreground); }}
+        .text-body-large {{ font-size: var(--font-size-body-large); line-height: var(--line-height-body-large); font-weight: 500; color: var(--foreground); }}
+        .text-body-medium {{ font-size: var(--font-size-body-medium); line-height: var(--line-height-body-medium); font-weight: 500; color: var(--foreground); }}
+        .text-body-small {{ font-size: var(--font-size-body-small); line-height: var(--line-height-body-small); font-weight: 400; color: var(--muted-foreground); }}
+        .card-stat-number {{ font-size: var(--font-size-stat); line-height: var(--line-height-stat); font-weight: 600; color: var(--foreground); }}
+        .section-header-title {{ font-size: var(--font-size-h6); line-height: var(--line-height-h6); font-weight: 600; color: var(--foreground); display: flex; align-items: center; gap: 0.5rem; }}
+        .card-overline {{ font-size: var(--font-size-overline); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted-foreground); display: inline-block; }}
+
+        .icon {{
+            display: inline-block;
+            width: 1.125rem;
+            height: 1.125rem;
+            stroke-width: 2;
+            stroke: currentColor;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }}
+
+        .icon-sm {{ width: 0.875rem; height: 0.875rem; }}
+        .icon-lg {{ width: 1.375rem; height: 1.375rem; }}
+
+        /* ----------------------------------------------------
+           STICKY NAVBAR WITH BRAND BADGE & TABS VIEW
+           ---------------------------------------------------- */
+        .header {{
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--card);
+            box-shadow: var(--shadow-sm);
+            transition: background-color 0.2s ease;
+        }}
+
+        .nav {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            gap: 1rem;
+        }}
+
+        .brand {{
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+            white-space: nowrap;
+            text-decoration: none;
+            cursor: pointer;
+        }}
+
+        .brand-badge {{
+            background-color: var(--pastel-sage-bg);
+            color: var(--pastel-sage-foreground);
+            font-size: var(--font-size-overline);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.3rem 0.6rem;
+            border-radius: var(--radius-sm);
+            flex-shrink: 0;
+        }}
+
+        .brand-title {{
+            font-size: 1.0625rem;
+            font-weight: 700;
+            color: var(--foreground);
+            letter-spacing: -0.015em;
+        }}
+
+        .nav-links {{
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            list-style: none;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }}
+
+        .nav-links::-webkit-scrollbar {{
+            display: none;
+        }}
+
+        .nav-link-btn {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.5rem 0.85rem;
+            background-color: transparent;
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            text-decoration: none;
+        }}
+
+        .nav-link-btn:hover {{
+            color: var(--foreground);
+            background-color: var(--secondary);
+        }}
+
+        .nav-link-btn.active {{
+            background-color: var(--secondary);
+            color: var(--foreground);
+            font-weight: 600;
+        }}
+
+        .nav-badge {{
+            font-size: 0.71875rem;
+            font-weight: 600;
+            padding: 0.15rem 0.45rem;
+            border-radius: var(--radius-full);
+            background-color: var(--background);
+            color: var(--muted-foreground);
+            line-height: 1.2;
+        }}
+
+        .nav-link-btn.active .nav-badge {{
+            background-color: var(--card);
+            color: var(--foreground);
+        }}
+
+        .nav-actions {{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }}
+
+        .theme-toggle-btn {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background-color: var(--secondary);
+            color: var(--foreground);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }}
+
+        .theme-toggle-btn:hover {{
+            background-color: var(--secondary-hover);
+        }}
+
+        .nav-link-timetable {{
+            background-color: var(--pastel-peach-bg) !important;
+            color: var(--pastel-peach-foreground) !important;
+            font-weight: 600 !important;
+        }}
+
+        /* ----------------------------------------------------
+           PAGE VIEWS (MULTI-VIEW TABBED APPLICATION)
+           ---------------------------------------------------- */
+        .app-page-view {{
+            display: none;
+            padding: 1.75rem 0 3rem;
+        }}
+
+        .app-page-view.active {{
+            display: block;
+        }}
+
+        .page-header-row {{
+            margin-bottom: 1.5rem;
+        }}
+
+        .page-title {{
+            font-size: clamp(1.75rem, 2.8vw, 2.25rem);
+            font-weight: 700;
+            color: var(--foreground);
+            letter-spacing: -0.02em;
+            margin-bottom: 0;
+        }}
+
+        .page-subtitle {{
+            font-size: 0.9375rem;
+            line-height: 1.55;
+            color: var(--muted-foreground);
+            max-width: 900px;
+        }}
+
+        /* ----------------------------------------------------
+           TABLES & STRUCTURED CONTAINERS
+           ---------------------------------------------------- */
+        .table-responsive-wrapper {{
+            background-color: var(--card);
+            border-radius: var(--radius-lg);
+            overflow-x: auto;
+            box-shadow: var(--shadow-sm);
+        }}
+
+        .master-data-table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.96875rem;
+            line-height: 1.6;
+            text-align: left;
+        }}
+
+        .master-data-table th {{
+            background-color: var(--table-header-bg);
+            color: var(--foreground);
+            font-size: var(--font-size-overline);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.875rem 1.25rem;
+            white-space: nowrap;
+        }}
+
+        .master-data-table td {{
+            padding: 1rem 1.25rem;
+            color: var(--foreground);
+            vertical-align: top;
+            background-color: var(--card);
+        }}
+
+        .master-data-table tr:hover td {{
+            background-color: var(--table-row-hover);
+        }}
+
+        .formula-chip {{
+            display: inline-block;
+            font-family: var(--font-family-mono);
+            font-size: 0.8125rem;
+            background-color: var(--secondary);
+            color: var(--foreground);
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-sm);
+            margin: 0.125rem 0.25rem 0.125rem 0;
+            line-height: 1.4;
+        }}
+
+        /* ----------------------------------------------------
+           STRUCTURED BULLETED LISTS FOR HIGH READABILITY
+           (ZERO RUN-ON CONTINUOUS TEXT ACROSS TABLES & CARDS)
+           ---------------------------------------------------- */
+        .table-list {{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }}
+
+        .table-list li {{
+            position: relative;
+            padding-left: 1.15rem;
+            font-size: 0.90625rem;
+            line-height: 1.5;
+            color: var(--foreground);
+        }}
+
+        .table-list li::before {{
+            content: "•";
+            position: absolute;
+            left: 0.1rem;
+            top: -0.05rem;
+            color: var(--muted-foreground);
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }}
+
+        .table-list-compact {{
+            gap: 0.3rem;
+        }}
+
+        .table-list-compact li {{
+            font-size: 0.84375rem;
+            line-height: 1.4;
+            white-space: nowrap;
+        }}
+
+        .formula-chip-sm {{
+            display: inline-block;
+            font-family: var(--font-family-mono);
+            font-size: 0.8125rem;
+            background-color: var(--secondary);
+            color: var(--foreground);
+            padding: 0.1rem 0.4rem;
+            border-radius: var(--radius-sm);
+            line-height: 1.35;
+            vertical-align: middle;
+        }}
+
+        .note-highlight {{
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: var(--radius-sm);
+            background-color: var(--pastel-amber-bg);
+            color: var(--pastel-amber-foreground);
+            line-height: 1.3;
+        }}
+
+        .note-highlight-green {{
+            background-color: var(--pastel-sage-bg);
+            color: var(--pastel-sage-foreground);
+        }}
+
+        .sol-list {{
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0.75rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }}
+
+        .sol-list li {{
+            position: relative;
+            padding-left: 1.25rem;
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--foreground);
+        }}
+
+        .sol-list li::before {{
+            content: "•";
+            position: absolute;
+            left: 0.2rem;
+            top: 0;
+            color: var(--muted-foreground);
+            font-size: 1.1rem;
+        }}
+
+        .sol-item-num {{
+            font-weight: 600;
+            color: var(--foreground);
+            display: inline-block;
+            margin-right: 0.25rem;
+        }}
+
+        .sol-text-block {{
+            margin-bottom: 0.35rem;
+            line-height: 1.6;
+        }}
+
+        /* Clean badges */
+        .badge {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.55rem;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+            letter-spacing: 0.01em;
+            line-height: 1.2;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }}
+
+        .badge-unit-1 {{ background-color: var(--pastel-sky-bg); color: var(--pastel-sky-foreground); }}
+        .badge-unit-2 {{ background-color: var(--pastel-lavender-bg); color: var(--pastel-lavender-foreground); }}
+        .badge-unit-3 {{ background-color: var(--pastel-peach-bg); color: var(--pastel-peach-foreground); }}
+        .badge-unit-4 {{ background-color: var(--pastel-sage-bg); color: var(--pastel-sage-foreground); }}
+        .badge-unit-5 {{ background-color: var(--pastel-rose-bg); color: var(--pastel-rose-foreground); }}
+        .badge-subtle {{ background-color: var(--secondary); color: var(--muted-foreground); }}
+        .badge-year {{ background-color: var(--pastel-sand-bg); color: var(--pastel-sand-foreground); }}
+
+        /* ----------------------------------------------------
+           COMPACT, SPACE-EFFICIENT CONTROL BAR
+           ---------------------------------------------------- */
+        .control-panel {{
+            background-color: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.125rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+        }}
+
+        .control-panel-row {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }}
+
+        .control-panel-top {{
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--secondary);
+        }}
+
+        .view-tabs {{
+            display: inline-flex;
+            background-color: var(--secondary);
+            padding: 0.2rem;
+            border-radius: var(--radius-md);
+            gap: 0.2rem;
+        }}
+
+        .view-tab-btn {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            background: transparent;
+            color: var(--muted-foreground);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            border-radius: calc(var(--radius-md) - 2px);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }}
+
+        .view-tab-btn:hover {{ color: var(--foreground); }}
+        .view-tab-btn.active {{
+            background-color: var(--card);
+            color: var(--foreground);
+            box-shadow: var(--shadow-sm);
+            font-weight: 600;
+        }}
+
+        .search-box-wrapper {{
+            position: relative;
+            flex: 1;
+            max-width: 380px;
+            min-width: 240px;
+        }}
+
+        .search-input {{
+            width: 100%;
+            background-color: var(--input-bg);
+            border-radius: var(--radius-md);
+            padding: 0.4rem 0.75rem 0.4rem 2.1rem;
+            font-size: 0.8125rem;
+            color: var(--foreground);
+            height: 34px;
+            box-sizing: border-box;
+            transition: box-shadow 0.15s ease;
+        }}
+
+        .search-input:focus {{
+            box-shadow: 0 0 0 2px var(--secondary-hover);
+        }}
+
+        .search-icon {{
+            position: absolute;
+            left: 0.65rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-foreground);
+            pointer-events: none;
+        }}
+
+        .filter-groups-wrapper {{
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+        }}
+
+        .filter-subgroup {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }}
+
+        .filter-pills-row {{
+            display: inline-flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }}
+
+        .filter-divider {{
+            width: 1px;
+            height: 16px;
+            background-color: var(--secondary-hover);
+            margin: 0 0.2rem;
+        }}
+
+        .filter-group-label {{
+            font-size: var(--font-size-overline);
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--muted-foreground);
+            margin-right: 0.15rem;
+        }}
+
+        .filter-pill-btn {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.55rem;
+            background-color: var(--secondary);
+            color: var(--muted-foreground);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }}
+
+        .filter-pill-btn:hover {{ color: var(--foreground); background-color: var(--secondary-hover); }}
+        .filter-pill-btn.active {{
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            font-weight: 600;
+        }}
+
+        .control-panel-counter {{
+            margin-left: auto;
+        }}
+
+        .match-counter-badge {{
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            background-color: var(--secondary);
+            padding: 0.2rem 0.55rem;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+        }}
+
+        /* ----------------------------------------------------
+           QUESTIONS ENGINE: CLICK-TO-OPEN CARD (NO TOGGLE BUTTON)
+           CONSTRAINED OPTIMAL READING MEASURE (NO RUNAWAY WIDE LINES)
+           ---------------------------------------------------- */
+        .questions-list-wrapper {{
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+        }}
+
+        .q-item {{
+            background-color: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 1.6rem 2rem;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+        }}
+
+        .q-item:hover {{
+            box-shadow: var(--shadow-md);
+            background-color: var(--card);
+        }}
+
+        .q-item-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }}
+
+        .q-item-badges {{
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }}
+
+        .q-item-side-meta {{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+            color: var(--muted-foreground);
+        }}
+
+        .chevron-icon {{
+            transition: transform 0.2s ease;
+            color: var(--muted-foreground);
+        }}
+
+        /* WHEN ANSWER IS OPEN:
+           1. HIDE/MUTE BADGE COLORS
+           2. ROTATE CHEVRON ICON
+        */
+        .q-item.is-open .badge {{
+            background-color: var(--secondary) !important;
+            color: var(--muted-foreground) !important;
+        }}
+
+        .q-item.is-open .chevron-icon {{
+            transform: rotate(180deg);
+            color: var(--foreground);
+        }}
+
+        .q-item-title {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--foreground);
+            line-height: 1.35;
+            margin-bottom: 0.5rem;
+            max-width: 920px; /* Constrained readable measure */
+        }}
+
+        .q-item-statement {{
+            font-size: 0.984375rem;
+            line-height: 1.65;
+            color: var(--foreground);
+            max-width: 900px; /* Constrained readable measure */
+        }}
+
+        /* READABLE, CONSTRAINED ANSWER UI (NO RUNAWAY WIDE LINES) */
+        .q-solution-content {{
+            display: none;
+            padding-top: 1.25rem;
+            margin-top: 1rem;
+            cursor: default;
+            user-select: text; /* Allow text selection inside open answer */
+        }}
+
+        .q-solution-content.open {{
+            display: block;
+        }}
+
+        .solution-body {{
+            max-width: 900px; /* OPTIMAL READING MEASURE: 65-80 CHARACTERS PER LINE */
+            font-size: 0.96875rem;
+            line-height: 1.75;
+            color: var(--foreground);
+        }}
+
+        .sol-step {{
+            max-width: 900px;
+            margin-bottom: 1.25rem;
+            line-height: 1.75;
+            font-size: 0.953125rem;
+            color: var(--foreground);
+        }}
+
+        .sol-step:last-child {{
+            margin-bottom: 0;
+        }}
+
+        .sol-step strong {{
+            font-size: 1.0625rem;
+            font-weight: 600;
+            color: var(--foreground);
+            display: inline-block;
+            margin-bottom: 0.25rem;
+        }}
+
+        .sol-step code {{
+            display: block;
+            max-width: 860px;
+            background-color: var(--secondary);
+            padding: 0.65rem 0.95rem;
+            border-radius: var(--radius-md);
+            font-family: var(--font-family-mono);
+            font-size: 0.9375rem;
+            margin: 0.75rem 0;
+            overflow-x: auto;
+            line-height: 1.55;
+            color: var(--foreground);
+        }}
+
+        .example-tag {{
+            display: inline-block;
+            font-size: 0.71875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background-color: var(--secondary);
+            color: var(--muted-foreground);
+            padding: 0.15rem 0.45rem;
+            border-radius: var(--radius-sm);
+            margin: 0 0.35rem;
+            vertical-align: middle;
+        }}
+
+        .empty-results {{
+            text-align: center;
+            padding: 3.5rem 1.5rem;
+            background-color: var(--card);
+            border-radius: var(--radius-lg);
+            color: var(--muted-foreground);
+            box-shadow: var(--shadow-sm);
+        }}
+
+        /* Overview Stat Grid */
+        .overview-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.75rem;
+        }}
+
+        .overview-card {{
+            background-color: var(--card);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }}
+    </style>
+</head>
+<body>
+
+    <!-- STICKY HEADER NAVBAR (WITH BRAND BADGE & BADGE VIEW LINKS) -->
+    <header class="header">
+        <div class="container nav">
+            <div class="brand" onclick="switchPageView('questions')" title="Geotechnical Engineering - II">
+                <span class="brand-badge">CE 41007</span>
+                <span class="brand-title">Geotechnical Engineering - II</span>
+            </div>
+
+            <!-- Nav links with badge view -->
+            <ul class="nav-links">
+                <li>
+                    <button class="nav-link-btn active" data-view="questions" onclick="switchPageView('questions')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                        Question Bank
+                        <span class="nav-badge">78 PYQs</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-link-btn" data-view="repeated" onclick="switchPageView('repeated')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                        Most Repeated
+                        <span class="nav-badge">Top 8</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-link-btn" data-view="syllabus" onclick="switchPageView('syllabus')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        Syllabus Breakdown
+                        <span class="nav-badge">5 Units</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-link-btn" data-view="formulas" onclick="switchPageView('formulas')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+                        Formulas
+                        <span class="nav-badge">Cheat-Sheet</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-link-btn" data-view="overview" onclick="switchPageView('overview')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        Overview
+                        <span class="nav-badge">78 PYQs</span>
+                    </button>
+                </li>
+                <li>
+                    <a href="timetable.html" class="nav-link-btn nav-link-timetable" title="View Exam Timetable">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        Timetable
+                    </a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
+                    <svg class="icon" id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- ====================================================
+             PAGE VIEW 1: QUESTIONS & SOLUTIONS ENGINE (DEFAULT)
+             ==================================================== -->
+        <div class="app-page-view active" id="view-questions">
+            <div class="page-header-row">
+                <span class="card-overline">Study Repository &bull; Complete Exam Papers Engine</span>
+                <h1 class="page-title">Questions &amp; Verified Solutions</h1>
+            </div>
+
+            <!-- Compact, Space-Efficient Control Panel -->
+            <div class="control-panel">
+                <div class="control-panel-row control-panel-top">
+                    <div class="view-tabs" role="tablist">
+                        <button class="view-tab-btn active" id="tabRaw" onclick="switchViewMode('raw')" title="View all 78 questions from 2024, 2023, and 2022 exam papers">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            Complete Exam Papers (78 Questions)
+                        </button>
+                        <button class="view-tab-btn" id="tabDedup" onclick="switchViewMode('dedup')" title="View 36 deduplicated core syllabus topics">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                            Deduplicated Study Core (36 Topics)
+                        </button>
+                    </div>
+
+                    <div class="search-box-wrapper">
+                        <svg class="icon icon-sm search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Search topics, questions, formulas... (Press '/')" aria-label="Search questions">
+                    </div>
+                </div>
+
+                <div class="control-panel-row control-panel-bottom">
+                    <div class="filter-groups-wrapper">
+                        <div class="filter-subgroup">
+                            <span class="filter-group-label">Unit:</span>
+                            <div id="unitFilters" class="filter-pills-row">
+                                <button class="filter-pill-btn active" data-unit="all">All</button>
+                                <button class="filter-pill-btn" data-unit="1">Unit 1</button>
+                                <button class="filter-pill-btn" data-unit="2">Unit 2</button>
+                                <button class="filter-pill-btn" data-unit="3">Unit 3</button>
+                                <button class="filter-pill-btn" data-unit="4">Unit 4</button>
+                                <button class="filter-pill-btn" data-unit="5">Unit 5</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-divider" aria-hidden="true"></div>
+
+                        <div class="filter-subgroup">
+                            <span class="filter-group-label">Type:</span>
+                            <div id="typeFilters" class="filter-pills-row">
+                                <button class="filter-pill-btn active" data-type="all">All</button>
+                                <button class="filter-pill-btn" data-type="Theory">Theory</button>
+                                <button class="filter-pill-btn" data-type="Numerical">Numerical</button>
+                                <button class="filter-pill-btn" data-type="Derivation">Derivation</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-panel-counter">
+                        <span class="match-counter-badge" id="matchCounter">78 of 78 matched</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Question List Container -->
+            <div class="questions-list-wrapper" id="questionsContainer">
+                <!-- Rendered dynamically by JavaScript -->
+            </div>
+        </div>
+
+        <!-- ====================================================
+             PAGE VIEW 2: MOST REPEATED (TOP 8 GUARANTEED TOPICS)
+             ==================================================== -->
+        <div class="app-page-view" id="view-repeated">
+            <div class="page-header-row">
+                <span class="card-overline">Strategic Prioritization &bull; 48+ Marks</span>
+                <h1 class="page-title">Top 8 Guaranteed High-Yield Concepts</h1>
+            </div>
+
+            <div class="table-responsive-wrapper">
+                <table class="master-data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 140px;">Frequency</th>
+                            <th>Core Recurring Question / Concept</th>
+                            <th style="width: 100px;">Unit</th>
+                            <th>Past Exam Occurrences</th>
+                            <th style="width: 100px;">Typical Marks</th>
+                            <th>Key Solution Strategy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-subtle">100% (3/3 Papers)</span></td>
+                            <td><strong>Standard Penetration Test (SPT) &amp; Corrections</strong></td>
+                            <td><span class="badge badge-unit-5">Unit 5</span></td>
+                            <td>
+                                <ul class="table-list table-list-compact">
+                                    <li>2024 Q5(e) OR (7M)</li>
+                                    <li>2023 Q5(c) OR (7M)</li>
+                                    <li>2022 Q5(d) (7M)</li>
+                                </ul>
+                            </td>
+                            <td>7 Marks</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Apply overburden correction <span class="formula-chip-sm">N'</span> first based on effective overburden pressure <span class="formula-chip-sm">&sigma;'<sub>v</sub></span></li>
+                                    <li>If <span class="formula-chip-sm">N' &gt; 15</span> under submerged fine sand or silt, apply dilatancy correction: <span class="formula-chip-sm">N'' = 15 + 0.5(N' - 15)</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-subtle">100% (3/3 Papers)</span></td>
+                            <td><strong>9-Pile Group Safe Load in Soft Clay Numerical</strong></td>
+                            <td><span class="badge badge-unit-4">Unit 4</span></td>
+                            <td>
+                                <ul class="table-list table-list-compact">
+                                    <li>2024 Q4(d) (7M)</li>
+                                    <li>2023 Q4(c) (6M)</li>
+                                    <li>2022 Q4(e) OR (7M)</li>
+                                </ul>
+                            </td>
+                            <td>7 Marks</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Calculate block capacity <span class="formula-chip-sm">Q<sub>ug</sub> = 9 c<sub>u</sub> B&sup2; + 4 B L &alpha; c<sub>u</sub></span></li>
+                                    <li>Calculate individual pile sum <span class="formula-chip-sm">n &middot; Q<sub>ui</sub> = n(9 c<sub>u</sub> A<sub>b</sub> + &alpha; c<sub>u</sub> A<sub>s</sub>)</span></li>
+                                    <li>Take the minimum capacity and divide by factor of safety <span class="formula-chip-sm">FS = 2.5</span> (&rArr; 1133.7 kN)</li>
+                                    <li><span class="note-highlight note-highlight-green">Verbatim identical in 2024 &amp; 2022!</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-subtle">100% (3/3 Papers)</span></td>
+                            <td><strong>Water Table Effect on Ultimate &amp; Safe Bearing Capacity</strong></td>
+                            <td><span class="badge badge-unit-3">Unit 3</span></td>
+                            <td>
+                                <ul class="table-list table-list-compact">
+                                    <li>2024 Q3(e) OR (7M)</li>
+                                    <li>2023 Q2(c) (6M)</li>
+                                    <li>2022 Q3(d) (7M)</li>
+                                </ul>
+                            </td>
+                            <td>6-7 Marks</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Evaluate water table depth relative to footing depth <span class="formula-chip-sm">D<sub>f</sub></span> and width <span class="formula-chip-sm">B</span></li>
+                                    <li>When WT rises from depth <span class="formula-chip-sm">(D<sub>f</sub> + B)</span> to ground level, surcharge unit weight drops to <span class="formula-chip-sm">&gamma;<sub>sub</sub></span></li>
+                                    <li>Correction factors <span class="formula-chip-sm">R<sub>w1</sub> = R<sub>w2</sub> = 0.5</span> produce <span class="note-highlight">~50% reduction</span> in safe bearing capacity (<span class="formula-chip-sm">q<sub>safe</sub></span>)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-subtle">67% (2/3 Papers)</span></td>
+                            <td><strong>Gravity Retaining Wall Coulomb Earth Thrust (12m &amp; 15m)</strong></td>
+                            <td><span class="badge badge-unit-1">Unit 1</span></td>
+                            <td>
+                                <ul class="table-list table-list-compact">
+                                    <li>2024 Q1(d) (7M)</li>
+                                    <li>2022 Q1(d) (7M)</li>
+                                </ul>
+                            </td>
+                            <td>7 Marks</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Compute Coulomb coefficients <span class="formula-chip-sm">K<sub>a</sub></span> and <span class="formula-chip-sm">K<sub>p</sub></span> with <span class="formula-chip-sm">&phi; = 30&deg;, &delta; = 20&deg;</span></li>
+                                    <li>Compute total active / passive thrust: <span class="formula-chip-sm">P = 0.5 &gamma; H&sup2; K</span></li>
+                                    <li>Point of action: at <span class="formula-chip-sm">H/3</span> above base, inclined at angle <span class="formula-chip-sm">&delta; = 20&deg;</span> to wall normal</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-subtle">100% (3/3 Papers)</span></td>
+                            <td><strong>Modes of Shear Failure (General, Local, Punching)</strong></td>
+                            <td><span class="badge badge-unit-2">Unit 2</span></td>
+                            <td>
+                                <ul class="table-list table-list-compact">
+                                    <li>2024 Q2(b) (2M)</li>
+                                    <li>2023 Q2(b) i (3M)</li>
+                                    <li>2024 Q3(c) (3M)</li>
+                                </ul>
+                            </td>
+                            <td>3 Marks</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><strong>Dense Sand (<span class="formula-chip-sm">&phi; &gt; 36&deg;</span>):</strong> General shear failure, distinct peak load, well-defined slip surfaces, prominent ground heaving</li>
+                                    <li><strong>Loose Sand (<span class="formula-chip-sm">&phi; &lt; 28&deg;</span>):</strong> Punching / local shear, no peak, large progressive settlement without surface heave</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-subtle">100% (3/3 Papers)</span></td>
+                            <td><strong>Triaxial Test Drainage Modes: UU, CU, and CD Selection</strong></td>
+                            <td><span class="badge badge-unit-2">Unit 2</span></td>
+                            <td>
+                                <ul class="table-list table-list-compact">
+                                    <li>2024 Q2(c) (3M)</li>
+                                    <li>2023 Q3(b) iii (3M)</li>
+                                    <li>2022 Q2(b) (2M)</li>
+                                </ul>
+                            </td>
+                            <td>3 Marks</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><strong>UU (Unconsolidated Undrained):</strong> Rapid construction over saturated clay (no pore water dissipation permitted)</li>
+                                    <li><strong>CU (Consolidated Undrained):</strong> Sudden reservoir drawdown in dam slopes (with pore pressure measurement)</li>
+                                    <li><strong>CD (Consolidated Drained):</strong> Long-term steady-state drained stability of slopes, foundations, and retaining walls</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-subtle">100% (3/3 Papers)</span></td>
+                            <td><strong>Soil Sampler Design Criteria (A<sub>r</sub>, C<sub>i</sub>, C<sub>o</sub>)</strong></td>
+                            <td><span class="badge badge-unit-5">Unit 5</span></td>
+                            <td>
+                                <ul class="table-list table-list-compact">
+                                    <li>2024 Q5(c) (3M)</li>
+                                    <li>2022 Q5(c) (3M)</li>
+                                </ul>
+                            </td>
+                            <td>3 Marks</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><strong>Area Ratio (<span class="formula-chip-sm">A<sub>r</sub></span>):</strong> &le; 10&ndash;12% to minimize soil displacement and shearing (thin-walled tube)</li>
+                                    <li><strong>Inside Clearance (<span class="formula-chip-sm">C<sub>i</sub></span>):</strong> 1&ndash;3% to allow elastic expansion and eliminate internal wall friction</li>
+                                    <li><strong>Outside Clearance (<span class="formula-chip-sm">C<sub>o</sub></span>):</strong> 0&ndash;2% to reduce driving drag on sample barrel</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-subtle">67% (2/3 Papers)</span></td>
+                            <td><strong>Rebhann's Graphical Construction for Active Thrust</strong></td>
+                            <td><span class="badge badge-unit-1">Unit 1</span></td>
+                            <td>
+                                <ul class="table-list table-list-compact">
+                                    <li>2023 Q1(c) OR (6M)</li>
+                                    <li>2022 Q1(e) OR (7M)</li>
+                                </ul>
+                            </td>
+                            <td>6-7 Marks</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Draw ground surface, <span class="formula-chip-sm">&phi;</span>-line, and <span class="formula-chip-sm">&psi;</span>-line radiating from wall heel</li>
+                                    <li>Construct semi-circle on intercept line to locate the critical rupture surface point</li>
+                                    <li>Erect perpendicular chord to determine the maximum active earth pressure triangle</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ====================================================
+             PAGE VIEW 3: SYLLABUS BREAKDOWN (5 UNITS)
+             ==================================================== -->
+        <div class="app-page-view" id="view-syllabus">
+            <div class="page-header-row">
+                <span class="card-overline">Course Structure &bull; 14 Marks per Unit</span>
+                <h1 class="page-title">5-Unit Structure &amp; Exam Weightage</h1>
+            </div>
+
+            <div class="table-responsive-wrapper">
+                <table class="master-data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 140px;">Unit</th>
+                            <th style="width: 240px;">Subject Domain</th>
+                            <th>Most Frequent Recurring Exam Questions</th>
+                            <th>Key Governing Formulas</th>
+                            <th style="width: 110px; text-align: right;">Weightage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-unit-1">Unit 1</span></td>
+                            <td>
+                                <strong>Lateral Earth Pressure &amp; Retaining Walls</strong>
+                                <ul class="table-list table-list-compact" style="margin-top: 0.35rem;">
+                                    <li>At-rest, Rankine &amp; Coulomb wedge theories</li>
+                                    <li>Gravity and cantilever retaining wall stability</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Gravity Retaining Wall Coulomb Active &amp; Passive Thrust (12m / 15m)</li>
+                                    <li>Rebhann's graphical construction &amp; Poncelet triangle proof</li>
+                                    <li>Tension crack depth in cohesive soil (<span class="formula-chip-sm">z<sub>c</sub> = 2c / &gamma;&radic;K<sub>a</sub></span>)</li>
+                                    <li>Surcharged &amp; battered backfill pressure distribution</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <span class="formula-chip">K<sub>a</sub> = (1-sin&phi;)/(1+sin&phi;)</span>
+                                <span class="formula-chip">z<sub>c</sub> = 2c / (&gamma;&radic;K<sub>a</sub>)</span>
+                                <span class="formula-chip">K<sub>0</sub> = &mu; / (1-&mu;)</span>
+                            </td>
+                            <td style="text-align: right; font-weight: 600;">14 Marks</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-2">Unit 2</span></td>
+                            <td>
+                                <strong>Shear Strength &amp; Slope Stability</strong>
+                                <ul class="table-list table-list-compact" style="margin-top: 0.35rem;">
+                                    <li>Mohr-Coulomb failure &amp; triaxial testing modes</li>
+                                    <li>Infinite &amp; finite slope stability with steady seepage</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Triaxial drainage modes (UU, CU, CD) selection criteria</li>
+                                    <li>Area correction (<span class="formula-chip-sm">A = A<sub>0</sub> / (1-&epsilon;)</span>) &amp; Mohr-Coulomb parameters (<span class="formula-chip-sm">c, &phi;</span>)</li>
+                                    <li>Modes of shear failure &amp; load-settlement characteristics</li>
+                                    <li>Infinite slope stability with steady seepage parallel to face</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <span class="formula-chip">&sigma;'₁ = &sigma;'₃ N<sub>&phi;</sub> + 2c'&radic;N<sub>&phi;</sub></span>
+                                <span class="formula-chip">A = A<sub>0</sub> / (1-&epsilon;)</span>
+                                <span class="formula-chip">FS = (c' + &gamma;' z cos&sup2;&beta; tan&phi;') / (&gamma;<sub>sat</sub> z sin&beta; cos&beta;)</span>
+                            </td>
+                            <td style="text-align: right; font-weight: 600;">14 Marks</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-3">Unit 3</span></td>
+                            <td>
+                                <strong>Shallow Foundations &amp; Bearing Capacity</strong>
+                                <ul class="table-list table-list-compact" style="margin-top: 0.35rem;">
+                                    <li>Terzaghi &amp; IS bearing capacity equations</li>
+                                    <li>Water table corrections &amp; plate load test</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Water table effect on safe bearing capacity (<span class="note-highlight note-highlight-green">100% Guaranteed 3/3 papers</span>)</li>
+                                    <li>Terzaghi ultimate bearing capacity theory &amp; core assumptions</li>
+                                    <li>Plate load test &amp; Housel's two-plate equation (<span class="formula-chip-sm">Q = Am + Pn</span>)</li>
+                                    <li>Square, circular, and continuous strip footing sizing</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <span class="formula-chip">q<sub>ult</sub> = c N<sub>c</sub> + q N<sub>q</sub> + 0.5 &gamma; B N<sub>&gamma;</sub></span>
+                                <span class="formula-chip">R<sub>w1</sub>, R<sub>w2</sub> = 0.5(1 + z<sub>w</sub>/d)</span>
+                                <span class="formula-chip">S<sub>i</sub> = q B (1-&mu;&sup2;)/E &middot; I<sub>f</sub></span>
+                            </td>
+                            <td style="text-align: right; font-weight: 600;">14 Marks</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-4">Unit 4</span></td>
+                            <td>
+                                <strong>Deep Foundations (Piles &amp; Caissons)</strong>
+                                <ul class="table-list table-list-compact" style="margin-top: 0.35rem;">
+                                    <li>Single pile &amp; group capacity in clay and sand</li>
+                                    <li>Under-reamed piles &amp; open caissons</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>9-Pile group safe load in soft clay (<span class="note-highlight note-highlight-green">Verbatim repeat 2024 &amp; 2022</span>)</li>
+                                    <li>Pile group efficiency &amp; block failure vs individual pile sum</li>
+                                    <li>Optimum pile spacing derivation (<span class="formula-chip-sm">s = d + 2d/&pi;&alpha;</span>)</li>
+                                    <li>Under-reamed piles &amp; open caisson sinking methods</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <span class="formula-chip">Q<sub>ug</sub> = 9 c<sub>u</sub> B&sup2; + 4 B L &alpha; c<sub>u</sub></span>
+                                <span class="formula-chip">Q<sub>ui</sub> = n &middot; (9 c<sub>u</sub> A<sub>b</sub> + &alpha; c<sub>u</sub> A<sub>s</sub>)</span>
+                                <span class="formula-chip">&eta; = 1 - (&theta;/90&deg;)[(n-1)m + (m-1)n]/(mn)</span>
+                            </td>
+                            <td style="text-align: right; font-weight: 600;">14 Marks</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-5">Unit 5</span></td>
+                            <td>
+                                <strong>Subsoil Exploration &amp; Testing</strong>
+                                <ul class="table-list table-list-compact" style="margin-top: 0.35rem;">
+                                    <li>Standard Penetration Test (SPT) corrections</li>
+                                    <li>Soil sampler design &amp; rock core drilling (RQD)</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Standard Penetration Test (SPT) overburden &amp; dilatancy corrections (<span class="note-highlight note-highlight-green">100% Guaranteed 3/3 papers</span>)</li>
+                                    <li>Soil sampler design criteria (Area ratio <span class="formula-chip-sm">A<sub>r</sub> &le; 10%</span>, <span class="formula-chip-sm">C<sub>i</sub></span>, <span class="formula-chip-sm">C<sub>o</sub></span>)</li>
+                                    <li>Borelog preparation &amp; standard subsoil stratification profiles</li>
+                                    <li>Core drilling in rock: RQD &amp; TCR determination and quality rating</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <span class="formula-chip">N' = N &middot; 350 / (&sigma;'<sub>v</sub> + 70)</span>
+                                <span class="formula-chip">N'' = 15 + 0.5(N' - 15)</span>
+                                <span class="formula-chip">A<sub>r</sub> = (D&sup2;<sub>ext</sub> - D&sup2;<sub>int</sub>)/D&sup2;<sub>int</sub> &times; 100%</span>
+                            </td>
+                            <td style="text-align: right; font-weight: 600;">14 Marks</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ====================================================
+             PAGE VIEW 4: FORMULAS REFERENCE (CHEAT-SHEET)
+             ==================================================== -->
+        <div class="app-page-view" id="view-formulas">
+            <div class="page-header-row">
+                <span class="card-overline">Mathematical Cheat-Sheet &bull; 14 Governing Relations</span>
+                <h1 class="page-title">Master Formulas &amp; Governing Equations</h1>
+            </div>
+
+            <div class="table-responsive-wrapper">
+                <table class="master-data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 130px;">Unit</th>
+                            <th style="width: 220px;">Topic &amp; Application</th>
+                            <th style="width: 380px;">Governing Equation</th>
+                            <th>Parameter Definitions &amp; Units</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-unit-1">Unit 1</span></td>
+                            <td>Rankine Active Pressure</td>
+                            <td><span class="formula-chip">p<sub>a</sub> = K<sub>a</sub> &sigma;'<sub>v</sub> - 2c &radic;K<sub>a</sub></span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><span class="formula-chip-sm">K<sub>a</sub> = (1 - sin&phi;) / (1 + sin&phi;) = tan&sup2;(45&deg; - &phi;/2)</span></li>
+                                    <li>Tension crack depth: <span class="formula-chip-sm">z<sub>c</sub> = 2c / (&gamma;&radic;K<sub>a</sub>)</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-1">Unit 1</span></td>
+                            <td>Coulomb Earth Thrust</td>
+                            <td><span class="formula-chip">P<sub>a</sub> = 0.5 &gamma; H&sup2; K<sub>a</sub>, P<sub>p</sub> = 0.5 &gamma; H&sup2; K<sub>p</sub></span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Acts at <span class="formula-chip-sm">H/3</span> above base of the retaining wall</li>
+                                    <li>Inclined at wall friction angle <span class="formula-chip-sm">&delta;</span> to wall normal</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-2">Unit 2</span></td>
+                            <td>Mohr-Coulomb Failure</td>
+                            <td><span class="formula-chip">&sigma;'₁ = &sigma;'₃ tan&sup2;(45&deg; + &phi;'/2) + 2c' tan(45&deg; + &phi;'/2)</span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><span class="formula-chip-sm">&sigma;'₁</span> = Major effective principal stress at failure</li>
+                                    <li><span class="formula-chip-sm">&sigma;'₃</span> = Minor effective principal stress (cell confining pressure)</li>
+                                    <li>Failure plane inclination: <span class="formula-chip-sm">&theta;<sub>cr</sub> = 45&deg; + &phi;'/2</span> to horizontal</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-2">Unit 2</span></td>
+                            <td>Triaxial Area Correction</td>
+                            <td><span class="formula-chip">A = A<sub>0</sub> / (1 - &epsilon;)</span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><span class="formula-chip-sm">&epsilon; = &Delta;L / L<sub>0</sub></span> (axial strain at failure)</li>
+                                    <li>Deviator stress: <span class="formula-chip-sm">&Delta;&sigma; = Failure Load / A</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-2">Unit 2</span></td>
+                            <td>Infinite Slope Seepage</td>
+                            <td><span class="formula-chip">FS = (c' + &gamma;' z cos&sup2;&beta; tan&phi;') / (&gamma;<sub>sat</sub> z sin&beta; cos&beta;)</span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><span class="formula-chip-sm">&beta;</span> = slope angle; <span class="formula-chip-sm">z</span> = failure plane depth</li>
+                                    <li>Submerged unit weight: <span class="formula-chip-sm">&gamma;' = &gamma;<sub>sat</sub> - &gamma;<sub>w</sub></span></li>
+                                    <li>Submerged cohesionless slope: <span class="formula-chip-sm">FS = (&gamma;'/&gamma;<sub>sat</sub>)(tan&phi;'/tan&beta;)</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-3">Unit 3</span></td>
+                            <td>Terzaghi Bearing Capacity</td>
+                            <td><span class="formula-chip">q<sub>ult</sub> = c N<sub>c</sub> + &gamma; D<sub>f</sub> N<sub>q</sub> R<sub>w1</sub> + 0.5 &gamma; B N<sub>&gamma;</sub> R<sub>w2</sub></span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><strong>Square Footing:</strong> <span class="formula-chip-sm">q<sub>ult</sub> = 1.3c N<sub>c</sub> + q N<sub>q</sub> + 0.4 &gamma; B N<sub>&gamma;</sub></span></li>
+                                    <li><strong>Circular Footing:</strong> <span class="formula-chip-sm">q<sub>ult</sub> = 1.3c N<sub>c</sub> + q N<sub>q</sub> + 0.3 &gamma; B N<sub>&gamma;</sub></span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-3">Unit 3</span></td>
+                            <td>Water Table Factors</td>
+                            <td><span class="formula-chip">R<sub>w1</sub> = 0.5 [1 + (z<sub>w1</sub>/D<sub>f</sub>)], R<sub>w2</sub> = 0.5 [1 + (z<sub>w2</sub>/B)]</span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><span class="formula-chip-sm">z<sub>w1</sub>, z<sub>w2</sub></span>: Water table depths below ground and footing base</li>
+                                    <li>When WT is at ground surface: <span class="formula-chip-sm">R<sub>w1</sub> = R<sub>w2</sub> = 0.5</span> (<span class="note-highlight">~50% reduction in q<sub>safe</sub></span>)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-3">Unit 3</span></td>
+                            <td>Housel's Two-Plate Method</td>
+                            <td><span class="formula-chip">Q<sub>1</sub> = A<sub>1</sub> m + P<sub>1</sub> n &emsp;|&emsp; Q<sub>2</sub> = A<sub>2</sub> m + P<sub>2</sub> n</span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li><span class="formula-chip-sm">m</span> = Perimeter shear resistance factor (kN/m)</li>
+                                    <li><span class="formula-chip-sm">n</span> = Direct bearing resistance factor (kN/m&sup2;)</li>
+                                    <li>Prototype Footing: <span class="formula-chip-sm">Q<sub>F</sub> = A<sub>F</sub> &middot; m + P<sub>F</sub> &middot; n</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-4">Unit 4</span></td>
+                            <td>Single Pile Capacity</td>
+                            <td><span class="formula-chip">Q<sub>u</sub> = 9 c<sub>u</sub> A<sub>b</sub> + &alpha; c<sub>u</sub> A<sub>s</sub></span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Base area: <span class="formula-chip-sm">A<sub>b</sub> = &pi; d&sup2; / 4</span>; Shaft area: <span class="formula-chip-sm">A<sub>s</sub> = &pi; d L</span></li>
+                                    <li><span class="formula-chip-sm">&alpha;</span> = Adhesion factor (<span class="formula-chip-sm">0.7 &ndash; 0.8</span> for soft clay)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-4">Unit 4</span></td>
+                            <td>Pile Group Block Failure</td>
+                            <td><span class="formula-chip">Q<sub>ug</sub> = 9 c<sub>u</sub> B&sup2; + 4 B L c<sub>u</sub></span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Group width: <span class="formula-chip-sm">B = (n - 1)s + d</span> for an <span class="formula-chip-sm">n &times; n</span> pile grid</li>
+                                    <li>Safe group capacity: <span class="formula-chip-sm">Q<sub>safe</sub> = min(Q<sub>ug</sub>, n&middot;Q<sub>ui</sub>) / FS</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-4">Unit 4</span></td>
+                            <td>Optimum Pile Spacing</td>
+                            <td><span class="formula-chip">s = d + (2 d / &pi; &alpha;)</span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Derived by equating group block perimeter shear to sum of individual pile skin resistances</li>
+                                    <li>Prevents redundant pile installation and block shear failure</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-5">Unit 5</span></td>
+                            <td>SPT Overburden Correction</td>
+                            <td><span class="formula-chip">N' = N &middot; [350 / (&sigma;'<sub>v</sub> + 70)]</span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>IS / Peck-Hanson-Thornburn formula; valid for <span class="formula-chip-sm">&sigma;'<sub>v</sub> &le; 280 kN/m&sup2;</span></li>
+                                    <li>Liao &amp; Whitman alternative: <span class="formula-chip-sm">N' = N &middot; &radic;(100 / &sigma;'<sub>v</sub>)</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-5">Unit 5</span></td>
+                            <td>SPT Dilatancy Correction</td>
+                            <td><span class="formula-chip">N'' = 15 + 0.5 (N' - 15)</span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Applies strictly when <span class="formula-chip-sm">N' &gt; 15</span></li>
+                                    <li>Applies in saturated fine sands or silty sands located below the water table</li>
+                                    <li>Accounts for negative pore water pressure induced during dynamic hammer driving</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-unit-5">Unit 5</span></td>
+                            <td>Sampler Area Ratio</td>
+                            <td><span class="formula-chip">A<sub>r</sub> = [(D&sup2;<sub>ext</sub> - D&sup2;<sub>int</sub>) / D&sup2;<sub>int</sub>] &times; 100%</span></td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Undisturbed sampling standard: <span class="formula-chip-sm">A<sub>r</sub> &le; 10&ndash;12%</span> (thin-walled Shelby tube)</li>
+                                    <li>Inside clearance: <span class="formula-chip-sm">C<sub>i</sub> = 1&ndash;3%</span>; Outside clearance: <span class="formula-chip-sm">C<sub>o</sub> = 0&ndash;2%</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ====================================================
+             PAGE VIEW 5: OVERVIEW & METRICS
+             ==================================================== -->
+        <div class="app-page-view" id="view-overview">
+            <div class="page-header-row">
+                <span class="card-overline">Exam Intelligence &bull; Dec 2022 to Nov 2024</span>
+                <h1 class="page-title">Curriculum &amp; Pattern Overview</h1>
+            </div>
+
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <span class="card-overline">Total Verified Questions</span>
+                    <span class="card-stat-number">78 Questions</span>
+                    <ul class="table-list table-list-compact" style="margin-top: 0.5rem;">
+                        <li>Full OCR &amp; engineering verification</li>
+                        <li>Spans 3 full examination sessions</li>
+                    </ul>
+                </div>
+                <div class="overview-card">
+                    <span class="card-overline">Deduplicated Study Core</span>
+                    <span class="card-stat-number">36 Topics</span>
+                    <ul class="table-list table-list-compact" style="margin-top: 0.5rem;">
+                        <li>Zero duplicate questions or noise</li>
+                        <li>Consolidated canonical topics</li>
+                    </ul>
+                </div>
+                <div class="overview-card">
+                    <span class="card-overline">Repetition Consistency</span>
+                    <span class="card-stat-number">82.1% High-Yield</span>
+                    <ul class="table-list table-list-compact" style="margin-top: 0.5rem;">
+                        <li>64 of 78 questions are direct repeats</li>
+                        <li>Guaranteed recurrent question templates</li>
+                    </ul>
+                </div>
+                <div class="overview-card">
+                    <span class="card-overline">Mark Allocation</span>
+                    <span class="card-stat-number">14 Marks / Unit</span>
+                    <ul class="table-list table-list-compact" style="margin-top: 0.5rem;">
+                        <li>Exactly 14 marks per unit (5 units)</li>
+                        <li>70 marks total with internal choice</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="table-responsive-wrapper">
+                <table class="master-data-table">
+                    <thead>
+                        <tr>
+                            <th>Exam Session</th>
+                            <th>Target Degree &amp; Batch</th>
+                            <th>Total Marks</th>
+                            <th>Structure &amp; Internal Choice</th>
+                            <th>Key Recurring Question Highlight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Nov-Dec 2024</strong></td>
+                            <td>B.Tech Civil Engineering (CE-41007)</td>
+                            <td>70 Marks</td>
+                            <td>Q1 to Q5 with internal 'OR' choice in every unit</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>9-Pile soft clay group numerical repeated verbatim from 2022 Q4e</li>
+                                    <li>Full 14 marks per unit structure maintained</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nov-Dec 2023</strong></td>
+                            <td>B.E. 4YDC Civil Engineering (CE-4107)</td>
+                            <td>70 Marks</td>
+                            <td>Q1 to Q5 with internal 'OR' choice in every unit</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Full depth-wise SPT correction table (1.5m to 6.0m)</li>
+                                    <li>Emphasis on triaxial drainage conditions (UU, CU, CD)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dec 2022</strong></td>
+                            <td>B.Tech Civil Engineering (CE-4151)</td>
+                            <td>70 Marks</td>
+                            <td>Q1 to Q5 with internal 'OR' choice in every unit</td>
+                            <td>
+                                <ul class="table-list">
+                                    <li>Coulomb gravity retaining wall (15m) active &amp; passive thrust</li>
+                                    <li>Rebhann's graphical active earth pressure proof</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Embedded High-Performance Data Arrays -->
+    <script>
+        const CANONICAL_TOPICS = {canonical_json_str};
+        const RAW_QUESTIONS = {raw_json_str};
+
+        let currentViewMode = 'raw'; // 'raw' | 'dedup'
+        let currentUnit = 'all';
+        let currentType = 'all';
+        let searchQuery = '';
+
+        // PAGE VIEW SWITCHER LOGIC
+        window.switchPageView = function(pageId) {{
+            document.querySelectorAll('.app-page-view').forEach(p => {{
+                p.classList.remove('active');
+            }});
+
+            const targetView = document.getElementById('view-' + pageId);
+            if (targetView) {{
+                targetView.classList.add('active');
+            }}
+
+            document.querySelectorAll('.nav-link-btn').forEach(btn => {{
+                btn.classList.toggle('active', btn.getAttribute('data-view') === pageId);
+            }});
+
+            if (history.pushState) {{
+                history.pushState(null, null, '#' + pageId);
+            }} else {{
+                location.hash = pageId;
+            }}
+
+            window.scrollTo({{ top: 0, behavior: 'instant' }});
+        }};
+
+        // Handle initial hash routing
+        window.addEventListener('DOMContentLoaded', () => {{
+            const hash = window.location.hash.replace('#', '');
+            const validViews = ['questions', 'repeated', 'syllabus', 'formulas', 'overview'];
+            if (validViews.includes(hash)) {{
+                switchPageView(hash);
+            }} else {{
+                switchPageView('questions');
+            }}
+        }});
+
+        window.addEventListener('hashchange', () => {{
+            const hash = window.location.hash.replace('#', '');
+            const validViews = ['questions', 'repeated', 'syllabus', 'formulas', 'overview'];
+            if (validViews.includes(hash)) {{
+                switchPageView(hash);
+            }}
+        }});
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlEl = document.documentElement;
+
+        function setTheme(theme) {{
+            htmlEl.setAttribute('data-theme', theme);
+            localStorage.setItem('geotech_theme', theme);
+            if (theme === 'dark') {{
+                themeIcon.innerHTML = `
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                `;
+            }} else {{
+                themeIcon.innerHTML = `
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                `;
+            }}
+        }}
+
+        const savedTheme = localStorage.getItem('geotech_theme') || 'dark';
+        setTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {{
+            const current = htmlEl.getAttribute('data-theme') || 'dark';
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        }});
+
+        // Keyboard Shortcut: '/' to search
+        window.addEventListener('keydown', (e) => {{
+            if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {{
+                e.preventDefault();
+                switchPageView('questions');
+                document.getElementById('searchInput').focus();
+            }}
+        }});
+
+        // Switch View Mode ('dedup' or 'raw') inside Questions Page
+        window.switchViewMode = function(mode) {{
+            currentViewMode = mode;
+            document.getElementById('tabDedup').classList.toggle('active', mode === 'dedup');
+            document.getElementById('tabRaw').classList.toggle('active', mode === 'raw');
+            renderQuestions();
+        }};
+
+        // Render Engine for Questions (Click to open, constrained optimal line length)
+        function renderQuestions() {{
+            const container = document.getElementById('questionsContainer');
+            const summaryEl = document.getElementById('activeFilterSummary');
+            const counterEl = document.getElementById('matchCounter');
+
+            let items = currentViewMode === 'dedup' ? CANONICAL_TOPICS : RAW_QUESTIONS;
+            let totalSource = items.length;
+
+            const filtered = items.filter(item => {{
+                if (currentUnit !== 'all' && String(item.unit) !== String(currentUnit)) {{
+                    return false;
+                }}
+
+                if (currentType !== 'all') {{
+                    const t = item.type || '';
+                    if (!t.toLowerCase().includes(currentType.toLowerCase())) {{
+                        return false;
+                    }}
+                }}
+
+                if (searchQuery) {{
+                    const q = searchQuery.toLowerCase();
+                    const titleText = (item.title || item.topic || '').toLowerCase();
+                    const questionText = (item.canonical_question || item.question || '').toLowerCase();
+                    const solutionText = (item.master_solution || item.solution || '').toLowerCase();
+                    const idText = (item.id || '').toLowerCase();
+                    if (!titleText.includes(q) && !questionText.includes(q) && !solutionText.includes(q) && !idText.includes(q)) {{
+                        return false;
+                    }}
+                }}
+
+                return true;
+            }});
+
+            if (counterEl) {{
+                counterEl.textContent = `${{filtered.length}} of ${{totalSource}} matched`;
+            }}
+            if (summaryEl) {{
+                summaryEl.textContent = currentViewMode === 'dedup' 
+                    ? `Showing ${{filtered.length}} deduplicated core study topics`
+                    : `Showing ${{filtered.length}} raw examination questions`;
+            }}
+
+            if (filtered.length === 0) {{
+                container.innerHTML = `
+                    <div class="empty-results">
+                        <svg class="icon icon-lg" style="margin-bottom: 0.5rem; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <div class="empty-results-title">No matching questions found</div>
+                        <p class="text-body-small">Try clearing search filters or selecting "All Units".</p>
+                    </div>
+                `;
+                return;
+            }}
+
+            if (currentViewMode === 'dedup') {{
+                // RENDER DEDUPLICATED STUDY CORE
+                container.innerHTML = filtered.map(item => {{
+                    const unitBadgeClass = `badge-unit-${{item.unit}}`;
+                    return `
+                    <div class="q-item" id="${{item.id}}" onclick="toggleSolution('${{item.id}}', event)">
+                        <div class="q-item-header">
+                            <div class="q-item-badges">
+                                <span class="badge ${{unitBadgeClass}}">Unit ${{item.unit}}</span>
+                                <span class="badge badge-subtle">${{item.type}}</span>
+                            </div>
+
+                            <div class="q-item-side-meta">
+                                <svg class="icon icon-sm chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <h3 class="q-item-title">${{item.title}}</h3>
+
+                        <div class="q-item-statement">
+                            ${{item.canonical_question}}
+                        </div>
+
+                        <div class="q-solution-content" id="sol-${{item.id}}">
+                            <div class="solution-body">
+                                ${{item.formatted_solution}}
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }}).join('');
+
+            }} else {{
+                // RENDER RAW 78 QUESTIONS BY EXAM YEAR
+                container.innerHTML = filtered.map(item => {{
+                    const unitBadgeClass = `badge-unit-${{item.unit}}`;
+                    return `
+                    <div class="q-item" id="${{item.id}}" onclick="toggleSolution('${{item.id}}', event)">
+                        <div class="q-item-header">
+                            <div class="q-item-badges">
+                                <span class="badge badge-year">${{item.year}} Exam</span>
+                                <span class="badge ${{unitBadgeClass}}">Unit ${{item.unit}}</span>
+                                <span class="badge badge-subtle">${{item.type}}</span>
+                            </div>
+
+                            <div class="q-item-side-meta">
+                                <span class="card-overline">${{item.q_no}}</span>
+                                <svg class="icon icon-sm chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <h3 class="q-item-title">${{item.topic}}</h3>
+
+                        <div class="q-item-statement">
+                            ${{item.question}}
+                        </div>
+
+                        <div class="q-solution-content" id="sol-${{item.id}}">
+                            <div class="solution-body">
+                                ${{item.formatted_solution}}
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }}).join('');
+            }}
+        }}
+
+        // TOGGLE SOLUTION ON ENTIRE CARD CLICK
+        window.toggleSolution = function(id, event) {{
+            if (event && event.target && event.target.closest('.q-solution-content')) {{
+                return; // Do not collapse when clicking or selecting text inside the answer!
+            }}
+            const itemEl = document.getElementById(id);
+            const solEl = document.getElementById('sol-' + id);
+            if (!itemEl || !solEl) return;
+
+            const isOpen = solEl.classList.contains('open');
+            if (isOpen) {{
+                solEl.classList.remove('open');
+                itemEl.classList.remove('is-open');
+            }} else {{
+                solEl.classList.add('open');
+                itemEl.classList.add('is-open');
+            }}
+        }};
+
+        function setupFilterGroup(containerId, stateVarSetter) {{
+            const group = document.getElementById(containerId);
+            if (!group) return;
+            group.querySelectorAll('.filter-pill-btn').forEach(btn => {{
+                btn.addEventListener('click', () => {{
+                    group.querySelectorAll('.filter-pill-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    stateVarSetter(btn);
+                    renderQuestions();
+                }});
+            }});
+        }}
+
+        setupFilterGroup('unitFilters', btn => currentUnit = btn.getAttribute('data-unit'));
+        setupFilterGroup('typeFilters', btn => currentType = btn.getAttribute('data-type'));
+
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', (e) => {{
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {{
+                searchQuery = e.target.value.trim();
+                renderQuestions();
+            }}, 200);
+        }});
+
+        renderQuestions();
+    </script>
+</body>
+</html>"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_template)
+
+with open("geotech_pyq_analysis.html", "w", encoding="utf-8") as f:
+    f.write(html_template)
+
+print("Updated index.html: Card click to open, removed toggle, removed CO1/marks/orange badges, removed occurrences, and constrained line length!")
