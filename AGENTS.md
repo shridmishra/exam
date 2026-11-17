@@ -265,3 +265,17 @@ Adhere strictly to the project typography hierarchy specification:
   2. **Tier 2 (Disk Background Sync)**: Automatic asynchronous debounced sync to server endpoint `POST /api/progress`, persisted to `user_progress.json` via `core/progress.py`.
   3. **Tier 3 (Seed Injection)**: When generating dashboards via `python3 generate_dashboard.py`, existing progress notes from `user_progress.json` are embedded directly into `index.html` (`EMBEDDED_NOTES`, `EMBEDDED_GEN_NOTES`) as an unshakeable bootstrap fallback.
   4. **Tier 4 (Export / Import Backup Utility)**: One-click "Export JSON Backup" (`exportNotesJSON`) and "Import Backup" (`triggerImportNotes`) file picker on the Notes page, plus a "Copy All Notes" clipboard utility for offline archiving.
+
+---
+
+## 13. KaTeX Mathematical Typography & Numerical Parsing Standards (Zero Red Errors Policy)
+
+- **The Problem**:
+  - Raw HTML entities (`&lt;`, `&gt;`, `&amp;`, `&nbsp;`, `&mdash;`), unescaped comment delimiters (`%`), raw ampersands (`&`), and corrupted Unicode negative exponents (`10⁻³` becoming `10⁻^3`) cause KaTeX parser failure, rendering equations as raw unstyled red text (`.katex-error`).
+- **The Standard**:
+  - **Negative Exponents**: Always format negative exponents cleanly as `10^{-3}` or `x^{-n}` with curly braces. Never output bare `^-3` or corrupted `⁻^3`.
+  - **HTML Entity Sanitization**: Never pass raw HTML entities inside math delimiters. `&lt;` must be `<`, `&gt;` must be `>`, `&amp;` must be `\&`, `&nbsp;` must be space, and `&mdash;` must be `\text{ --- }`.
+  - **Percentage Escaping**: Always escape literal percentage signs in LaTeX math mode as `\%` (`100\%`, `80.0\%`) so they are not treated as LaTeX line comments that truncate the equation.
+  - **Balanced Radicals & Nested Parentheses**: Ensure square roots with internal parentheses (e.g. Coulomb friction terms `\sqrt{...}`) enclose the full quotient without premature truncation.
+  - **Pre-Process Sanitization Hook**: `renderMathInElement` must maintain an active `preProcess` filter so that any dynamic or client-rendered equations are sanitized before KaTeX parsing occurs.
+- **Verification Rule**: Every time numerical or formula code is modified, run the automated KaTeX validation script to ensure 0 display errors and 0 inline errors across all pages (`index.html` and `geotech_pyq_analysis.html`).

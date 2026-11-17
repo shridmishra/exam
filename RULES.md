@@ -197,3 +197,13 @@
   - Asynchronous background synchronization to disk via `POST /api/progress` (`user_progress.json`).
   - Embedded data bootstrap in generated HTML (`EMBEDDED_NOTES`, `EMBEDDED_GEN_NOTES`).
   - JSON Backup export (`exportNotesJSON`) and import (`triggerImportNotes`), plus clipboard copy utilities on the Notes page.
+
+---
+
+## 13. KaTeX Mathematical Typography & Numerical Parsing Standards
+
+- **Zero Red Errors Guarantee**: Equations must never render in raw red text (`.katex-error`).
+- **Negative Exponents**: Always format negative exponents with braces as `10^{-3}` or `x^{-n}`. Never output `^-3` or corrupted `⁻^3`.
+- **Entity Sanitization**: Replace all HTML entities (`&lt;` -> `<`, `&gt;` -> `>`, `&amp;` -> `\&`, `&nbsp;` -> ` `, `&mdash;` -> `\text{ --- }`).
+- **Percent Escaping**: Literal `%` in math mode must be escaped as `\%` to prevent line comment truncation.
+- **Client Pre-Processing**: Always ensure `renderMathInElement` runs with `preProcess` so all dynamic client math blocks are pre-sanitized before parsing.

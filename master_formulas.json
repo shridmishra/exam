@@ -687,7 +687,7 @@
     "frequency": "100% Guaranteed (3/3 Papers - 7M Numerical)",
     "freq_badge": "badge-repeated",
     "latex_main": "N' = N \\cdot C_N = N \\cdot \\left[ \\frac{350}{\\sigma'_v + 70} \\right] \\quad (\\text{per IS: 2131})",
-    "latex_sub": "\\text{Constraint: } C_N \\le 2.0 \\quad (\\sigma'_v \\le 280\\text{ kPa}) \\qquad \\text{Peck & Hanson: } N' = N \\cdot \\sqrt{\\frac{100}{\\sigma'_v}}",
+    "latex_sub": "\\text{Constraint: } C_N \\le 2.0 \\quad (\\sigma'_v \\le 280\\text{ kPa}) \\qquad \\text{Peck \\& Hanson: } N' = N \\cdot \\sqrt{\\frac{100}{\\sigma'_v}}",
     "latex_raw": "N' = N \\cdot C_N = N \\cdot \\left[\\frac{350}{\\sigma'_v + 70}\\right] \\quad (C_N \\le 2.0)",
     "params": [
       {

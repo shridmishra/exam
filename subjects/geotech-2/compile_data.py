@@ -388,7 +388,7 @@ From Table 1 for &phi; = 25&deg;: N<sub>c</sub> = 10.98, N<sub>q</sub> = 3.94, N
 <code>= 20(10.98)(1.133) + 112.29 + 40.28(0.867) = 248.81 + 112.29 + 34.92 = <strong>396.02 kN/m&sup2;</strong></code>.<br>
 4. <strong>Safety Check:</strong><br>
 Average effective pressure: <code>q'_{avg} = \frac{Q}{B' L'} = \frac{1500}{1.6 \times 2.4} = 390.63 kN/m&sup2; \approx q_{ult}</code>.<br>
-<code>FOS = \frac{q_{ult}}{q'_{avg}} = \frac{396.02}{390.63} = <strong>1.01 &lt; 2.5</strong></code>.<br>
+<code>FOS = \frac{q_{ult}}{q'_{avg}} = \frac{396.02}{390.63} = <strong>1.01 < 2.5</strong></code>.<br>
 <strong>Conclusion:</strong> UNSAFE in shear; footing dimensions must be increased or eccentricity reduced."""
     },
     {
@@ -721,7 +721,7 @@ Group width: <code>B_g = 2s + d = 2(1.2) + 0.4 = <strong>2.8 m</strong></code>.<
 • Total block capacity: <code>Q_{ug} = 1764 + 1680 = <strong>3444 kN</strong></code>.<br>
 Safe block capacity: <code>\frac{3444}{2.5} = 1377.6 kN \gg 500 kN \quad \text{(Safe)}</code>.<br>
 5. <strong>Group Efficiency:</strong><br>
-<code>\eta = \frac{Q_{ug}}{n \cdot Q_{up}} = \frac{3444}{9 \times 141.38} = \frac{3444}{1272.4} = 2.70 &gt; 1.0 \implies \eta = 100\%</code>.<br>
+<code>\eta = \frac{Q_{ug}}{n \cdot Q_{up}} = \frac{3444}{9 \times 141.38} = \frac{3444}{1272.4} = 2.70 > 1.0 \implies \eta = 100\%</code>.<br>
 Group safe capacity is governed by individual action: 9 &times; 56.55 = <strong>508.95 kN &gt; 500 kN</strong> (Safe)."""
     },
     {
@@ -1353,10 +1353,10 @@ Total foundation settlement consists of three components:<br>
 where A = plate area, P = plate perimeter, m = perimeter shear resistance factor, n = base resistance factor.<br>
 <strong>Test 1 (0.5 m square plate):</strong><br>
 A<sub>1</sub> = 0.5 &times; 0.5 = 0.25 m&sup2;, P<sub>1</sub> = 4 &times; 0.5 = 2.0 m, Q<sub>1</sub> = 60 kN.<br>
-<code>60 = 0.25 m + 2.0 n &nbsp;&nbsp;&mdash; (Equation 1)</code><br>
+<code>60 = 0.25 m + 2.0 n \qquad\text{--- (Equation 1)}</code><br>
 <strong>Test 2 (1.0 m square plate):</strong><br>
 A<sub>2</sub> = 1.0 &times; 1.0 = 1.0 m&sup2;, P<sub>2</sub> = 4 &times; 1.0 = 4.0 m, Q<sub>2</sub> = 180 kN.<br>
-<code>180 = 1.0 m + 4.0 n &nbsp;&nbsp;&mdash; (Equation 2)</code><br>
+<code>180 = 1.0 m + 4.0 n \qquad\text{--- (Equation 2)}</code><br>
 Multiply Eq. 1 by 2: <code>120 = 0.5 m + 4.0 n</code>.<br>
 Subtract from Eq. 2: <code>60 = 0.5 m &rArr; m = 120 kN/m&sup2;</code>.<br>
 Substitute into Eq. 1: <code>60 = 0.25(120) + 2n &rArr; 60 = 30 + 2n &rArr; n = 15 kN/m</code>.<br>
@@ -2384,12 +2384,12 @@ d = 38 mm &rArr; A<sub>0</sub> = (&pi;/4)(0.038)&sup2; = 1.134 &times; 10⁻&sup
 <strong>Test 1 (&sigma;₃ = 100 kPa):</strong><br>
 &Delta;L₁ = 2.0 mm &rArr; &epsilon;₁ = 2.0/76 = 0.02632.<br>
 Corrected Area A₁ = A<sub>0</sub>/(1 - &epsilon;₁) = 1.134 &times; 10⁻&sup3; / (1 - 0.02632) = 1.1647 &times; 10⁻&sup3; m&sup2;.<br>
-Deviator stress: <code>&sigma;<sub>d1</sub> = 251 &times; 10⁻&sup3; kN / (1.1647 &times; 10⁻&sup3; m&sup2;) = 215.5 kPa</code>.<br>
+Deviator stress: <code>&sigma;<sub>d1</sub> = 251 &times; 10^{-3} kN / (1.1647 &times; 10^{-3} m&sup2;) = 215.5 kPa</code>.<br>
 Major principal stress: <code>&sigma;₁ = 100 + 215.5 = 315.5 kPa</code>.<br>
 <strong>Test 2 (&sigma;₃ = 200 kPa):</strong><br>
 &Delta;L₂ = 5.2 mm &rArr; &epsilon;₂ = 5.2/76 = 0.06842.<br>
 Corrected Area A₂ = 1.134 &times; 10⁻&sup3; / (1 - 0.06842) = 1.2173 &times; 10⁻&sup3; m&sup2;.<br>
-Deviator stress: <code>&sigma;<sub>d2</sub> = 327 &times; 10⁻&sup3; / (1.2173 &times; 10⁻&sup3;) = 268.6 kPa</code>.<br>
+Deviator stress: <code>&sigma;<sub>d2</sub> = 327 &times; 10^{-3} / (1.2173 &times; 10^{-3}) = 268.6 kPa</code>.<br>
 Major principal stress: <code>&sigma;₁ = 200 + 268.6 = 468.6 kPa</code>.<br>
 <strong>Solve for Shear Parameters:</strong><br>
 <code>&sigma;₁ = &sigma;₃ tan&sup2;(45&deg; + &phi;/2) + 2c tan(45&deg; + &phi;/2)</code>.<br>
@@ -3061,9 +3061,9 @@ H = 10.8 cm = 0.108 m, D = 7.2 cm = 0.072 m, Torque T = 45 N&middot;m.<br>
 <code>T = c<sub>u</sub> &middot; &pi; &middot; D&sup2; &middot; [ (H / 2) + (D / 6) ]</code><br>
 <code>&pi; &middot; D&sup2; = &pi; &times; (0.072)&sup2; = 0.016286 m&sup2;</code>.<br>
 <code>(H / 2) + (D / 6) = (0.108 / 2) + (0.072 / 6) = 0.054 + 0.012 = 0.066 m</code>.<br>
-<code>T = c<sub>u</sub> &times; 0.016286 &times; 0.066 = c<sub>u</sub> &times; (1.0749 &times; 10⁻&sup3; m&sup3;)</code>.<br>
+<code>T = c<sub>u</sub> &times; 0.016286 &times; 0.066 = c<sub>u</sub> &times; (1.0749 &times; 10^{-3} m&sup3;)</code>.<br>
 <strong>Undrained Shear Strength (c<sub>u</sub>):</strong><br>
-<code>c<sub>u</sub> = 45 / (1.0749 &times; 10⁻&sup3;) = 41,864 N/m&sup2; = <strong>41.86 kPa</strong></code>.<br>
+<code>c<sub>u</sub> = 45 / (1.0749 &times; 10^{-3}) = 41,864 N/m&sup2; = <strong>41.86 kPa</strong></code>.<br>
 Shear strength of clay on horizontal plane is <strong>41.86 kN/m&sup2;</strong>."""
     },
     {

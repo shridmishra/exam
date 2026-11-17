@@ -332,7 +332,7 @@ master_formulas = [
         "frequency": "100% Guaranteed (4/4 Papers - 7M Numerical)",
         "freq_badge": "badge-repeated",
         "latex_main": r"N' = N \cdot C_N = N \cdot \left[ \frac{350}{\sigma'_v + 70} \right] \quad (\text{per IS: 2131})",
-        "latex_sub": r"\text{Constraint: } C_N \le 2.0 \quad (\sigma'_v \le 280\text{ kPa}) \qquad \text{Peck & Hanson: } N' = N \cdot \sqrt{\frac{100}{\sigma'_v}}",
+        "latex_sub": r"\text{Constraint: } C_N \le 2.0 \quad (\sigma'_v \le 280\text{ kPa}) \qquad \text{Peck \& Hanson: } N' = N \cdot \sqrt{\frac{100}{\sigma'_v}}",
         "latex_raw": r"N' = N \cdot C_N = N \cdot \left[\frac{350}{\sigma'_v + 70}\right] \quad (C_N \le 2.0)",
         "params": [
             {"sym": "N", "name": "Observed field SPT blow count for final 300 mm drive", "unit": "blows / 300 mm"},
@@ -966,6 +966,22 @@ formulas_js_template = """
                     {left: '\\\\[', right: '\\\\]', display: true}
                 ],
                 ignoredTags: ["script", "noscript", "style", "textarea"],
+                preProcess: function(math) {
+                    if (!math) return "";
+                    var s = math;
+                    s = s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '\\\\&').replace(/&nbsp;/g, ' ').replace(/&mdash;/g, '\\\\text{ --- }').replace(/&ndash;/g, '\\\\text{ -- }');
+                    s = s.replace(/[⁻^\\\\-]*⁻[⁻^\\\\-]*\\^?(\\d+)/g, '^{-$1}');
+                    s = s.replace(/10\\s*\\^-\\s*(\\d+)/g, '10^{-$1}');
+                    var sup = {"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁺":"+","⁻":"-"};
+                    s = s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]+/g, function(m) {
+                        var res = '';
+                        for (var i = 0; i < m.length; i++) { res += sup[m[i]] || m[i]; }
+                        return '^{' + res + '}';
+                    });
+                    s = s.replace(/(?<!\\\\)%/g, '\\\\%');
+                    s = s.replace(/Peck\\s*&\\s*Hanson/g, 'Peck \\\\& Hanson');
+                    return s;
+                },
                 throwOnError: false
             });
         }
@@ -1305,6 +1321,9 @@ def html_to_katex(html_str):
         return ""
     s = html_str.strip()
     
+    # 0. Equation labels at end
+    s = re.sub(r"(?:&nbsp;|\s)*(?:&mdash;|—|--|-)\s*\((Equation\s*\d+|\d+)\)", r"\\qquad\\text{--- (\1)}", s)
+    
     # 1. Clean bold & italics
     s = re.sub(r'<strong>(.*?)</strong>', lambda m: r'\mathbf{' + m.group(1) + '}', s)
     s = re.sub(r'<em>(.*?)</em>', lambda m: m.group(1), s)
@@ -1313,18 +1332,32 @@ def html_to_katex(html_str):
     sub_unicode = {
         '₀': '_0', '₁': '_1', '₂': '_2', '₃': '_3', '₄': '_4',
         '₅': '_5', '₆': '_6', '₇': '_7', '₈': '_8', '₉': '_9',
+        '₊': '_+', '₋': '_-', '₌': '_=', '₍': '_(', '₎': '_)',
+        'ᵤ': '_u', 'ᵥ': '_v', 'ₚ': '_p', 'ₛ': '_s', 'ₐ': '_a', 'ᵣ': '_r'
     }
     for k, v in sub_unicode.items():
         s = s.replace(k, v)
 
-    # 3. Subscripts & Superscripts tags
+    # 3. Subscripts & Superscripts tags and entities
     s = re.sub(r'<sub>(.*?)</sub>', lambda m: '_{' + m.group(1) + '}', s)
     s = re.sub(r'<sup>(.*?)</sup>', lambda m: '^{' + m.group(1) + '}', s)
-    s = s.replace('&sup2;', '^2').replace('&sup3;', '^3').replace('&deg;', '^\\circ')
-    s = s.replace('²', '^2').replace('³', '^3').replace('°', '^\\circ')
+    s = s.replace('&sup1;', '¹').replace('&sup2;', '²').replace('&sup3;', '³').replace('&deg;', '^\\circ')
+    s = s.replace('°', '^\\circ')
 
-    # 4. Greek and Math Entities
+    # 3b. Normalize negative exponents and Unicode superscript runs (e.g. 10⁻³, 10⁻^3, 10^-3, 10⁻⁶)
+    s = re.sub(r'[⁻^\\-]*⁻[⁻^\\-]*\^?(\d+)', r'^{-\1}', s)
+    s = re.sub(r'10\s*\^-\s*\{?(\d+)\}?', r'10^{-\1}', s)
+    s = re.sub(r'(?<!\^)\^-\s*\{?(\d+)\}?', r'^{-\1}', s)
+    sup_map = {
+        '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4',
+        '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9',
+        '⁺': '+', '⁻': '-', '⁼': '=', '⁽': '(', '⁾': ')'
+    }
+    s = re.sub(r'([⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾]+)', lambda m: '^{' + ''.join(sup_map.get(c, c) for c in m.group(1)) + '}', s)
+
+    # 4. Greek and Math Entities & HTML Entities
     rep = {
+        '&lt;': '<', '&gt;': '>', '&nbsp;': ' ', '&mdash;': r'\text{ --- }', '&ndash;': r'\text{ -- }',
         '&beta;': r'\beta ', '&phi;': r'\phi ', '&gamma;': r'\gamma ', '&delta;': r'\delta ',
         '&sigma;': r'\sigma ', '&tau;': r'\tau ', '&mu;': r'\mu ', '&epsilon;': r'\varepsilon ',
         '&alpha;': r'\alpha ', '&theta;': r'\theta ', '&lambda;': r'\lambda ', '&eta;': r'\eta ',
@@ -1338,25 +1371,69 @@ def html_to_katex(html_str):
     }
     for k, v in rep.items():
         s = s.replace(k, v)
+
+    # 4b. Escape unescaped % (LaTeX comment character)
+    s = re.sub(r'(?<!\\)%', r'\%', s)
+
+    # 4c. Fix unescaped ampersand in common texts (e.g. Peck & Hanson)
+    s = re.sub(r'\bPeck\s*&\s*Hanson\b', r'Peck \\& Hanson', s)
+    s = re.sub(r'(?<=\\text\{)(.*?)(?=\})', lambda m: m.group(1).replace('&', r'\&'), s)
         
-    # 5. Roots
+    # 5. Roots with balanced parentheses/brackets
     s = s.replace('&radic;', r'\sqrt ').replace('√', r'\sqrt ')
-    s = re.sub(r'\\sqrt\s*\((.*?)\)', lambda m: r'\sqrt{' + m.group(1) + '}', s)
-    s = re.sub(r'\\sqrt\s*\[(.*?)\]', lambda m: r'\sqrt{' + m.group(1) + '}', s)
+    def parse_sqrt(text):
+        pos = 0
+        out_parts = []
+        while True:
+            m = re.search(r'\\sqrt\s*([(\[])', text[pos:])
+            if not m:
+                out_parts.append(text[pos:])
+                break
+            start = pos + m.start()
+            open_char = m.group(1)
+            close_char = ')' if open_char == '(' else ']'
+            open_idx = pos + m.end() - 1
+            out_parts.append(text[pos:start])
+            depth = 0
+            idx = open_idx
+            while idx < len(text):
+                ch = text[idx]
+                if ch == open_char:
+                    depth += 1
+                elif ch == close_char:
+                    depth -= 1
+                    if depth == 0:
+                        break
+                idx += 1
+            if depth == 0 and idx < len(text):
+                inside = text[open_idx + 1:idx].strip()
+                out_parts.append(r'\sqrt{' + inside + '}')
+                pos = idx + 1
+            else:
+                out_parts.append(r'\sqrt ')
+                pos = open_idx + 1
+        return ''.join(out_parts)
+    s = parse_sqrt(s)
     s = re.sub(r'\\sqrt\s*([0-9]+(?:\.[0-9]+)?)', lambda m: r'\sqrt{' + m.group(1) + '}', s)
     s = re.sub(r'\\sqrt\s*([A-Za-z]+(?:_[A-Za-z0-9{}]+)?)', lambda m: r'\sqrt{' + m.group(1) + '}', s)
     
     # 6. Units
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*kN/m\^2', lambda m: m.group(1) + r'\text{ kN/m}^2', s)
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*kN/m\^3', lambda m: m.group(1) + r'\text{ kN/m}^3', s)
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*kN/m\b', lambda m: m.group(1) + r'\text{ kN/m}', s)
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*kN\b', lambda m: m.group(1) + r'\text{ kN}', s)
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*kPa\b', lambda m: m.group(1) + r'\text{ kPa}', s)
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*MPa\b', lambda m: m.group(1) + r'\text{ MPa}', s)
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*m\^2\b', lambda m: m.group(1) + r'\text{ m}^2', s)
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*m\^3\b', lambda m: m.group(1) + r'\text{ m}^3', s)
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*m\b', lambda m: m.group(1) + r'\text{ m}', s)
-    s = re.sub(r'(\d+(?:\.\d+)?)\s*mm\b', lambda m: m.group(1) + r'\text{ mm}', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:kN/m\^2|kN/m\^\{2\}|kN/m²)(?![a-zA-Z0-9])', r'\g<1>\\text{ kN/m}^2', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:kN/m\^3|kN/m\^\{3\}|kN/m³)(?![a-zA-Z0-9])', r'\g<1>\\text{ kN/m}^3', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:kN/m\b)', r'\g<1>\\text{ kN/m}', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:kN\b)', r'\g<1>\\text{ kN}', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:N/m\^2|N/m\^\{2\}|N/m²)(?![a-zA-Z0-9])', r'\g<1>\\text{ N/m}^2', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:N/m\^3|N/m\^\{3\}|N/m³)(?![a-zA-Z0-9])', r'\g<1>\\text{ N/m}^3', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*N(?:\s*\\cdot\s*|\s*·\s*|\.)m\b', r'\g<1>\\text{ N}\\cdot\\text{m}', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:kPa\b)', r'\g<1>\\text{ kPa}', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:MPa\b)', r'\g<1>\\text{ MPa}', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:m\^2|m\^\{2\}|m²)(?![a-zA-Z0-9])', r'\g<1>\\text{ m}^2', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:m\^3|m\^\{3\}|m³)(?![a-zA-Z0-9])', r'\g<1>\\text{ m}^3', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:cm\^2|cm\^\{2\}|cm²)(?![a-zA-Z0-9])', r'\g<1>\\text{ cm}^2', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:cm\^3|cm\^\{3\}|cm³)(?![a-zA-Z0-9])', r'\g<1>\\text{ cm}^3', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:cm\b)', r'\g<1>\\text{ cm}', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:mm\b)', r'\g<1>\\text{ mm}', s)
+    s = re.sub(r'(\d+(?:\.\d+)?|\})\s*(?:m\b)', r'\g<1>\\text{ m}', s)
 
     # 7. Math & Trig Functions
     s = re.sub(r'(?<!\\)\b(sin|cos|tan|cot|sec|cosec|log|ln|arctan|arcsin|arccos)\b', lambda m: chr(92) + m.group(1) + ' ', s)
