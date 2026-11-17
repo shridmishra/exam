@@ -82,7 +82,7 @@ Adhere strictly to the project typography hierarchy specification:
 - **Question Bank Engine Directives**:
   - **Zero Heading Clutter**: The Question Bank view starts immediately with the space-efficient Control Panel, removing unnecessary top headings and subheadings for maximum vertical workspace.
   - **Balanced Control Panel & Segmented Filter Matrix (Zero Awkward Wrapping)**:
-    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Responsive search input with search shortcut hint badge (`/`) on the left, paired horizontally with live session metrics and quick actions on the right (`2022 Toggle`, `Match counter`, `Completion progress`, `Clear Done`, `Reset`). Eliminates awkward wrapping and prevents lopsided empty lines.
+    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Responsive search input with search shortcut hint badge (`/`) on the left, paired horizontally with live session metrics and quick actions on the right (`2023 Toggle`, `Match counter`, `Completion progress`, `Clear Done`, `Reset`). Eliminates awkward wrapping and prevents lopsided empty lines.
     - **Filter Matrix Rows (`.control-panel-filters`)**: Two clean, symmetrically balanced rows of segmented controls:
       - **Row 1 (Scope, Frequency & Status)**: `Year` (`All`, `2025`, `2024`, `2023`, `2022`), `Repeated` (`All`, `Most Repeated`, `4x`, `3x`, `2x`), and `Status` (`All`, `Incomplete`, `Completed`).
       - **Row 2 (Syllabus, Format & Marks)**: `Unit` (`All`, `Unit 1..5`), `Type` (`All`, `Theory`, `Numerical`, `Derivation`), and `Marks` (`All`, `2M`, `3M`, `7M/6M`).
@@ -140,21 +140,21 @@ Adhere strictly to the project typography hierarchy specification:
 
 ---
 
-## 8. Global 2022 Exam Paper Visibility Toggle
+## 8. Global 2023 Exam Paper Visibility Toggle
 
-- **Universal Scope Control**: Allows users to include or completely hide the 2022 examination paper across all views and analytical computations in the Geotech application.
+- **Universal Scope Control**: Allows users to include or completely hide the 2023 examination paper across all views and analytical computations in the Geotech application.
 - **Dedicated In-View Control Architecture (Clean Navbar)**:
-  - **Header Navbar**: Kept clean, uncluttered, and minimal with only page navigation and the theme toggle (the 2022 toggle is removed from the top navbar).
-  - **Question Bank Control Panel (`#panelToggle2022Btn`)**: Integrated directly into the Top Toolbar of the control panel alongside session metrics (`Match Counter`, `Completion Progress`, and `Reset`) for immediate context-aware toggling without redundant outer labels.
-  - **Unit Checklist Engine (`#checklistToggle2022Btn`)**: Integrated in the checklist summary units toolbar so users can easily include or hide the 2022 paper within the syllabus checklist.
+  - **Header Navbar**: Kept clean, uncluttered, and minimal with only page navigation and the theme toggle.
+  - **Question Bank Control Panel (`#panelToggle2023Btn`)**: Integrated directly into the Top Toolbar of the control panel alongside session metrics (`Match Counter`, `Completion Progress`, and `Reset`) for immediate context-aware toggling without redundant outer labels.
+  - **Unit Checklist Engine (`#checklistToggle2023Btn`)**: Integrated in the checklist summary units toolbar so users can easily include or hide the 2023 paper within the syllabus checklist.
 - **Dynamic Scope Recalculation Engine**:
-  - **Question Bank Engine**: When 2022 is hidden, filters out all 2022 question cards, hides the `2022` year filter pill (`#filterPill2022`, resetting to `all` if 2022 was selected), and updates match counters (`X of 81 matched` vs `X of 106 matched`).
-  - **Unit Checklist Engine**: Completely hides `#year-section-2022` and `#checklistYearPill-2022`, presents `#checklistToggle2022Btn` for one-click re-inclusion, and updates total question base, completion meters, and status pill badges.
+  - **Question Bank Engine**: When 2023 is hidden, filters out all 2023 question cards, hides the `2023` year filter pill (`#filterPill2023`, resetting to `all` if 2023 was selected), and updates match counters (`X of 78 matched` vs `X of 106 matched`).
+  - **Unit Checklist Engine**: Completely hides `#year-section-2023` and `#checklistYearPill-2023`, presents `#checklistToggle2023Btn` for one-click re-inclusion, and updates total question base, completion meters, and status pill badges.
   - **Dynamic Repeat Analysis (`getRepeatInfo`)**: Recalculates cluster occurrence frequencies and `3x` / `2x` repeat badges strictly among visible papers.
   - **Study Progress & Completion Tracker**: Counts and clears completed questions strictly within the active scope.
 - **State Persistence & Deep-Link Recovery**:
-  - Automatically saved to and restored from `localStorage` (`geotech_hide_2022`).
-  - If a user navigates or deep-links directly to a 2022 question (`jumpToQuestionBank`), the system automatically restores 2022 visibility to display and highlight the requested question.
+  - Automatically saved to and restored from `localStorage` (`geotech_hide_2023`).
+  - If a user navigates or deep-links directly to a 2023 question (`jumpToQuestionBank`), the system automatically restores 2023 visibility to display and highlight the requested question.
 
 ---
 
@@ -229,3 +229,39 @@ Adhere strictly to the project typography hierarchy specification:
   - Tests reside in `tests/`.
   - Archived/legacy scripts reside in `archive/`.
   - No loose scratch or test scripts in the root directory.
+
+---
+
+## 12. Personal Notes, Custom Answers & Study Scratchpad Engine
+
+- **Overview & User Intent**:
+  - Enables students to write, store, and toggle their own custom answers and personal study notes alongside verified solutions without leaking across cards or cluttering separate pages.
+  - Guarantees zero data loss across browser sessions, device reboots, and dashboard regenerations.
+- **Card-Level Quick Actions (`.note-action-btn`)**:
+  - Placed directly in `.q-item-actions` (Question Bank) and `.checklist-card-actions` (PYQ Checklist).
+  - Features an intuitive pen icon (`<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>`).
+  - Active visual feedback: When a question has a saved note, the pen button lights up with a subtle active fill and an indicator dot (`.note-indicator-dot`).
+  - Smooth expansion: Clicking the pen button opens the question card solution, switches the view to the custom answer pane, and focuses the inline note editor.
+- **In-Card Solution Segmented Toggle Switch (`.sol-view-switch-row`)**:
+  - Located at the top of the solution area on every question card in both Question Bank and Checklist.
+  - Recessed capsule track hosting two segmented tabs:
+    - `Verified Solution`: The official step-by-step verified examination answer.
+    - `My Answer ✍️`: The student's custom answer/notes for that exact question. Displays an indicator dot when notes exist.
+  - Isolated scoping: Toggling between "Verified Solution" and "My Answer" changes the view for that specific question card only, leaving all other questions unaffected.
+- **Typographic & Zero Wall-of-Text Formatting (`renderUserAnswerHtml`)**:
+  - Student notes are parsed and rendered with clean typography:
+    - Numbered steps (`1.`, `2.`) and bullet items (`-`, `*`) are converted into vertical `.sol-list` items.
+    - `Example:` prefixes are formatted as dedicated `.example-tag` badges on their own lines.
+    - Double newlines are converted into clean typographic paragraphs (`.my-answer-text`).
+    - Raw text remains editable via `<textarea class="note-editor-textarea">` with auto-growing height.
+- **Dedicated Notes Workspace Page (`#view-notes`)**:
+  - Accessible via the desktop sticky header (`Notes` with live count badge) and mobile bottom navigation bar (`Notes` destination).
+  - **General Revision Scratchpad (`.general-scratchpad-card`)**: High-priority auto-saving textarea for overall subject revision formulas, exam tips, and memory hooks.
+  - **Filter & Search Bar**: Live keyword search across questions and custom answer text, paired with Unit filter capsules (`All`, `Unit 1..5`).
+  - **Saved Question Archive (`.saved-note-card`)**: Lists all questions with personal answers, displaying question titles, metadata chips, formatted answers, inline edit/delete controls, and an "Open in Bank &rarr;" jump button (`jumpFromNotesToQuestion`).
+  - **Empty State**: Elegant empty state with quick action buttons directing users to the Question Bank or PYQ Checklist.
+- **Multi-Tier Zero-Data-Loss Persistence Guarantee**:
+  1. **Tier 1 (Client Storage)**: Instant local persistence in `localStorage` under `<prefix>_user_notes` and `<prefix>_general_notes`.
+  2. **Tier 2 (Disk Background Sync)**: Automatic asynchronous debounced sync to server endpoint `POST /api/progress`, persisted to `user_progress.json` via `core/progress.py`.
+  3. **Tier 3 (Seed Injection)**: When generating dashboards via `python3 generate_dashboard.py`, existing progress notes from `user_progress.json` are embedded directly into `index.html` (`EMBEDDED_NOTES`, `EMBEDDED_GEN_NOTES`) as an unshakeable bootstrap fallback.
+  4. **Tier 4 (Export / Import Backup Utility)**: One-click "Export JSON Backup" (`exportNotesJSON`) and "Import Backup" (`triggerImportNotes`) file picker on the Notes page, plus a "Copy All Notes" clipboard utility for offline archiving.

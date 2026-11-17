@@ -60,7 +60,7 @@
 - **Question Bank Control Panel**:
   - Unnecessary top headings and subheadings are removed from the Question Bank view for an immediate, high-efficiency dashboard workspace.
   - **Balanced Control Panel & Segmented Filter Matrix (Zero Awkward Wrapping)**:
-    - **Top Toolbar (`.control-panel-toolbar`)**: Responsive search input with search shortcut hint badge (`/`) on the left, paired horizontally with live session metrics and quick actions on the right (`2022 Toggle`, `Match counter`, `Completion progress`, `Clear Done`, `Reset`). Eliminates awkward wrapping and prevents lopsided empty lines.
+    - **Top Toolbar (`.control-panel-toolbar`)**: Responsive search input with search shortcut hint badge (`/`) on the left, paired horizontally with live session metrics and quick actions on the right (`2023 Toggle`, `Match counter`, `Completion progress`, `Clear Done`, `Reset`). Eliminates awkward wrapping and prevents lopsided empty lines.
     - **Filter Matrix Rows (`.control-panel-filters`)**: Two clean, symmetrically balanced rows of segmented controls:
       - **Row 1 (Scope, Frequency & Status)**: `Year` (`All`, `2025`, `2024`, `2023`, `2022`), `Repeated` (`All`, `Most Repeated`, `4x`, `3x`, `2x`), and `Status` (`All`, `Incomplete`, `Completed`).
       - **Row 2 (Syllabus, Format & Marks)**: `Unit` (`All`, `Unit 1..5`), `Type` (`All`, `Theory`, `Numerical`, `Derivation`), and `Marks` (`All`, `2M`, `3M`, `7M/6M`).
@@ -128,20 +128,20 @@
 
 ---
 
-### [RULE 11] Global 2022 Exam Paper Visibility Toggle
-- **Universal Scope**: Provides an instant global toggle to include or hide the entire 2022 examination paper across all views (Question Bank, Unit Checklist, repeat analysis, and completion metrics).
+### [RULE 11] Global 2023 Exam Paper Visibility Toggle
+- **Universal Scope**: Provides an instant global toggle to include or hide the entire 2023 examination paper across all views (Question Bank, Unit Checklist, repeat analysis, and completion metrics).
 - **In-View Contextual Controls (Clean Navbar)**:
-  - **Header Navbar**: Top navbar remains clean, focused, and free of the 2022 toggle.
-  - **Control Panel Quick Toggle (`#panelToggle2022Btn`)**: Integrated directly into the Top Toolbar of the Question Bank Control Panel alongside session metrics (`Match Counter`, `Completion Progress`, and `Reset`) for frictionless one-click toggling without redundant outer labels.
-  - **Unit Checklist Quick Inclusion (`#checklistToggle2022Btn`)**: Accessible in the Unit Checklist summary to easily restore the 2022 paper.
+  - **Header Navbar**: Top navbar remains clean, focused, and free of the 2023 toggle.
+  - **Control Panel Quick Toggle (`#panelToggle2023Btn`)**: Integrated directly into the Top Toolbar of the Question Bank Control Panel alongside session metrics (`Match Counter`, `Completion Progress`, and `Reset`) for frictionless one-click toggling without redundant outer labels.
+  - **Unit Checklist Quick Inclusion (`#checklistToggle2023Btn`)**: Accessible in the Unit Checklist summary to easily restore the 2023 paper.
 - **Dynamic Scope & Metrics Recalculation**:
-  - **Question Bank**: Removes all 2022 question cards from the DOM, hides the `2022` filter pill (`#filterPill2022`, resetting to `'all'` if active), and updates match counts (`X of 81 matched` when hidden vs `X of 106 matched` when shown).
-  - **Unit Checklist**: Hides the entire `#year-section-2022` container and `#checklistYearPill-2022`, rendering a dashed quick-include button (`#checklistToggle2022Btn`), while updating total counts (`81 Completed / Incomplete`) and progress percentages.
-  - **Repeat Concept Analysis**: Uses `getRepeatInfo(item, items)` to dynamically compute cluster repeat counts (`3x`, `2x`) strictly among visible papers, preventing false recurring tags for concepts that only occurred in 2022 and another single paper.
+  - **Question Bank**: Removes all 2023 question cards from the DOM, hides the `2023` filter pill (`#filterPill2023`, resetting to `'all'` if active), and updates match counts (`X of 78 matched` when hidden vs `X of 106 matched` when shown).
+  - **Unit Checklist**: Hides the entire `#year-section-2023` container and `#checklistYearPill-2023`, rendering a dashed quick-include button (`#checklistToggle2023Btn`), while updating total counts (`78 Completed / Incomplete`) and progress percentages.
+  - **Repeat Concept Analysis**: Uses `getRepeatInfo(item, items)` to dynamically compute cluster repeat counts (`3x`, `2x`) strictly among visible papers, preventing false recurring tags for concepts that only occurred in 2023 and another single paper.
   - **Completion Metrics & Clear Done**: Counts and unmarks completed questions strictly within the active scope.
 - **State Persistence & Deep Jump Recovery**:
-  - Persisted in `localStorage` under `geotech_hide_2022` (`"true"` / `"false"`).
-  - Calling `jumpToQuestionBank(id)` for a 2022 question automatically restores 2022 visibility, ensuring the requested question is rendered, expanded, and focused smoothly.
+  - Persisted in `localStorage` under `geotech_hide_2023` (`"true"` / `"false"`).
+  - Calling `jumpToQuestionBank(id)` for a 2023 question automatically restores 2023 visibility, ensuring the requested question is rendered, expanded, and focused smoothly.
 
 ---
 
@@ -180,3 +180,20 @@
 - **Local Timetable Policy (Gitignored)**: The examination timetable is local-only. `timetable.html`, `build_timetable.py`, `tools/timetable/`, and source PDFs must remain in `.gitignore` and never be committed to git.
 - **Master CLI Generation Engine**: `python3 generate_dashboard.py` builds the active default subject (`geotech-2`) into `index.html` and `geotech_pyq_analysis.html`. Passing `<subject_id>` builds that subject, `--list` inspects the registry, and `--new <id> "<name>" "<code>"` scaffolds a new subject module.
 - **Root Proxy Immutability**: Root `compile_data.py` and `formula_showcase.py` proxy directly to `subjects/geotech-2/` ensuring 100% backward compatibility for all scripts and agents.
+
+---
+
+### [RULE 16] Personal Notes, Custom Answers & Study Scratchpad Engine
+- **In-Card Pen Action Button (`.note-action-btn`)**: Question cards in both the Question Bank (`.q-item-actions`) and PYQ Checklist (`.checklist-card-actions`) must include an accessible pen icon button to add, edit, or toggle personal notes/answers. Questions with saved notes must display a visual dot indicator (`.note-indicator-dot`) and subtle active styling.
+- **In-Card Solution Toggle Switch (`.sol-view-switch-row`)**: The solution block of every question card must feature a capsule toggle switch allowing seamless switching between `Verified Solution` and `My Answer ✍️` directly on the card. This toggle must remain strictly isolated to the specific card without affecting any other question.
+- **Zero Wall-of-Text Formatting**: Custom answers must be rendered via `renderUserAnswerHtml()` preserving structured vertical bullet lists (`.sol-list`), numbered points, dedicated `Example:` micro-tags (`.example-tag`), and clean paragraph spacing.
+- **Dedicated Notes Page (`#view-notes`)**:
+  - Must be navigable from the sticky top header (`Notes` with live count badge) and mobile bottom navigation bar.
+  - Hosts the General Revision Scratchpad (`.general-scratchpad-card`) for subject-wide formulas and notes with real-time auto-saving.
+  - Features real-time keyword search and Unit filter capsules (`All`, `Unit 1..5`).
+  - Displays the saved questions archive with formatted answers, quick edit/delete actions, and an "Open in Bank &rarr;" jump button (`jumpFromNotesToQuestion`).
+- **Multi-Tier Persistence Guarantee ("Never Lose Notes")**:
+  - Primary instant persistence in `localStorage` (`<prefix>_user_notes`, `<prefix>_general_notes`).
+  - Asynchronous background synchronization to disk via `POST /api/progress` (`user_progress.json`).
+  - Embedded data bootstrap in generated HTML (`EMBEDDED_NOTES`, `EMBEDDED_GEN_NOTES`).
+  - JSON Backup export (`exportNotesJSON`) and import (`triggerImportNotes`), plus clipboard copy utilities on the Notes page.

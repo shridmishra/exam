@@ -166,6 +166,13 @@ def build_unit_checklist_html(questions, unit_titles=None):
                                                 {rep_badge}
                                             </div>
                                             <div class="checklist-card-actions">
+                                                <button class="note-action-btn" id="chk-note-btn-{q['id']}" onclick="handleChecklistNoteClick('{q['id']}', event)" title="Personal Answer / Notes" aria-label="Personal Notes">
+                                                    <svg class="icon icon-xs pen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                    </svg>
+                                                    <span class="note-action-text" id="chk-note-text-{q['id']}">Note</span>
+                                                </button>
                                                 <svg class="icon icon-sm chevron-icon chk-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                                     <polyline points="6 9 12 15 18 9"></polyline>
                                                 </svg>
@@ -173,9 +180,59 @@ def build_unit_checklist_html(questions, unit_titles=None):
                                         </div>
                                         <div class="checklist-card-title">{safe_question}</div>
                                         <div class="checklist-solution-content" id="chk-sol-{q['id']}">
-                                            <div class="solution-body">
-                                                {formatted_sol}
+                                            <div class="sol-view-switch-row" onclick="event.stopPropagation()">
+                                                <div class="sol-view-pills">
+                                                    <button type="button" class="sol-view-pill active" id="chk-tab-std-{q['id']}" onclick="switchSolutionTab('{q['id']}', 'standard', event, true)">
+                                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                                                        <span>Verified Solution</span>
+                                                    </button>
+                                                    <button type="button" class="sol-view-pill" id="chk-tab-mine-{q['id']}" onclick="switchSolutionTab('{q['id']}', 'mine', event, true)">
+                                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                        <span>My Answer</span>
+                                                        <span class="note-indicator-dot" id="chk-dot-{q['id']}" style="display:none;"></span>
+                                                    </button>
+                                                </div>
+                                                <div class="sol-view-quick-actions">
+                                                    <button type="button" class="sol-btn-edit-note" id="chk-btn-edit-{q['id']}" onclick="openNoteEditor('{q['id']}', event, true)" title="Edit or write your personal answer">
+                                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                        <span id="chk-btn-edit-text-{q['id']}">Add My Answer</span>
+                                                    </button>
+                                                </div>
                                             </div>
+
+                                            <div class="solution-pane" id="chk-pane-std-{q['id']}">
+                                                <div class="solution-body">
+                                                    {formatted_sol}
+                                                </div>
+                                            </div>
+
+                                            <div class="solution-pane" id="chk-pane-mine-{q['id']}" style="display: none;">
+                                                <div class="my-answer-container" id="chk-my-answer-box-{q['id']}">
+                                                </div>
+                                            </div>
+
+                                            <div class="note-editor-container" id="chk-editor-{q['id']}" style="display: none;" onclick="event.stopPropagation()">
+                                                <div class="note-editor-header">
+                                                    <div class="note-editor-title">
+                                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                        <span>Personal Answer / Custom Solution</span>
+                                                    </div>
+                                                    <span class="note-editor-meta">Saved in data &bull; Never lost</span>
+                                                </div>
+                                                <p class="note-editor-hint">Write your alternate explanation, textbook derivation steps, or revision notes. Supports line breaks, numbered points, and math ($...$).</p>
+                                                <textarea class="note-editor-textarea" id="chk-note-input-{q['id']}" rows="7" placeholder="Write your own custom answer or notes for this question here..."></textarea>
+                                                <div class="note-editor-footer">
+                                                    <span class="note-editor-keys">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to save</span>
+                                                    <div class="note-editor-buttons">
+                                                        <button type="button" class="note-btn-cancel" onclick="cancelNoteEditor('{q['id']}', event, true)">Cancel</button>
+                                                        <button type="button" class="note-btn-save" onclick="saveQuestionNote('{q['id']}', event, true)">
+                                                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                            <span>Save Answer</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div class="checklist-solution-footer">
                                                 <button type="button" class="checklist-jump-link" onclick="jumpToQuestionBank('{q['id']}'); event.stopPropagation();" title="Open full view in Question Bank">
                                                     <span>Open in Question Bank &rarr;</span>
@@ -275,6 +332,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
     from core.progress import get_subject_progress
     sub_prog = get_subject_progress(ctx.id)
     embedded_completed_json = json.dumps(sub_prog.get("completed_questions", [])).replace("</script>", r"<\/script>")
+    embedded_notes_json = json.dumps(sub_prog.get("notes", {})).replace("</script>", r"<\/script>")
+    embedded_general_notes = json.dumps(sub_prog.get("general_notes", "")).replace("</script>", r"<\/script>")
     subject_id_str = ctx.id
 
     unit_checklist_html = build_unit_checklist_html(raw_questions, unit_titles)
@@ -1497,6 +1556,48 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             color: var(--pastel-sage-foreground) !important;
         }}
 
+        .note-action-btn {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.65rem;
+            background-color: var(--secondary);
+            color: var(--muted-foreground);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            position: relative;
+        }}
+
+        .note-action-btn:hover {{
+            background-color: var(--secondary-hover);
+            color: var(--foreground);
+        }}
+
+        .note-action-btn.has-note {{
+            background-color: var(--pastel-sky-bg);
+            color: var(--pastel-sky-foreground);
+            font-weight: 600;
+        }}
+
+        .note-action-btn .pen-icon {{
+            width: 13px;
+            height: 13px;
+            stroke-width: 2.2;
+        }}
+
+        .note-indicator-dot {{
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: currentColor;
+            display: inline-block;
+        }}
+
         /* ----------------------------------------------------
            QUESTIONS ENGINE: CLICK-TO-OPEN CARD (NO TOGGLE BUTTON)
            CONSTRAINED OPTIMAL READING MEASURE (NO RUNAWAY WIDE LINES)
@@ -1704,6 +1805,564 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .q-solution-content.open {{
             display: block;
+        }}
+
+        /* SOLUTION VIEW TOGGLE TOOLBAR (SWITCH BETWEEN VERIFIED SOLUTION & MY ANSWER) */
+        .sol-view-switch-row {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--secondary);
+            flex-wrap: wrap;
+        }}
+
+        .sol-view-pills {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background-color: var(--secondary);
+            padding: 3px;
+            border-radius: var(--radius-full);
+        }}
+
+        .sol-view-pill {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.28rem 0.75rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }}
+
+        .sol-view-pill:hover {{
+            color: var(--foreground);
+        }}
+
+        .sol-view-pill.active {{
+            background-color: var(--filter-pill-active-bg);
+            color: var(--filter-pill-active-fg);
+            font-weight: 600;
+            box-shadow: var(--filter-pill-active-shadow);
+        }}
+
+        .sol-view-quick-actions {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }}
+
+        .sol-btn-edit-note {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.28rem 0.7rem;
+            font-size: 0.76rem;
+            font-weight: 500;
+            color: var(--foreground);
+            background-color: var(--secondary);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }}
+
+        .sol-btn-edit-note:hover {{
+            background-color: var(--secondary-hover);
+        }}
+
+        /* USER CUSTOM ANSWER PANE (MINE) */
+        .my-answer-container {{
+            background-color: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            position: relative;
+        }}
+
+        .my-answer-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.85rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }}
+
+        .my-answer-meta {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }}
+
+        .my-answer-badge {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.18rem 0.55rem;
+            border-radius: var(--radius-full);
+            background-color: var(--pastel-sky-bg);
+            color: var(--pastel-sky-foreground);
+        }}
+
+        .my-answer-time {{
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+        }}
+
+        .my-answer-actions {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }}
+
+        .my-answer-btn-action {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.2rem 0.55rem;
+            font-size: 0.74rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            background-color: var(--secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }}
+
+        .my-answer-btn-action:hover {{
+            color: var(--foreground);
+            background-color: var(--secondary-hover);
+        }}
+
+        .my-answer-btn-action.btn-delete:hover {{
+            color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.12);
+        }}
+
+        .my-answer-text {{
+            font-size: 0.96875rem;
+            line-height: 1.75;
+            color: var(--foreground);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }}
+
+        .my-answer-empty {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 2rem 1rem;
+            background-color: var(--secondary);
+            border-radius: var(--radius-lg);
+            gap: 0.75rem;
+        }}
+
+        .my-answer-empty-title {{
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--foreground);
+        }}
+
+        .my-answer-empty-desc {{
+            font-size: 0.85rem;
+            color: var(--muted-foreground);
+            max-width: 480px;
+            line-height: 1.5;
+        }}
+
+        .my-answer-empty-btn {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 1rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-top: 0.25rem;
+        }}
+
+        .my-answer-empty-btn:hover {{
+            transform: scale(1.02);
+            opacity: 0.95;
+        }}
+
+        /* INLINE NOTE EDITOR */
+        .note-editor-container {{
+            background-color: var(--secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            margin-top: 0.5rem;
+        }}
+
+        .note-editor-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }}
+
+        .note-editor-title {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--foreground);
+        }}
+
+        .note-editor-meta {{
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+        }}
+
+        .note-editor-hint {{
+            font-size: 0.8rem;
+            color: var(--muted-foreground);
+            margin-bottom: 0.75rem;
+            line-height: 1.45;
+        }}
+
+        .note-editor-textarea {{
+            width: 100%;
+            min-height: 160px;
+            padding: 0.85rem 1rem;
+            font-family: inherit;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--foreground);
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            box-sizing: border-box;
+        }}
+
+        .note-editor-textarea:focus {{
+            border-color: var(--foreground);
+            box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.2);
+        }}
+
+        .note-editor-footer {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.75rem;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }}
+
+        .note-editor-keys {{
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+        }}
+
+        .note-editor-keys kbd {{
+            background-color: var(--card);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-family: var(--font-family-mono);
+            border: 1px solid var(--border);
+        }}
+
+        .note-editor-buttons {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+        }}
+
+        .note-btn-cancel {{
+            padding: 0.4rem 0.85rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            background-color: transparent;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }}
+
+        .note-btn-cancel:hover {{
+            color: var(--foreground);
+            background-color: var(--secondary-hover);
+        }}
+
+        .note-btn-save {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }}
+
+        .note-btn-save:hover {{
+            transform: scale(1.02);
+            opacity: 0.95;
+        }}
+
+        /* APP GLOBAL TOAST NOTIFICATION */
+        .app-global-toast {{
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--foreground);
+            color: var(--background);
+            padding: 0.6rem 1.25rem;
+            border-radius: var(--radius-full);
+            font-size: 0.84rem;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            z-index: 999999;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }}
+
+        .app-global-toast.visible {{
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }}
+
+        /* ----------------------------------------------------
+           PAGE VIEW: NOTES & CUSTOM ANSWERS ARCHIVE
+           ---------------------------------------------------- */
+        .general-scratchpad-card {{
+            background-color: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }}
+
+        .scratchpad-header {{
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.85rem;
+            flex-wrap: wrap;
+        }}
+
+        .scratchpad-title-wrap {{
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }}
+
+        .scratchpad-title-wrap .icon {{
+            color: var(--foreground);
+            margin-top: 2px;
+        }}
+
+        .scratchpad-title {{
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin: 0 0 0.2rem 0;
+        }}
+
+        .scratchpad-subtitle {{
+            font-size: 0.82rem;
+            color: var(--muted-foreground);
+            margin: 0;
+            line-height: 1.45;
+        }}
+
+        .scratchpad-status {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+            background-color: var(--secondary);
+            padding: 0.2rem 0.6rem;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+        }}
+
+        .scratchpad-status .status-indicator {{
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #22c55e;
+        }}
+
+        .scratchpad-textarea {{
+            width: 100%;
+            min-height: 120px;
+            padding: 0.85rem 1rem;
+            font-family: inherit;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--foreground);
+            background-color: var(--secondary);
+            border: 1px solid transparent;
+            border-radius: var(--radius-md);
+            resize: vertical;
+            outline: none;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }}
+
+        .scratchpad-textarea:focus {{
+            border-color: var(--foreground);
+            background-color: var(--card);
+            box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.2);
+        }}
+
+        .notes-filter-toolbar {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }}
+
+        .notes-search-box {{
+            position: relative;
+            flex: 1;
+            min-width: 260px;
+            max-width: 420px;
+        }}
+
+        .notes-search-icon {{
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-foreground);
+            pointer-events: none;
+        }}
+
+        .notes-search-input {{
+            width: 100%;
+            height: 38px;
+            padding: 0 1rem 0 2.4rem;
+            border-radius: var(--radius-full);
+            background-color: var(--secondary);
+            color: var(--foreground);
+            font-size: 0.85rem;
+            border: 1px solid transparent;
+            outline: none;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }}
+
+        .notes-search-input:focus {{
+            background-color: var(--card);
+            border-color: var(--foreground);
+        }}
+
+        .notes-unit-pills {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background-color: var(--secondary);
+            padding: 3px;
+            border-radius: var(--radius-full);
+            overflow-x: auto;
+            max-width: 100%;
+        }}
+
+        .saved-notes-list {{
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }}
+
+        .saved-note-card {{
+            background-color: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.15s ease;
+        }}
+
+        .saved-note-card:hover {{
+            box-shadow: var(--shadow-md);
+        }}
+
+        .saved-note-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.65rem;
+            flex-wrap: wrap;
+        }}
+
+        .saved-note-meta {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }}
+
+        .saved-note-actions {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }}
+
+        .saved-note-qtitle {{
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 0.85rem;
+            line-height: 1.5;
+        }}
+
+        .saved-note-content-box {{
+            background-color: var(--secondary);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            color: var(--foreground);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }}
+
+        .saved-note-footer {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+            flex-wrap: wrap;
         }}
 
         .solution-body {{
@@ -2666,6 +3325,32 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 min-height: 28px;
             }}
 
+            .note-action-btn {{
+                font-size: 0.72rem;
+                padding: 0.25rem 0.55rem;
+                min-height: 28px;
+            }}
+
+            .sol-view-switch-row {{
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }}
+
+            .sol-view-pills {{
+                width: 100%;
+                justify-content: flex-start;
+            }}
+
+            .sol-view-quick-actions {{
+                width: 100%;
+                justify-content: flex-end;
+            }}
+
+            .my-answer-container, .note-editor-container {{
+                padding: 0.85rem 1rem;
+            }}
+
             .q-item-title {{
                 font-size: clamp(0.9375rem, 3.5vw, 1.0625rem);
                 line-height: 1.5;
@@ -2764,6 +3449,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     <button class="nav-link-btn" data-view="formulas" onclick="switchPageView('formulas')">
                         <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
                         Formulas
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-link-btn" data-view="notes" onclick="switchPageView('notes')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        Notes
+                        <span class="nav-badge" id="navNotesBadge">0 Notes</span>
                     </button>
                 </li>
                 <li>
@@ -3117,6 +3809,72 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             </div>
         </div>
 
+        <!-- ====================================================
+             PAGE VIEW: NOTES & CUSTOM ANSWERS ARCHIVE
+             ==================================================== -->
+        <div class="app-page-view" id="view-notes">
+            <div class="page-header-row" style="margin-bottom: 1.25rem;">
+                <div class="page-header-titles">
+                    <span class="card-overline">Personal Study Archive &bull; <span id="notesCountStat">0 Answers Saved</span></span>
+                    <h1 class="page-title">My Notes &amp; Custom Answers</h1>
+                </div>
+                <div class="page-header-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button type="button" class="complete-btn" onclick="exportNotesJSON()" title="Download a JSON backup of all your notes and answers">
+                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <span>Export Backup</span>
+                    </button>
+                    <button type="button" class="complete-btn" onclick="triggerImportNotes()" title="Restore notes from a JSON backup file">
+                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <span>Import</span>
+                    </button>
+                    <input type="file" id="notesImportFileInput" accept=".json" style="display:none;" onchange="handleImportFile(event)">
+                    <button type="button" class="complete-btn" onclick="copyAllNotesToClipboard()" title="Copy all notes formatted to clipboard">
+                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span>Copy All</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- GENERAL REVISION SCRATCHPAD / SUBJECT NOTES -->
+            <div class="general-scratchpad-card">
+                <div class="scratchpad-header">
+                    <div class="scratchpad-title-wrap">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <div>
+                            <h3 class="scratchpad-title">General Scratchpad &amp; Revision Notes</h3>
+                            <p class="scratchpad-subtitle">Freeform notes, exam warnings, memory mnemonics, or formulas to remember for {subject_name}.</p>
+                        </div>
+                    </div>
+                    <div class="scratchpad-status" id="scratchpadStatus">
+                        <span class="status-indicator"></span>
+                        <span id="scratchpadStatusText">Auto-saved</span>
+                    </div>
+                </div>
+                <textarea class="scratchpad-textarea" id="generalNotesTextarea" rows="4" placeholder="Jot down quick reminders, high-priority exam tips, formulas to memorize, or general revision notes here..." oninput="handleGeneralNotesInput()"></textarea>
+            </div>
+
+            <!-- NOTES SEARCH & UNIT FILTER TOOLBAR -->
+            <div class="notes-filter-toolbar">
+                <div class="notes-search-box">
+                    <svg class="icon icon-xs notes-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" class="notes-search-input" id="notesSearchInput" placeholder="Filter saved answers by question, keywords, or content..." oninput="filterNotesView()">
+                </div>
+                <div class="notes-unit-pills" id="notesUnitFilters">
+                    <button type="button" class="filter-pill-btn active" data-unit="all" onclick="setNotesUnitFilter('all', this)">All Units</button>
+                    <button type="button" class="filter-pill-btn" data-unit="1" onclick="setNotesUnitFilter('1', this)">Unit 1</button>
+                    <button type="button" class="filter-pill-btn" data-unit="2" onclick="setNotesUnitFilter('2', this)">Unit 2</button>
+                    <button type="button" class="filter-pill-btn" data-unit="3" onclick="setNotesUnitFilter('3', this)">Unit 3</button>
+                    <button type="button" class="filter-pill-btn" data-unit="4" onclick="setNotesUnitFilter('4', this)">Unit 4</button>
+                    <button type="button" class="filter-pill-btn" data-unit="5" onclick="setNotesUnitFilter('5', this)">Unit 5</button>
+                </div>
+            </div>
+
+            <!-- SAVED QUESTION NOTES CONTAINER -->
+            <div class="saved-notes-list" id="savedNotesContainer">
+                <!-- Populated dynamically by JavaScript -->
+            </div>
+        </div>
+
     </div>
 
     <!-- Embedded High-Performance Data Arrays -->
@@ -3128,6 +3886,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         const STORAGE_KEY_COMPLETED = '{storage_prefix}_completed_questions';
         const STORAGE_KEY_VIEW = '{storage_prefix}_active_view';
         const STORAGE_KEY_HIDE_2023 = '{storage_prefix}_hide_2023';
+        const STORAGE_KEY_NOTES = '{storage_prefix}_user_notes';
+        const STORAGE_KEY_GENERAL_NOTES = '{storage_prefix}_general_notes';
+
+        const EMBEDDED_NOTES = {embedded_notes_json};
+        const EMBEDDED_GEN_NOTES = {embedded_general_notes};
 
         let hide2023 = false;
         try {{
@@ -3160,7 +3923,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         window.toggleHide2023 = function() {{
             setHide2023(!hide2023);
         }};
-        window.toggleHide2022 = window.toggleHide2023;
+        window.toggleHide2022 = window.toggleHide2023; // Alias for backward compatibility
 
         function sync2023ToggleUI() {{
             const panelBtn = document.getElementById('panelToggle2023Btn');
@@ -3226,6 +3989,26 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             console.error('Error loading completed questions:', e);
         }}
 
+        let userNotes = {{}};
+        try {{
+            const savedNotes = JSON.parse(localStorage.getItem(STORAGE_KEY_NOTES) || '{{}}');
+            userNotes = Object.assign({{}}, EMBEDDED_NOTES, savedNotes);
+        }} catch(e) {{
+            userNotes = Object.assign({{}}, EMBEDDED_NOTES);
+        }}
+
+        let generalNotes = '';
+        try {{
+            const savedGen = localStorage.getItem(STORAGE_KEY_GENERAL_NOTES);
+            generalNotes = (savedGen !== null ? savedGen : EMBEDDED_GEN_NOTES) || '';
+        }} catch(e) {{
+            generalNotes = EMBEDDED_GEN_NOTES || '';
+        }}
+
+        let activeSolutionTab = {{}};
+        let notesUnitFilter = 'all';
+        let notesSearchQuery = '';
+
         function setSyncStatus(state, msg) {{
             const badge = document.getElementById('syncStatusBadge');
             const txt = document.getElementById('syncStatusText');
@@ -3264,7 +4047,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                         search: searchQuery
                     }},
                     active_view: (typeof activeView !== 'undefined' ? activeView : 'questions'),
-                    hide_2023: hide2023
+                    hide_2023: hide2023,
+                    notes: userNotes,
+                    general_notes: generalNotes
                 }};
                 const res = await fetch('/api/progress', {{
                     method: 'POST',
@@ -3287,21 +4072,50 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 if (res.ok) {{
                     const data = await res.json();
                     const subData = data.subjects && data.subjects[CURRENT_SUBJECT_ID];
-                    if (subData && Array.isArray(subData.completed_questions)) {{
-                        const prevSize = completedQuestions.size;
-                        subData.completed_questions.forEach(qid => completedQuestions.add(qid));
+                    if (subData) {{
+                        if (Array.isArray(subData.completed_questions)) {{
+                            const prevSize = completedQuestions.size;
+                            subData.completed_questions.forEach(qid => completedQuestions.add(qid));
 
-                        // If localStorage had extra questions not yet on disk, sync back to disk
-                        if (completedQuestions.size > subData.completed_questions.length) {{
-                            syncProgressToDisk();
+                            // If localStorage had extra questions not yet on disk, sync back to disk
+                            if (completedQuestions.size > subData.completed_questions.length) {{
+                                syncProgressToDisk();
+                            }}
+                            if (completedQuestions.size !== prevSize) {{
+                                try {{
+                                    localStorage.setItem(STORAGE_KEY_COMPLETED, JSON.stringify([...completedQuestions]));
+                                }} catch (e) {{}}
+                                renderQuestions();
+                                syncChecklistUI();
+                                updateMetrics();
+                            }}
                         }}
-                        if (completedQuestions.size !== prevSize) {{
+
+                        if (subData.notes && typeof subData.notes === 'object') {{
+                            let updated = false;
+                            for (const qid in subData.notes) {{
+                                if (!userNotes[qid]) {{
+                                    userNotes[qid] = subData.notes[qid];
+                                    updated = true;
+                                }}
+                            }}
+                            if (updated) {{
+                                try {{
+                                    localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(userNotes));
+                                }} catch(e) {{}}
+                                renderQuestions();
+                                renderNotesPage();
+                                updateNavBadges();
+                            }}
+                        }}
+
+                        if (subData.general_notes && !generalNotes) {{
+                            generalNotes = subData.general_notes;
+                            const ta = document.getElementById('generalNotesTextarea');
+                            if (ta) ta.value = generalNotes;
                             try {{
-                                localStorage.setItem(STORAGE_KEY_COMPLETED, JSON.stringify([...completedQuestions]));
-                            }} catch (e) {{}}
-                            renderQuestions();
-                            syncChecklistUI();
-                            updateMetrics();
+                                localStorage.setItem(STORAGE_KEY_GENERAL_NOTES, generalNotes);
+                            }} catch(e) {{}}
                         }}
                     }}
                     setSyncStatus('saved', 'Saved to JSON');
@@ -3383,7 +4197,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         function updateMetrics() {{
             const completedText = document.getElementById('completedCounterText');
             const clearBtn = document.getElementById('clearCompletedBtn');
-            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2023');
+            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2023 || String(q.year) !== '2023');
             const total = visibleQuestions.length;
             const doneCount = visibleQuestions.filter(q => completedQuestions.has(q.id)).length;
             const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
@@ -3417,7 +4231,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         let checklistSearchQuery = '';
 
         function syncChecklistUI() {{
-            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2022 || String(q.year) !== '2023');
+            const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2023 || String(q.year) !== '2023');
             const total = visibleQuestions.length;
             const completedCount = visibleQuestions.filter(q => completedQuestions.has(q.id)).length;
             const totalPct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
@@ -3476,7 +4290,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     cardEl.classList.toggle('is-completed', isDone);
 
                     let visible = true;
-                    if (hide2022 && y === '2023') visible = false;
+                    if (hide2023 && y === '2023') visible = false;
                     if (currentChecklistStatus === 'incomplete' && isDone) visible = false;
                     if (currentChecklistStatus === 'completed' && !isDone) visible = false;
 
@@ -3498,6 +4312,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 if (btnEl) {{
                     btnEl.classList.toggle('checked', isDone);
                 }}
+                updateNoteButtonsAndBadges(item.id);
             }});
 
             ['2025', '2024', '2023', '2022'].forEach(y => {{
@@ -3523,7 +4338,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
                     const subGroup = document.getElementById(`unit-subgroup-${{y}}-${{u}}`);
                     if (subGroup) {{
-                        if (hide2022 && y === '2023') {{
+                        if (hide2023 && y === '2023') {{
                             subGroup.style.display = 'none';
                         }} else {{
                             const visibleCards = subGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
@@ -3534,7 +4349,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
                 const yearGroup = document.getElementById(`year-section-${{y}}`);
                 if (yearGroup) {{
-                    if (hide2022 && y === '2023') {{
+                    if (hide2023 && y === '2023') {{
                         yearGroup.style.display = 'none';
                     }} else {{
                         const visibleInYear = yearGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
@@ -3543,13 +4358,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 }}
             }});
 
-            const checklistPill2022 = document.getElementById('checklistYearPill-2023');
-            if (checklistPill2022) {{
-                checklistPill2022.style.display = hide2022 ? 'none' : 'inline-flex';
+            const checklistPill2023 = document.getElementById('checklistYearPill-2023');
+            if (checklistPill2023) {{
+                checklistPill2023.style.display = hide2023 ? 'none' : 'inline-flex';
             }}
-            const checklistToggleBtn = document.getElementById('checklistToggle2022Btn');
+            const checklistToggleBtn = document.getElementById('checklistToggle2023Btn');
             if (checklistToggleBtn) {{
-                checklistToggleBtn.style.display = hide2022 ? 'inline-flex' : 'none';
+                checklistToggleBtn.style.display = hide2023 ? 'inline-flex' : 'none';
             }}
         }}
 
@@ -3576,9 +4391,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             if (event && event.target && (
                 event.target.closest('.checklist-solution-content') || 
                 event.target.closest('.checklist-card-check') || 
-                event.target.closest('.checklist-checkbox-btn')
+                event.target.closest('.checklist-checkbox-btn') ||
+                event.target.closest('.note-action-btn')
             )) {{
-                return; // Do not collapse when selecting text inside answer or clicking checkbox!
+                return; // Do not collapse when selecting text inside answer, clicking checkbox, or note button!
             }}
             const cardEl = document.getElementById('chk-card-' + id);
             const solEl = document.getElementById('chk-sol-' + id);
@@ -3591,6 +4407,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }} else {{
                 solEl.classList.add('open');
                 cardEl.classList.add('is-open');
+                const box = document.getElementById('chk-my-answer-box-' + id);
+                if (box) box.innerHTML = renderAnswerBoxInner(id, true);
                 if (window.renderAllMath) {{
                     try {{ window.renderAllMath(); }} catch(e) {{}}
                 }}
@@ -3601,7 +4419,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             const qObj = RAW_QUESTIONS.find(q => q.id === questionId);
             if (!qObj) return;
 
-            if (String(qObj.year) === '2023' && hide2022) {{
+            if (String(qObj.year) === '2023' && hide2023) {{
                 setHide2023(false);
             }}
 
@@ -3710,6 +4528,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
             if (pageId === 'syllabus') {{
                 syncChecklistUI();
+            }} else if (pageId === 'notes') {{
+                renderNotesPage();
             }}
 
             window.scrollTo({{ top: 0, behavior: 'instant' }});
@@ -3726,7 +4546,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
             let hash = window.location.hash.replace('#', '');
             if (hash === 'checklist') hash = 'syllabus';
-            const validViews = ['questions', 'syllabus', 'formulas'];
+            const validViews = ['questions', 'syllabus', 'formulas', 'notes'];
             const savedView = localStorage.getItem(STORAGE_KEY_VIEW);
 
             if (hash === 'repeated') {{
@@ -3753,12 +4573,19 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 }});
             }}
             syncChecklistUI();
+
+            const genTextarea = document.getElementById('generalNotesTextarea');
+            if (genTextarea) {{
+                genTextarea.value = generalNotes;
+            }}
+            updateNavBadges();
+            renderNotesPage();
         }});
 
         window.addEventListener('hashchange', () => {{
             let hash = window.location.hash.replace('#', '');
             if (hash === 'checklist') hash = 'syllabus';
-            const validViews = ['questions', 'syllabus', 'formulas'];
+            const validViews = ['questions', 'syllabus', 'formulas', 'notes'];
             if (hash === 'repeated') {{
                 switchPageView('questions');
                 const repBtn = document.querySelector('#repeatFilters [data-repeat="repeated"]');
@@ -3833,14 +4660,696 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             return {{ isRep: false, countStr: '', rank: 4, freq: '' }};
         }}
 
+        // ----------------------------------------------------
+        // PERSONAL NOTES & CUSTOM ANSWERS PERSISTENCE ENGINE
+        // ----------------------------------------------------
+        function renderUserAnswerHtml(raw) {{
+            if (!raw) return '';
+            let s = raw
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            // Bold **text**
+            s = s.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');
+
+            // Format Example: lines
+            s = s.replace(/(?:^|\\n)(?:Example|Eg):\\s*(.*?)(?=\\n|$)/gi, (match, ex) => {{
+                return `\\n<div class="sol-example" style="margin: 0.4rem 0;"><span class="example-tag">Eg</span> <span class="sol-example-text">${{ex}}</span></div>`;
+            }});
+
+            const lines = s.split('\\n');
+            let out = [];
+            let inList = false;
+
+            lines.forEach(line => {{
+                const trimmed = line.trim();
+                if (!trimmed) {{
+                    if (inList) {{
+                        out.push('</ul>');
+                        inList = false;
+                    }}
+                    out.push('<div style="height: 0.45rem;"></div>');
+                    return;
+                }}
+
+                if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {{
+                    if (!inList) {{
+                        out.push('<ul class="sol-list" style="margin: 0.4rem 0;">');
+                        inList = true;
+                    }}
+                    out.push(`<li>${{trimmed.substring(2)}}</li>`);
+                    return;
+                }}
+
+                const numMatch = trimmed.match(/^(\\d+[\\.\\)])\\s*(.*)/);
+                if (numMatch) {{
+                    if (inList) {{
+                        out.push('</ul>');
+                        inList = false;
+                    }}
+                    out.push(`
+                        <div class="sol-item-row" style="margin-bottom: 0.45rem;">
+                            <span class="sol-item-num" style="font-weight: 700; color: var(--foreground);">${{numMatch[1]}}</span>
+                            <div style="flex: 1;">${{numMatch[2]}}</div>
+                        </div>
+                    `);
+                    return;
+                }}
+
+                if (inList) {{
+                    out.push('</ul>');
+                    inList = false;
+                }}
+
+                out.push(`<div style="margin-bottom: 0.45rem; line-height: 1.7;">${{line}}</div>`);
+            }});
+
+            if (inList) {{
+                out.push('</ul>');
+            }}
+
+            return out.join('');
+        }}
+
+        function renderAnswerBoxInner(qid, isChecklist = false) {{
+            const noteObj = userNotes[qid];
+            const text = typeof noteObj === 'string' ? noteObj : (noteObj && noteObj.answer ? noteObj.answer : '');
+            if (!text.trim()) {{
+                return `
+                    <div class="my-answer-empty">
+                        <svg class="icon icon-md" style="color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <div class="my-answer-empty-title">No Personal Answer Yet</div>
+                        <p class="my-answer-empty-desc">You can save your own alternate solution, summary points, formula steps, or mnemonics for this question. It is saved in your data so you never lose it.</p>
+                        <button type="button" class="my-answer-empty-btn" onclick="openNoteEditor('${{qid}}', event, ${{isChecklist}})">
+                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            <span>Write Your Answer</span>
+                        </button>
+                    </div>
+                `;
+            }}
+
+            const formatted = renderUserAnswerHtml(text);
+            const dateStr = (noteObj && noteObj.updated_at) ? new Date(noteObj.updated_at).toLocaleDateString(undefined, {{ month: 'short', day: 'numeric' }}) : '';
+
+            return `
+                <div class="my-answer-header">
+                    <div class="my-answer-meta">
+                        <span class="my-answer-badge">
+                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            My Answer
+                        </span>
+                        ${{dateStr ? `<span class="my-answer-time">Updated ${{dateStr}}</span>` : ''}}
+                    </div>
+                    <div class="my-answer-actions">
+                        <button type="button" class="my-answer-btn-action" onclick="openNoteEditor('${{qid}}', event, ${{isChecklist}})" title="Edit your answer">
+                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <span>Edit</span>
+                        </button>
+                        <button type="button" class="my-answer-btn-action btn-delete" onclick="deleteQuestionNote('${{qid}}', event, ${{isChecklist}})" title="Delete your answer">
+                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            <span>Delete</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="my-answer-text">${{formatted}}</div>
+            `;
+        }}
+
+        function updateNoteButtonsAndBadges(qid) {{
+            const noteObj = userNotes[qid];
+            const hasNote = Boolean(noteObj && (typeof noteObj === 'string' ? noteObj.trim() : (noteObj.answer && noteObj.answer.trim())));
+
+            // Question Bank button
+            const btn = document.getElementById('note-btn-' + qid);
+            if (btn) {{
+                btn.classList.toggle('has-note', hasNote);
+                const txt = btn.querySelector('.note-action-text');
+                if (txt) txt.textContent = hasNote ? 'My Answer' : 'Note';
+                let dot = btn.querySelector('.note-indicator-dot');
+                if (hasNote && !dot) {{
+                    dot = document.createElement('span');
+                    dot.className = 'note-indicator-dot';
+                    btn.appendChild(dot);
+                }} else if (!hasNote && dot) {{
+                    dot.remove();
+                }}
+            }}
+
+            // Question Bank toggle pill
+            const pillMine = document.getElementById('tab-mine-' + qid);
+            if (pillMine) {{
+                pillMine.classList.toggle('has-note', hasNote);
+                let dot = pillMine.querySelector('.note-indicator-dot');
+                if (hasNote && !dot) {{
+                    dot = document.createElement('span');
+                    dot.className = 'note-indicator-dot';
+                    pillMine.appendChild(dot);
+                }} else if (!hasNote && dot) {{
+                    dot.remove();
+                }}
+            }}
+
+            const editLabel = document.getElementById('btn-edit-label-' + qid);
+            if (editLabel) {{
+                editLabel.textContent = hasNote ? 'Edit My Answer' : 'Add My Answer';
+            }}
+
+            // Checklist button
+            const chkBtn = document.getElementById('chk-note-btn-' + qid);
+            if (chkBtn) {{
+                chkBtn.classList.toggle('has-note', hasNote);
+                const txt = chkBtn.querySelector('.note-action-text');
+                if (txt) txt.textContent = hasNote ? 'My Answer' : 'Note';
+            }}
+
+            // Checklist toggle pill
+            const chkPillMine = document.getElementById('chk-tab-mine-' + qid);
+            if (chkPillMine) {{
+                chkPillMine.classList.toggle('has-note', hasNote);
+                const dot = document.getElementById('chk-dot-' + qid);
+                if (dot) dot.style.display = hasNote ? 'inline-block' : 'none';
+            }}
+
+            const chkEditLabel = document.getElementById('chk-btn-edit-text-' + qid);
+            if (chkEditLabel) {{
+                chkEditLabel.textContent = hasNote ? 'Edit My Answer' : 'Add My Answer';
+            }}
+        }}
+
+        function updateNavBadges() {{
+            const count = Object.keys(userNotes).filter(id => {{
+                const n = userNotes[id];
+                return Boolean(n && (typeof n === 'string' ? n.trim() : (n.answer && n.answer.trim())));
+            }}).length;
+            const badge = document.getElementById('navNotesBadge');
+            if (badge) {{
+                badge.textContent = `${{count}} ${{count === 1 ? 'Note' : 'Notes'}}`;
+            }}
+            const stat = document.getElementById('notesCountStat');
+            if (stat) {{
+                stat.textContent = `${{count}} ${{count === 1 ? 'Answer' : 'Answers'}} Saved`;
+            }}
+        }}
+
+        window.handleNoteButtonClick = function(qid, event) {{
+            if (event) event.stopPropagation();
+            const itemEl = document.getElementById(qid);
+            const solEl = document.getElementById('sol-' + qid);
+            if (!itemEl || !solEl) return;
+
+            if (!solEl.classList.contains('open')) {{
+                solEl.classList.add('open');
+                itemEl.classList.add('is-open');
+            }}
+
+            const noteObj = userNotes[qid];
+            const hasNote = Boolean(noteObj && (typeof noteObj === 'string' ? noteObj.trim() : (noteObj.answer && noteObj.answer.trim())));
+
+            if (!hasNote) {{
+                switchSolutionTab(qid, 'mine', event, false);
+                openNoteEditor(qid, event, false);
+            }} else {{
+                switchSolutionTab(qid, 'mine', event, false);
+            }}
+        }};
+
+        window.handleChecklistNoteClick = function(qid, event) {{
+            if (event) event.stopPropagation();
+            const cardEl = document.getElementById('chk-card-' + qid);
+            const solEl = document.getElementById('chk-sol-' + qid);
+            if (!cardEl || !solEl) return;
+
+            if (!solEl.classList.contains('open')) {{
+                solEl.classList.add('open');
+                cardEl.classList.add('is-open');
+            }}
+
+            const noteObj = userNotes[qid];
+            const hasNote = Boolean(noteObj && (typeof noteObj === 'string' ? noteObj.trim() : (noteObj.answer && noteObj.answer.trim())));
+
+            if (!hasNote) {{
+                switchSolutionTab(qid, 'mine', event, true);
+                openNoteEditor(qid, event, true);
+            }} else {{
+                switchSolutionTab(qid, 'mine', event, true);
+            }}
+        }};
+
+        window.switchSolutionTab = function(qid, tab, event, isChecklist = false) {{
+            if (event) event.stopPropagation();
+            activeSolutionTab[qid] = tab;
+
+            const prefix = isChecklist ? 'chk-' : '';
+            const stdBtn = document.getElementById(prefix + 'tab-std-' + qid);
+            const mineBtn = document.getElementById(prefix + 'tab-mine-' + qid);
+            const stdPane = document.getElementById(prefix + 'pane-std-' + qid);
+            const minePane = document.getElementById(prefix + 'pane-mine-' + qid);
+            const editor = document.getElementById(prefix + 'editor-' + qid);
+
+            if (editor) editor.style.display = 'none';
+
+            if (tab === 'mine') {{
+                if (stdBtn) stdBtn.classList.remove('active');
+                if (mineBtn) mineBtn.classList.add('active');
+                if (stdPane) stdPane.style.display = 'none';
+                if (minePane) {{
+                    minePane.style.display = 'block';
+                    const box = document.getElementById(prefix + 'my-answer-box-' + qid);
+                    if (box) box.innerHTML = renderAnswerBoxInner(qid, isChecklist);
+                }}
+            }} else {{
+                if (mineBtn) mineBtn.classList.remove('active');
+                if (stdBtn) stdBtn.classList.add('active');
+                if (minePane) minePane.style.display = 'none';
+                if (stdPane) stdPane.style.display = 'block';
+            }}
+
+            if (window.renderAllMath) {{
+                try {{ window.renderAllMath(); }} catch(e) {{}}
+            }}
+        }};
+
+        window.openNoteEditor = function(qid, event, isChecklist = false) {{
+            if (event) event.stopPropagation();
+            const prefix = isChecklist ? 'chk-' : '';
+            const editor = document.getElementById(prefix + 'editor-' + qid);
+            const stdPane = document.getElementById(prefix + 'pane-std-' + qid);
+            const minePane = document.getElementById(prefix + 'pane-mine-' + qid);
+            const textarea = document.getElementById(prefix + 'note-input-' + qid);
+
+            if (!editor || !textarea) return;
+
+            const cardEl = document.getElementById(isChecklist ? ('chk-card-' + qid) : qid);
+            const solEl = document.getElementById(isChecklist ? ('chk-sol-' + qid) : ('sol-' + qid));
+            if (cardEl && solEl && !solEl.classList.contains('open')) {{
+                solEl.classList.add('open');
+                cardEl.classList.add('is-open');
+            }}
+
+            if (stdPane) stdPane.style.display = 'none';
+            if (minePane) minePane.style.display = 'none';
+            editor.style.display = 'block';
+
+            const noteObj = userNotes[qid];
+            const currentText = typeof noteObj === 'string' ? noteObj : (noteObj && noteObj.answer ? noteObj.answer : '');
+            textarea.value = currentText;
+            textarea.focus();
+
+            textarea.onkeydown = function(e) {{
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {{
+                    e.preventDefault();
+                    saveQuestionNote(qid, e, isChecklist);
+                }}
+            }};
+        }};
+
+        window.cancelNoteEditor = function(qid, event, isChecklist = false) {{
+            if (event) event.stopPropagation();
+            const prefix = isChecklist ? 'chk-' : '';
+            const editor = document.getElementById(prefix + 'editor-' + qid);
+            if (editor) editor.style.display = 'none';
+
+            const noteObj = userNotes[qid];
+            const hasNote = Boolean(noteObj && (typeof noteObj === 'string' ? noteObj.trim() : (noteObj.answer && noteObj.answer.trim())));
+            const tab = hasNote ? (activeSolutionTab[qid] || 'mine') : 'standard';
+            switchSolutionTab(qid, tab, event, isChecklist);
+        }};
+
+        window.saveQuestionNote = function(qid, event, isChecklist = false) {{
+            if (event) event.stopPropagation();
+            const prefix = isChecklist ? 'chk-' : '';
+            const textarea = document.getElementById(prefix + 'note-input-' + qid);
+            if (!textarea) return;
+
+            const text = textarea.value.trim();
+            if (text) {{
+                userNotes[qid] = {{
+                    answer: text,
+                    updated_at: new Date().toISOString()
+                }};
+            }} else {{
+                delete userNotes[qid];
+            }}
+
+            try {{
+                localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(userNotes));
+            }} catch(e) {{
+                console.error('Error saving notes to localStorage:', e);
+            }}
+
+            setSyncStatus('saving', 'Saving...');
+            if (diskSyncTimeout) clearTimeout(diskSyncTimeout);
+            diskSyncTimeout = setTimeout(syncProgressToDisk, 300);
+
+            updateNoteButtonsAndBadges(qid);
+            activeSolutionTab[qid] = text ? 'mine' : 'standard';
+            switchSolutionTab(qid, activeSolutionTab[qid], null, isChecklist);
+            updateNavBadges();
+            renderNotesPage();
+            showQuickToast(text ? 'Answer saved in your data!' : 'Answer removed');
+
+            // Also synchronize the counterpart view if open
+            const otherPrefix = isChecklist ? '' : 'chk-';
+            const otherBox = document.getElementById(otherPrefix + 'my-answer-box-' + qid);
+            if (otherBox) {{
+                otherBox.innerHTML = renderAnswerBoxInner(qid, !isChecklist);
+            }}
+        }};
+
+        window.deleteQuestionNote = function(qid, event, isChecklist = false) {{
+            if (event) event.stopPropagation();
+            if (!confirm('Are you sure you want to delete your personal answer for this question?')) {{
+                return;
+            }}
+
+            delete userNotes[qid];
+            try {{
+                localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(userNotes));
+            }} catch(e) {{}}
+
+            setSyncStatus('saving', 'Saving...');
+            if (diskSyncTimeout) clearTimeout(diskSyncTimeout);
+            diskSyncTimeout = setTimeout(syncProgressToDisk, 300);
+
+            updateNoteButtonsAndBadges(qid);
+            activeSolutionTab[qid] = 'standard';
+            switchSolutionTab(qid, 'standard', null, isChecklist);
+            updateNavBadges();
+            renderNotesPage();
+            showQuickToast('Answer removed');
+        }};
+
+        let generalNotesTimeout = null;
+        window.handleGeneralNotesInput = function() {{
+            const ta = document.getElementById('generalNotesTextarea');
+            const statusText = document.getElementById('scratchpadStatusText');
+            if (!ta) return;
+
+            generalNotes = ta.value;
+            if (statusText) statusText.textContent = 'Saving...';
+
+            try {{
+                localStorage.setItem(STORAGE_KEY_GENERAL_NOTES, generalNotes);
+            }} catch(e) {{}}
+
+            if (generalNotesTimeout) clearTimeout(generalNotesTimeout);
+            generalNotesTimeout = setTimeout(() => {{
+                syncProgressToDisk();
+                if (statusText) statusText.textContent = 'Auto-saved';
+            }}, 500);
+        }};
+
+        window.setNotesUnitFilter = function(unit, btn) {{
+            notesUnitFilter = String(unit);
+            const parent = document.getElementById('notesUnitFilters');
+            if (parent) {{
+                parent.querySelectorAll('.filter-pill-btn').forEach(b => b.classList.remove('active'));
+            }}
+            if (btn) btn.classList.add('active');
+            renderNotesPage();
+        }};
+
+        window.filterNotesView = function() {{
+            const input = document.getElementById('notesSearchInput');
+            notesSearchQuery = input ? input.value.trim() : '';
+            renderNotesPage();
+        }};
+
+        function renderNotesPage() {{
+            const container = document.getElementById('savedNotesContainer');
+            const countStat = document.getElementById('notesCountStat');
+            if (!container) return;
+
+            const qIds = Object.keys(userNotes).filter(id => {{
+                const n = userNotes[id];
+                return Boolean(n && (typeof n === 'string' ? n.trim() : (n.answer && n.answer.trim())));
+            }});
+
+            if (countStat) {{
+                countStat.textContent = `${{qIds.length}} ${{qIds.length === 1 ? 'Answer' : 'Answers'}} Saved`;
+            }}
+
+            let matched = qIds.map(id => {{
+                const qObj = RAW_QUESTIONS.find(q => q.id === id);
+                return {{
+                    id: id,
+                    qObj: qObj || {{ id: id, q_no: id, question: id, year: 'PYQ', unit: 1, marks: 0, type: 'Note' }},
+                    note: userNotes[id]
+                }};
+            }});
+
+            if (notesUnitFilter !== 'all') {{
+                matched = matched.filter(m => String(m.qObj.unit) === String(notesUnitFilter));
+            }}
+
+            if (notesSearchQuery) {{
+                const sq = notesSearchQuery.toLowerCase();
+                matched = matched.filter(m => {{
+                    const text = (typeof m.note === 'string' ? m.note : (m.note.answer || '')).toLowerCase();
+                    const qTitle = (m.qObj.question || '').toLowerCase();
+                    const qNo = (m.qObj.q_no || '').toLowerCase();
+                    return text.includes(sq) || qTitle.includes(sq) || qNo.includes(sq);
+                }});
+            }}
+
+            if (matched.length === 0) {{
+                container.innerHTML = `
+                    <div class="empty-results" style="padding: 3rem 1.5rem; text-align: center; background: var(--card); border-radius: var(--radius-lg);">
+                        <svg class="icon icon-lg" style="margin-bottom: 0.75rem; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <div class="empty-results-title">${{qIds.length === 0 ? 'No personal answers saved yet' : 'No matching answers found'}}</div>
+                        <p class="text-body-small" style="max-width: 460px; margin: 0.5rem auto 1.25rem; color: var(--muted-foreground);">
+                            ${{qIds.length === 0 
+                                ? 'Click the ✍️ pen icon on any question card in the Question Bank or Checklist to save your own answers and study notes.' 
+                                : 'Try clearing your search query or switching the unit filter to All Units.'}}
+                        </p>
+                        ${{qIds.length === 0 ? `
+                            <button type="button" class="complete-btn" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;" onclick="switchPageView('questions')">
+                                <span>Browse Question Bank &rarr;</span>
+                            </button>
+                        ` : ''}}
+                    </div>
+                `;
+                return;
+            }}
+
+            matched.sort((a, b) => {{
+                if (a.qObj.unit !== b.qObj.unit) return a.qObj.unit - b.qObj.unit;
+                if (a.qObj.year !== b.qObj.year) return Number(b.qObj.year) - Number(a.qObj.year);
+                return (a.qObj.q_no || '').localeCompare(b.qObj.q_no || '');
+            }});
+
+            const html = matched.map(m => {{
+                const q = m.qObj;
+                const text = typeof m.note === 'string' ? m.note : (m.note.answer || '');
+                const dateStr = (m.note && m.note.updated_at) ? new Date(m.note.updated_at).toLocaleDateString(undefined, {{ month: 'short', day: 'numeric' }}) : '';
+                const formattedAnswer = renderUserAnswerHtml(text);
+
+                return `
+                    <div class="saved-note-card" id="saved-note-card-${{q.id}}">
+                        <div class="saved-note-header">
+                            <div class="saved-note-meta">
+                                <span class="badge badge-subtle font-mono" style="font-weight: 700;">${{q.q_no || q.id}}</span>
+                                <span class="badge badge-year-${{q.year}}">${{q.year}}</span>
+                                <span class="badge badge-unit-${{q.unit}}">Unit ${{q.unit}}</span>
+                                <span class="badge badge-subtle">${{q.marks}}M</span>
+                                <span class="badge badge-subtle">${{q.type}}</span>
+                            </div>
+                            <div class="saved-note-actions">
+                                <button type="button" class="my-answer-btn-action" onclick="jumpFromNotesToQuestion('${{q.id}}')" title="Open question in Question Bank">
+                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                                    <span>View in Bank &rarr;</span>
+                                </button>
+                                <button type="button" class="my-answer-btn-action" onclick="jumpFromNotesToQuestion('${{q.id}}', true)" title="Edit your answer">
+                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    <span>Edit</span>
+                                </button>
+                                <button type="button" class="my-answer-btn-action btn-delete" onclick="deleteQuestionNote('${{q.id}}')" title="Delete this answer">
+                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    <span>Delete</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="saved-note-qtitle">${{q.question}}</div>
+
+                        <div class="saved-note-content-box">
+                            <div class="my-answer-header" style="margin-bottom: 0.5rem;">
+                                <span class="my-answer-badge">My Answer</span>
+                                ${{dateStr ? `<span class=\"my-answer-time\">${{dateStr}}</span>` : ''}}
+                            </div>
+                            <div class="my-answer-text">${{formattedAnswer}}</div>
+                        </div>
+                    </div>
+                `;
+            }});
+
+            container.innerHTML = html.join('');
+            if (window.renderAllMath) {{
+                try {{ window.renderAllMath(); }} catch(e) {{}}
+            }}
+        }}
+
+        window.jumpFromNotesToQuestion = function(qid, openEdit = false) {{
+            switchPageView('questions');
+            const qObj = RAW_QUESTIONS.find(q => q.id === qid);
+            if (qObj && String(qObj.year) === '2023' && hide2023) {{
+                setHide2023(false);
+            }}
+
+            if (currentYear !== 'all' || currentUnit !== 'all' || currentType !== 'all' || currentMarks !== 'all' || currentRepeat !== 'all' || currentStatus !== 'all' || searchQuery) {{
+                resetFilters();
+            }}
+
+            setTimeout(() => {{
+                const el = document.getElementById(qid);
+                const solEl = document.getElementById('sol-' + qid);
+                if (el && solEl) {{
+                    if (!solEl.classList.contains('open')) {{
+                        solEl.classList.add('open');
+                        el.classList.add('is-open');
+                    }}
+                    switchSolutionTab(qid, 'mine');
+                    if (openEdit) {{
+                        openNoteEditor(qid);
+                    }}
+                    el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                    el.classList.add('highlight-target');
+                    setTimeout(() => el.classList.remove('highlight-target'), 2500);
+                }}
+            }}, 120);
+        }};
+
+        window.exportNotesJSON = function() {{
+            const data = {{
+                subject: CURRENT_SUBJECT_ID,
+                exported_at: new Date().toISOString(),
+                general_notes: generalNotes,
+                notes: userNotes
+            }};
+            const blob = new Blob([JSON.stringify(data, null, 2)], {{ type: 'application/json' }});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${{CURRENT_SUBJECT_ID}}_study_notes_${{new Date().toISOString().slice(0, 10)}}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showQuickToast('Notes exported successfully!');
+        }};
+
+        window.triggerImportNotes = function() {{
+            const input = document.getElementById('notesImportFileInput');
+            if (input) input.click();
+        }};
+
+        window.handleImportFile = function(e) {{
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {{
+                try {{
+                    const data = JSON.parse(evt.target.result);
+                    if (data && typeof data.notes === 'object') {{
+                        Object.assign(userNotes, data.notes);
+                        if (data.general_notes) {{
+                            generalNotes = (generalNotes ? (generalNotes + '\\n\\n' + data.general_notes) : data.general_notes);
+                            const ta = document.getElementById('generalNotesTextarea');
+                            if (ta) ta.value = generalNotes;
+                            localStorage.setItem(STORAGE_KEY_GENERAL_NOTES, generalNotes);
+                        }}
+                        localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(userNotes));
+                        syncProgressToDisk();
+                        renderQuestions();
+                        renderNotesPage();
+                        updateNavBadges();
+                        showQuickToast(`Imported ${{Object.keys(data.notes).length}} notes!`);
+                    }} else {{
+                        alert('Invalid backup file. Expected JSON with "notes" object.');
+                    }}
+                }} catch(err) {{
+                    alert('Error reading backup file: ' + err.message);
+                }}
+            }};
+            reader.readAsText(file);
+            e.target.value = '';
+        }};
+
+        window.copyAllNotesToClipboard = function() {{
+            const qIds = Object.keys(userNotes).filter(id => {{
+                const n = userNotes[id];
+                return Boolean(n && (typeof n === 'string' ? n.trim() : (n.answer && n.answer.trim())));
+            }});
+
+            if (qIds.length === 0 && !generalNotes.trim()) {{
+                showQuickToast('No notes to copy.');
+                return;
+            }}
+
+            let textParts = [];
+            textParts.push(`# ${{document.title.split('|')[0].trim()}} - Study Notes\n`);
+
+            if (generalNotes.trim()) {{
+                textParts.push(`## General Scratchpad & Revision Notes\n${{generalNotes.trim()}}\n\n---\n`);
+            }}
+
+            textParts.push(`## Saved Question Answers (${{qIds.length}} PYQs)\n`);
+
+            qIds.forEach(id => {{
+                const qObj = RAW_QUESTIONS.find(q => q.id === id);
+                const qNo = qObj ? qObj.q_no : id;
+                const year = qObj ? qObj.year : '';
+                const unit = qObj ? `Unit ${{qObj.unit}}` : '';
+                const marks = qObj ? `${{qObj.marks}}M` : '';
+                const qTitle = qObj ? qObj.question : id;
+                const n = userNotes[id];
+                const ans = typeof n === 'string' ? n : (n.answer || '');
+
+                textParts.push(`### [${{qNo}}] (${{year}} - ${{unit}} - ${{marks}})\n${{qTitle}}\n\n**My Answer:**\n${{ans}}\n\n---\n`);
+            }});
+
+            navigator.clipboard.writeText(textParts.join('\\n')).then(() => {{
+                showQuickToast('All notes copied to clipboard!');
+            }}).catch(err => {{
+                console.error('Clipboard copy failed:', err);
+                alert('Could not copy notes to clipboard.');
+            }});
+        }};
+
+        function showQuickToast(msg) {{
+            let toast = document.getElementById('appGlobalToast');
+            if (!toast) {{
+                toast = document.createElement('div');
+                toast.id = 'appGlobalToast';
+                toast.className = 'app-global-toast';
+                document.body.appendChild(toast);
+            }}
+            toast.textContent = msg;
+            toast.classList.add('visible');
+            setTimeout(() => {{
+                toast.classList.remove('visible');
+            }}, 2400);
+        }}
+
         // Render Engine for Questions (Click to open, constrained optimal line length)
         function renderQuestions() {{
             const container = document.getElementById('questionsContainer');
             const counterEl = document.getElementById('matchCounter');
 
             let items = RAW_QUESTIONS;
-            if (hide2022) {{
-                items = items.filter(q => String(q.year) !== '2022');
+            if (hide2023) {{
+                items = items.filter(q => String(q.year) !== '2023');
             }}
             let totalSource = items.length;
 
@@ -3951,7 +5460,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     <div class="empty-results">
                         <svg class="icon icon-lg" style="margin-bottom: 0.5rem; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         <div class="empty-results-title">${{isAllDoneIncomplete ? 'All questions marked as completed!' : 'No matching questions found'}}</div>
-                        <p class="text-body-small">${{isAllDoneIncomplete ? 'Great work! Switch status to "All" or "Completed" to review your work.' : 'Try clearing search filters or clicking Reset Filters.'}}</p>
+                        <p class="text-body-small">${{isAllDoneIncomplete ? 'Great work! Switch status to "All" or "Completed" to review your work.' : 'Your active filter combination has no matches.'}}</p>
+                        <div style="margin-top: 1rem;">
+                            <button type="button" class="reset-filters-btn" style="display: inline-flex;" onclick="window.resetAllFilters && window.resetAllFilters()">
+                                <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                                <span>Reset All Filters</span>
+                            </button>
+                        </div>
                     </div>
                 `;
                 return;
@@ -4021,6 +5536,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 const isCompleted = completedQuestions.has(item.id);
                 const unitBadgeClass = `badge-unit-${{item.unit}}`;
                 const cardBadgeClass = repBadgeInfo.countStr === '4x' ? 'badge-repeat-4x' : (repBadgeInfo.countStr === '3x' ? 'badge-repeat-3x' : (repBadgeInfo.countStr === '2x' ? 'badge-repeat-2x' : 'badge-subtle'));
+                const userNoteObj = userNotes[item.id];
+                const hasNote = Boolean(userNoteObj && (typeof userNoteObj === 'string' ? userNoteObj.trim() : (userNoteObj.answer && userNoteObj.answer.trim())));
+                const activeTab = activeSolutionTab[item.id] || 'standard';
 
                 htmlParts.push(`
                 <div class="q-item ${{isCompleted ? 'is-completed' : ''}}" id="${{item.id}}" onclick="toggleSolution('${{item.id}}', event)">
@@ -4040,6 +5558,18 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                             </div>
 
                             <div class="q-item-actions">
+                                <button class="note-action-btn ${{hasNote ? 'has-note' : ''}}" 
+                                        id="note-btn-${{item.id}}" 
+                                        onclick="handleNoteButtonClick('${{item.id}}', event)" 
+                                        title="${{hasNote ? 'Personal Answer Saved (Click to view/edit)' : 'Add personal answer / custom notes'}}"
+                                        aria-label="Personal Notes">
+                                    <svg class="icon icon-xs pen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                    <span class="note-action-text">${{hasNote ? 'My Answer' : 'Note'}}</span>
+                                    ${{hasNote ? '<span class="note-indicator-dot"></span>' : ''}}
+                                </button>
                                 <button class="complete-btn ${{isCompleted ? 'is-completed' : ''}}" 
                                         onclick="toggleCompleteQuestion('${{item.id}}', event)" 
                                         title="${{isCompleted ? 'Click to unmark as complete' : 'Click to mark as complete'}}"
@@ -4059,8 +5589,59 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     <h3 class="q-item-title">${{item.question}}</h3>
 
                     <div class="q-solution-content" id="sol-${{item.id}}">
-                        <div class="solution-body">
-                            ${{item.formatted_solution}}
+                        <div class="sol-view-switch-row" onclick="event.stopPropagation()">
+                            <div class="sol-view-pills">
+                                <button type="button" class="sol-view-pill ${{activeTab === 'standard' ? 'active' : ''}}" id="tab-std-${{item.id}}" onclick="switchSolutionTab('${{item.id}}', 'standard', event)">
+                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                                    <span>Verified Solution</span>
+                                </button>
+                                <button type="button" class="sol-view-pill ${{activeTab === 'mine' ? 'active' : ''}} ${{hasNote ? 'has-note' : ''}}" id="tab-mine-${{item.id}}" onclick="switchSolutionTab('${{item.id}}', 'mine', event)">
+                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    <span>My Answer</span>
+                                    ${{hasNote ? '<span class="note-indicator-dot"></span>' : ''}}
+                                </button>
+                            </div>
+
+                            <div class="sol-view-quick-actions">
+                                <button type="button" class="sol-btn-edit-note" id="btn-edit-note-${{item.id}}" onclick="openNoteEditor('${{item.id}}', event)" title="Edit or write your personal answer">
+                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    <span id="btn-edit-label-${{item.id}}">${{hasNote ? 'Edit My Answer' : 'Add My Answer'}}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="solution-pane" id="pane-std-${{item.id}}" style="${{activeTab === 'standard' ? '' : 'display:none;'}}">
+                            <div class="solution-body">
+                                ${{item.formatted_solution}}
+                            </div>
+                        </div>
+
+                        <div class="solution-pane" id="pane-mine-${{item.id}}" style="${{activeTab === 'mine' ? '' : 'display:none;'}}">
+                            <div class="my-answer-container" id="my-answer-box-${{item.id}}">
+                                ${{renderAnswerBoxInner(item.id)}}
+                            </div>
+                        </div>
+
+                        <div class="note-editor-container" id="editor-${{item.id}}" style="display: none;" onclick="event.stopPropagation()">
+                            <div class="note-editor-header">
+                                <div class="note-editor-title">
+                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    <span>Personal Answer / Custom Solution</span>
+                                </div>
+                                <span class="note-editor-meta">Saved in data &bull; Never lost</span>
+                            </div>
+                            <p class="note-editor-hint">Write your alternate explanation, textbook derivation steps, or revision notes. Supports line breaks, numbered points, and math ($...$).</p>
+                            <textarea class="note-editor-textarea" id="note-input-${{item.id}}" rows="7" placeholder="Write your own custom answer or notes for this question here..."></textarea>
+                            <div class="note-editor-footer">
+                                <span class="note-editor-keys">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to save</span>
+                                <div class="note-editor-buttons">
+                                    <button type="button" class="note-btn-cancel" onclick="cancelNoteEditor('${{item.id}}', event)">Cancel</button>
+                                    <button type="button" class="note-btn-save" onclick="saveQuestionNote('${{item.id}}', event)">
+                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        <span>Save Answer</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -4072,8 +5653,12 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         // TOGGLE SOLUTION ON ENTIRE CARD CLICK
         window.toggleSolution = function(id, event) {{
-            if (event && event.target && (event.target.closest('.q-solution-content') || event.target.closest('.complete-btn'))) {{
-                return; // Do not collapse when clicking or selecting text inside answer or clicking complete button!
+            if (event && event.target && (
+                event.target.closest('.q-solution-content') || 
+                event.target.closest('.complete-btn') ||
+                event.target.closest('.note-action-btn')
+            )) {{
+                return; // Do not collapse when clicking note button, complete button, or inside answer!
             }}
             const itemEl = document.getElementById(id);
             const solEl = document.getElementById('sol-' + id);
@@ -4086,6 +5671,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }} else {{
                 solEl.classList.add('open');
                 itemEl.classList.add('is-open');
+                const box = document.getElementById('my-answer-box-' + id);
+                if (box) box.innerHTML = renderAnswerBoxInner(id, false);
+                if (window.renderAllMath) {{
+                    try {{ window.renderAllMath(); }} catch(e) {{}}
+                }}
             }}
         }};
 
@@ -4146,29 +5736,37 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }});
         }}
 
+        window.resetAllFilters = function() {{
+            currentYear = 'all';
+            currentUnit = 'all';
+            currentType = 'all';
+            currentMarks = 'all';
+            currentRepeat = 'all';
+            currentStatus = 'all';
+            searchQuery = '';
+            const searchInput = document.getElementById('searchBar');
+            if (searchInput) searchInput.value = '';
+            const searchClearBtn = document.getElementById('searchClearBtn');
+            if (searchClearBtn) searchClearBtn.style.display = 'none';
+            saveFilters();
+            syncFilterUI();
+            renderQuestions();
+        }};
+
         const resetBtn = document.getElementById('resetFiltersBtn');
         if (resetBtn) {{
             resetBtn.addEventListener('click', () => {{
-                currentYear = 'all';
-                currentUnit = 'all';
-                currentType = 'all';
-                currentMarks = 'all';
-                currentRepeat = 'all';
-                currentStatus = 'all';
-                searchQuery = '';
-                saveFilters();
-                syncFilterUI();
-                renderQuestions();
+                window.resetAllFilters();
             }});
         }}
 
         const clearDoneBtn = document.getElementById('clearCompletedBtn');
         if (clearDoneBtn) {{
             clearDoneBtn.addEventListener('click', () => {{
-                const visibleDone = RAW_QUESTIONS.filter(q => (!hide2022 || String(q.year) !== '2022') && completedQuestions.has(q.id));
+                const visibleDone = RAW_QUESTIONS.filter(q => (!hide2023 || String(q.year) !== '2023') && completedQuestions.has(q.id));
                 if (visibleDone.length === 0) return;
-                const promptMsg = hide2022
-                    ? ('Unmark ' + visibleDone.length + ' completed questions in 2025, 2024 & 2023?')
+                const promptMsg = hide2023
+                    ? ('Unmark ' + visibleDone.length + ' completed questions in 2025, 2024 & 2022?')
                     : ('Unmark all ' + completedQuestions.size + ' completed questions?');
                 if (confirm(promptMsg)) {{
                     visibleDone.forEach(q => completedQuestions.delete(q.id));
@@ -4282,6 +5880,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 <line x1="12" y1="4" x2="12" y2="20"></line>
             </svg>
             <span class="mobile-nav-label">Formulas</span>
+        </button>
+        <button class="mobile-nav-item nav-link-btn" data-view="notes" onclick="switchPageView('notes')" aria-label="Notes">
+            <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span class="mobile-nav-label">Notes</span>
         </button>
         <a href="timetable.html" class="mobile-nav-item nav-link-timetable" aria-label="Exam Timetable">
             <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">

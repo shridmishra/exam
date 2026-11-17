@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-16T09:23:11.164674+00:00",
+  "last_updated": "2026-11-17T09:39:10.297729+00:00",
   "active_subject": "geotech-2",
   "subjects": {
     "geotech-2": {
@@ -31,20 +31,47 @@
         "2023-Q5a",
         "2025-Q3a",
         "2023-Q3a",
-        "2025-Q4bii"
+        "2025-Q4bii",
+        "2025-Q1bi",
+        "2025-Q1bii",
+        "2025-Q3bi",
+        "2025-Q2biii",
+        "2025-Q4biii",
+        "2025-Q3bii",
+        "2024-Q5a",
+        "2022-Q5b",
+        "2023-Q1bii",
+        "2023-Q1bi",
+        "2023-Q3bi",
+        "2023-Q3bii",
+        "2024-Q3b",
+        "2024-Q3c",
+        "2024-Q4a",
+        "2024-Q4b",
+        "2024-Q5e-OR",
+        "2022-Q5d",
+        "2025-Q5c-OR",
+        "2024-Q5c",
+        "2025-Q5b",
+        "2022-Q5e-OR",
+        "2022-Q5c",
+        "2024-Q1d",
+        "2022-Q1d"
       ],
       "filters": {
         "year": "all",
         "unit": "all",
-        "type": "Theory",
-        "marks": "3",
-        "repeat": "repeated",
-        "status": "incomplete",
+        "type": "all",
+        "marks": "all",
+        "repeat": "all",
+        "status": "all",
         "search": ""
       },
-      "active_view": "syllabus",
+      "active_view": "questions",
       "hide_2023": false,
-      "last_saved": "2026-11-16T09:23:11.164669+00:00"
+      "last_saved": "2026-11-17T09:39:10.297394+00:00",
+      "notes": {},
+      "general_notes": ""
     }
   }
 }

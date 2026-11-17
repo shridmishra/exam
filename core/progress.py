@@ -28,14 +28,26 @@ def load_all_progress() -> Dict[str, Any]:
 def get_subject_progress(subject_id: str) -> Dict[str, Any]:
     data = load_all_progress()
     subjects = data.get("subjects", {})
-    return subjects.get(subject_id, {
-        "completed_questions": [],
-        "filters": {},
-        "active_view": "questions",
-        "hide_2023": False
-    })
+    sub = subjects.get(subject_id, {})
+    return {
+        "completed_questions": sub.get("completed_questions", []),
+        "filters": sub.get("filters", {}),
+        "active_view": sub.get("active_view", "questions"),
+        "hide_2023": sub.get("hide_2023", False),
+        "notes": sub.get("notes", {}),
+        "general_notes": sub.get("general_notes", "")
+    }
 
-def save_subject_progress(subject_id: str, completed_questions: List[str] = None, filters: Dict[str, Any] = None, active_view: str = None, hide_2023: bool = None, hide_2022: bool = None) -> Dict[str, Any]:
+def save_subject_progress(
+    subject_id: str,
+    completed_questions: List[str] = None,
+    filters: Dict[str, Any] = None,
+    active_view: str = None,
+    hide_2023: bool = None,
+    hide_2022: bool = None,
+    notes: Dict[str, Any] = None,
+    general_notes: str = None
+) -> Dict[str, Any]:
     data = load_all_progress()
     if "subjects" not in data:
         data["subjects"] = {}
@@ -53,6 +65,10 @@ def save_subject_progress(subject_id: str, completed_questions: List[str] = None
         sub_data["hide_2023"] = hide_2023
     elif hide_2022 is not None:
         sub_data["hide_2023"] = hide_2022
+    if notes is not None:
+        sub_data["notes"] = notes
+    if general_notes is not None:
+        sub_data["general_notes"] = general_notes
 
     sub_data["last_saved"] = datetime.now(timezone.utc).isoformat()
     data["subjects"][subject_id] = sub_data

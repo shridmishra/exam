@@ -86,13 +86,17 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 hide_2023 = payload.get("hide_2023")
                 if hide_2023 is None:
                     hide_2023 = payload.get("hide_2022")
+                notes = payload.get("notes")
+                general_notes = payload.get("general_notes")
                 
                 updated = save_subject_progress(
                     subject_id=subject_id,
                     completed_questions=completed,
                     filters=filters,
                     active_view=active_view,
-                    hide_2023=hide_2023
+                    hide_2023=hide_2023,
+                    notes=notes,
+                    general_notes=general_notes
                 )
                 
                 resp_data = json.dumps({
