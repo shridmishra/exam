@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    @media (prefers-color-scheme: light) {
+      .bg { fill: #18181b; }
+      .border { stroke: rgba(0, 0, 0, 0.15); }
+      .glyph { fill: #ffffff; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #09090b; }
+      .border { stroke: rgba(255, 255, 255, 0.16); }
+      .glyph { fill: #fcfcfd; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="7" fill="#09090b"/>
+  <rect class="border" x="0.5" y="0.5" width="31" height="31" rx="6.5" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="1"/>
+  <path class="glyph" d="M8 6h16v4H12v4h9v4H12v4h12v4H8z" fill="#fcfcfd"/>
+</svg>

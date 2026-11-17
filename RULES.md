@@ -38,6 +38,11 @@
 
 ### [RULE 3] Pure Background Separation (Zero Borders) & Unified Canvas Palette
 - Maintain zero 1px structural borders throughout the application.
+- **KaTeX Fraction Line & Border Immunity (NEVER use `border: none !important` on universal `*`)**:
+  - KaTeX mathematical rendering relies on CSS borders for fraction division bars (`.mfrac .frac-line`), square roots, overlines, and rules.
+  - **NEVER** apply `border: none !important;` to universal selectors (`*`, `*::before`, `*::after`). Doing so strips fraction division bars and mathematical lines.
+  - Target form control resets specifically (`button, input, select, textarea { border: none; outline: none; }`).
+  - Explicitly enforce `.katex .mfrac .frac-line { border-bottom-style: solid !important; border-bottom-width: max(1.2px, 0.05em) !important; border-bottom-color: currentColor !important; min-height: 1.2px !important; }` to guarantee crisp, distinct fraction dividing lines across all screen resolutions and dark/light themes.
 - Unified canvas palette shared between Examination Timetable (`timetable.html`) and PYQ Analysis Platform (`index.html`):
   - **Light Mode**: `--background: #fbfaf8` (warm linen/paper ivory), `--card: #ffffff`, `--secondary: #f3f1ec`, `--muted: #f3f1ec`, `--foreground: #1e293b`.
   - **Dark Mode**: `--background: #09090b` (zinc-950 deep obsidian black), `--card: #141416`, `--secondary: #1c1c1f`, `--muted: #1c1c1f`, `--foreground: #fcfcfd`.
@@ -59,13 +64,15 @@
 - Any modification to UI structure or content must be made in `generate_dashboard.py` (and relevant source data).
 - **Question Bank Control Panel**:
   - Unnecessary top headings and subheadings are removed from the Question Bank view for an immediate, high-efficiency dashboard workspace.
-  - **Balanced Control Panel & Segmented Filter Matrix (Zero Awkward Wrapping)**:
-    - **Top Toolbar (`.control-panel-toolbar`)**: Responsive search input with search shortcut hint badge (`/`) on the left, paired horizontally with live session metrics and quick actions on the right (`2023 Toggle`, `Match counter`, `Completion progress`, `Clear Done`, `Reset`). Eliminates awkward wrapping and prevents lopsided empty lines.
-    - **Filter Matrix Rows (`.control-panel-filters`)**: Two clean, symmetrically balanced rows of segmented controls:
-      - **Row 1 (Scope, Frequency & Status)**: `Year` (`All`, `2025`, `2024`, `2023`, `2022`), `Repeated` (`All`, `Most Repeated`, `4x`, `3x`, `2x`), and `Status` (`All`, `Incomplete`, `Completed`).
-      - **Row 2 (Syllabus, Format & Marks)**: `Unit` (`All`, `Unit 1..5`), `Type` (`All`, `Theory`, `Numerical`, `Derivation`), and `Marks` (`All`, `2M`, `3M`, `7M/6M`).
-    - **Apple/Linear Segmented Capsule Track (`.filter-pills-row`)**: Recessed background track (`var(--secondary)`), clean label overlines without colon noise, and elevated active buttons (`var(--filter-pill-active-bg)` / `var(--filter-pill-active-shadow)`), completely eliminating harsh whiteout blobs in dark mode.
-    - **Uniform Action Metrics & Toggles**: All top action badges, toggle switches, and buttons maintain uniform 30px height, responsive horizontal scroll on mobile, and smooth hover/active scaling transitions.
+  - **Minimal Grid-Based Control Panel (Zero Separate Backgrounds & Proper Grid System)**:
+    - **Top Toolbar (`.control-panel-toolbar`)**: Responsive search input with search shortcut hint badge (`/`) on the left spanning across (`flex: 1`), paired horizontally with `Reset` on the right. 2023 toggle is permanently removed.
+    - **Zero Separate Pill Track Backgrounds**: Filter button groups (`.filter-pill-group`) feature NO separate recessed background capsule containers, NO divider lines (`|`), and NO nested background boxes. Inactive buttons are transparent with muted text; active buttons feature a refined, subtle elevated highlight pill.
+    - **Proper CSS Grid System (`.control-panel-grid`)**: Symmetrical 3-column CSS Grid (`grid-template-columns: repeat(3, 1fr)`) utilizing 100% of the horizontal space without empty voids:
+      - Column 1: `Year` (`All`, `2025`, `2024`, `2023`, `2022`) and `Unit` (`All`, `Unit 1..5`).
+      - Column 2: `Repeated` (`All`, `Most Repeated`, `4x`, `3x`, `2x`) and `Type` (`All`, `Theory`, `Numerical`, `Derivation`).
+      - Column 3: `Status` (`All`, `Incomplete`, `Completed`, `Starred`, `Later`) and `Marks` (`All`, `2M`, `3M`, `7M/6M`).
+    - **Uniform 62px Label Alignment**: All filter labels (`.filter-grid-label`) maintain a uniform 62px width, aligning all button groups across columns.
+    - **Responsive Grid Breakpoints**: 3 columns on desktop (`> 1100px`), 2 columns on tablet (`680px - 1100px`), and 1 column on mobile (`< 680px`).
 - The Question Bank view presents complete examination papers exclusively (106 questions across 2025, 2024, 2023, 2022). Recurring questions display frequency badges (`4x`, `3x`, `2x` with no text "Repeated") with tooltips. When `Most Repeated` (or repeat frequency: `4x`, `3x`, `2x`) is active, recurring questions are organized strictly by repeat frequency tier FIRST (Tier 1: 4x repeated across all 4 papers first, Tier 2: 3x repeated across 3 papers second, Tier 3: 2x repeated third), and within each tier by Unit (Unit 1–5), rendering a clear `.q-tier-section-divider` for each tier and `.q-topic-section-header` for each concept, followed by the question cards streaming consecutively in adjacent chronological order (e.g. 2025 card, followed by 2024, 2023, then 2022 card). Individual question cards are free of redundant topic overlines, keeping focus directly on the verbatim question statement. Selecting any repeat filter automatically resets Year, Type, and Marks to `All` so all cross-paper occurrences are visible. Generous distinguishing spacing (`.q-topic-section-header`, 2.5rem) separates topic sections, and Unit dividers (`.q-unit-section-divider`, 2rem) separate units. No nested sub-boxes and no batch headers. Standalone "Most Repeated" and "Overview" tabs are deprecated in favor of integrated filtering.
 - **Persistence Across Refresh**: Filter selections, search input, active page view, formula filters, and question completion states (`localStorage`) must persist reliably across reloads.
 - **Completion & Removal Controls**: Users must be able to mark individual questions as Done / Incomplete via dedicated card buttons (without toggling the solution open/closed). Completed questions must be filterable via the Status pills (`Incomplete` hides/removes completed questions, `Completed` isolates them). A progress badge and reset controls must be provided.
@@ -78,9 +85,9 @@
 ---
 
 ### [RULE 6] Question Presentation, Header Layout & Un-Cardified Solutions
-- **Question Card Header Layout (Number Left, Badges Right Corner)**:
-  - Every question card positions the question number (e.g. `Q.1 (b)`) on the **far left** (`.q-item-qno`).
-  - All metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`, `Done`) are grouped on the **far right corner** (`.q-item-right-meta`) alongside the `Mark Done` button and accordion toggle chevron.
+- **Question Card Header Layout (Badges Left, Actions Right)**:
+  - Every question card positions the question number (e.g. `Q.1 (b)`) and all metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`) together on the **left side** (`.q-item-left-meta` / `.q-item-badges`).
+  - Action controls (`Personal Note` button, `Mark Done` / `Completed` button, and accordion toggle chevron) remain cleanly anchored on the **far right corner** (`.q-item-right-meta` / `.q-item-actions`).
 - **Clean & Un-Cardified Editorial Solutions (Zero Sub-Card Boxes)**:
   - Individual solution points, assumptions, and steps must NEVER be wrapped in nested card containers (`.sol-item-card`), background fills (`--solution-card-bg`), box shadows, or square badge boxes (`.sol-item-badge`).
   - Solutions format as clean, elegant typographic rows (`.sol-item-row`) with natural numbers (`1.`, `2.`), bold concept titles, comfortable line-height (`1.75`), and dedicated lines for examples (`Example: ...`).
@@ -101,9 +108,10 @@
   - 2024: Sky Blue (`.badge-year-2024`)
   - 2023: Lavender Purple (`.badge-year-2023`)
   - 2022: Warm Sand / Gold (`.badge-year-2022`)
-- **Zero-Clutter Directive & In-Place Answer Expansion**: Eliminate redundant explanatory paragraphs, boilerplate slogans, and duplicate action buttons. The entire card is clickable to reveal its complete step-by-step verified solution right there in place without redirecting to the Question Bank. A subtle "Open in Question Bank &rarr;" jump button is located at the bottom of the expanded solution for deep cross-question study when needed.
-- **Two-Way Completion Synchronization**: Toggling question completion from either the Question Bank or the Checklist immediately synchronizes `localStorage` (`geotech_completed_questions`), overall completion counters, year-level progress bars, and unit subhead counters.
+- **Zero-Clutter Directive & In-Place Answer Expansion**: Eliminate uppercase overlines, redundant explanatory paragraphs, boilerplate slogans, duplicate action buttons, and bulky full-width summary cards. Completion progress is displayed via a precision circular progress indicator (`.checklist-progress-circle` with 42px diameter, edge-aligned SVG ring with gradient stroke, dark-mode luminous OLED glow, optical tabular percentage with subscript `%` unit, and click-to-filter action) positioned directly to the right of the `PYQ Checklist` title alongside the year jump pills (`.checklist-summary-units`). Monospace fonts are strictly prohibited for counters and percentages—standard app typography with tabular numbers is enforced. The entire card is clickable to reveal its complete step-by-step verified solution right there in place without redirecting to the Question Bank. A subtle "Open in Question Bank &rarr;" jump button is located at the bottom of the expanded solution for deep cross-question study when needed.
+- **Two-Way Completion Synchronization**: Toggling question completion from either the Question Bank or the Checklist immediately synchronizes `localStorage` (`geotech_completed_questions`), overall completion counters, year-level toolbar progress pills, and unit subhead counters.
 - **In-Place Solution Accordion (`toggleChecklistSolution`)**: Clicking any checklist card smoothly toggles its solution container (`chk-sol-*`), rotates the chevron icon (`.chk-chevron`), and sets `.is-open`. Clicking inside the solution text, copying formulas, or clicking the completion button never collapses the card. KaTeX math typesetting is automatically triggered on toggle.
+- **Minimal Checklist Toolbar & Zero BG Separation**: The checklist toolbar (`.checklist-toolbar`) has `background: transparent; box-shadow: none; padding: 0;`, eliminating any boxy background separation from the canvas. Status filters (`All`, `Incomplete`, `Done`, `Starred`, `Later`) and Unit filters (`Unit` label + `All`, `Unit 1..5`) use unified `.filter-pill-btn` elements with transparent inactive states and subtle active highlight pills. The search box is minimal, small, and right-aligned (`width: 220px`, `height: 32px`, pill-shaped) with a clear button `✕`.
 
 ---
 
@@ -115,7 +123,7 @@
 ### [RULE 9] Floating Back-to-Top Action Button
 - A floating back-to-top button (`.scroll-to-top-btn`) must be permanently visible in the bottom-right corner (`position: fixed; bottom: 2rem; right: 2rem; z-index: 99999; width: 48px; height: 48px; border-radius: var(--radius-full);`).
 - Must use high-contrast theme tokens (`--primary` background, `--primary-foreground` arrow color, `box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28)`) for immediate prominence and zero hardcoded colors.
-- Uses an accessible feather/lucide upward arrow SVG icon (`line` + `polyline` with stroke width 2.5), smoothly scrolls to top on click (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
+- Uses an accessible Hugeicons upward arrow stroke icon (`i.hgi-stroke.hgi-arrow-up-01`), smoothly scrolls to top on click (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
 - Responsive styling adjusts margins for mobile viewports (`max-width: 640px` adjusts offset to `1.25rem`).
 
 ---
@@ -128,20 +136,10 @@
 
 ---
 
-### [RULE 11] Global 2023 Exam Paper Visibility Toggle
-- **Universal Scope**: Provides an instant global toggle to include or hide the entire 2023 examination paper across all views (Question Bank, Unit Checklist, repeat analysis, and completion metrics).
-- **In-View Contextual Controls (Clean Navbar)**:
-  - **Header Navbar**: Top navbar remains clean, focused, and free of the 2023 toggle.
-  - **Control Panel Quick Toggle (`#panelToggle2023Btn`)**: Integrated directly into the Top Toolbar of the Question Bank Control Panel alongside session metrics (`Match Counter`, `Completion Progress`, and `Reset`) for frictionless one-click toggling without redundant outer labels.
-  - **Unit Checklist Quick Inclusion (`#checklistToggle2023Btn`)**: Accessible in the Unit Checklist summary to easily restore the 2023 paper.
-- **Dynamic Scope & Metrics Recalculation**:
-  - **Question Bank**: Removes all 2023 question cards from the DOM, hides the `2023` filter pill (`#filterPill2023`, resetting to `'all'` if active), and updates match counts (`X of 78 matched` when hidden vs `X of 106 matched` when shown).
-  - **Unit Checklist**: Hides the entire `#year-section-2023` container and `#checklistYearPill-2023`, rendering a dashed quick-include button (`#checklistToggle2023Btn`), while updating total counts (`78 Completed / Incomplete`) and progress percentages.
-  - **Repeat Concept Analysis**: Uses `getRepeatInfo(item, items)` to dynamically compute cluster repeat counts (`3x`, `2x`) strictly among visible papers, preventing false recurring tags for concepts that only occurred in 2023 and another single paper.
-  - **Completion Metrics & Clear Done**: Counts and unmarks completed questions strictly within the active scope.
-- **State Persistence & Deep Jump Recovery**:
-  - Persisted in `localStorage` under `geotech_hide_2023` (`"true"` / `"false"`).
-  - Calling `jumpToQuestionBank(id)` for a 2023 question automatically restores 2023 visibility, ensuring the requested question is rendered, expanded, and focused smoothly.
+### [RULE 11] Permanent Inclusion of All 4 Exam Papers (2023 Toggle Removed)
+- **Complete 4-Paper Intelligence**: All 4 verified examination papers (2025, 2024, 2023, 2022 — totaling 106 verified questions) are permanently active across all views and computations.
+- **Toggle Removed for Ultimate Minimalism**: The separate 2023 toggle switch has been completely removed from the UI. Users filter by year naturally via the standard `Year` filter pill buttons (`All`, `2025`, `2024`, `2023`, `2022`).
+- **Clean, Clutter-Free Control Toolbar**: The search toolbar hosts solely the full-width responsive search box and context-sensitive `Reset` action.
 
 ---
 
@@ -185,13 +183,16 @@
 
 ### [RULE 16] Personal Notes, Custom Answers & Study Scratchpad Engine
 - **In-Card Pen Action Button (`.note-action-btn`)**: Question cards in both the Question Bank (`.q-item-actions`) and PYQ Checklist (`.checklist-card-actions`) must include an accessible pen icon button to add, edit, or toggle personal notes/answers. Questions with saved notes must display a visual dot indicator (`.note-indicator-dot`) and subtle active styling.
-- **In-Card Solution Toggle Switch (`.sol-view-switch-row`)**: The solution block of every question card must feature a capsule toggle switch allowing seamless switching between `Verified Solution` and `My Answer ✍️` directly on the card. This toggle must remain strictly isolated to the specific card without affecting any other question.
-- **Zero Wall-of-Text Formatting**: Custom answers must be rendered via `renderUserAnswerHtml()` preserving structured vertical bullet lists (`.sol-list`), numbered points, dedicated `Example:` micro-tags (`.example-tag`), and clean paragraph spacing.
-- **Dedicated Notes Page (`#view-notes`)**:
-  - Must be navigable from the sticky top header (`Notes` with live count badge) and mobile bottom navigation bar.
-  - Hosts the General Revision Scratchpad (`.general-scratchpad-card`) for subject-wide formulas and notes with real-time auto-saving.
-  - Features real-time keyword search and Unit filter capsules (`All`, `Unit 1..5`).
-  - Displays the saved questions archive with formatted answers, quick edit/delete actions, and an "Open in Bank &rarr;" jump button (`jumpFromNotesToQuestion`).
+- **In-Card Solution Toggle Switch (`.sol-view-switch-row`)**: The solution block of question cards features a capsule toggle switch allowing seamless switching between `Verified Solution` and `My Answer ✍️` directly on the card.
+  - **Zero-Clutter Visibility Rule**: When no personal answer is provided (`!hasNote`), all 3 elements in the switch row (`Verified Solution` tab, `My Answer` tab, and `Add My Answer` button) must be strictly **hidden** (`display: none`), displaying the verified solution cleanly and directly.
+  - Only when a personal answer is provided / saved does `.sol-view-switch-row` appear (`display: flex`), allowing students to toggle between solutions and edit their notes.
+  - Deleting a personal answer automatically hides all 3 elements and restores the direct verified solution view.
+  - This toggle must remain strictly isolated to the specific card without affecting any other question.
+- **Full Markdown & Zero Wall-of-Text Formatting**: Custom answers must be rendered via `renderUserAnswerHtml()` supporting full Markdown (headings `#..####`, pipe tables `|...|`, numbered lists `1.` and escaped `1\.`, bullet lists, `Note:` callout boxes, and `Example:` micro-tags) with zero raw markdown artifacts.
+- **Default Tab Display**: When a question has a saved personal answer ("My Answer"), it must open and display "My Answer" by default instead of the verified solution.
+- **Notes & Custom Answers Navigation Policy**:
+  - The sticky top header and mobile bottom navigation retain the clean, minimal 4 primary destinations: `Questions`, `Checklist`, `Formulas`, and `Timetable` (using minimal 1-word titles, pure numeric badges such as `71` and `47/71` without redundant word suffixes, and the dedicated `hgi-file-question-mark` icon).
+  - The standalone `Notes` navigation tab and count badge are excluded from both desktop and mobile navigation bars to keep the interface uncluttered. Personal answers and notes remain accessible directly in-card via the pen button (`.note-action-btn`) and solution tab switch.
 - **Multi-Tier Persistence Guarantee ("Never Lose Notes")**:
   - Primary instant persistence in `localStorage` (`<prefix>_user_notes`, `<prefix>_general_notes`).
   - Asynchronous background synchronization to disk via `POST /api/progress` (`user_progress.json`).
@@ -207,3 +208,90 @@
 - **Entity Sanitization**: Replace all HTML entities (`&lt;` -> `<`, `&gt;` -> `>`, `&amp;` -> `\&`, `&nbsp;` -> ` `, `&mdash;` -> `\text{ --- }`).
 - **Percent Escaping**: Literal `%` in math mode must be escaped as `\%` to prevent line comment truncation.
 - **Client Pre-Processing**: Always ensure `renderMathInElement` runs with `preProcess` so all dynamic client math blocks are pre-sanitized before parsing.
+
+---
+
+## 14. Star & Mark-for-Later Question Tracking Engine
+
+- **Pure Icon-Only Buttons**: Star and Later controls must never contain text labels ("notext just icon"), only clean SVG glyphs.
+- **Star Icon (`.star-action-btn`)**: 5-point star polygon. When active, lights up with warm amber gold (`var(--pastel-amber-bg)` / `var(--pastel-amber-foreground)`).
+- **Later Icon (`.later-action-btn`)**: Clock icon. When active, highlights with soft lavender (`var(--pastel-lavender-bg)` / `var(--pastel-lavender-foreground)`).
+- **Strict Exclusion from Total Count (MANDATORY)**: Questions marked as "Later" MUST NOT be counted in the total questions count or completion progress denominator across Question Bank metrics, PYQ Checklist metrics, navbar badges, and syllabus breakdown counters.
+- **Visual Dimming (`.is-later`)**: Deferred question cards adopt a subtle `0.65` opacity, restoring to `1.0` on hover.
+- **Segmented Status Filters**: `Starred` and `Later` filters are added to status filter pills across Question Bank and PYQ Checklist. Selecting `Incomplete` automatically excludes deferred items.
+- **Multi-Tier Persistence**: Saved to `localStorage` (`<prefix>_starred_questions`, `<prefix>_later_questions`), synced to `user_progress.json`, and bootstrap seeded during dashboard generation.
+- **Client Pre-Processing**: Always ensure `renderMathInElement` runs with `preProcess` so all dynamic client math blocks are pre-sanitized before parsing.
+
+---
+
+## 15. Minimal Favicon & Touch Icon Standard
+
+- **Minimalist Brandmark**: Obsidian/zinc squircle (`#09090b` canvas) with subtle border (`rgba(255, 255, 255, 0.15)`) enclosing a crisp geometric "E" monogram (`#fcfcfd`).
+- **Mathematical Pixel Alignment**: 32×32 canvas aligned to even integer coordinates, scaling to 16×16 with exact 1-to-1 pixel sharpness and zero subpixel blur.
+- **Universal Multi-Tier Delivery**:
+  - Embedded inline URL-safe SVG data URI in `<link rel="icon">` without literal `</style>` tags for instantaneous local `file://` offline rendering.
+  - Root `favicon.svg` for infinite retina scalability and dark/light system theme support.
+  - Root `favicon.ico` (16×16, 32×32, 48×48) for legacy/Windows browsers.
+  - Root `apple-touch-icon.png` (180×180) for iOS homescreen and Safari touch shortcuts.
+- **Generator Enforcement**: Always declare the full favicon stack in both `generate_dashboard.py` and `tools/timetable/build_timetable.py`.
+
+---
+
+## 16. Formula Parameter Breakdown & Clean Typography Standard (Zero Separate Bg & Font)
+
+- **Parameter Breakdown Clean Architecture**:
+  - In formula cards (`#view-formulas`), parameter items must **NEVER** be wrapped in individual colored pill backgrounds (`--math-param-pill-bg`) or nested unit boxes (`--card`).
+  - **No Monospace Font Clutter**: Parameter symbols and units must **NOT** force monospace font (`var(--font-family-mono)`). KaTeX renders the mathematical symbols with standard math typography; descriptions and units inherit the clean, natural application sans-serif typography.
+  - **Structured 3-Column Alignment (`.formula-param-grid`)**: Parameters format as clean, seamless typographic rows using CSS Grid:
+    - **Container**: `display: grid; grid-template-columns: auto 1fr auto; column-gap: 0.85rem; row-gap: 0.45rem; align-items: baseline;`
+    - **Row Wrapper**: `.formula-param-row { display: contents; }` so that all rows across a card align into 3 synchronized columns.
+    - **Column 1 (`.param-sym`)**: Bold symbol, rendered via KaTeX (`$p.sym$`), crisp and left-aligned.
+    - **Column 2 (`.param-desc`)**: High-contrast, highly readable description (`color: var(--foreground); font-size: 0.875rem; line-height: 1.5;`).
+    - **Column 3 (`.param-unit`)**: Clean, subtle SI unit (`color: var(--muted-foreground); font-size: 0.8125rem; font-weight: 500; justify-self: end; text-align: right; background: none; border-radius: 0; padding: 0;`).
+  - **Mobile Fluidity (`@media (max-width: 540px)`)**: Switches smoothly to a flexible wrapping flex layout (`.param-sym { min-width: 44px; }`, `.param-desc { flex: 1 1 180px; }`, `.param-unit { margin-left: auto; }`).
+- **Exam Insight Callout Removal**:
+  - The redundant `.formula-exam-notes` ("Exam Insight") callout box at the bottom of formula cards is removed to eliminate visual clutter and keep cards focused strictly on governing equations and parameter definitions.
+  - In the formula table view, the 4th column displays the clean parameter list rather than repetitive note blocks.
+
+---
+
+## 17. Master Formulas & Governing Equations Control Panel (Minimal & Clean Standard)
+
+- **Zero Heading Clutter**:
+  - The Formulas view (`#view-formulas`) completely eliminates the top `.page-header-row`, removing the redundant overline (`Interactive Mathematical Reference...`), giant H1 headline, and dense paragraph description for maximum vertical workspace.
+- **Unified Space-Efficient Control Panel (`.control-panel`)**:
+  - Adopts the project's standard compact control bar (`var(--card)` background, `var(--radius-lg)` radius, and `var(--shadow-sm)`).
+- **Top Utility & Search Toolbar (`.control-panel-toolbar`)**:
+  - **Search Box**: Responsive search input with search icon, concise placeholder (`Search formulas, variables (Ka, qu, SPT, φ), topics...`), keyboard shortcut hint badge (`f`), and clear button (`✕`).
+  - **Match Counter Pill**: Dedicated subtle pill (`.badge-subtle`) displaying `21 formulas` when unfiltered, or `X of 21 matched` when filtered.
+  - **Segmented Capsule Layout Switcher**: Compact Apple/Linear style capsule pill group (`.filter-pills-row`) with `Cards` and `Table` toggles.
+  - **Smart Reset Button**: Appears smoothly when any search query or custom unit filter is active to reset all formula filters to default.
+- **Segmented Unit Filter Row**:
+  - Compact capsule buttons (`All`, `Unit 1`, `Unit 2`, `Unit 3`, `Unit 4`, `Unit 5`) with hover tooltips displaying unit topics (e.g. `Unit 1: Earth Pressure (5 formulas)`), eliminating wrapping and verbose button titles.
+- **Zero Redundant Status Row**:
+  - Eliminates the duplicate all-caps summary row (`SHOWING 4 MASTER ENGINEERING FORMULATIONS`), saving ~180px-200px of vertical space so equations and cards appear immediately at the top of the viewport.
+
+---
+
+### [RULE 18] Unified Hugeicons Icon System Standard
+- **Design Standard**: The application exclusively uses **Hugeicons** (Stroke-Rounded style) across desktop and mobile views.
+- **CDN with Offline Local Vendored Fallback**:
+  - All pages load Hugeicons via:
+    ```html
+    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" onerror="this.onerror=null;this.href='vendor/hugeicons/icons.css'">
+    <link rel="stylesheet" href="vendor/hugeicons/icons.css">
+    ```
+  - Local assets in `vendor/hugeicons/` ensure zero-latency rendering when opened offline via `file://`.
+- **Sizing Tokens**:
+  - Base `.icon`: `1.25rem` (20px)
+  - `.icon-xs`: `1rem` (16px)
+  - `.icon-sm`: `1.125rem` (18px)
+  - `.icon-md`: `1.375rem` (22px)
+  - `.icon-lg`: `1.75rem` (28px)
+  - Mobile bottom nav (`.mobile-nav-icon`): `22px`
+  - Floating back-to-top (`.scroll-to-top-btn i`): `24px`
+- **Zero Sparkle Mandate**: Never use AI sparkle icons or multi-point stars (`hgi-stars`, `hgi-sparkle`). Questions are starred strictly using standard 5-point star (`hgi-star`).
+
+
+
+

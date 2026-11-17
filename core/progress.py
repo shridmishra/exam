@@ -31,6 +31,8 @@ def get_subject_progress(subject_id: str) -> Dict[str, Any]:
     sub = subjects.get(subject_id, {})
     return {
         "completed_questions": sub.get("completed_questions", []),
+        "starred_questions": sub.get("starred_questions", []),
+        "later_questions": sub.get("later_questions", []),
         "filters": sub.get("filters", {}),
         "active_view": sub.get("active_view", "questions"),
         "hide_2023": sub.get("hide_2023", False),
@@ -41,6 +43,8 @@ def get_subject_progress(subject_id: str) -> Dict[str, Any]:
 def save_subject_progress(
     subject_id: str,
     completed_questions: List[str] = None,
+    starred_questions: List[str] = None,
+    later_questions: List[str] = None,
     filters: Dict[str, Any] = None,
     active_view: str = None,
     hide_2023: bool = None,
@@ -57,6 +61,10 @@ def save_subject_progress(
     if completed_questions is not None:
         # Preserve order, deduplicate
         sub_data["completed_questions"] = list(dict.fromkeys(completed_questions))
+    if starred_questions is not None:
+        sub_data["starred_questions"] = list(dict.fromkeys(starred_questions))
+    if later_questions is not None:
+        sub_data["later_questions"] = list(dict.fromkeys(later_questions))
     if filters is not None:
         sub_data["filters"] = filters
     if active_view is not None:

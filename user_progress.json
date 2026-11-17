@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-17T09:39:10.297729+00:00",
+  "last_updated": "2026-11-17T19:01:38.172672+00:00",
   "active_subject": "geotech-2",
   "subjects": {
     "geotech-2": {
@@ -14,7 +14,6 @@
         "2024-Q2a",
         "2023-Q2bi",
         "2024-Q2b",
-        "2025-Q1a",
         "2025-Q2bi",
         "2025-Q2a",
         "2025-Q4a",
@@ -56,22 +55,65 @@
         "2022-Q5e-OR",
         "2022-Q5c",
         "2024-Q1d",
-        "2022-Q1d"
+        "2022-Q1d",
+        "2022-Q4e-OR",
+        "2024-Q4d",
+        "2022-Q4c",
+        "2025-Q4c",
+        "2022-Q2c",
+        "2022-Q5a",
+        "2024-Q5d",
+        "2025-Q5c",
+        "2023-Q4c",
+        "2025-Q1a",
+        "2025-Q1biii",
+        "2023-Q1biii",
+        "2023-Q1c",
+        "2023-Q1c-OR",
+        "2023-Q5c-OR",
+        "2023-Q5c",
+        "2023-Q5b",
+        "2023-Q4c-OR",
+        "2023-Q4biii",
+        "2023-Q4bii",
+        "2023-Q2c-OR",
+        "2023-Q2c",
+        "2023-Q2biii",
+        "2023-Q3c",
+        "2023-Q3c-OR",
+        "2022-Q4a"
       ],
       "filters": {
         "year": "all",
-        "unit": "all",
+        "unit": "4",
         "type": "all",
         "marks": "all",
         "repeat": "all",
-        "status": "all",
+        "status": "incomplete",
         "search": ""
       },
       "active_view": "questions",
       "hide_2023": false,
-      "last_saved": "2026-11-17T09:39:10.297394+00:00",
-      "notes": {},
-      "general_notes": ""
+      "last_saved": "2026-11-17T19:01:38.172633+00:00",
+      "notes": {
+        "2024-Q5d": {
+          "answer": "## **Depth of Exploration Required for Various Types of Structures / Foundations**\n\n**Depth of exploration** is the depth up to which soil investigation is carried out to determine the soil properties, groundwater conditions and bearing capacity of the soil for safe foundation design.\n\nThe required depth depends on the type, size and load of the structure.\n\n### **1. Depth of Exploration for Different Structures**\n\n| Type of structure/foundation   | Required depth of exploration                                                                                       |\n| ------------------------------ | ------------------------------------------------------------------------------------------------------------------- |\n| **Isolated footing**           | 1.5 to 2 times the width (B) of the footing below foundation level.                                                 |\n| **Combined footing**           | Approximately 1.5 to 2 times the width of the footing.                                                              |\n| **Raft foundation**            | Generally 1.5 times the width of the raft or until the significant stress zone is reached.                          |\n| **Pile foundation**            | At least 1.5 times the width of the pile group below the pile tip.                                                  |\n| **Bridge piers and abutments** | Sufficient depth below the anticipated foundation level to cover the zone of significant stress and possible scour. |\n| **Retaining walls**            | Generally up to a depth where the effect of foundation pressure becomes insignificant.                              |\n| **Dams**                       | Exploration should extend to a considerable depth to identify weak strata, seepage paths and bedrock conditions.    |\n\n### **2. General Criteria for Depth of Exploration**\n\nThe depth of exploration is generally decided based on the following criteria:\n\n1\\. **Stress criterion:** Exploration should continue until the increase in vertical stress due to the foundation load becomes insignificant (usually about 10% of the existing overburden pressure).\n\n2\\. **Soil condition:** If weak or compressible soil layers are encountered, exploration should extend through the entire weak layer.\n\n3\\. **Groundwater table:** The groundwater level and its seasonal variations should be determined.\n\n4\\. **Rock condition:** If rock is encountered, sufficient depth of drilling should be carried out to confirm the quality and continuity of the rock.\n\n### **3. Conclusion**\n\nThe depth of exploration should be sufficient to cover the entire zone of significant stress influence below the foundation so that the structure remains safe against bearing capacity failure and excessive settlement.\n\n**Note:** The numerical depths are general preliminary guidelines. Actual exploration depth depends on soil conditions, foundation dimensions and design requirements.",
+          "updated_at": "2026-11-17T17:24:54.908Z"
+        }
+      },
+      "general_notes": "",
+      "starred_questions": [
+        "2025-Q4c"
+      ],
+      "later_questions": [
+        "2024-Q3e-OR",
+        "2025-Q1c-OR",
+        "2022-Q1e-OR",
+        "2024-Q1c",
+        "2025-Q2c",
+        "2022-Q3d",
+        "2024-Q5b"
+      ]
     }
   }
 }

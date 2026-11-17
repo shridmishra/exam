@@ -32,30 +32,39 @@ def build_unit_checklist_html(questions, unit_titles=None):
 
     years = sorted(tree.keys(), reverse=True)
 
+    distinct_units = sorted(list(set(int(q['unit']) for q in questions if q.get('unit'))))
+    unit_buttons = ['<button type="button" class="filter-pill-btn active" data-unit="all" onclick="setChecklistUnit(\'all\', this)">All</button>']
+    for u in distinct_units:
+        unit_buttons.append(f'<button type="button" class="filter-pill-btn" data-unit="{u}" onclick="setChecklistUnit(\'{u}\', this)">Unit {u}</button>')
+    unit_pills_html = "".join(unit_buttons)
+
     html = []
     html.append(f'''
         <!-- ====================================================
              PAGE VIEW 2: PYQ CHECKLIST (YEAR-WISE & UNIT-WISE)
              ==================================================== -->
         <div class="app-page-view" id="view-syllabus">
-            <div class="page-header-row" style="margin-bottom: 1rem;">
-                <span class="card-overline">Study Tracker &bull; <span id="checklistOverlineCount">{len(questions)} PYQs</span></span>
-                <h1 class="page-title">PYQ Checklist</h1>
-            </div>
+            <div class="checklist-header-row">
+                <h1 class="page-title">Checklist</h1>
 
-            <!-- CHECKLIST GLOBAL PROGRESS CARD -->
-            <div class="checklist-summary-card">
-                <div class="checklist-summary-left">
-                    <div class="checklist-summary-meta">
-                        <span class="card-overline">Total Completion</span>
-                        <span class="checklist-stat-pct" id="checklistTotalPct">0%</span>
+                <div class="checklist-header-right">
+                    <div class="checklist-progress-circle" id="checklistProgressWidget" onclick="toggleChecklistProgressFilter()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){{event.preventDefault();toggleChecklistProgressFilter();}}" title="Overall Checklist Completion: 0% • Click to filter incomplete questions" aria-label="Overall Checklist Completion: 0%">
+                        <svg class="checklist-progress-ring" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="checklistRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="var(--ring-grad-start)" />
+                                    <stop offset="100%" stop-color="var(--ring-grad-end)" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="checklist-ring-bg" cx="21" cy="21" r="17.5" />
+                            <circle class="checklist-ring-fill" id="checklistTotalRing" cx="21" cy="21" r="17.5" />
+                        </svg>
+                        <span class="checklist-stat-pct" id="checklistTotalPct">
+                            <span class="pct-num" id="checklistPctVal">0</span><span class="pct-unit">%</span>
+                        </span>
                     </div>
-                    <div class="checklist-stat-count" id="checklistTotalCount">0 / {len(questions)} Completed</div>
-                    <div class="checklist-progress-bar-bg">
-                        <div class="checklist-progress-bar-fill" id="checklistTotalBar" style="width: 0%;"></div>
-                    </div>
-                </div>
-                <div class="checklist-summary-units">
+
+                    <div class="checklist-summary-units">
     ''')
 
     for y in years:
@@ -67,34 +76,51 @@ def build_unit_checklist_html(questions, unit_titles=None):
                     </a>
         ''')
 
-    count_2023 = sum(len(tree['2023'][u]) for u in tree['2023']) if '2023' in tree else 28
     html.append(f'''
-                    <button class="checklist-toggle-2023-pill" id="checklistToggle2023Btn" onclick="toggleHide2023()" title="Include 2023 Paper in checklist" style="display: none;">
-                        + Include 2023 Paper ({count_2023} Qs)
-                    </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- CHECKLIST CONTROLS & SEARCH TOOLBAR -->
+            <!-- CHECKLIST CONTROLS & SEARCH TOOLBAR (MINIMAL, ZERO BG SEPARATION) -->
             <div class="checklist-toolbar">
-                <div class="checklist-status-filters" id="checklistStatusGroup">
-                    <button class="checklist-status-pill active" data-status="all" onclick="setChecklistStatus('all')">
-                        All <span class="nav-badge" id="checklistAllCount">{len(questions)}</span>
-                    </button>
-                    <button class="checklist-status-pill" data-status="incomplete" onclick="setChecklistStatus('incomplete')">
-                        Incomplete <span class="nav-badge" id="checklistIncompleteCount">{len(questions)}</span>
-                    </button>
-                    <button class="checklist-status-pill" data-status="completed" onclick="setChecklistStatus('completed')">
-                        Done <span class="nav-badge" id="checklistCompletedCount">0</span>
-                    </button>
+                <div class="checklist-toolbar-filters">
+                    <!-- STATUS -->
+                    <div id="checklistStatusGroup" class="filter-pill-group">
+                        <button type="button" class="filter-pill-btn active" data-status="all" onclick="setChecklistStatus('all')">
+                            All <span class="nav-badge" id="checklistAllCount">{len(questions)}</span>
+                        </button>
+                        <button type="button" class="filter-pill-btn" data-status="incomplete" onclick="setChecklistStatus('incomplete')">
+                            Incomplete <span class="nav-badge" id="checklistIncompleteCount">{len(questions)}</span>
+                        </button>
+                        <button type="button" class="filter-pill-btn" data-status="completed" onclick="setChecklistStatus('completed')">
+                            Done <span class="nav-badge" id="checklistCompletedCount">0</span>
+                        </button>
+                        <button type="button" class="filter-pill-btn" data-status="starred" onclick="setChecklistStatus('starred')">
+                            Starred <span class="nav-badge" id="checklistStarredCount">0</span>
+                        </button>
+                        <button type="button" class="filter-pill-btn" data-status="later" onclick="setChecklistStatus('later')">
+                            Later <span class="nav-badge" id="checklistLaterCount">0</span>
+                        </button>
+                    </div>
+
+                    <div class="checklist-filter-divider" aria-hidden="true"></div>
+
+                    <!-- UNIT -->
+                    <div class="checklist-unit-group" id="checklistUnitGroup">
+                        <span class="checklist-filter-label">Unit</span>
+                        <div id="checklistUnitFilters" class="filter-pill-group">
+                            {unit_pills_html}
+                        </div>
+                    </div>
                 </div>
 
+                <!-- MINIMAL COMPACT SEARCH BOX ON RIGHT -->
                 <div class="checklist-search-box">
-                    <svg class="icon icon-sm checklist-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
+                    <i class="icon icon-sm checklist-search-icon hgi-stroke hgi-search-01"></i>
                     <input type="text" class="checklist-search-input" id="checklistSearchInput" placeholder="Filter questions..." aria-label="Filter questions">
+                    <button type="button" class="checklist-search-clear-btn" id="checklistSearchClearBtn" title="Clear search" aria-label="Clear search" style="display: none;">
+                        <i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>
+                    </button>
                 </div>
             </div>
 
@@ -103,19 +129,8 @@ def build_unit_checklist_html(questions, unit_titles=None):
     ''')
 
     for y in years:
-        total_y = sum(len(tree[y][u]) for u in tree[y])
         html.append(f'''
                 <section class="checklist-year-group" id="year-section-{y}">
-                    <div class="checklist-year-header">
-                        <div class="checklist-year-info">
-                            <span class="badge badge-year-{y}">{y} Paper</span>
-                            <span class="checklist-year-stat-text" id="yearStatText-{y}">0 / {total_y} Done (0%)</span>
-                        </div>
-                        <div class="checklist-year-mini-bar">
-                            <div class="checklist-year-mini-bar-fill" id="yearMiniBar-{y}" style="width: 0%;"></div>
-                        </div>
-                    </div>
-
                     <div class="checklist-year-units">
         ''')
 
@@ -151,9 +166,7 @@ def build_unit_checklist_html(questions, unit_titles=None):
                                                 onclick="toggleCompleteQuestion('{q['id']}', event)"
                                                 title="Toggle completed"
                                                 aria-label="Toggle completion for {q['id']}">
-                                            <svg class="icon chk-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                                <polyline points="20 6 9 17 4 12"></polyline>
-                                            </svg>
+                                            <i class="icon chk-svg hgi-stroke hgi-tick-01"></i>
                                         </button>
                                     </div>
                                     <div class="checklist-card-content">
@@ -166,35 +179,35 @@ def build_unit_checklist_html(questions, unit_titles=None):
                                                 {rep_badge}
                                             </div>
                                             <div class="checklist-card-actions">
-                                                <button class="note-action-btn" id="chk-note-btn-{q['id']}" onclick="handleChecklistNoteClick('{q['id']}', event)" title="Personal Answer / Notes" aria-label="Personal Notes">
-                                                    <svg class="icon icon-xs pen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                                    </svg>
-                                                    <span class="note-action-text" id="chk-note-text-{q['id']}">Note</span>
+                                                <button class="icon-action-btn star-action-btn" id="chk-star-btn-{q['id']}" onclick="toggleStarQuestion('{q['id']}', event)" title="Star this question" aria-label="Star question">
+                                                    <i class="icon icon-xs star-icon hgi-stroke hgi-star"></i>
                                                 </button>
-                                                <svg class="icon icon-sm chevron-icon chk-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                                </svg>
+                                                <button class="icon-action-btn later-action-btn" id="chk-later-btn-{q['id']}" onclick="toggleLaterQuestion('{q['id']}', event)" title="Mark for later" aria-label="Mark for later">
+                                                    <i class="icon icon-xs clock-icon hgi-stroke hgi-clock-01"></i>
+                                                </button>
+                                                <button class="icon-action-btn note-action-btn" id="chk-note-btn-{q['id']}" onclick="handleChecklistNoteClick('{q['id']}', event)" title="Personal Answer / Notes" aria-label="Personal Notes">
+                                                    <i class="icon icon-xs pen-icon hgi-stroke hgi-pencil-edit-01"></i>
+                                                </button>
+                                                <i class="icon icon-sm chevron-icon chk-chevron hgi-stroke hgi-chevron-down"></i>
                                             </div>
                                         </div>
                                         <div class="checklist-card-title">{safe_question}</div>
                                         <div class="checklist-solution-content" id="chk-sol-{q['id']}">
-                                            <div class="sol-view-switch-row" onclick="event.stopPropagation()">
+                                            <div class="sol-view-switch-row" id="chk-switch-row-{q['id']}" style="display: none;" onclick="event.stopPropagation()">
                                                 <div class="sol-view-pills">
                                                     <button type="button" class="sol-view-pill active" id="chk-tab-std-{q['id']}" onclick="switchSolutionTab('{q['id']}', 'standard', event, true)">
-                                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                                                        <i class="icon icon-xs hgi-stroke hgi-checkmark-badge-01"></i>
                                                         <span>Verified Solution</span>
                                                     </button>
                                                     <button type="button" class="sol-view-pill" id="chk-tab-mine-{q['id']}" onclick="switchSolutionTab('{q['id']}', 'mine', event, true)">
-                                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                        <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                                                         <span>My Answer</span>
                                                         <span class="note-indicator-dot" id="chk-dot-{q['id']}" style="display:none;"></span>
                                                     </button>
                                                 </div>
                                                 <div class="sol-view-quick-actions">
                                                     <button type="button" class="sol-btn-edit-note" id="chk-btn-edit-{q['id']}" onclick="openNoteEditor('{q['id']}', event, true)" title="Edit or write your personal answer">
-                                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                        <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                                                         <span id="chk-btn-edit-text-{q['id']}">Add My Answer</span>
                                                     </button>
                                                 </div>
@@ -214,7 +227,7 @@ def build_unit_checklist_html(questions, unit_titles=None):
                                             <div class="note-editor-container" id="chk-editor-{q['id']}" style="display: none;" onclick="event.stopPropagation()">
                                                 <div class="note-editor-header">
                                                     <div class="note-editor-title">
-                                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                        <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                                                         <span>Personal Answer / Custom Solution</span>
                                                     </div>
                                                     <span class="note-editor-meta">Saved in data &bull; Never lost</span>
@@ -226,7 +239,7 @@ def build_unit_checklist_html(questions, unit_titles=None):
                                                     <div class="note-editor-buttons">
                                                         <button type="button" class="note-btn-cancel" onclick="cancelNoteEditor('{q['id']}', event, true)">Cancel</button>
                                                         <button type="button" class="note-btn-save" onclick="saveQuestionNote('{q['id']}', event, true)">
-                                                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                            <i class="icon icon-xs hgi-stroke hgi-tick-01"></i>
                                                             <span>Save Answer</span>
                                                         </button>
                                                     </div>
@@ -234,8 +247,8 @@ def build_unit_checklist_html(questions, unit_titles=None):
                                             </div>
 
                                             <div class="checklist-solution-footer">
-                                                <button type="button" class="checklist-jump-link" onclick="jumpToQuestionBank('{q['id']}'); event.stopPropagation();" title="Open full view in Question Bank">
-                                                    <span>Open in Question Bank &rarr;</span>
+                                                <button type="button" class="checklist-jump-link" onclick="jumpToQuestionBank('{q['id']}'); event.stopPropagation();" title="Open question in Questions">
+                                                    <span>Open in Questions &rarr;</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -332,6 +345,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
     from core.progress import get_subject_progress
     sub_prog = get_subject_progress(ctx.id)
     embedded_completed_json = json.dumps(sub_prog.get("completed_questions", [])).replace("</script>", r"<\/script>")
+    embedded_starred_json = json.dumps(sub_prog.get("starred_questions", [])).replace("</script>", r"<\/script>")
+    embedded_later_json = json.dumps(sub_prog.get("later_questions", [])).replace("</script>", r"<\/script>")
     embedded_notes_json = json.dumps(sub_prog.get("notes", {})).replace("</script>", r"<\/script>")
     embedded_general_notes = json.dumps(sub_prog.get("general_notes", "")).replace("</script>", r"<\/script>")
     subject_id_str = ctx.id
@@ -349,9 +364,17 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
     <meta name="theme-color" id="metaThemeColor" content="#09090b">
     <meta name="format-detection" content="telephone=no">
     <title>{subject_name} ({subject_code}) | PYQ Analysis &amp; High-Yield Solutions</title>
+    <!-- Minimalist Favicon & Touch Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2309090b'/%3E%3Crect x='0.5' y='0.5' width='31' height='31' rx='6.5' fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cpath d='M8 6h16v4H12v4h9v4H12v4h12v4H8z' fill='%23fcfcfd'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Hugeicons Font (CDN with offline local fallback) -->
+    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" onerror="this.onerror=null;this.href='vendor/hugeicons/icons.css'">
+    <link rel="stylesheet" href="vendor/hugeicons/icons.css">
     <style>
         /* ----------------------------------------------------
            STRICT DESIGN SYSTEM TOKENS & PURE BG SEPARATION
@@ -407,6 +430,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             --filter-pill-active-bg: #ffffff;
             --filter-pill-active-fg: #1e293b;
             --filter-pill-active-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+
+            /* Circular Progress Ring Gradient Tokens (Light Mode) */
+            --ring-grad-start: #059669;
+            --ring-grad-end: #10b981;
 
             /* Neutral Pastel Accents */
             --pastel-sage-bg: #eaf4ed;
@@ -478,6 +505,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             --filter-pill-active-fg: #fcfcfd;
             --filter-pill-active-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
+            /* Circular Progress Ring Gradient Tokens (Dark Mode) */
+            --ring-grad-start: #10b981;
+            --ring-grad-end: #34d399;
+
             --pastel-sage-bg: rgba(52, 211, 153, 0.16);
             --pastel-sage-foreground: #34d399;
 
@@ -520,9 +551,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            border: none !important;
             outline: none;
             -webkit-tap-highlight-color: transparent;
+        }}
+
+        button, input, select, textarea {{
+            border: none;
+            outline: none;
         }}
 
         html, body {{
@@ -613,10 +648,19 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         .section-header-title {{ font-size: var(--font-size-h6); line-height: var(--line-height-h6); font-weight: 600; color: var(--foreground); display: flex; align-items: center; gap: 0.5rem; }}
         .card-overline {{ font-size: var(--font-size-overline); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted-foreground); display: inline-block; }}
 
-        .icon {{
-            display: inline-block;
-            width: 1.125rem;
-            height: 1.125rem;
+        /* ----------------------------------------------------
+           HUGEICONS SYSTEM & ENHANCED ICON TYPOGRAPHY TOKENS
+           ---------------------------------------------------- */
+        .icon,
+        .hgi-stroke.icon,
+        i.hgi-stroke {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+            font-size: 1.25rem;
+            line-height: 1;
             stroke-width: 2;
             stroke: currentColor;
             fill: none;
@@ -624,10 +668,43 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             stroke-linejoin: round;
             vertical-align: middle;
             flex-shrink: 0;
+            font-style: normal;
         }}
 
-        .icon-sm {{ width: 0.875rem; height: 0.875rem; }}
-        .icon-lg {{ width: 1.375rem; height: 1.375rem; }}
+        .icon-xs, .hgi-stroke.icon-xs {{ width: 1rem; height: 1rem; font-size: 1rem; }}
+        .icon-sm, .hgi-stroke.icon-sm {{ width: 1.125rem; height: 1.125rem; font-size: 1.125rem; }}
+        .icon-md, .hgi-stroke.icon-md {{ width: 1.375rem; height: 1.375rem; font-size: 1.375rem; }}
+        .icon-lg, .hgi-stroke.icon-lg {{ width: 1.75rem; height: 1.75rem; font-size: 1.75rem; }}
+
+        .mobile-nav-icon,
+        .hgi-stroke.mobile-nav-icon {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            font-size: 22px;
+            line-height: 1;
+            transition: transform 0.15s ease;
+            font-style: normal;
+        }}
+
+        .scroll-to-top-btn i,
+        .scroll-to-top-btn .icon {{
+            font-size: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }}
+
+        .q-item.is-open .chevron-icon,
+        .checklist-card.is-open .chk-chevron {{
+            transform: rotate(180deg);
+        }}
+        .chevron-icon,
+        .chk-chevron {{
+            transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }}
 
         /* ----------------------------------------------------
            STICKY NAVBAR (AUTO-HIDE ON SCROLL DOWN, SHOW ON UPSCROLL)
@@ -751,9 +828,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             font-weight: 600;
             padding: 0.15rem 0.45rem;
             border-radius: var(--radius-full);
-            background-color: var(--background);
+            background-color: var(--secondary);
             color: var(--muted-foreground);
             line-height: 1.2;
+            font-variant-numeric: tabular-nums;
         }}
 
         .nav-link-btn.active .nav-badge {{
@@ -887,27 +965,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             line-height: 1;
         }}
 
-        .checklist-toggle-2023-pill,
-        .checklist-toggle-2022-pill {{
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.35rem 0.75rem;
-            background-color: var(--pastel-lavender-bg);
-            color: var(--pastel-lavender-foreground);
-            border-radius: var(--radius-full);
-            border: 1px dashed var(--pastel-lavender-foreground);
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease, transform 0.15s ease;
-        }}
-
-        .checklist-toggle-2023-pill:hover,
-        .checklist-toggle-2022-pill:hover {{
-            background-color: var(--secondary-hover);
-            transform: translateY(-1px);
-        }}
 
         /* ----------------------------------------------------
            SCROLL TO TOP (FLOATING ACTION BUTTON)
@@ -964,10 +1021,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }}
         }}
 
-        .nav-link-timetable {{
-            background-color: var(--pastel-peach-bg) !important;
-            color: var(--pastel-peach-foreground) !important;
-            font-weight: 600 !important;
+        .nav-link-timetable:hover {{
+            background-color: var(--pastel-peach-bg);
+            color: var(--pastel-peach-foreground);
         }}
 
         /* ----------------------------------------------------
@@ -1175,7 +1231,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         /* ----------------------------------------------------
-           COMPACT, SPACE-EFFICIENT CONTROL BAR
+           MINIMAL GRID-BASED CONTROL BAR (ZERO SEPARATE BG)
            ---------------------------------------------------- */
         .control-panel {{
             background-color: var(--card);
@@ -1188,32 +1244,18 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             gap: 0.75rem;
         }}
 
-        /* TOP TOOLBAR: SEARCH & LIVE SESSION ACTIONS */
+        /* TOP TOOLBAR: SEARCH & RESET */
         .control-panel-toolbar {{
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 0.85rem;
-            flex-wrap: wrap;
-            padding-bottom: 0.75rem;
-            position: relative;
-        }}
-
-        .control-panel-toolbar::after {{
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background-color: var(--secondary);
+            gap: 0.75rem;
+            width: 100%;
         }}
 
         .search-box-wrapper {{
             position: relative;
             flex: 1;
-            max-width: 440px;
-            min-width: 240px;
+            min-width: 200px;
         }}
 
         .search-input {{
@@ -1286,119 +1328,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             background-color: var(--secondary-hover);
         }}
 
-        .control-panel-actions,
-        .control-panel-meta {{
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            margin-left: auto;
-            flex-wrap: wrap;
-        }}
-
-        .match-counter-badge {{
-            display: inline-flex;
-            align-items: center;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--muted-foreground);
-            background-color: var(--secondary);
-            padding: 0.25rem 0.6rem;
-            border-radius: var(--radius-full);
-            white-space: nowrap;
-            height: 30px;
-            box-sizing: border-box;
-            line-height: 1;
-        }}
-
-        .progress-pill-badge {{
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--pastel-sage-foreground);
-            background-color: var(--pastel-sage-bg);
-            padding: 0.25rem 0.65rem;
-            border-radius: var(--radius-full);
-            white-space: nowrap;
-            cursor: pointer;
-            user-select: none;
-            height: 30px;
-            box-sizing: border-box;
-            line-height: 1;
-            transition: opacity 0.15s ease, transform 0.1s ease;
-        }}
-
-        .progress-pill-badge:hover {{
-            opacity: 0.85;
-        }}
-
-        .progress-pill-badge:active {{
-            transform: scale(0.97);
-        }}
-
-        .sync-indicator-badge {{
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            font-size: 0.72rem;
-            font-weight: 500;
-            color: var(--muted-foreground);
-            background-color: var(--secondary);
-            padding: 0.25rem 0.65rem;
-            border-radius: var(--radius-full);
-            white-space: nowrap;
-            height: 30px;
-            box-sizing: border-box;
-            line-height: 1;
-            user-select: none;
-            transition: all 0.2s ease;
-        }}
-
-        .sync-dot {{
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background-color: #10b981;
-            display: inline-block;
-            transition: background-color 0.2s ease;
-            flex-shrink: 0;
-        }}
-
-        .sync-indicator-badge.saving .sync-dot {{
-            background-color: #f59e0b;
-        }}
-
-        .sync-indicator-badge.local .sync-dot {{
-            background-color: #0ea5e9;
-        }}
-
-        .clear-completed-btn {{
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.25rem 0.65rem;
-            background-color: var(--pastel-rose-bg);
-            color: var(--pastel-rose-foreground);
-            border-radius: var(--radius-full);
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.15s ease, transform 0.1s ease;
-            white-space: nowrap;
-            height: 30px;
-            box-sizing: border-box;
-            line-height: 1;
-        }}
-
-        .clear-completed-btn:hover {{
-            opacity: 0.85;
-        }}
-
-        .clear-completed-btn:active {{
-            transform: scale(0.97);
-        }}
-
         .reset-filters-btn {{
             display: inline-flex;
             align-items: center;
@@ -1412,9 +1341,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             cursor: pointer;
             transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
             white-space: nowrap;
-            height: 30px;
+            height: 32px;
             box-sizing: border-box;
             line-height: 1;
+            flex-shrink: 0;
         }}
 
         .reset-filters-btn:hover {{
@@ -1426,53 +1356,64 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             transform: scale(0.97);
         }}
 
-        /* FILTER ROWS & SEGMENTED CONTROLS */
-        .control-panel-filters {{
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }}
-
-        .control-panel-filter-row {{
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            flex-wrap: wrap;
-        }}
-
-        .filter-subgroup {{
+        .control-panel-actions {{
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-        }}
-
-        .filter-group-label {{
-            font-size: var(--font-size-overline);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: var(--muted-foreground);
-            margin-right: 0.15rem;
-            user-select: none;
-            white-space: nowrap;
+            gap: 0.45rem;
+            margin-left: auto;
+            flex-wrap: wrap;
         }}
 
         .filter-pills-row {{
             display: inline-flex;
             align-items: center;
-            background-color: var(--secondary);
-            padding: 2.5px;
-            border-radius: var(--radius-full);
             gap: 2px;
         }}
 
-        .filter-divider {{
-            width: 1px;
-            height: 16px;
-            background-color: var(--secondary-hover);
-            margin: 0 0.15rem;
-            opacity: 0.6;
+        /* ----------------------------------------------------
+           PROPER CSS GRID SYSTEM FOR FILTERS (RESPONSIVE)
+           ---------------------------------------------------- */
+        .control-panel-grid {{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.65rem 1.25rem;
+            width: 100%;
+        }}
+
+        .filter-grid-cell {{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 0;
+        }}
+
+        .filter-grid-label {{
+            font-size: var(--font-size-overline);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--muted-foreground);
+            user-select: none;
+            white-space: nowrap;
             flex-shrink: 0;
+            width: 62px;
+        }}
+
+        /* Zero separate background for pill tracks! Pure minimal flow */
+        .filter-pill-group {{
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: transparent;
+            padding: 0;
+            min-width: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }}
+
+        .filter-pill-group::-webkit-scrollbar {{
+            display: none;
         }}
 
         .filter-pill-btn {{
@@ -1480,17 +1421,19 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             align-items: center;
             justify-content: center;
             gap: 0.25rem;
-            padding: 0.25rem 0.6rem;
+            padding: 0.22rem 0.55rem;
             background: transparent;
             color: var(--muted-foreground);
-            border-radius: var(--radius-full);
+            border-radius: var(--radius-sm);
             font-size: 0.75rem;
             font-weight: 500;
             cursor: pointer;
-            transition: color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+            transition: color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
             white-space: nowrap;
             user-select: none;
             line-height: 1.25;
+            box-sizing: border-box;
+            flex-shrink: 0;
         }}
 
         .filter-pill-btn:hover {{
@@ -1503,10 +1446,62 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .filter-pill-btn.active {{
-            background-color: var(--filter-pill-active-bg);
-            color: var(--filter-pill-active-fg);
+            background-color: var(--secondary);
+            color: var(--foreground);
             font-weight: 600;
-            box-shadow: var(--filter-pill-active-shadow);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }}
+
+        [data-theme="dark"] .filter-pill-btn.active {{
+            background-color: #27272a;
+            color: #fcfcfd;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+        }}
+
+        .filter-pill-btn .nav-badge {{
+            font-size: 0.7rem;
+            padding: 0.1rem 0.35rem;
+            border-radius: var(--radius-full);
+            background-color: var(--secondary);
+            color: var(--muted-foreground);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            margin-left: 0.15rem;
+        }}
+
+        .filter-pill-btn.active .nav-badge {{
+            background-color: var(--card);
+            color: var(--foreground);
+        }}
+
+        [data-theme="dark"] .filter-pill-btn.active .nav-badge {{
+            background-color: #18181b;
+            color: #fcfcfd;
+        }}
+
+
+
+        @media (max-width: 1100px) {{
+            .control-panel-grid {{
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem 1rem;
+            }}
+        }}
+
+        @media (max-width: 680px) {{
+            .control-panel {{
+                padding: 0.75rem 0.85rem;
+                gap: 0.65rem;
+            }}
+
+            .control-panel-grid {{
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }}
+
+            .filter-grid-label {{
+                width: 58px;
+            }}
         }}
 
         .search-clear-btn:hover {{
@@ -1556,32 +1551,97 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             color: var(--pastel-sage-foreground) !important;
         }}
 
-        .note-action-btn {{
+        .icon-action-btn {{
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            padding: 0.25rem 0.65rem;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            padding: 0;
             background-color: var(--secondary);
             color: var(--muted-foreground);
             border-radius: var(--radius-full);
-            font-size: 0.75rem;
-            font-weight: 500;
             cursor: pointer;
             user-select: none;
             transition: all 0.15s ease;
-            white-space: nowrap;
+            flex-shrink: 0;
+        }}
+
+        .icon-action-btn:hover {{
+            background-color: var(--secondary-hover);
+            color: var(--foreground);
+            transform: scale(1.08);
+        }}
+
+        .icon-action-btn:active {{
+            transform: scale(0.92);
+        }}
+
+        .icon-action-btn.star-action-btn.is-starred {{
+            background-color: var(--pastel-amber-bg);
+            color: var(--pastel-amber-foreground);
+        }}
+
+        .icon-action-btn.star-action-btn.is-starred .star-icon {{
+            fill: currentColor;
+            stroke: currentColor;
+        }}
+
+        .icon-action-btn.later-action-btn.is-later {{
+            background-color: var(--pastel-lavender-bg);
+            color: var(--pastel-lavender-foreground);
+        }}
+
+        .icon-action-btn.later-action-btn.is-later .clock-icon {{
+            stroke-width: 2.5;
+        }}
+
+        .q-item.is-later {{
+            opacity: 0.65;
+        }}
+
+        .q-item.is-later:hover {{
+            opacity: 1;
+        }}
+
+        .checklist-card.is-later {{
+            opacity: 0.65;
+        }}
+
+        .checklist-card.is-later:hover {{
+            opacity: 1;
+        }}
+
+        .note-action-btn {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            background-color: var(--secondary);
+            color: var(--muted-foreground);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
             position: relative;
+            flex-shrink: 0;
         }}
 
         .note-action-btn:hover {{
             background-color: var(--secondary-hover);
             color: var(--foreground);
+            transform: scale(1.08);
+        }}
+
+        .note-action-btn:active {{
+            transform: scale(0.92);
         }}
 
         .note-action-btn.has-note {{
             background-color: var(--pastel-sky-bg);
             color: var(--pastel-sky-foreground);
-            font-weight: 600;
         }}
 
         .note-action-btn .pen-icon {{
@@ -1591,8 +1651,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .note-indicator-dot {{
-            width: 6px;
-            height: 6px;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
             background-color: currentColor;
             display: inline-block;
@@ -1716,6 +1779,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            row-gap: 0.35rem;
+            flex-wrap: wrap;
+            flex: 1;
+            min-width: 0;
         }}
 
         .q-item-qno {{
@@ -1953,11 +2020,196 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .my-answer-text {{
-            font-size: 0.96875rem;
-            line-height: 1.75;
+            font-size: var(--font-size-body-medium);
+            line-height: 1.7;
             color: var(--foreground);
-            white-space: pre-wrap;
             word-break: break-word;
+        }}
+
+        .my-answer-text p,
+        .my-answer-p {{
+            margin-bottom: 0.85rem;
+            line-height: 1.7;
+            color: var(--foreground);
+        }}
+
+        .my-answer-text p:last-child,
+        .my-answer-p:last-child {{
+            margin-bottom: 0;
+        }}
+
+        .my-answer-heading {{
+            font-weight: 700;
+            color: var(--foreground);
+            margin-top: 1.4rem;
+            margin-bottom: 0.65rem;
+            display: block;
+            letter-spacing: -0.015em;
+        }}
+
+        .my-answer-heading:first-child {{
+            margin-top: 0;
+        }}
+
+        .my-answer-heading.h1,
+        .my-answer-heading.h2 {{
+            font-size: 1.15rem;
+            line-height: 1.45;
+            color: var(--foreground);
+            padding-bottom: 0.45rem;
+            border-bottom: 1px solid var(--border);
+        }}
+
+        .my-answer-heading.h3 {{
+            font-size: 1.05rem;
+            line-height: 1.4;
+            color: var(--foreground);
+            margin-top: 1.35rem;
+        }}
+
+        .my-answer-heading.h4 {{
+            font-size: 0.92rem;
+            line-height: 1.4;
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }}
+
+        /* TABLE CONTAINER & STYLING */
+        .my-answer-table-wrapper {{
+            width: 100%;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            border-radius: var(--radius-md);
+            background-color: var(--card);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
+            -webkit-overflow-scrolling: touch;
+        }}
+
+        .my-answer-table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            text-align: left;
+        }}
+
+        .my-answer-table thead tr {{
+            background-color: var(--secondary);
+            border-bottom: 1px solid var(--border);
+        }}
+
+        .my-answer-table th {{
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--muted-foreground);
+            white-space: nowrap;
+        }}
+
+        .my-answer-table td {{
+            padding: 0.75rem 1rem;
+            color: var(--foreground);
+            vertical-align: top;
+            border-bottom: 1px solid var(--border);
+        }}
+
+        .my-answer-table tbody tr:last-child td {{
+            border-bottom: none;
+        }}
+
+        .my-answer-table tbody tr:nth-child(even) {{
+            background-color: var(--table-row-alt, var(--secondary));
+        }}
+
+        .my-answer-table tbody tr:hover {{
+            background-color: var(--table-row-hover, var(--secondary-hover));
+        }}
+
+        .my-answer-table td:first-child {{
+            font-weight: 600;
+            color: var(--foreground);
+            width: 230px;
+        }}
+
+        .my-answer-table td strong {{
+            color: var(--foreground);
+            font-weight: 600;
+        }}
+
+        /* LIST ITEMS INSIDE MY ANSWER */
+        .my-answer-text .sol-item-row {{
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.65rem;
+            line-height: 1.65;
+        }}
+
+        .my-answer-text .sol-item-row:last-child {{
+            margin-bottom: 0;
+        }}
+
+        .my-answer-text .sol-item-num {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 1.5rem;
+            height: 1.5rem;
+            border-radius: var(--radius-sm);
+            background-color: var(--secondary);
+            color: var(--foreground);
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+            line-height: 1;
+        }}
+
+        .my-answer-text .sol-item-content {{
+            flex: 1;
+            min-width: 0;
+            color: var(--foreground);
+        }}
+
+        .my-answer-text .sol-item-content strong {{
+            color: var(--foreground);
+            font-weight: 700;
+        }}
+
+        /* NOTE BOX CALLOUT */
+        .sol-note-box {{
+            margin: 1.25rem 0 0.5rem;
+            padding: 0.85rem 1.1rem;
+            border-radius: var(--radius-md);
+            background-color: var(--pastel-peach-bg);
+            border-left: 3px solid var(--pastel-peach-foreground);
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }}
+
+        .sol-note-box .note-tag {{
+            font-weight: 700;
+            color: var(--pastel-peach-foreground);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.05em;
+            padding: 0.15rem 0.5rem;
+            border-radius: var(--radius-sm);
+            background-color: var(--card);
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }}
+
+        .sol-note-box .sol-note-text {{
+            flex: 1;
+            color: var(--foreground);
+            font-size: 0.875rem;
+            line-height: 1.6;
         }}
 
         .my-answer-empty {{
@@ -2578,88 +2830,152 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         /* ----------------------------------------------------
            UNIT-WISE PYQ CHECKLIST STYLING (PURE BACKGROUND SEPARATION)
            ---------------------------------------------------- */
-        .checklist-summary-card {{
-            background-color: var(--card);
-            border-radius: var(--radius-lg);
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 1.25rem;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }}
-
-        @media (min-width: 960px) {{
-            .checklist-summary-card {{
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                gap: 2rem;
-            }}
-        }}
-
-        .checklist-summary-left {{
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            min-width: 260px;
-        }}
-
-        .checklist-summary-meta {{
+        .checklist-header-row {{
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
             gap: 1rem;
+            margin-bottom: 1.25rem;
+        }}
+
+        .checklist-header-right {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+        }}
+
+        .checklist-progress-circle {{
+            position: relative;
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-full);
+            background-color: var(--card);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+            user-select: none;
+        }}
+
+        [data-theme="light"] .checklist-progress-circle {{
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04);
+        }}
+
+        .checklist-progress-circle:hover {{
+            transform: translateY(-1px) scale(1.04);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }}
+
+        [data-theme="light"] .checklist-progress-circle:hover {{
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }}
+
+        .checklist-progress-circle:active {{
+            transform: translateY(0) scale(0.98);
+        }}
+
+        .checklist-progress-ring {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 42px;
+            height: 42px;
+            transform: rotate(-90deg);
+            pointer-events: none;
+        }}
+
+        .checklist-ring-bg {{
+            fill: none;
+            stroke: rgba(0, 0, 0, 0.06);
+            stroke-width: 3;
+        }}
+
+        [data-theme="dark"] .checklist-ring-bg {{
+            stroke: rgba(255, 255, 255, 0.08);
+        }}
+
+        .checklist-ring-fill {{
+            fill: none;
+            stroke: var(--pastel-sage-foreground);
+            stroke: url(#checklistRingGrad);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 109.96;
+            stroke-dashoffset: 109.96;
+            transition: stroke-dashoffset 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+        }}
+
+        [data-theme="dark"] .checklist-ring-fill {{
+            filter: drop-shadow(0 0 5px rgba(52, 211, 153, 0.45));
+        }}
+
+        .checklist-progress-circle.is-complete .checklist-ring-fill {{
+            stroke-linecap: butt;
+        }}
+
+        [data-theme="dark"] .checklist-progress-circle.is-complete .checklist-ring-fill {{
+            filter: drop-shadow(0 0 7px rgba(52, 211, 153, 0.6));
         }}
 
         .checklist-stat-pct {{
-            font-size: var(--font-size-stat);
-            line-height: var(--line-height-stat);
-            font-weight: 700;
-            color: var(--pastel-sage-foreground);
-            font-family: var(--font-family-mono);
-        }}
-
-        .checklist-stat-count {{
-            font-size: 0.90625rem;
-            color: var(--foreground-secondary, var(--foreground));
-            font-weight: 500;
-        }}
-
-        .checklist-progress-bar-bg {{
-            width: 100%;
-            height: 8px;
-            background-color: var(--secondary);
-            border-radius: var(--radius-full);
-            overflow: hidden;
             position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: baseline;
+            justify-content: center;
+            color: var(--muted-foreground);
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            text-align: center;
+            white-space: nowrap;
+            pointer-events: none;
+            transition: color 0.25s ease;
         }}
 
-        .checklist-progress-bar-fill {{
-            height: 100%;
-            background-color: var(--pastel-sage-foreground);
-            border-radius: var(--radius-full);
-            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        .checklist-progress-circle.has-progress .checklist-stat-pct {{
+            color: var(--pastel-sage-foreground);
+        }}
+
+        .checklist-stat-pct .pct-num {{
+            font-size: 0.8125rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            font-family: inherit;
+        }}
+
+        .checklist-stat-pct .pct-unit {{
+            font-size: 0.5rem;
+            font-weight: 600;
+            opacity: 0.75;
+            margin-left: 0.75px;
+            transform: translateY(-0.5px);
         }}
 
         .checklist-summary-units {{
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
+            gap: 0.35rem;
             flex-wrap: wrap;
         }}
 
         .checklist-year-pill {{
             display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
-            padding: 0.4rem 0.75rem;
+            gap: 0.4rem;
+            padding: 0.3rem 0.65rem;
             background-color: var(--secondary);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-full);
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: background-color 0.15s ease, transform 0.15s ease;
         }}
 
         .checklist-year-pill:hover {{
@@ -2669,73 +2985,87 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .unit-pill-count {{
             font-size: 0.75rem;
-            font-weight: 700;
-            font-family: var(--font-family-mono);
+            font-weight: 600;
             color: var(--foreground);
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
         }}
 
-        /* CHECKLIST CONTROLS BAR */
+        /* CHECKLIST CONTROLS BAR (ZERO BG SEPARATION, MINIMAL FLOW) */
         .checklist-toolbar {{
-            background-color: var(--card);
-            border-radius: var(--radius-lg);
-            padding: 0.65rem 1rem;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
             margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-sm);
+            box-shadow: none;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }}
+
+        .checklist-toolbar-filters {{
+            display: flex;
+            align-items: center;
             gap: 0.75rem;
             flex-wrap: wrap;
         }}
 
-        .checklist-status-filters {{
-            display: inline-flex;
-            gap: 0.25rem;
-            background-color: var(--secondary);
-            padding: 0.2rem;
-            border-radius: var(--radius-md);
-        }}
-
-        .checklist-status-pill {{
+        .checklist-unit-group {{
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
-            padding: 0.35rem 0.75rem;
-            background: transparent;
-            color: var(--muted-foreground);
-            font-size: 0.8125rem;
-            font-weight: 500;
-            border-radius: calc(var(--radius-md) - 2px);
-            cursor: pointer;
-            transition: all 0.15s ease;
         }}
 
-        .checklist-status-pill:hover {{
-            color: var(--foreground);
+        .checklist-filter-divider {{
+            width: 1px;
+            height: 18px;
+            background-color: var(--border);
+            opacity: 0.5;
+            margin: 0 0.15rem;
+            flex-shrink: 0;
         }}
 
-        .checklist-status-pill.active {{
-            background-color: var(--card);
-            color: var(--foreground);
+        .checklist-filter-label {{
+            font-size: var(--font-size-overline);
             font-weight: 600;
-            box-shadow: var(--shadow-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted-foreground);
+            margin-right: 0.2rem;
+            user-select: none;
+            white-space: nowrap;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
         }}
 
         .checklist-search-box {{
             position: relative;
-            flex: 1;
-            max-width: 320px;
-            min-width: 220px;
+            width: 220px;
+            max-width: 240px;
+            min-width: 180px;
+            flex-shrink: 0;
         }}
 
         .checklist-search-input {{
             width: 100%;
             background-color: var(--input-bg);
-            border-radius: var(--radius-md);
-            padding: 0.4rem 0.75rem 0.4rem 2.1rem;
+            border: none;
+            border-radius: var(--radius-full);
+            padding: 0.35rem 1.8rem 0.35rem 2rem;
             font-size: 0.8125rem;
             color: var(--foreground);
-            height: 34px;
+            height: 32px;
+            box-sizing: border-box;
+            outline: none;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+        }}
+
+        .checklist-search-input:focus {{
+            background-color: var(--card);
+            box-shadow: 0 0 0 2px var(--secondary-hover);
         }}
 
         .checklist-search-icon {{
@@ -2745,51 +3075,34 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             transform: translateY(-50%);
             color: var(--muted-foreground);
             pointer-events: none;
+            font-size: 13px;
+        }}
+
+        .checklist-search-clear-btn {{
+            position: absolute;
+            right: 0.45rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--muted-foreground);
+            cursor: pointer;
+            padding: 0.15rem;
+            border-radius: var(--radius-full);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: color 0.15s ease;
+        }}
+
+        .checklist-search-clear-btn:hover {{
+            color: var(--foreground);
         }}
 
         /* YEAR GROUPS & SUB-UNITS */
         .checklist-year-group {{
             margin-bottom: 2rem;
-        }}
-
-        .checklist-year-header {{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            padding: 0.75rem 1.15rem;
-            background-color: var(--secondary);
-            border-radius: var(--radius-lg);
-            margin-bottom: 0.85rem;
-            flex-wrap: wrap;
-        }}
-
-        .checklist-year-info {{
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }}
-
-        .checklist-year-stat-text {{
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--muted-foreground);
-            font-family: var(--font-family-mono);
-        }}
-
-        .checklist-year-mini-bar {{
-            width: 80px;
-            height: 6px;
-            background-color: var(--card);
-            border-radius: var(--radius-full);
-            overflow: hidden;
-        }}
-
-        .checklist-year-mini-bar-fill {{
-            height: 100%;
-            background-color: var(--pastel-sage-foreground);
-            border-radius: var(--radius-full);
-            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }}
 
         .checklist-year-units {{
@@ -3099,6 +3412,49 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             max-width: 100%;
         }}
 
+        /* KATEX FRACTION DIVIDING LINE & MATHEMATICAL BORDER ENFORCEMENT */
+        .katex * {{
+            border-color: currentColor;
+        }}
+
+        .katex .mfrac .frac-line {{
+            display: inline-block !important;
+            width: 100% !important;
+            border-bottom-style: solid !important;
+            border-bottom-width: 0.06em !important;
+            border-bottom-width: max(1.2px, 0.05em) !important;
+            border-bottom-color: currentColor !important;
+            min-height: 1.2px !important;
+        }}
+
+        .katex .overline .overline-line,
+        .katex .underline .underline-line {{
+            border-bottom-style: solid !important;
+            border-bottom-width: 0.06em !important;
+            border-bottom-width: max(1.2px, 0.05em) !important;
+            border-bottom-color: currentColor !important;
+            min-height: 1.2px !important;
+        }}
+
+        .katex .hdashline {{
+            border-bottom-style: dashed !important;
+            border-bottom-width: 0.06em !important;
+            border-bottom-width: max(1.2px, 0.05em) !important;
+            border-bottom-color: currentColor !important;
+        }}
+
+        .katex .hline {{
+            border-bottom-style: solid !important;
+            border-bottom-width: 0.06em !important;
+            border-bottom-width: max(1.2px, 0.05em) !important;
+            border-bottom-color: currentColor !important;
+        }}
+
+        .katex .rule {{
+            border-style: solid !important;
+            border-color: currentColor !important;
+        }}
+
         .table-responsive-wrapper {{
             -webkit-overflow-scrolling: touch;
         }}
@@ -3197,60 +3553,75 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 flex-shrink: 0;
             }}
 
-            .match-counter-badge, .progress-pill-badge, .reset-filters-btn, .clear-completed-btn, .panel-year-toggle-btn {{
+            .reset-filters-btn, .panel-year-toggle-btn {{
                 font-size: 0.72rem;
                 padding: 0.2rem 0.5rem;
                 height: 28px;
             }}
 
-            .checklist-summary-card {{
-                padding: 1rem;
-                gap: 0.85rem;
-                border-radius: var(--radius-md);
+            .checklist-header-row {{
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
             }}
 
-            .checklist-summary-meta {{
+            .checklist-header-right {{
+                width: 100%;
+                justify-content: flex-start;
                 gap: 0.5rem;
-            }}
-
-            .checklist-summary-units {{
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
+                padding-bottom: 3px;
                 flex-wrap: nowrap;
-                width: 100%;
-                padding-bottom: 4px;
             }}
 
-            .checklist-summary-units::-webkit-scrollbar {{
+            .checklist-header-right::-webkit-scrollbar {{
                 display: none;
             }}
 
+            .checklist-progress-circle {{
+                flex-shrink: 0;
+            }}
+
+            .checklist-summary-units {{
+                flex-shrink: 0;
+                flex-wrap: nowrap;
+            }}
+
             .checklist-year-pill {{
-                padding: 0.35rem 0.65rem;
+                padding: 0.28rem 0.55rem;
                 font-size: 0.75rem;
                 flex-shrink: 0;
             }}
 
             .checklist-toolbar {{
-                padding: 0.65rem 0.85rem;
+                padding: 0;
                 flex-direction: column;
                 align-items: stretch;
                 gap: 0.65rem;
-                border-radius: var(--radius-md);
+                background: transparent;
+                box-shadow: none;
             }}
 
-            .checklist-status-filters {{
+            .checklist-toolbar-filters {{
                 display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
                 width: 100%;
             }}
 
-            .checklist-status-pill {{
-                flex: 1;
-                justify-content: center;
-                text-align: center;
-                padding: 0.35rem 0.5rem;
-                font-size: 0.78rem;
+            .checklist-filter-divider {{
+                display: none;
+            }}
+
+            .checklist-unit-group {{
+                display: flex;
+                align-items: center;
+                gap: 0.35rem;
+                width: 100%;
             }}
 
             .checklist-search-box {{
@@ -3278,12 +3649,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 font-size: 0.6875rem;
                 padding: 0.18rem 0.4rem;
             }}
-
-            .checklist-year-header {{
-                padding: 0.65rem 0.85rem;
-                border-radius: var(--radius-md);
-                gap: 0.5rem;
-            }}
         }}
 
         @media (max-width: 640px) {{
@@ -3302,11 +3667,17 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 padding: 0.2rem 0.5rem;
             }}
 
+            .q-item-left-meta {{
+                gap: 0.35rem;
+                row-gap: 0.25rem;
+                flex: 1;
+                min-width: 0;
+            }}
+
             .q-item-right-meta {{
                 gap: 0.35rem;
-                width: 100%;
-                justify-content: space-between;
-                margin-left: 0;
+                margin-left: auto;
+                flex-shrink: 0;
             }}
 
             .q-item-badges {{
@@ -3326,9 +3697,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }}
 
             .note-action-btn {{
-                font-size: 0.72rem;
-                padding: 0.25rem 0.55rem;
-                min-height: 28px;
+                width: 28px;
+                height: 28px;
+                padding: 0;
             }}
 
             .sol-view-switch-row {{
@@ -3433,34 +3804,27 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             <ul class="nav-links">
                 <li>
                     <button class="nav-link-btn active" data-view="questions" onclick="switchPageView('questions')">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-                        Question Bank
-                        <span class="nav-badge" id="navQuestionsBadge">{len(raw_questions)} PYQs</span>
+                        <i class="icon icon-sm hgi-stroke hgi-help-circle"></i>
+                        Questions
+                        <span class="nav-badge" id="navQuestionsBadge">{len(raw_questions)}</span>
                     </button>
                 </li>
                 <li>
                     <button class="nav-link-btn" data-view="syllabus" onclick="switchPageView('syllabus')">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                        Unit Checklist
-                        <span class="nav-badge" id="navChecklistBadge">5 Units</span>
+                        <i class="icon icon-sm hgi-stroke hgi-task-01"></i>
+                        Checklist
+                        <span class="nav-badge" id="navChecklistBadge">0/{len(raw_questions)}</span>
                     </button>
                 </li>
                 <li>
                     <button class="nav-link-btn" data-view="formulas" onclick="switchPageView('formulas')">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+                        <i class="icon icon-sm hgi-stroke hgi-function-of-x"></i>
                         Formulas
                     </button>
                 </li>
                 <li>
-                    <button class="nav-link-btn" data-view="notes" onclick="switchPageView('notes')">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        Notes
-                        <span class="nav-badge" id="navNotesBadge">0 Notes</span>
-                    </button>
-                </li>
-                <li>
                     <a href="timetable.html" class="nav-link-btn nav-link-timetable" title="View Exam Timetable">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <i class="icon icon-sm hgi-stroke hgi-calendar-03"></i>
                         Timetable
                     </a>
                 </li>
@@ -3468,17 +3832,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
             <div class="nav-actions">
                 <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
-                    <svg class="icon" id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
+                    <i class="icon hgi-stroke hgi-sun-01" id="themeIcon"></i>
                 </button>
             </div>
         </div>
@@ -3490,129 +3844,95 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
              PAGE VIEW 1: QUESTIONS & SOLUTIONS ENGINE (DEFAULT)
              ==================================================== -->
         <div class="app-page-view active" id="view-questions">
-            <!-- Compact, Space-Efficient Control Panel (Refined Segmented Architecture) -->
+            <!-- Compact, Space-Efficient Control Panel (Minimal Grid Architecture) -->
             <div class="control-panel">
                 <!-- TOP UTILITY & SEARCH TOOLBAR -->
                 <div class="control-panel-toolbar">
                     <div class="search-box-wrapper">
-                        <svg class="icon icon-sm search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <i class="icon icon-sm search-icon hgi-stroke hgi-search-01"></i>
                         <input type="text" class="search-input" id="searchInput" placeholder="Search topics, questions, formulas..." aria-label="Search questions">
                         <kbd class="search-kbd-hint" aria-hidden="true">/</kbd>
                         <button class="search-clear-btn" id="searchClearBtn" title="Clear search" aria-label="Clear search" style="display: none;">
-                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            <i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>
                         </button>
                     </div>
 
-                    <div class="control-panel-actions">
-                        <button class="panel-year-toggle-btn is-active" id="panelToggle2023Btn" onclick="toggleHide2023()" title="Toggle 2023 exam questions (Click to show/hide 2023 questions)">
-                            <span class="toggle-switch-track" aria-hidden="true">
-                                <span class="toggle-switch-thumb"></span>
-                            </span>
-                            <span class="year-toggle-text" id="panelToggle2023Text">
-                                <span class="badge badge-year-2023">2023</span> Shown
-                            </span>
-                        </button>
-
-                        <span class="match-counter-badge" id="matchCounter">{len(raw_questions)} of {len(raw_questions)} matched</span>
-
-                        <div class="progress-pill-badge" id="completionProgressBadge" title="Click to view completed questions">
-                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                            <span id="completedCounterText">0 / {len(raw_questions)} Done</span>
-                        </div>
-
-                        <div class="sync-indicator-badge" id="syncStatusBadge" title="Progress saved automatically to user_progress.json on disk">
-                            <span class="sync-dot"></span>
-                            <span id="syncStatusText">Saved to JSON</span>
-                        </div>
-
-                        <button class="clear-completed-btn" id="clearCompletedBtn" title="Unmark all completed questions" style="display: none;">
-                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                            Clear Done
-                        </button>
-
-                        <button class="reset-filters-btn" id="resetFiltersBtn" title="Reset all filters to default" style="display: none;">
-                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-                            Reset
-                        </button>
-                    </div>
+                    <button class="reset-filters-btn" id="resetFiltersBtn" title="Reset all filters to default" style="display: none;">
+                        <i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>
+                        Reset
+                    </button>
                 </div>
 
-                <!-- STRUCTURED FILTER ROWS (ZERO WRAPPING & PERFECT SYMMETRY) -->
-                <div class="control-panel-filters">
-                    <!-- ROW 1: YEAR, REPEAT, STATUS -->
-                    <div class="control-panel-filter-row">
-                        <div class="filter-subgroup">
-                            <span class="filter-group-label">Year</span>
-                            <div id="yearFilters" class="filter-pills-row">
-                                <button class="filter-pill-btn active" data-year="all">All</button>
-                                <button class="filter-pill-btn" data-year="2025">2025</button>
-                                <button class="filter-pill-btn" data-year="2024">2024</button>
-                                <button class="filter-pill-btn" data-year="2023" id="filterPill2023">2023</button>
-                                <button class="filter-pill-btn" data-year="2022">2022</button>
-                            </div>
-                        </div>
-
-                        <div class="filter-divider" aria-hidden="true"></div>
-
-                        <div class="filter-subgroup">
-                            <span class="filter-group-label">Repeated</span>
-                            <div id="repeatFilters" class="filter-pills-row">
-                                <button class="filter-pill-btn active" data-repeat="all">All</button>
-                                <button class="filter-pill-btn" data-repeat="repeated" title="All Repeated Questions (4x, 3x, 2x)">Most Repeated</button>
-                                <button class="filter-pill-btn" data-repeat="4x" title="Questions repeated across all 4 exam papers">4x</button>
-                                <button class="filter-pill-btn" data-repeat="3x" title="Questions repeated across 3 exam papers">3x</button>
-                                <button class="filter-pill-btn" data-repeat="2x" title="Questions repeated across 2 exam papers">2x</button>
-                            </div>
-                        </div>
-
-                        <div class="filter-divider" aria-hidden="true"></div>
-
-                        <div class="filter-subgroup">
-                            <span class="filter-group-label">Status</span>
-                            <div id="statusFilters" class="filter-pills-row">
-                                <button class="filter-pill-btn active" data-status="all">All</button>
-                                <button class="filter-pill-btn" data-status="incomplete" title="Hide completed questions">Incomplete</button>
-                                <button class="filter-pill-btn" data-status="completed" title="Show only completed questions">Completed</button>
-                            </div>
+                <!-- PROPER CSS GRID FOR ALL 6 FILTER DIMENSIONS -->
+                <div class="control-panel-grid">
+                    <!-- CELL 1: YEAR -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Year</span>
+                        <div id="yearFilters" class="filter-pill-group">
+                            <button class="filter-pill-btn active" data-year="all">All</button>
+                            <button class="filter-pill-btn" data-year="2025">2025</button>
+                            <button class="filter-pill-btn" data-year="2024">2024</button>
+                            <button class="filter-pill-btn" data-year="2023" id="filterPill2023">2023</button>
+                            <button class="filter-pill-btn" data-year="2022">2022</button>
                         </div>
                     </div>
 
-                    <!-- ROW 2: UNIT, TYPE, MARKS -->
-                    <div class="control-panel-filter-row">
-                        <div class="filter-subgroup">
-                            <span class="filter-group-label">Unit</span>
-                            <div id="unitFilters" class="filter-pills-row">
-                                <button class="filter-pill-btn active" data-unit="all">All</button>
-                                <button class="filter-pill-btn" data-unit="1">Unit 1</button>
-                                <button class="filter-pill-btn" data-unit="2">Unit 2</button>
-                                <button class="filter-pill-btn" data-unit="3">Unit 3</button>
-                                <button class="filter-pill-btn" data-unit="4">Unit 4</button>
-                                <button class="filter-pill-btn" data-unit="5">Unit 5</button>
-                            </div>
+                    <!-- CELL 2: REPEATED -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Repeated</span>
+                        <div id="repeatFilters" class="filter-pill-group">
+                            <button class="filter-pill-btn active" data-repeat="all">All</button>
+                            <button class="filter-pill-btn" data-repeat="repeated" title="All Repeated Questions (4x, 3x, 2x)">Most Repeated</button>
+                            <button class="filter-pill-btn" data-repeat="4x" title="Questions repeated across all 4 exam papers">4x</button>
+                            <button class="filter-pill-btn" data-repeat="3x" title="Questions repeated across 3 exam papers">3x</button>
+                            <button class="filter-pill-btn" data-repeat="2x" title="Questions repeated across 2 exam papers">2x</button>
                         </div>
+                    </div>
 
-                        <div class="filter-divider" aria-hidden="true"></div>
-
-                        <div class="filter-subgroup">
-                            <span class="filter-group-label">Type</span>
-                            <div id="typeFilters" class="filter-pills-row">
-                                <button class="filter-pill-btn active" data-type="all">All</button>
-                                <button class="filter-pill-btn" data-type="Theory">Theory</button>
-                                <button class="filter-pill-btn" data-type="Numerical">Numerical</button>
-                                <button class="filter-pill-btn" data-type="Derivation">Derivation</button>
-                            </div>
+                    <!-- CELL 3: STATUS -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Status</span>
+                        <div id="statusFilters" class="filter-pill-group">
+                            <button class="filter-pill-btn active" data-status="all">All</button>
+                            <button class="filter-pill-btn" data-status="incomplete" title="Hide completed questions">Incomplete</button>
+                            <button class="filter-pill-btn" data-status="completed" title="Show only completed questions">Completed</button>
+                            <button class="filter-pill-btn" data-status="starred" title="Show only starred questions">Starred</button>
+                            <button class="filter-pill-btn" data-status="later" title="Show questions saved for later">Later</button>
                         </div>
+                    </div>
 
-                        <div class="filter-divider" aria-hidden="true"></div>
+                    <!-- CELL 4: UNIT -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Unit</span>
+                        <div id="unitFilters" class="filter-pill-group">
+                            <button class="filter-pill-btn active" data-unit="all">All</button>
+                            <button class="filter-pill-btn" data-unit="1">Unit 1</button>
+                            <button class="filter-pill-btn" data-unit="2">Unit 2</button>
+                            <button class="filter-pill-btn" data-unit="3">Unit 3</button>
+                            <button class="filter-pill-btn" data-unit="4">Unit 4</button>
+                            <button class="filter-pill-btn" data-unit="5">Unit 5</button>
+                        </div>
+                    </div>
 
-                        <div class="filter-subgroup">
-                            <span class="filter-group-label">Marks</span>
-                            <div id="marksFilters" class="filter-pills-row">
-                                <button class="filter-pill-btn active" data-marks="all">All</button>
-                                <button class="filter-pill-btn" data-marks="2">2M</button>
-                                <button class="filter-pill-btn" data-marks="3">3M</button>
-                                <button class="filter-pill-btn" data-marks="7">7M / 6M</button>
-                            </div>
+                    <!-- CELL 5: TYPE -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Type</span>
+                        <div id="typeFilters" class="filter-pill-group">
+                            <button class="filter-pill-btn active" data-type="all">All</button>
+                            <button class="filter-pill-btn" data-type="Theory">Theory</button>
+                            <button class="filter-pill-btn" data-type="Numerical">Numerical</button>
+                            <button class="filter-pill-btn" data-type="Derivation">Derivation</button>
+                        </div>
+                    </div>
+
+                    <!-- CELL 6: MARKS -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Marks</span>
+                        <div id="marksFilters" class="filter-pill-group">
+                            <button class="filter-pill-btn active" data-marks="all">All</button>
+                            <button class="filter-pill-btn" data-marks="2">2M</button>
+                            <button class="filter-pill-btn" data-marks="3">3M</button>
+                            <button class="filter-pill-btn" data-marks="7">7M / 6M</button>
                         </div>
                     </div>
                 </div>
@@ -3630,11 +3950,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
              PAGE VIEW 4: FORMULAS REFERENCE (CHEAT-SHEET)
              ==================================================== -->
         <div class="app-page-view" id="view-formulas">
-            <div class="page-header-row">
-                <span class="card-overline">Mathematical Cheat-Sheet &bull; 14 Governing Relations</span>
-                <h1 class="page-title">Master Formulas &amp; Governing Equations</h1>
-            </div>
-
             <div class="table-responsive-wrapper">
                 <table class="master-data-table">
                     <thead>
@@ -3820,16 +4135,16 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 </div>
                 <div class="page-header-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                     <button type="button" class="complete-btn" onclick="exportNotesJSON()" title="Download a JSON backup of all your notes and answers">
-                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <i class="icon icon-xs hgi-stroke hgi-download-02"></i>
                         <span>Export Backup</span>
                     </button>
                     <button type="button" class="complete-btn" onclick="triggerImportNotes()" title="Restore notes from a JSON backup file">
-                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <i class="icon icon-xs hgi-stroke hgi-upload-02"></i>
                         <span>Import</span>
                     </button>
                     <input type="file" id="notesImportFileInput" accept=".json" style="display:none;" onchange="handleImportFile(event)">
                     <button type="button" class="complete-btn" onclick="copyAllNotesToClipboard()" title="Copy all notes formatted to clipboard">
-                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <i class="icon icon-xs hgi-stroke hgi-copy-01"></i>
                         <span>Copy All</span>
                     </button>
                 </div>
@@ -3839,7 +4154,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             <div class="general-scratchpad-card">
                 <div class="scratchpad-header">
                     <div class="scratchpad-title-wrap">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <i class="icon icon-sm hgi-stroke hgi-note-01"></i>
                         <div>
                             <h3 class="scratchpad-title">General Scratchpad &amp; Revision Notes</h3>
                             <p class="scratchpad-subtitle">Freeform notes, exam warnings, memory mnemonics, or formulas to remember for {subject_name}.</p>
@@ -3856,7 +4171,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             <!-- NOTES SEARCH & UNIT FILTER TOOLBAR -->
             <div class="notes-filter-toolbar">
                 <div class="notes-search-box">
-                    <svg class="icon icon-xs notes-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <i class="icon icon-xs notes-search-icon hgi-stroke hgi-search-01"></i>
                     <input type="text" class="notes-search-input" id="notesSearchInput" placeholder="Filter saved answers by question, keywords, or content..." oninput="filterNotesView()">
                 </div>
                 <div class="notes-unit-pills" id="notesUnitFilters">
@@ -3888,31 +4203,24 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         const STORAGE_KEY_HIDE_2023 = '{storage_prefix}_hide_2023';
         const STORAGE_KEY_NOTES = '{storage_prefix}_user_notes';
         const STORAGE_KEY_GENERAL_NOTES = '{storage_prefix}_general_notes';
+        const STORAGE_KEY_STARRED = '{storage_prefix}_starred_questions';
+        const STORAGE_KEY_LATER = '{storage_prefix}_later_questions';
 
         const EMBEDDED_NOTES = {embedded_notes_json};
+        const EMBEDDED_STARRED = {embedded_starred_json};
+        const EMBEDDED_LATER = {embedded_later_json};
         const EMBEDDED_GEN_NOTES = {embedded_general_notes};
 
         let hide2023 = false;
         try {{
-            const savedHide = localStorage.getItem(STORAGE_KEY_HIDE_2023);
-            if (savedHide !== null) {{
-                hide2023 = (savedHide === 'true');
-            }}
-        }} catch (e) {{
-            console.error('Error loading hide2023 setting:', e);
-        }}
+            localStorage.removeItem(STORAGE_KEY_HIDE_2023);
+        }} catch (e) {{}}
 
         function setHide2023(val) {{
-            hide2023 = Boolean(val);
+            hide2023 = false; // 2023 toggle removed per user directive; always visible
             try {{
-                localStorage.setItem(STORAGE_KEY_HIDE_2023, String(hide2023));
+                localStorage.removeItem(STORAGE_KEY_HIDE_2023);
             }} catch (e) {{}}
-
-            if (hide2023 && currentYear === '2023') {{
-                currentYear = 'all';
-                saveFilters();
-                syncFilterUI();
-            }}
 
             sync2023ToggleUI();
             renderQuestions();
@@ -3921,7 +4229,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         window.toggleHide2023 = function() {{
-            setHide2023(!hide2023);
+            setHide2023(false);
         }};
         window.toggleHide2022 = window.toggleHide2023; // Alias for backward compatibility
 
@@ -3929,7 +4237,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             const panelBtn = document.getElementById('panelToggle2023Btn');
             const panelText = document.getElementById('panelToggle2023Text');
             const filterPill2023 = document.getElementById('filterPill2023');
-            const checklistToggleBtn = document.getElementById('checklistToggle2023Btn');
             const checklistPill2023 = document.getElementById('checklistYearPill-2023');
             const yearSection2023 = document.getElementById('year-section-2023');
 
@@ -3938,7 +4245,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             if (panelBtn) {{
                 panelBtn.classList.toggle('is-active', isShown);
                 panelBtn.classList.toggle('is-hidden', !isShown);
-                panelBtn.title = isShown ? '2023 PYQs are included (Click to hide 2023)' : '2023 PYQs are hidden (Click to include 2023)';
+                panelBtn.title = isShown ? '2023 PYQs are included' : '2023 PYQs are hidden';
             }}
             if (panelText) {{
                 panelText.innerHTML = isShown 
@@ -3948,10 +4255,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
             if (filterPill2023) {{
                 filterPill2023.style.display = isShown ? 'inline-flex' : 'none';
-            }}
-
-            if (checklistToggleBtn) {{
-                checklistToggleBtn.style.display = hide2023 ? 'inline-flex' : 'none';
             }}
 
             if (checklistPill2023) {{
@@ -3976,17 +4279,41 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         let completedQuestions = new Set();
         try {{
-            // 1. Initial seed from disk-saved user_progress.json (embedded directly in HTML)
             if (Array.isArray(EMBEDDED_COMPLETED) && EMBEDDED_COMPLETED.length > 0) {{
                 EMBEDDED_COMPLETED.forEach(qid => completedQuestions.add(qid));
             }}
-            // 2. Merge any existing items from browser localStorage
             const savedDone = JSON.parse(localStorage.getItem(STORAGE_KEY_COMPLETED) || '[]');
             if (Array.isArray(savedDone)) {{
                 savedDone.forEach(qid => completedQuestions.add(qid));
             }}
         }} catch (e) {{
             console.error('Error loading completed questions:', e);
+        }}
+
+        let starredQuestions = new Set();
+        try {{
+            if (Array.isArray(EMBEDDED_STARRED) && EMBEDDED_STARRED.length > 0) {{
+                EMBEDDED_STARRED.forEach(qid => starredQuestions.add(qid));
+            }}
+            const savedStarred = JSON.parse(localStorage.getItem(STORAGE_KEY_STARRED) || '[]');
+            if (Array.isArray(savedStarred)) {{
+                savedStarred.forEach(qid => starredQuestions.add(qid));
+            }}
+        }} catch (e) {{
+            console.error('Error loading starred questions:', e);
+        }}
+
+        let laterQuestions = new Set();
+        try {{
+            if (Array.isArray(EMBEDDED_LATER) && EMBEDDED_LATER.length > 0) {{
+                EMBEDDED_LATER.forEach(qid => laterQuestions.add(qid));
+            }}
+            const savedLater = JSON.parse(localStorage.getItem(STORAGE_KEY_LATER) || '[]');
+            if (Array.isArray(savedLater)) {{
+                savedLater.forEach(qid => laterQuestions.add(qid));
+            }}
+        }} catch (e) {{
+            console.error('Error loading later questions:', e);
         }}
 
         let userNotes = {{}};
@@ -4025,8 +4352,29 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 console.error('Error saving completed questions to localStorage:', e);
             }}
             updateMetrics();
+            setSyncStatus('saving', 'Saving...');
+            if (diskSyncTimeout) clearTimeout(diskSyncTimeout);
+            diskSyncTimeout = setTimeout(syncProgressToDisk, 300);
+        }}
 
-            // Background async sync to user_progress.json on disk
+        function saveStarred() {{
+            try {{
+                localStorage.setItem(STORAGE_KEY_STARRED, JSON.stringify([...starredQuestions]));
+            }} catch (e) {{
+                console.error('Error saving starred questions to localStorage:', e);
+            }}
+            setSyncStatus('saving', 'Saving...');
+            if (diskSyncTimeout) clearTimeout(diskSyncTimeout);
+            diskSyncTimeout = setTimeout(syncProgressToDisk, 300);
+        }}
+
+        function saveLater() {{
+            try {{
+                localStorage.setItem(STORAGE_KEY_LATER, JSON.stringify([...laterQuestions]));
+            }} catch (e) {{
+                console.error('Error saving later questions to localStorage:', e);
+            }}
+            updateMetrics();
             setSyncStatus('saving', 'Saving...');
             if (diskSyncTimeout) clearTimeout(diskSyncTimeout);
             diskSyncTimeout = setTimeout(syncProgressToDisk, 300);
@@ -4037,6 +4385,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 const payload = {{
                     subject: CURRENT_SUBJECT_ID,
                     completed_questions: [...completedQuestions],
+                    starred_questions: [...starredQuestions],
+                    later_questions: [...laterQuestions],
                     filters: {{
                         year: currentYear,
                         unit: currentUnit,
@@ -4076,8 +4426,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                         if (Array.isArray(subData.completed_questions)) {{
                             const prevSize = completedQuestions.size;
                             subData.completed_questions.forEach(qid => completedQuestions.add(qid));
-
-                            // If localStorage had extra questions not yet on disk, sync back to disk
                             if (completedQuestions.size > subData.completed_questions.length) {{
                                 syncProgressToDisk();
                             }}
@@ -4089,6 +4437,20 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                                 syncChecklistUI();
                                 updateMetrics();
                             }}
+                        }}
+
+                        if (Array.isArray(subData.starred_questions)) {{
+                            subData.starred_questions.forEach(qid => starredQuestions.add(qid));
+                            try {{
+                                localStorage.setItem(STORAGE_KEY_STARRED, JSON.stringify([...starredQuestions]));
+                            }} catch (e) {{}}
+                        }}
+
+                        if (Array.isArray(subData.later_questions)) {{
+                            subData.later_questions.forEach(qid => laterQuestions.add(qid));
+                            try {{
+                                localStorage.setItem(STORAGE_KEY_LATER, JSON.stringify([...laterQuestions]));
+                            }} catch (e) {{}}
                         }}
 
                         if (subData.notes && typeof subData.notes === 'object') {{
@@ -4198,8 +4560,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             const completedText = document.getElementById('completedCounterText');
             const clearBtn = document.getElementById('clearCompletedBtn');
             const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2023 || String(q.year) !== '2023');
-            const total = visibleQuestions.length;
-            const doneCount = visibleQuestions.filter(q => completedQuestions.has(q.id)).length;
+            // Questions marked as later are excluded from total count!
+            const activeQuestions = visibleQuestions.filter(q => !laterQuestions.has(q.id));
+            const total = activeQuestions.length;
+            const doneCount = activeQuestions.filter(q => completedQuestions.has(q.id)).length;
             const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
 
             if (completedText) {{
@@ -4207,7 +4571,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }}
             if (clearBtn) {{
                 clearBtn.style.display = doneCount > 0 ? 'inline-flex' : 'none';
-                clearBtn.innerHTML = `<svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Clear Done (${{doneCount}})`;
+                clearBtn.innerHTML = `<i class="icon icon-xs hgi-stroke hgi-delete-02"></i> Clear Done (${{doneCount}})`;
             }}
             syncChecklistUI();
         }}
@@ -4226,42 +4590,117 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             syncChecklistUI();
         }};
 
+        window.toggleStarQuestion = function(id, event) {{
+            if (event) {{
+                event.stopPropagation();
+            }}
+            if (starredQuestions.has(id)) {{
+                starredQuestions.delete(id);
+            }} else {{
+                starredQuestions.add(id);
+            }}
+            saveStarred();
+            renderQuestions();
+            syncChecklistUI();
+        }};
+
+        window.toggleLaterQuestion = function(id, event) {{
+            if (event) {{
+                event.stopPropagation();
+            }}
+            if (laterQuestions.has(id)) {{
+                laterQuestions.delete(id);
+            }} else {{
+                laterQuestions.add(id);
+            }}
+            saveLater();
+            renderQuestions();
+            syncChecklistUI();
+        }};
+
         // UNIT CHECKLIST & SYNCHRONIZATION ENGINE (YEAR-WISE & UNIT-WISE)
         let currentChecklistStatus = 'all';
+        let currentChecklistUnit = 'all';
         let checklistSearchQuery = '';
+
+        window.setChecklistUnit = function(unit, btn) {{
+            currentChecklistUnit = String(unit);
+            const container = document.getElementById('checklistUnitFilters');
+            if (container) {{
+                container.querySelectorAll('.filter-pill-btn').forEach(b => {{
+                    b.classList.toggle('active', b.getAttribute('data-unit') === String(unit));
+                }});
+            }}
+            syncChecklistUI();
+        }};
 
         function syncChecklistUI() {{
             const visibleQuestions = RAW_QUESTIONS.filter(q => !hide2023 || String(q.year) !== '2023');
-            const total = visibleQuestions.length;
-            const completedCount = visibleQuestions.filter(q => completedQuestions.has(q.id)).length;
+            // Questions marked as later are excluded from total count!
+            const activeQuestions = visibleQuestions.filter(q => !laterQuestions.has(q.id));
+            const total = activeQuestions.length;
+            const completedCount = activeQuestions.filter(q => completedQuestions.has(q.id)).length;
             const totalPct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
 
             const totalPctEl = document.getElementById('checklistTotalPct');
+            const pctValEl = document.getElementById('checklistPctVal');
             const totalCountEl = document.getElementById('checklistTotalCount');
             const totalBarEl = document.getElementById('checklistTotalBar');
-            if (totalPctEl) totalPctEl.textContent = `${{totalPct}}%`;
+            const totalRingEl = document.getElementById('checklistTotalRing');
+            const widgetEl = document.getElementById('checklistProgressWidget');
+
+            if (pctValEl) {{
+                pctValEl.textContent = `${{totalPct}}`;
+            }} else if (totalPctEl) {{
+                totalPctEl.innerHTML = `<span class="pct-num" id="checklistPctVal">${{totalPct}}</span><span class="pct-unit">%</span>`;
+            }}
             if (totalCountEl) totalCountEl.textContent = `${{completedCount}} / ${{total}} Completed`;
             if (totalBarEl) totalBarEl.style.width = `${{totalPct}}%`;
+
+            if (totalRingEl) {{
+                const circumference = 109.96;
+                if (totalPct === 0) {{
+                    totalRingEl.style.strokeDashoffset = circumference;
+                    totalRingEl.style.opacity = '0';
+                }} else {{
+                    totalRingEl.style.opacity = '1';
+                    const offset = circumference - (totalPct / 100) * circumference;
+                    totalRingEl.style.strokeDashoffset = offset;
+                }}
+            }}
+            if (widgetEl) {{
+                const filterActionHint = (typeof currentChecklistStatus !== 'undefined' && currentChecklistStatus === 'incomplete')
+                    ? 'Click to show all questions'
+                    : 'Click to filter incomplete';
+                widgetEl.title = `Overall Completion: ${{totalPct}}% (${{completedCount}} of ${{total}} Done) • ${{filterActionHint}}`;
+                widgetEl.setAttribute('aria-label', `Overall Completion: ${{totalPct}}% (${{completedCount}} of ${{total}} Done)`);
+                widgetEl.classList.toggle('has-progress', totalPct > 0);
+                widgetEl.classList.toggle('is-complete', totalPct === 100);
+            }}
 
             const overlineEl = document.getElementById('checklistOverlineCount');
             if (overlineEl) overlineEl.textContent = `${{total}} PYQs`;
 
             const navBadge = document.getElementById('navChecklistBadge');
             if (navBadge) {{
-                navBadge.textContent = `${{completedCount}}/${{total}} Done`;
+                navBadge.textContent = `${{completedCount}}/${{total}}`;
             }}
 
             const navQBadge = document.getElementById('navQuestionsBadge');
             if (navQBadge) {{
-                navQBadge.textContent = `${{total}} PYQs`;
+                navQBadge.textContent = `${{total}}`;
             }}
 
             const allCountEl = document.getElementById('checklistAllCount');
             const incCountEl = document.getElementById('checklistIncompleteCount');
             const compCountEl = document.getElementById('checklistCompletedCount');
+            const starCountEl = document.getElementById('checklistStarredCount');
+            const laterCountEl = document.getElementById('checklistLaterCount');
             if (allCountEl) allCountEl.textContent = total;
             if (incCountEl) incCountEl.textContent = total - completedCount;
             if (compCountEl) compCountEl.textContent = completedCount;
+            if (starCountEl) starCountEl.textContent = visibleQuestions.filter(q => starredQuestions.has(q.id)).length;
+            if (laterCountEl) laterCountEl.textContent = visibleQuestions.filter(q => laterQuestions.has(q.id)).length;
 
             const yearTotal = {{ '2025': 0, '2024': 0, '2023': 0, '2022': 0 }};
             const yearDone = {{ '2025': 0, '2024': 0, '2023': 0, '2022': 0 }};
@@ -4273,26 +4712,37 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 const u = String(item.unit);
                 const yuKey = `${{y}}-${{u}}`;
 
-                if (yearTotal[y] !== undefined) {{
-                    yearTotal[y]++;
-                    if (completedQuestions.has(item.id)) yearDone[y]++;
-                }}
-                subheadTotal[yuKey] = (subheadTotal[yuKey] || 0) + 1;
-                if (completedQuestions.has(item.id)) {{
-                    subheadDone[yuKey] = (subheadDone[yuKey] || 0) + 1;
+                const isLater = laterQuestions.has(item.id);
+                const isDone = completedQuestions.has(item.id);
+                const isStarred = starredQuestions.has(item.id);
+
+                if (!isLater) {{
+                    if (yearTotal[y] !== undefined) {{
+                        yearTotal[y]++;
+                        if (isDone) yearDone[y]++;
+                    }}
+                    subheadTotal[yuKey] = (subheadTotal[yuKey] || 0) + 1;
+                    if (isDone) {{
+                        subheadDone[yuKey] = (subheadDone[yuKey] || 0) + 1;
+                    }}
                 }}
 
-                const isDone = completedQuestions.has(item.id);
                 const cardEl = document.getElementById('chk-card-' + item.id);
                 const btnEl = document.getElementById('chk-btn-' + item.id);
+                const starBtn = document.getElementById('chk-star-btn-' + item.id);
+                const laterBtn = document.getElementById('chk-later-btn-' + item.id);
 
                 if (cardEl) {{
                     cardEl.classList.toggle('is-completed', isDone);
+                    cardEl.classList.toggle('is-later', isLater);
 
                     let visible = true;
                     if (hide2023 && y === '2023') visible = false;
-                    if (currentChecklistStatus === 'incomplete' && isDone) visible = false;
+                    if (currentChecklistUnit !== 'all' && u !== String(currentChecklistUnit)) visible = false;
+                    if (currentChecklistStatus === 'incomplete' && (isDone || isLater)) visible = false;
                     if (currentChecklistStatus === 'completed' && !isDone) visible = false;
+                    if (currentChecklistStatus === 'starred' && !isStarred) visible = false;
+                    if (currentChecklistStatus === 'later' && !isLater) visible = false;
 
                     if (visible && checklistSearchQuery) {{
                         const qText = (item.question || '').toLowerCase();
@@ -4312,6 +4762,14 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 if (btnEl) {{
                     btnEl.classList.toggle('checked', isDone);
                 }}
+                if (starBtn) {{
+                    starBtn.classList.toggle('is-starred', isStarred);
+                    const svgEl = starBtn.querySelector('.star-icon');
+                    if (svgEl) svgEl.setAttribute('fill', isStarred ? 'currentColor' : 'none');
+                }}
+                if (laterBtn) {{
+                    laterBtn.classList.toggle('is-later', isLater);
+                }}
                 updateNoteButtonsAndBadges(item.id);
             }});
 
@@ -4322,12 +4780,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
                 const pillCount = document.getElementById(`yearPillCount-${{y}}`);
                 if (pillCount) pillCount.textContent = `${{yDn}}/${{yTot}}`;
-
-                const statText = document.getElementById(`yearStatText-${{y}}`);
-                if (statText) statText.textContent = `${{yDn}} / ${{yTot}} Done (${{yPct}}%)`;
-
-                const miniBar = document.getElementById(`yearMiniBar-${{y}}`);
-                if (miniBar) miniBar.style.width = `${{yPct}}%`;
 
                 for (let u = 1; u <= 5; u++) {{
                     const yuKey = `${{y}}-${{u}}`;
@@ -4340,9 +4792,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     if (subGroup) {{
                         if (hide2023 && y === '2023') {{
                             subGroup.style.display = 'none';
+                        }} else if (currentChecklistUnit !== 'all' && String(u) !== String(currentChecklistUnit)) {{
+                            subGroup.style.display = 'none';
                         }} else {{
                             const visibleCards = subGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
-                            subGroup.style.display = (visibleCards.length > 0 || (!checklistSearchQuery && currentChecklistStatus === 'all')) ? 'flex' : 'none';
+                            subGroup.style.display = (visibleCards.length > 0 || (!checklistSearchQuery && currentChecklistStatus === 'all' && currentChecklistUnit === 'all')) ? 'flex' : 'none';
                         }}
                     }}
                 }}
@@ -4353,7 +4807,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                         yearGroup.style.display = 'none';
                     }} else {{
                         const visibleInYear = yearGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
-                        yearGroup.style.display = (visibleInYear.length > 0 || (!checklistSearchQuery && currentChecklistStatus === 'all')) ? 'block' : 'none';
+                        yearGroup.style.display = (visibleInYear.length > 0 || (!checklistSearchQuery && currentChecklistStatus === 'all' && currentChecklistUnit === 'all')) ? 'block' : 'none';
                     }}
                 }}
             }});
@@ -4361,10 +4815,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             const checklistPill2023 = document.getElementById('checklistYearPill-2023');
             if (checklistPill2023) {{
                 checklistPill2023.style.display = hide2023 ? 'none' : 'inline-flex';
-            }}
-            const checklistToggleBtn = document.getElementById('checklistToggle2023Btn');
-            if (checklistToggleBtn) {{
-                checklistToggleBtn.style.display = hide2023 ? 'inline-flex' : 'none';
             }}
         }}
 
@@ -4380,11 +4830,16 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             currentChecklistStatus = status;
             const group = document.getElementById('checklistStatusGroup');
             if (group) {{
-                group.querySelectorAll('.checklist-status-pill').forEach(btn => {{
+                group.querySelectorAll('.filter-pill-btn, .checklist-status-pill').forEach(btn => {{
                     btn.classList.toggle('active', btn.getAttribute('data-status') === status);
                 }});
             }}
             syncChecklistUI();
+        }};
+
+        window.toggleChecklistProgressFilter = function() {{
+            const nextStatus = (currentChecklistStatus === 'incomplete') ? 'all' : 'incomplete';
+            window.setChecklistStatus(nextStatus);
         }};
 
         window.toggleChecklistSolution = function(id, event) {{
@@ -4392,7 +4847,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 event.target.closest('.checklist-solution-content') || 
                 event.target.closest('.checklist-card-check') || 
                 event.target.closest('.checklist-checkbox-btn') ||
-                event.target.closest('.note-action-btn')
+                event.target.closest('.note-action-btn') ||
+                event.target.closest('.icon-action-btn')
             )) {{
                 return; // Do not collapse when selecting text inside answer, clicking checkbox, or note button!
             }}
@@ -4546,7 +5002,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
             let hash = window.location.hash.replace('#', '');
             if (hash === 'checklist') hash = 'syllabus';
-            const validViews = ['questions', 'syllabus', 'formulas', 'notes'];
+            const validViews = ['questions', 'syllabus', 'formulas'];
             const savedView = localStorage.getItem(STORAGE_KEY_VIEW);
 
             if (hash === 'repeated') {{
@@ -4562,15 +5018,26 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }}
 
             const checklistSearchInput = document.getElementById('checklistSearchInput');
+            const clClearBtn = document.getElementById('checklistSearchClearBtn');
             if (checklistSearchInput) {{
                 let clTimeout;
                 checklistSearchInput.addEventListener('input', (e) => {{
+                    if (clClearBtn) clClearBtn.style.display = e.target.value ? 'inline-flex' : 'none';
                     clearTimeout(clTimeout);
                     clTimeout = setTimeout(() => {{
                         checklistSearchQuery = e.target.value.trim().toLowerCase();
                         syncChecklistUI();
                     }}, 150);
                 }});
+                if (clClearBtn) {{
+                    clClearBtn.addEventListener('click', () => {{
+                        checklistSearchInput.value = '';
+                        clClearBtn.style.display = 'none';
+                        checklistSearchQuery = '';
+                        syncChecklistUI();
+                        checklistSearchInput.focus();
+                    }});
+                }}
             }}
             syncChecklistUI();
 
@@ -4585,7 +5052,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         window.addEventListener('hashchange', () => {{
             let hash = window.location.hash.replace('#', '');
             if (hash === 'checklist') hash = 'syllabus';
-            const validViews = ['questions', 'syllabus', 'formulas', 'notes'];
+            const validViews = ['questions', 'syllabus', 'formulas'];
             if (hash === 'repeated') {{
                 switchPageView('questions');
                 const repBtn = document.querySelector('#repeatFilters [data-repeat="repeated"]');
@@ -4608,21 +5075,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 metaTheme.setAttribute('content', theme === 'dark' ? '#09090b' : '#fbfaf8');
             }}
             if (theme === 'dark') {{
-                themeIcon.innerHTML = `
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                `;
+                themeIcon.className = 'icon hgi-stroke hgi-sun-01';
+                themeIcon.innerHTML = '';
             }} else {{
-                themeIcon.innerHTML = `
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                `;
+                themeIcon.className = 'icon hgi-stroke hgi-moon-02';
+                themeIcon.innerHTML = '';
             }}
         }}
 
@@ -4665,68 +5122,149 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         // ----------------------------------------------------
         function renderUserAnswerHtml(raw) {{
             if (!raw) return '';
+
+            // First escape HTML entities
             let s = raw
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
 
-            // Bold **text**
+            // Markdown Bold: **text** or __text__
             s = s.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');
+            s = s.replace(/__(.*?)__/g, '<strong>$1</strong>');
 
-            // Format Example: lines
-            s = s.replace(/(?:^|\\n)(?:Example|Eg):\\s*(.*?)(?=\\n|$)/gi, (match, ex) => {{
-                return `\\n<div class="sol-example" style="margin: 0.4rem 0;"><span class="example-tag">Eg</span> <span class="sol-example-text">${{ex}}</span></div>`;
-            }});
+            // Markdown Italic: *text* (excluding already matched strong)
+            s = s.replace(/(^|[^\\*])\\*([^\\*]+)\\*([^\\*]|$)/g, '$1<em>$2</em>$3');
 
-            const lines = s.split('\\n');
-            let out = [];
-            let inList = false;
+            // Inline code: `code`
+            s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-            lines.forEach(line => {{
+            // Normalize newlines and split lines
+            const rawLines = s.replaceAll(String.fromCharCode(13), '').split(String.fromCharCode(10));
+            const out = [];
+
+            function isTableDelimiter(line) {{
                 const trimmed = line.trim();
+                return /^\\|?(\\s*:?--+:?\\s*\\|)+\\s*:?--+:?\\s*\\|?$/.test(trimmed) || /^(\\s*:?--+:?\\s*\\|)+\\s*:?--+:?$/.test(trimmed);
+            }}
+
+            function isTableRow(line) {{
+                const trimmed = line.trim();
+                return trimmed.includes('|') && !trimmed.startsWith('#');
+            }}
+
+            function splitRow(line) {{
+                let t = line.trim();
+                if (t.startsWith('|')) t = t.slice(1);
+                if (t.endsWith('|')) t = t.slice(0, -1);
+                return t.split('|').map(c => c.trim());
+            }}
+
+            let i = 0;
+            while (i < rawLines.length) {{
+                let line = rawLines[i];
+                let trimmed = line.trim();
+
                 if (!trimmed) {{
-                    if (inList) {{
-                        out.push('</ul>');
-                        inList = false;
-                    }}
-                    out.push('<div style="height: 0.45rem;"></div>');
-                    return;
+                    i++;
+                    continue;
                 }}
 
-                if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {{
-                    if (!inList) {{
-                        out.push('<ul class="sol-list" style="margin: 0.4rem 0;">');
-                        inList = true;
-                    }}
-                    out.push(`<li>${{trimmed.substring(2)}}</li>`);
-                    return;
+                // 1. Headings: #, ##, ###, ####
+                const headingMatch = trimmed.match(/^(#+)\\s+(.*)$/);
+                if (headingMatch && headingMatch[1].length <= 6) {{
+                    const level = headingMatch[1].length;
+                    let title = headingMatch[2].trim();
+                    title = title.replace(/^<strong>(.*)<\\/strong>$/i, '$1');
+                    const hTag = level === 1 ? 'h3' : (level === 2 ? 'h4' : (level === 3 ? 'h5' : 'h6'));
+                    const hClass = level === 1 ? 'my-answer-heading h1' : (level === 2 ? 'my-answer-heading h2' : (level === 3 ? 'my-answer-heading h3' : 'my-answer-heading h4'));
+                    out.push(`<${{hTag}} class="${{hClass}}">${{title}}</${{hTag}}>`);
+                    i++;
+                    continue;
                 }}
 
-                const numMatch = trimmed.match(/^(\\d+[\\.\\)])\\s*(.*)/);
+                // 2. Markdown Table Detection
+                if (isTableRow(trimmed) && i + 1 < rawLines.length && isTableDelimiter(rawLines[i + 1])) {{
+                    const headerCells = splitRow(trimmed);
+                    const delimCells = splitRow(rawLines[i + 1]);
+                    const aligns = delimCells.map(c => {{
+                        const left = c.startsWith(':');
+                        const right = c.endsWith(':');
+                        if (left && right) return 'center';
+                        if (right) return 'right';
+                        return 'left';
+                    }});
+
+                    i += 2; // skip header & delimiter
+
+                    const bodyRows = [];
+                    while (i < rawLines.length) {{
+                        const rowLine = rawLines[i].trim();
+                        if (!rowLine || !isTableRow(rowLine) || isTableDelimiter(rowLine)) {{
+                            break;
+                        }}
+                        bodyRows.push(splitRow(rowLine));
+                        i++;
+                    }}
+
+                    let tableHtml = '<div class="my-answer-table-wrapper"><table class="my-answer-table"><thead><tr>';
+                    headerCells.forEach((th, idx) => {{
+                        const align = aligns[idx] || 'left';
+                        tableHtml += `<th style="text-align: ${{align}};">${{th}}</th>`;
+                    }});
+                    tableHtml += '</tr></thead><tbody>';
+
+                    bodyRows.forEach(row => {{
+                        tableHtml += '<tr>';
+                        row.forEach((td, idx) => {{
+                            const align = aligns[idx] || 'left';
+                            tableHtml += `<td style="text-align: ${{align}};">${{td}}</td>`;
+                        }});
+                        tableHtml += '</tr>';
+                    }});
+
+                    tableHtml += '</tbody></table></div>';
+                    out.push(tableHtml);
+                    continue;
+                }}
+
+                // 3. Examples
+                const exampleMatch = trimmed.match(/^(?:(?:<strong>)?(?:Example|Eg):?(?:<\\/strong>)?)\\s*(.*)$/i);
+                if (exampleMatch) {{
+                    out.push(`<div class="sol-example"><span class="example-tag">Eg</span> <span class="sol-example-text">${{exampleMatch[1]}}</span></div>`);
+                    i++;
+                    continue;
+                }}
+
+                // 4. Notes: Note: or **Note:**
+                const noteMatch = trimmed.match(/^(?:(?:<strong>)?Note:?(?:<\\/strong>)?)\\s*(.*)$/i);
+                if (noteMatch) {{
+                    out.push(`<div class="sol-note-box"><span class="note-tag">Note</span><div class="sol-note-text">${{noteMatch[1]}}</div></div>`);
+                    i++;
+                    continue;
+                }}
+
+                // 5. Numbered Lists: 1. or 1. or 1)
+                const numMatch = trimmed.match(/^(\\d+)(?:\\\\\\.|\\\\.|\\))\\s+(.*)$/);
                 if (numMatch) {{
-                    if (inList) {{
-                        out.push('</ul>');
-                        inList = false;
-                    }}
-                    out.push(`
-                        <div class="sol-item-row" style="margin-bottom: 0.45rem;">
-                            <span class="sol-item-num" style="font-weight: 700; color: var(--foreground);">${{numMatch[1]}}</span>
-                            <div style="flex: 1;">${{numMatch[2]}}</div>
-                        </div>
-                    `);
-                    return;
+                    const num = numMatch[1];
+                    let content = numMatch[2].trim();
+                    out.push(`<div class="sol-item-row"><span class="sol-item-num">${{num}}.</span><div class="sol-item-content">${{content}}</div></div>`);
+                    i++;
+                    continue;
                 }}
 
-                if (inList) {{
-                    out.push('</ul>');
-                    inList = false;
+                // 6. Bullet lists
+                const bulletMatch = trimmed.match(/^[-*•+]\\s+(.*)$/);
+                if (bulletMatch) {{
+                    out.push(`<div class="sol-item-row"><span class="sol-item-num">&bull;</span><div class="sol-item-content">${{bulletMatch[1]}}</div></div>`);
+                    i++;
+                    continue;
                 }}
 
-                out.push(`<div style="margin-bottom: 0.45rem; line-height: 1.7;">${{line}}</div>`);
-            }});
-
-            if (inList) {{
-                out.push('</ul>');
+                // 7. Regular paragraph
+                out.push(`<p class="my-answer-p">${{trimmed}}</p>`);
+                i++;
             }}
 
             return out.join('');
@@ -4738,17 +5276,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             if (!text.trim()) {{
                 return `
                     <div class="my-answer-empty">
-                        <svg class="icon icon-md" style="color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
+                        <i class="icon icon-md hgi-stroke hgi-note-01" style="color: var(--muted-foreground);"></i>
                         <div class="my-answer-empty-title">No Personal Answer Yet</div>
                         <p class="my-answer-empty-desc">You can save your own alternate solution, summary points, formula steps, or mnemonics for this question. It is saved in your data so you never lose it.</p>
                         <button type="button" class="my-answer-empty-btn" onclick="openNoteEditor('${{qid}}', event, ${{isChecklist}})">
-                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                            </svg>
+                            <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                             <span>Write Your Answer</span>
                         </button>
                     </div>
@@ -4762,18 +5294,18 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 <div class="my-answer-header">
                     <div class="my-answer-meta">
                         <span class="my-answer-badge">
-                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                             My Answer
                         </span>
                         ${{dateStr ? `<span class="my-answer-time">Updated ${{dateStr}}</span>` : ''}}
                     </div>
                     <div class="my-answer-actions">
                         <button type="button" class="my-answer-btn-action" onclick="openNoteEditor('${{qid}}', event, ${{isChecklist}})" title="Edit your answer">
-                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                             <span>Edit</span>
                         </button>
                         <button type="button" class="my-answer-btn-action btn-delete" onclick="deleteQuestionNote('${{qid}}', event, ${{isChecklist}})" title="Delete your answer">
-                            <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            <i class="icon icon-xs hgi-stroke hgi-delete-02"></i>
                             <span>Delete</span>
                         </button>
                     </div>
@@ -4786,12 +5318,23 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             const noteObj = userNotes[qid];
             const hasNote = Boolean(noteObj && (typeof noteObj === 'string' ? noteObj.trim() : (noteObj.answer && noteObj.answer.trim())));
 
+            // Switch row in Question Bank (hide if no answer is provided)
+            const switchRow = document.getElementById('sol-switch-row-' + qid);
+            if (switchRow) {{
+                switchRow.style.display = hasNote ? '' : 'none';
+            }}
+
+            // Switch row in Checklist (hide if no answer is provided)
+            const chkSwitchRow = document.getElementById('chk-switch-row-' + qid);
+            if (chkSwitchRow) {{
+                chkSwitchRow.style.display = hasNote ? '' : 'none';
+            }}
+
             // Question Bank button
             const btn = document.getElementById('note-btn-' + qid);
             if (btn) {{
                 btn.classList.toggle('has-note', hasNote);
-                const txt = btn.querySelector('.note-action-text');
-                if (txt) txt.textContent = hasNote ? 'My Answer' : 'Note';
+                btn.title = hasNote ? 'Personal Answer Saved (Click to view/edit)' : 'Add personal answer / custom notes';
                 let dot = btn.querySelector('.note-indicator-dot');
                 if (hasNote && !dot) {{
                     dot = document.createElement('span');
@@ -4825,8 +5368,15 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             const chkBtn = document.getElementById('chk-note-btn-' + qid);
             if (chkBtn) {{
                 chkBtn.classList.toggle('has-note', hasNote);
-                const txt = chkBtn.querySelector('.note-action-text');
-                if (txt) txt.textContent = hasNote ? 'My Answer' : 'Note';
+                chkBtn.title = hasNote ? 'Personal Answer Saved (Click to view/edit)' : 'Personal Answer / Notes';
+                let dot = chkBtn.querySelector('.note-indicator-dot');
+                if (hasNote && !dot) {{
+                    dot = document.createElement('span');
+                    dot.className = 'note-indicator-dot';
+                    chkBtn.appendChild(dot);
+                }} else if (!hasNote && dot) {{
+                    dot.remove();
+                }}
             }}
 
             // Checklist toggle pill
@@ -4915,6 +5465,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
             if (editor) editor.style.display = 'none';
 
+            const noteObj = userNotes[qid];
+            const hasNote = Boolean(noteObj && (typeof noteObj === 'string' ? noteObj.trim() : (noteObj.answer && noteObj.answer.trim())));
+            const switchRow = document.getElementById(isChecklist ? ('chk-switch-row-' + qid) : ('sol-switch-row-' + qid));
+            if (switchRow) switchRow.style.display = hasNote ? '' : 'none';
+
             if (tab === 'mine') {{
                 if (stdBtn) stdBtn.classList.remove('active');
                 if (mineBtn) mineBtn.classList.add('active');
@@ -4943,6 +5498,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             const stdPane = document.getElementById(prefix + 'pane-std-' + qid);
             const minePane = document.getElementById(prefix + 'pane-mine-' + qid);
             const textarea = document.getElementById(prefix + 'note-input-' + qid);
+            const switchRow = document.getElementById(isChecklist ? ('chk-switch-row-' + qid) : ('sol-switch-row-' + qid));
 
             if (!editor || !textarea) return;
 
@@ -4953,6 +5509,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 cardEl.classList.add('is-open');
             }}
 
+            if (switchRow) switchRow.style.display = 'none';
             if (stdPane) stdPane.style.display = 'none';
             if (minePane) minePane.style.display = 'none';
             editor.style.display = 'block';
@@ -4978,6 +5535,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
             const noteObj = userNotes[qid];
             const hasNote = Boolean(noteObj && (typeof noteObj === 'string' ? noteObj.trim() : (noteObj.answer && noteObj.answer.trim())));
+            const switchRow = document.getElementById(isChecklist ? ('chk-switch-row-' + qid) : ('sol-switch-row-' + qid));
+            if (switchRow) switchRow.style.display = hasNote ? '' : 'none';
+
             const tab = hasNote ? (activeSolutionTab[qid] || 'mine') : 'standard';
             switchSolutionTab(qid, tab, event, isChecklist);
         }};
@@ -5122,19 +5682,16 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             if (matched.length === 0) {{
                 container.innerHTML = `
                     <div class="empty-results" style="padding: 3rem 1.5rem; text-align: center; background: var(--card); border-radius: var(--radius-lg);">
-                        <svg class="icon icon-lg" style="margin-bottom: 0.75rem; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
+                        <i class="icon icon-lg hgi-stroke hgi-note-01" style="margin-bottom: 0.75rem; color: var(--muted-foreground);"></i>
                         <div class="empty-results-title">${{qIds.length === 0 ? 'No personal answers saved yet' : 'No matching answers found'}}</div>
                         <p class="text-body-small" style="max-width: 460px; margin: 0.5rem auto 1.25rem; color: var(--muted-foreground);">
                             ${{qIds.length === 0 
-                                ? 'Click the ✍️ pen icon on any question card in the Question Bank or Checklist to save your own answers and study notes.' 
+                                ? 'Click the ✍️ pen icon on any question card in Questions or Checklist to save your own answers and study notes.' 
                                 : 'Try clearing your search query or switching the unit filter to All Units.'}}
                         </p>
                         ${{qIds.length === 0 ? `
                             <button type="button" class="complete-btn" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;" onclick="switchPageView('questions')">
-                                <span>Browse Question Bank &rarr;</span>
+                                <span>Browse Questions &rarr;</span>
                             </button>
                         ` : ''}}
                     </div>
@@ -5165,16 +5722,16 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                                 <span class="badge badge-subtle">${{q.type}}</span>
                             </div>
                             <div class="saved-note-actions">
-                                <button type="button" class="my-answer-btn-action" onclick="jumpFromNotesToQuestion('${{q.id}}')" title="Open question in Question Bank">
-                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-                                    <span>View in Bank &rarr;</span>
+                                <button type="button" class="my-answer-btn-action" onclick="jumpFromNotesToQuestion('${{q.id}}')" title="Open question in Questions">
+                                    <i class="icon icon-xs hgi-stroke hgi-view"></i>
+                                    <span>View Question &rarr;</span>
                                 </button>
                                 <button type="button" class="my-answer-btn-action" onclick="jumpFromNotesToQuestion('${{q.id}}', true)" title="Edit your answer">
-                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                                     <span>Edit</span>
                                 </button>
                                 <button type="button" class="my-answer-btn-action btn-delete" onclick="deleteQuestionNote('${{q.id}}')" title="Delete this answer">
-                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    <i class="icon icon-xs hgi-stroke hgi-delete-02"></i>
                                     <span>Delete</span>
                                 </button>
                             </div>
@@ -5351,7 +5908,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             if (hide2023) {{
                 items = items.filter(q => String(q.year) !== '2023');
             }}
-            let totalSource = items.length;
+            // Questions marked as later are not counted in total count!
+            let totalSource = items.filter(q => !laterQuestions.has(q.id)).length;
 
             const filtered = items.filter(item => {{
                 if (currentYear !== 'all' && String(item.year) !== String(currentYear)) {{
@@ -5392,11 +5950,19 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 }}
 
                 if (currentStatus === 'incomplete') {{
-                    if (completedQuestions.has(item.id)) {{
+                    if (completedQuestions.has(item.id) || laterQuestions.has(item.id)) {{
                         return false;
                     }}
                 }} else if (currentStatus === 'completed') {{
                     if (!completedQuestions.has(item.id)) {{
+                        return false;
+                    }}
+                }} else if (currentStatus === 'starred') {{
+                    if (!starredQuestions.has(item.id)) {{
+                        return false;
+                    }}
+                }} else if (currentStatus === 'later') {{
+                    if (!laterQuestions.has(item.id)) {{
                         return false;
                     }}
                 }}
@@ -5451,19 +6017,26 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }}
 
             if (counterEl) {{
-                counterEl.textContent = `${{filtered.length}} of ${{totalSource}} matched`;
+                if (currentStatus === 'later') {{
+                    counterEl.textContent = `${{filtered.length}} marked for later`;
+                }} else if (currentStatus === 'starred') {{
+                    counterEl.textContent = `${{filtered.length}} of ${{totalSource}} starred`;
+                }} else {{
+                    const matchedActive = filtered.filter(q => !laterQuestions.has(q.id)).length;
+                    counterEl.textContent = `${{matchedActive}} of ${{totalSource}} matched`;
+                }}
             }}
 
             if (filtered.length === 0) {{
                 const isAllDoneIncomplete = currentStatus === 'incomplete' && completedQuestions.size > 0 && completedQuestions.size === totalSource;
                 container.innerHTML = `
                     <div class="empty-results">
-                        <svg class="icon icon-lg" style="margin-bottom: 0.5rem; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <i class="icon icon-lg hgi-stroke hgi-search-01" style="margin-bottom: 0.5rem; color: var(--muted-foreground);"></i>
                         <div class="empty-results-title">${{isAllDoneIncomplete ? 'All questions marked as completed!' : 'No matching questions found'}}</div>
                         <p class="text-body-small">${{isAllDoneIncomplete ? 'Great work! Switch status to "All" or "Completed" to review your work.' : 'Your active filter combination has no matches.'}}</p>
                         <div style="margin-top: 1rem;">
                             <button type="button" class="reset-filters-btn" style="display: inline-flex;" onclick="window.resetAllFilters && window.resetAllFilters()">
-                                <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                                <i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>
                                 <span>Reset All Filters</span>
                             </button>
                         </div>
@@ -5534,6 +6107,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 }}
 
                 const isCompleted = completedQuestions.has(item.id);
+                const isStarred = starredQuestions.has(item.id);
+                const isLater = laterQuestions.has(item.id);
                 const unitBadgeClass = `badge-unit-${{item.unit}}`;
                 const cardBadgeClass = repBadgeInfo.countStr === '4x' ? 'badge-repeat-4x' : (repBadgeInfo.countStr === '3x' ? 'badge-repeat-3x' : (repBadgeInfo.countStr === '2x' ? 'badge-repeat-2x' : 'badge-subtle'));
                 const userNoteObj = userNotes[item.id];
@@ -5541,47 +6116,51 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 const activeTab = activeSolutionTab[item.id] || 'standard';
 
                 htmlParts.push(`
-                <div class="q-item ${{isCompleted ? 'is-completed' : ''}}" id="${{item.id}}" onclick="toggleSolution('${{item.id}}', event)">
+                <div class="q-item ${{isCompleted ? 'is-completed' : ''}} ${{isLater ? 'is-later' : ''}}" id="${{item.id}}" onclick="toggleSolution('${{item.id}}', event)">
                     <div class="q-item-header">
                         <div class="q-item-left-meta">
                             <span class="q-item-qno">${{item.q_no}}</span>
-                        </div>
-
-                        <div class="q-item-right-meta">
                             <div class="q-item-badges">
                                 <span class="badge badge-year-${{item.year}}">${{item.year}}</span>
                                 <span class="badge ${{unitBadgeClass}}">Unit ${{item.unit}}</span>
                                 <span class="badge badge-subtle">${{item.type}}</span>
                                 <span class="badge badge-subtle">${{item.marks}}M</span>
                                 ${{repBadgeInfo.isRep && repBadgeInfo.countStr ? `<span class=\"badge ${{cardBadgeClass}}\" title=\"${{repBadgeInfo.freq}}\">${{repBadgeInfo.countStr}}</span>` : ''}}
-                                ${{isCompleted ? `<span class="badge badge-completed"><svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg> Done</span>` : ''}}
                             </div>
+                        </div>
 
+                        <div class="q-item-right-meta">
                             <div class="q-item-actions">
-                                <button class="note-action-btn ${{hasNote ? 'has-note' : ''}}" 
+                                <button class="icon-action-btn star-action-btn ${{isStarred ? 'is-starred' : ''}}" 
+                                        id="star-btn-${{item.id}}" 
+                                        onclick="toggleStarQuestion('${{item.id}}', event)" 
+                                        title="${{isStarred ? 'Starred (Click to unstar)' : 'Star this question'}}" 
+                                        aria-label="${{isStarred ? 'Starred' : 'Star question'}}">
+                                    <i class="icon icon-xs star-icon hgi-stroke hgi-star"></i>
+                                </button>
+                                <button class="icon-action-btn later-action-btn ${{isLater ? 'is-later' : ''}}" 
+                                        id="later-btn-${{item.id}}" 
+                                        onclick="toggleLaterQuestion('${{item.id}}', event)" 
+                                        title="${{isLater ? 'Marked for later (Click to remove)' : 'Mark for later'}}" 
+                                        aria-label="${{isLater ? 'Marked for later' : 'Mark for later'}}">
+                                    <i class="icon icon-xs clock-icon hgi-stroke hgi-clock-01"></i>
+                                </button>
+                                <button class="icon-action-btn note-action-btn ${{hasNote ? 'has-note' : ''}}" 
                                         id="note-btn-${{item.id}}" 
                                         onclick="handleNoteButtonClick('${{item.id}}', event)" 
                                         title="${{hasNote ? 'Personal Answer Saved (Click to view/edit)' : 'Add personal answer / custom notes'}}"
                                         aria-label="Personal Notes">
-                                    <svg class="icon icon-xs pen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                    </svg>
-                                    <span class="note-action-text">${{hasNote ? 'My Answer' : 'Note'}}</span>
+                                    <i class="icon icon-xs pen-icon hgi-stroke hgi-pencil-edit-01"></i>
                                     ${{hasNote ? '<span class="note-indicator-dot"></span>' : ''}}
                                 </button>
                                 <button class="complete-btn ${{isCompleted ? 'is-completed' : ''}}" 
                                         onclick="toggleCompleteQuestion('${{item.id}}', event)" 
                                         title="${{isCompleted ? 'Click to unmark as complete' : 'Click to mark as complete'}}"
                                         aria-label="${{isCompleted ? 'Mark incomplete' : 'Mark complete'}}">
-                                    <svg class="icon icon-xs check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
+                                    <i class="icon icon-xs check-icon hgi-stroke hgi-checkmark-circle-02"></i>
                                     <span>${{isCompleted ? 'Completed' : 'Mark Done'}}</span>
                                 </button>
-                                <svg class="icon icon-sm chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
+                                <i class="icon icon-sm chevron-icon hgi-stroke hgi-chevron-down"></i>
                             </div>
                         </div>
                     </div>
@@ -5589,14 +6168,14 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     <h3 class="q-item-title">${{item.question}}</h3>
 
                     <div class="q-solution-content" id="sol-${{item.id}}">
-                        <div class="sol-view-switch-row" onclick="event.stopPropagation()">
+                        <div class="sol-view-switch-row" id="sol-switch-row-${{item.id}}" style="${{hasNote ? '' : 'display:none;'}}" onclick="event.stopPropagation()">
                             <div class="sol-view-pills">
                                 <button type="button" class="sol-view-pill ${{activeTab === 'standard' ? 'active' : ''}}" id="tab-std-${{item.id}}" onclick="switchSolutionTab('${{item.id}}', 'standard', event)">
-                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                                    <i class="icon icon-xs hgi-stroke hgi-checkmark-badge-01"></i>
                                     <span>Verified Solution</span>
                                 </button>
                                 <button type="button" class="sol-view-pill ${{activeTab === 'mine' ? 'active' : ''}} ${{hasNote ? 'has-note' : ''}}" id="tab-mine-${{item.id}}" onclick="switchSolutionTab('${{item.id}}', 'mine', event)">
-                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                                     <span>My Answer</span>
                                     ${{hasNote ? '<span class="note-indicator-dot"></span>' : ''}}
                                 </button>
@@ -5604,7 +6183,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
                             <div class="sol-view-quick-actions">
                                 <button type="button" class="sol-btn-edit-note" id="btn-edit-note-${{item.id}}" onclick="openNoteEditor('${{item.id}}', event)" title="Edit or write your personal answer">
-                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                                     <span id="btn-edit-label-${{item.id}}">${{hasNote ? 'Edit My Answer' : 'Add My Answer'}}</span>
                                 </button>
                             </div>
@@ -5625,7 +6204,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                         <div class="note-editor-container" id="editor-${{item.id}}" style="display: none;" onclick="event.stopPropagation()">
                             <div class="note-editor-header">
                                 <div class="note-editor-title">
-                                    <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    <i class="icon icon-xs hgi-stroke hgi-pencil-edit-01"></i>
                                     <span>Personal Answer / Custom Solution</span>
                                 </div>
                                 <span class="note-editor-meta">Saved in data &bull; Never lost</span>
@@ -5637,7 +6216,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                                 <div class="note-editor-buttons">
                                     <button type="button" class="note-btn-cancel" onclick="cancelNoteEditor('${{item.id}}', event)">Cancel</button>
                                     <button type="button" class="note-btn-save" onclick="saveQuestionNote('${{item.id}}', event)">
-                                        <svg class="icon icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        <i class="icon icon-xs hgi-stroke hgi-tick-01"></i>
                                         <span>Save Answer</span>
                                     </button>
                                 </div>
@@ -5656,7 +6235,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             if (event && event.target && (
                 event.target.closest('.q-solution-content') || 
                 event.target.closest('.complete-btn') ||
-                event.target.closest('.note-action-btn')
+                event.target.closest('.note-action-btn') ||
+                event.target.closest('.icon-action-btn')
             )) {{
                 return; // Do not collapse when clicking note button, complete button, or inside answer!
             }}
@@ -5744,7 +6324,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             currentRepeat = 'all';
             currentStatus = 'all';
             searchQuery = '';
-            const searchInput = document.getElementById('searchBar');
+            const searchInput = document.getElementById('searchInput') || document.getElementById('searchBar');
             if (searchInput) searchInput.value = '';
             const searchClearBtn = document.getElementById('searchClearBtn');
             if (searchClearBtn) searchClearBtn.style.display = 'none';
@@ -5851,50 +6431,25 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
     <!-- Floating Back to Top Button (Always Visible in Bottom-Right Corner) -->
     <button id="scrollToTopBtn" class="scroll-to-top-btn" aria-label="Scroll to top" title="Scroll to top" onclick="scrollToTop()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="19" x2="12" y2="5"></line>
-            <polyline points="5 12 12 5 19 12"></polyline>
-        </svg>
+        <i class="hgi-stroke hgi-arrow-up-01"></i>
     </button>
 
     <!-- MOBILE BOTTOM APP NAVIGATION (iOS/Android Native App Style) -->
     <nav class="mobile-bottom-nav" aria-label="Mobile App Navigation">
-        <button class="mobile-nav-item nav-link-btn active" data-view="questions" onclick="switchPageView('questions')" aria-label="Question Bank">
-            <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 14 14"></polyline>
-            </svg>
+        <button class="mobile-nav-item nav-link-btn active" data-view="questions" onclick="switchPageView('questions')" aria-label="Questions">
+            <i class="mobile-nav-icon hgi-stroke hgi-help-circle"></i>
             <span class="mobile-nav-label">Questions</span>
         </button>
-        <button class="mobile-nav-item nav-link-btn" data-view="syllabus" onclick="switchPageView('syllabus')" aria-label="PYQ Checklist">
-            <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="9 11 12 14 22 4"></polyline>
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-            </svg>
+        <button class="mobile-nav-item nav-link-btn" data-view="syllabus" onclick="switchPageView('syllabus')" aria-label="Checklist">
+            <i class="mobile-nav-icon hgi-stroke hgi-task-01"></i>
             <span class="mobile-nav-label">Checklist</span>
         </button>
         <button class="mobile-nav-item nav-link-btn" data-view="formulas" onclick="switchPageView('formulas')" aria-label="Formulas">
-            <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="4 7 4 4 20 4 20 7"></polyline>
-                <line x1="9" y1="20" x2="15" y2="20"></line>
-                <line x1="12" y1="4" x2="12" y2="20"></line>
-            </svg>
+            <i class="mobile-nav-icon hgi-stroke hgi-function-of-x"></i>
             <span class="mobile-nav-label">Formulas</span>
         </button>
-        <button class="mobile-nav-item nav-link-btn" data-view="notes" onclick="switchPageView('notes')" aria-label="Notes">
-            <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-            <span class="mobile-nav-label">Notes</span>
-        </button>
         <a href="timetable.html" class="mobile-nav-item nav-link-timetable" aria-label="Exam Timetable">
-            <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
+            <i class="mobile-nav-icon hgi-stroke hgi-calendar-03"></i>
             <span class="mobile-nav-label">Timetable</span>
         </a>
     </nav>

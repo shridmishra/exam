@@ -81,6 +81,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 payload = json.loads(body.decode("utf-8"))
                 subject_id = payload.get("subject", "geotech-2")
                 completed = payload.get("completed_questions")
+                starred = payload.get("starred_questions")
+                later = payload.get("later_questions")
                 filters = payload.get("filters")
                 active_view = payload.get("active_view")
                 hide_2023 = payload.get("hide_2023")
@@ -92,6 +94,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 updated = save_subject_progress(
                     subject_id=subject_id,
                     completed_questions=completed,
+                    starred_questions=starred,
+                    later_questions=later,
                     filters=filters,
                     active_view=active_view,
                     hide_2023=hide_2023,

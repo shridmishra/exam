@@ -64,6 +64,11 @@ Adhere strictly to the project typography hierarchy specification:
   - **Light Mode Canvas**: `--background: #fbfaf8` (warm, natural linen/paper canvas), `--card: #ffffff`, `--secondary: #f3f1ec`, `--muted: #f3f1ec`, `--foreground: #1e293b`.
   - **Dark Mode Canvas**: `--background: #09090b` (zinc-950 deep obsidian neutral black), `--card: #141416` (zinc-900 surface), `--secondary: #1c1c1f`, `--muted: #1c1c1f`, `--foreground: #fcfcfd`.
 - **No 1px Structural Borders**: Structure containers, cards, and table headers using tonal background shifts (`--background`, `--card`, `--secondary`, `--muted`) rather than harsh borders.
+- **KaTeX Mathematical Fraction Line & Border Immunity (Zero Universal `border: none !important` Anti-pattern)**:
+  - KaTeX mathematical rendering relies on CSS borders for fraction division lines (`.mfrac .frac-line`), square roots (`.sqrt-line`), overlines, underlines, and rules.
+  - **NEVER** apply `border: none !important;` to universal selectors (`*`, `*::before`, `*::after`). Doing so strips the division vinculum line from fractions (`\frac{a}{b}`), causing numerators and denominators to run together without a dividing bar.
+  - Target form control resets specifically (`button, input, select, textarea { border: none; outline: none; }`).
+  - Enforce `.katex .mfrac .frac-line { border-bottom-style: solid !important; border-bottom-width: max(1.2px, 0.05em) !important; border-bottom-color: currentColor !important; min-height: 1.2px !important; }` across all stylesheets to guarantee crisp, high-contrast, perfectly visible fraction division lines across all screen resolutions, pixel ratios, and dark/light modes.
 - **Design Tokens**: NEVER hardcode hex codes or RGB strings inside components or markup. Always reference semantic CSS variables (`var(--background)`, `var(--foreground)`, `var(--card)`, `var(--secondary)`).
 - **Theme Support**: Ensure all colors work seamlessly across dark mode (`data-theme="dark"`) and light mode (`data-theme="light"`). Both Timetable and PYQ Master share the unified `geotech_theme` localStorage key.
 - **No Sparkle Icons**: Never use sparkle icons, generative AI stars, or multi-point sparkle glyphs anywhere in the UI.
@@ -81,13 +86,16 @@ Adhere strictly to the project typography hierarchy specification:
   - `geotech_pyq_analysis.html` (Canonical standalone analysis)
 - **Question Bank Engine Directives**:
   - **Zero Heading Clutter**: The Question Bank view starts immediately with the space-efficient Control Panel, removing unnecessary top headings and subheadings for maximum vertical workspace.
-  - **Balanced Control Panel & Segmented Filter Matrix (Zero Awkward Wrapping)**:
-    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Responsive search input with search shortcut hint badge (`/`) on the left, paired horizontally with live session metrics and quick actions on the right (`2023 Toggle`, `Match counter`, `Completion progress`, `Clear Done`, `Reset`). Eliminates awkward wrapping and prevents lopsided empty lines.
-    - **Filter Matrix Rows (`.control-panel-filters`)**: Two clean, symmetrically balanced rows of segmented controls:
-      - **Row 1 (Scope, Frequency & Status)**: `Year` (`All`, `2025`, `2024`, `2023`, `2022`), `Repeated` (`All`, `Most Repeated`, `4x`, `3x`, `2x`), and `Status` (`All`, `Incomplete`, `Completed`).
-      - **Row 2 (Syllabus, Format & Marks)**: `Unit` (`All`, `Unit 1..5`), `Type` (`All`, `Theory`, `Numerical`, `Derivation`), and `Marks` (`All`, `2M`, `3M`, `7M/6M`).
-    - **Apple/Linear Segmented Capsule Track (`.filter-pills-row`)**: Recessed background track (`var(--secondary)`), clean label overlines without colon noise, and elevated active buttons (`var(--filter-pill-active-bg)` / `var(--filter-pill-active-shadow)`), completely eliminating harsh whiteout blobs in dark mode.
-    - **Uniform Action Metrics & Toggles**: All top action badges, toggle switches, and buttons maintain uniform 30px height, responsive horizontal scroll on mobile, and smooth hover/active scaling transitions.
+  - **Minimal Grid-Based Control Panel (Zero Separate Backgrounds & Proper Grid System)**:
+    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Clean, responsive search input spanning across (`flex: 1`) with search shortcut hint badge (`/`) and clear `✕` button, paired with the `Reset` action on the right.
+    - **Zero Separate Pill Track Backgrounds (Pure Minimal Flow)**: Filter button groups (`.filter-pill-group`) feature NO separate recessed background capsule containers (`var(--secondary)` track removed), NO divider lines (`|`), and NO nested background boxes. Inactive buttons are transparent with muted text, while the active filter button features a subtle, refined background highlight pill (`var(--secondary)` in light mode, `#27272a` in dark mode).
+    - **Proper CSS Grid System (`.control-panel-grid`)**: All 6 filter dimensions are laid out in a symmetrical 3-column CSS Grid (`grid-template-columns: repeat(3, 1fr)`) that utilizes 100% of the horizontal workspace without empty voids:
+      - **Column 1 (Scope & Syllabus)**: `Year` (`All`, `2025`, `2024`, `2023`, `2022`) and `Unit` (`All`, `Unit 1..5`).
+      - **Column 2 (Intelligence & Format)**: `Repeated` (`All`, `Most Repeated`, `4x`, `3x`, `2x`) and `Type` (`All`, `Theory`, `Numerical`, `Derivation`).
+      - **Column 3 (Workflow & Priority)**: `Status` (`All`, `Incomplete`, `Completed`, `Starred`, `Later`) and `Marks` (`All`, `2M`, `3M`, `7M/6M`).
+    - **Uniform 62px Label Alignment**: All filter labels (`.filter-grid-label`) maintain a uniform 62px width, ensuring button groups in every column align down to the pixel across rows.
+    - **2023 Toggle Removed**: All 4 examination years (2025, 2024, 2023, 2022) are permanently included and active in the Year filter without any separate toggle switch widget.
+    - **Responsive Grid Breakpoints**: 3 columns on desktop (`> 1100px`), 2 columns on tablet (`680px - 1100px`), and 1 column on mobile (`< 680px`) with smooth horizontal momentum scrolling.
   - **Repeated Filter Hierarchy Ordering (4x First, Then 3x, Then 2x - MANDATORY)**: Recurring questions display clean frequency multiplier badges (e.g., `4x`, `3x`, `2x` with no redundant "Repeated" label text) with tooltip details. When the `Most Repeated` filter is selected, verified recurring questions are organized strictly by frequency tier FIRST:
     1. **Tier 1 (4x Repeated)**: 100% Guaranteed concepts appearing across all 4 exam papers (2025, 2024, 2023, 2022) come first.
     2. **Tier 2 (3x Repeated)**: 75% High Probability concepts appearing across 3 exam papers come next.
@@ -99,19 +107,28 @@ Adhere strictly to the project typography hierarchy specification:
     - Multi-paper repeats require occurrence in distinct examination papers (`clusterYears.length >= 2`). Questions from only a single paper are classified as 1x topics and never masquerade as repeats.
   - **Local Persistence & Completion Engine**: All filters (`year`, `unit`, `type`, `marks`, `repeat`, `status`, `search`), active tab view (`geotech_active_view`), formula filters (`geotech_formula_filters`), and question completion records (`geotech_completed_questions`) are stored in `localStorage` and restored automatically on page load/refresh.
   - **Mark as Complete & Hide Completed**: Questions include an interactive `.complete-btn` that toggles completion status without expanding/collapsing the answer card. The `Status: Incomplete` filter immediately removes/hides completed questions from view, while `Status: Completed` isolates finished questions. Progress metrics (`X / 106 Done`) and "Reset Filters" / "Clear Done" controls provide seamless study session management.
-  - **Question Card Header Layout (Number Left, Badges Right)**: Every question card anchors the question number (e.g. `Q.1 (b)`) prominently on the **far left** as `.q-item-qno`. All metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`, `Done`) are grouped on the **far right corner** alongside the action controls (`Mark Done` button and accordion chevron).
+  - **Question Card Header Layout (Badges Left, Actions Right)**: Every question card anchors the question number (e.g. `Q.1 (b)`) and all metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`) together on the **left side** as `.q-item-left-meta` / `.q-item-badges`. Action controls (`Personal Note` button, `Mark Done` / `Completed` button, and accordion chevron) remain cleanly anchored on the **far right corner** as `.q-item-right-meta` / `.q-item-actions`.
   - **Clean & Un-Cardified Editorial Solutions (Zero Sub-Card Boxes)**: Individual solution points, assumptions, and steps must NEVER be wrapped in nested card containers (`.sol-item-card`), background fills (`--solution-card-bg`), box shadows, or square badge boxes (`.sol-item-badge`). Instead, solutions format as clean, elegant typographic rows (`.sol-item-row`) with natural numbers (`1.`, `2.`), bold concept titles, comfortable line-height (`1.75`), and dedicated lines for examples (`Example: ...`). Multi-line text wraps cleanly under the text margin via flex alignment, preserving effortless readability and zero wall-of-text fatigue.
   - **Verbatim PYQ Question as Card Headline & Zero Topic Clutter**: Every question card presents the actual verbatim question statement asked in the PYQ paper (`item.question`) cleanly as its primary heading (`.q-item-title`) without bracket `[]` marks and without any intermediate topic overlines (`Topic:` removed from question cards). Metadata chips clearly display Exam Year, Unit, Question Type, Marks (`2M`, `3M`, `7M` as a normal `.badge-subtle` badge with no mono font and no bold), and Repeat Count (`4x`, `3x`, or `2x`). Dedicated Marks filter and search support allow filtering specifically by marks.
 - **Data inputs**:
   - `canonical_data.json` (59 clean, deduplicated core topics)
   - `compile_data.py` (106 verified raw questions across 4 exam years: 2025, 2024, 2023, 2022)
+- **Master Formulas & Governing Equations Engine Directives**:
+  - **Zero Heading Clutter**: Removes redundant overlines, giant page titles, and dense paragraph descriptions. The view starts immediately with the space-efficient `.control-panel` matching the Question Bank architecture.
+  - **Top Utility & Search Toolbar**: Clean search input with `f` keyboard shortcut badge and `✕` clear button, paired horizontally with the live match counter pill (`21 formulas` or `4 of 21 matched`), segmented capsule layout switcher (`Cards` / `Table`), and smart `Reset` button.
+  - **Segmented Unit Capsule Track**: Minimal, non-wrapping unit filter pills (`All`, `Unit 1`, `Unit 2`, `Unit 3`, `Unit 4`, `Unit 5`) with informative hover tooltips (e.g., `Unit 1: Earth Pressure (5 formulas)`), completely replacing verbose multi-clause buttons.
+  - **Zero Redundant Status Row**: Completely eliminates redundant all-caps summary bars (`SHOWING 4 MASTER ENGINEERING FORMULATIONS`), saving ~180px-200px of vertical viewport space so mathematical formulas appear immediately.
 - **PYQ Checklist Engine Directives (Year-wise, then Unit-wise)**:
   - Replaces the legacy static syllabus breakdown table with an interactive, year-wise and unit-wise PYQ checklist across all 106 verified questions (2025: 28 Qs, 2024: 25 Qs, 2023: 28 Qs, 2022: 25 Qs, covering Units 1 to 5 within each exam paper).
   - **Distinct Color Year Badges**: Each exam year has its own unique, accessible pastel color token: 2025 (Sage Green `.badge-year-2025`), 2024 (Sky Blue `.badge-year-2024`), 2023 (Lavender Purple `.badge-year-2023`), 2022 (Warm Sand `.badge-year-2022`) across both Question Bank and Checklist cards.
-  - **Minimal, Zero-Clutter Architecture & In-Place Answer Expansion**: Free of explanatory subtitles, redundant "View in Bank" buttons, and verbose labels. Entire question cards are clickable to expand and view the verified solution right there in place without redirecting to the Question Bank. An unobtrusive "Open in Question Bank &rarr;" jump button is provided at the bottom of the expanded solution for deep cross-question study when needed.
-  - **Two-Way Real-Time Synchronization**: Toggling a question's completion state in either the Checklist or Question Bank instantly synchronizes `localStorage` (`geotech_completed_questions`), overall completion counters, year-level progress meters, and unit-level subhead counters.
+  - **Minimal, Zero-Clutter Architecture & In-Place Answer Expansion**: Free of explanatory subtitles, uppercase overlines, redundant "View in Bank" buttons, and verbose labels. The separate bulky summary card below the title is replaced by a minimal inline header action row (`.checklist-header-right`) located directly to the right of the `PYQ Checklist` title (`.checklist-header-row`), featuring a precision circular progress indicator (`.checklist-progress-circle` with 42px diameter, edge-aligned SVG ring with gradient stroke, dark-mode luminous OLED glow, optical tabular percentage with subscript `%` unit, and click-to-filter action) alongside the year jump pills (`.checklist-summary-units`). No monospaced fonts (`font-family: var(--font-family-mono)`) are used for stats or pill counters; all counts and percentages use standard clean app typography with `font-variant-numeric: tabular-nums`. Entire question cards are clickable to expand and view the verified solution right there in place without redirecting to the Question Bank. An unobtrusive "Open in Question Bank &rarr;" jump button is provided at the bottom of the expanded solution for deep cross-question study when needed.
+  - **Two-Way Real-Time Synchronization**: Toggling a question's completion state in either the Checklist or Question Bank instantly synchronizes `localStorage` (`geotech_completed_questions`), overall completion counters, year-level toolbar progress pills, and unit-level subhead counters.
   - **In-Place Accordion Engine (`toggleChecklistSolution`)**: Clicking any checklist card smoothly toggles its solution container (`chk-sol-*`), rotates the `.chk-chevron` icon (180&deg;), and sets `.is-open`. Clicking inside the solution text, highlighting/copying formulas, or toggling completion never collapses the card. KaTeX math typesetting is automatically triggered on toggle.
-  - **Checklist Controls & Filtering**: Features total completion progress, quick year-jump pills (`2025`, `2024`, `2023`, `2022`), checklist status pills (`All`, `Incomplete`, `Done`), and live real-time filtering (including matching across solution text).
+  - **Checklist Controls & Filtering (Minimal Toolbar & Zero BG Separation)**: Features total completion progress, quick year-jump pills (`2025`, `2024`, `2023`, `2022`), and a minimal toolbar (`.checklist-toolbar`) positioned seamlessly on the canvas:
+    - **Zero Background Separation**: The toolbar container div has `background: transparent; box-shadow: none; padding: 0;`, eliminating any boxy card separation from the background.
+    - **Unified Pill Styling**: Filter groups for Status (`All`, `Incomplete`, `Done`, `Starred`, `Later`) and Unit (`Unit` overline label + `All`, `Unit 1..5`) use unified `.filter-pill-btn` elements with transparent inactive states and refined active highlight pills.
+    - **Minimal Compact Search Bar**: A small, minimal search box (`width: 220px`, `height: 32px`, pill-shaped) sits neatly on the right side with an icon and clear `✕` button, preserving vertical workspace.
+    - **Live Counters & Instant Filter Response**: Micro-badge counters on status pills update dynamically in real time.
 - **Rule**: Whenever modifying layout, tables, styles, or data, ALWAYS make changes in `generate_dashboard.py` (or data sources) and re-run `python3 generate_dashboard.py`. Do NOT make isolated manual edits to `index.html` without reflecting them in the generator.
 
 ---
@@ -119,7 +136,7 @@ Adhere strictly to the project typography hierarchy specification:
 ## 5. Floating Back-to-Top Navigation
 
 - A persistent, high-contrast floating back-to-top button (`.scroll-to-top-btn`) is fixed and permanently visible at the bottom-right corner of all views (`bottom: 2rem; right: 2rem; z-index: 99999; width: 48px; height: 48px; border-radius: var(--radius-full);`).
-- Features a clean Lucide/Feather arrow-up SVG icon (`<polyline>` and `<line>` with 2.5px stroke), semantic design token styling (`--primary`, `--primary-foreground`, `box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28)`), and smooth scrolling behavior (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
+- Features a clean Hugeicons arrow-up stroke icon (`hgi-stroke hgi-arrow-up-01`), semantic design token styling (`--primary`, `--primary-foreground`, `box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28)`), and smooth scrolling behavior (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
 - Always visible across desktop and mobile (`opacity: 0.95`, hover elevation to `scale(1.05)`).
 
 ---
@@ -129,7 +146,14 @@ Adhere strictly to the project typography hierarchy specification:
 - **Behavior**: The sticky header navbar (`.header`) automatically translates off-screen (`transform: translateY(-100%)`, `header-hidden`) on downward scroll, and smoothly glides back into view (`transform: translateY(0)`) on upward scroll.
 - **Top Threshold Immunity**: The header is permanently visible when `scrollY <= 64px` (top of page or during elastic rubber-banding bounce).
 - **Navigation & Jump Integration**: Switching view tabs (`switchPageView`), clicking the floating back-to-top button, or jumping to top immediately resets and displays the navbar (`header.classList.remove('header-hidden')`).
-- **Clean Brand Header**: The navbar presents the clean course title (`.brand-title`) without redundant course code or colored brand badges.
+- **Clean Brand Header & Minimal Navigation Tabs**:
+  - The navbar presents the clean course title (`.brand-title`) without redundant course code or colored brand badges.
+  - **Minimal 1-Word Navigation Titles**: All primary navigation destinations use crisp, balanced 1-word titles: `Questions`, `Checklist`, `Formulas`, and `Timetable` (replacing verbose labels like `Question Bank` and `Unit Checklist`).
+  - **Zero-Suffix Pure Numeric Badges**: Badges display pure numbers with tabular figures (`71` total questions, `47/71` checklist progress ratio) eliminating redundant word noise like `PYQs` and `Done`.
+  - **Dedicated Question Icon**: The Questions navigation tab uses the crisp, universally recognizable `hgi-help-circle` icon (circle with centered `?`) in place of the generic textbook icon (`hgi-book-open-01`), ensuring sharp 16px rendering with zero stroke collisions.
+  - **Tonal Badge Integration**: Inactive navigation badges use `var(--secondary)` background tokens, seamlessly blending into the navbar without harsh pitch-black cutouts.
+  - **Balanced Navigation Hierarchy**: Navigation destination `.nav-link-timetable` applies subtle hover styling, keeping the active navigation tab as the clean, single focal point.
+  - **Strict Container Nesting Guarantee**: All app page views (`#view-questions`, `#view-syllabus`, `#view-formulas`, `#view-notes`) must remain strictly isolated inside `.container` so that internal card wrappers never leak across views on tab switching.
 
 ---
 
@@ -140,21 +164,11 @@ Adhere strictly to the project typography hierarchy specification:
 
 ---
 
-## 8. Global 2023 Exam Paper Visibility Toggle
+## 8. Permanent Inclusion of All 4 Exam Papers (2023 Toggle Removed)
 
-- **Universal Scope Control**: Allows users to include or completely hide the 2023 examination paper across all views and analytical computations in the Geotech application.
-- **Dedicated In-View Control Architecture (Clean Navbar)**:
-  - **Header Navbar**: Kept clean, uncluttered, and minimal with only page navigation and the theme toggle.
-  - **Question Bank Control Panel (`#panelToggle2023Btn`)**: Integrated directly into the Top Toolbar of the control panel alongside session metrics (`Match Counter`, `Completion Progress`, and `Reset`) for immediate context-aware toggling without redundant outer labels.
-  - **Unit Checklist Engine (`#checklistToggle2023Btn`)**: Integrated in the checklist summary units toolbar so users can easily include or hide the 2023 paper within the syllabus checklist.
-- **Dynamic Scope Recalculation Engine**:
-  - **Question Bank Engine**: When 2023 is hidden, filters out all 2023 question cards, hides the `2023` year filter pill (`#filterPill2023`, resetting to `all` if 2023 was selected), and updates match counters (`X of 78 matched` vs `X of 106 matched`).
-  - **Unit Checklist Engine**: Completely hides `#year-section-2023` and `#checklistYearPill-2023`, presents `#checklistToggle2023Btn` for one-click re-inclusion, and updates total question base, completion meters, and status pill badges.
-  - **Dynamic Repeat Analysis (`getRepeatInfo`)**: Recalculates cluster occurrence frequencies and `3x` / `2x` repeat badges strictly among visible papers.
-  - **Study Progress & Completion Tracker**: Counts and clears completed questions strictly within the active scope.
-- **State Persistence & Deep-Link Recovery**:
-  - Automatically saved to and restored from `localStorage` (`geotech_hide_2023`).
-  - If a user navigates or deep-links directly to a 2023 question (`jumpToQuestionBank`), the system automatically restores 2023 visibility to display and highlight the requested question.
+- **Complete 4-Paper Exam Intelligence**: All 4 verified examination papers (2025, 2024, 2023, 2022 — totaling 106 verified questions) are permanently active across all views, metrics, and analytical computations.
+- **Toggle Removed for Ultimate Minimalism**: The separate 2023 toggle switch has been completely removed from the UI. Users filter by year naturally via the standard `Year` filter pill buttons (`All`, `2025`, `2024`, `2023`, `2022`).
+- **Clean, Clutter-Free Control Toolbar**: The search toolbar hosts solely the full-width responsive search box and the context-sensitive `Reset` action, eliminating toggle chrome and visual clutter.
 
 ---
 
@@ -239,27 +253,35 @@ Adhere strictly to the project typography hierarchy specification:
   - Guarantees zero data loss across browser sessions, device reboots, and dashboard regenerations.
 - **Card-Level Quick Actions (`.note-action-btn`)**:
   - Placed directly in `.q-item-actions` (Question Bank) and `.checklist-card-actions` (PYQ Checklist).
-  - Features an intuitive pen icon (`<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>`).
+  - Features an intuitive pen icon (`hgi-pencil-edit-01`).
   - Active visual feedback: When a question has a saved note, the pen button lights up with a subtle active fill and an indicator dot (`.note-indicator-dot`).
   - Smooth expansion: Clicking the pen button opens the question card solution, switches the view to the custom answer pane, and focuses the inline note editor.
 - **In-Card Solution Segmented Toggle Switch (`.sol-view-switch-row`)**:
-  - Located at the top of the solution area on every question card in both Question Bank and Checklist.
-  - Recessed capsule track hosting two segmented tabs:
+  - Located at the top of the solution area on question cards in both Question Bank and Checklist.
+  - Recessed capsule track hosting two segmented tabs and quick action:
     - `Verified Solution`: The official step-by-step verified examination answer.
     - `My Answer ✍️`: The student's custom answer/notes for that exact question. Displays an indicator dot when notes exist.
+    - `Edit My Answer`: Quick inline action button to update the saved answer.
+  - **Zero-Clutter Visibility Policy (Hide When No Answer Provided)**:
+    - When no personal answer is provided (`!hasNote`), all 3 elements in the row (`Verified Solution` pill, `My Answer` pill, and `Add My Answer` button) remain strictly **hidden** (`display: none`).
+    - The verified solution renders cleanly and directly without top toolbar clutter.
+    - Only when a personal answer is provided and saved by the student (via the card header's pen note button) does `.sol-view-switch-row` appear (`display: flex`), enabling fluid switching between the Verified Solution and My Answer.
+    - If the user deletes their personal answer, the switch row with all 3 elements automatically hides again.
   - Isolated scoping: Toggling between "Verified Solution" and "My Answer" changes the view for that specific question card only, leaving all other questions unaffected.
-- **Typographic & Zero Wall-of-Text Formatting (`renderUserAnswerHtml`)**:
-  - Student notes are parsed and rendered with clean typography:
-    - Numbered steps (`1.`, `2.`) and bullet items (`-`, `*`) are converted into vertical `.sol-list` items.
-    - `Example:` prefixes are formatted as dedicated `.example-tag` badges on their own lines.
-    - Double newlines are converted into clean typographic paragraphs (`.my-answer-text`).
-    - Raw text remains editable via `<textarea class="note-editor-textarea">` with auto-growing height.
-- **Dedicated Notes Workspace Page (`#view-notes`)**:
-  - Accessible via the desktop sticky header (`Notes` with live count badge) and mobile bottom navigation bar (`Notes` destination).
-  - **General Revision Scratchpad (`.general-scratchpad-card`)**: High-priority auto-saving textarea for overall subject revision formulas, exam tips, and memory hooks.
-  - **Filter & Search Bar**: Live keyword search across questions and custom answer text, paired with Unit filter capsules (`All`, `Unit 1..5`).
-  - **Saved Question Archive (`.saved-note-card`)**: Lists all questions with personal answers, displaying question titles, metadata chips, formatted answers, inline edit/delete controls, and an "Open in Bank &rarr;" jump button (`jumpFromNotesToQuestion`).
-  - **Empty State**: Elegant empty state with quick action buttons directing users to the Question Bank or PYQ Checklist.
+  - **Default Tab Selection**: Questions that have a saved personal answer ("My Answer") automatically display the "My Answer" tab by default on both Question Bank and Checklist cards.
+- **Full Markdown & Typographic Rendering (`renderUserAnswerHtml`)**:
+  - Student notes and pasted ChatGPT answers are parsed and rendered with full Markdown support into project-standard editorial typography:
+    - **Markdown Headings (`#`, `##`, `###`, `####`)**: Converted into styled editorial headers (`.my-answer-heading`) without literal `#` hashes or bracket artifacts.
+    - **Markdown Pipe Tables (`| ... |`)**: Parsed and rendered as clean, responsive HTML tables (`.my-answer-table-wrapper` and `.my-answer-table`) with zebra striping, tonal headers, and horizontal scroll on mobile.
+    - **Numbered Lists (`1.`, `1\.`, `1)`)**: Automatically strip backslash escapes (e.g. from ChatGPT `1\.`) and format into clean `.sol-item-row` rows with `.sol-item-num`.
+    - **Bullet Lists (`-`, `*`, `•`, `+`)**: Formatted as vertical `.sol-item-row` list items.
+    - **Note Callouts (`Note:`, `**Note:**`)**: Formatted with dedicated `.sol-note-box` containers and `.note-tag` micro-badges.
+    - **Example Micro-Tags (`Example:`, `Eg:`)**: Formatted with `.sol-example` and `.example-tag`.
+    - **Formatting**: Full support for bold (`**text**`), italic (`*text*`), inline code (` `code` `), and KaTeX mathematical formulas (`$...$`, `$$...$$`).
+- **Navigation Architecture & In-Card Focus Policy**:
+  - The desktop sticky header and mobile bottom navigation are strictly reserved for the 4 primary destinations: `Questions` / `Question Bank`, `Checklist` / `Unit Checklist`, `Formulas`, and `Timetable`.
+  - The standalone `Notes` navigation tab and count badge are excluded from both desktop and mobile navigation bars to preserve maximum vertical and horizontal space and prevent clutter.
+  - Personal custom answers and notes are managed directly in-place on individual question cards via `.note-action-btn` and the in-card solution switcher (`.sol-view-switch-row`).
 - **Multi-Tier Zero-Data-Loss Persistence Guarantee**:
   1. **Tier 1 (Client Storage)**: Instant local persistence in `localStorage` under `<prefix>_user_notes` and `<prefix>_general_notes`.
   2. **Tier 2 (Disk Background Sync)**: Automatic asynchronous debounced sync to server endpoint `POST /api/progress`, persisted to `user_progress.json` via `core/progress.py`.
@@ -279,3 +301,110 @@ Adhere strictly to the project typography hierarchy specification:
   - **Balanced Radicals & Nested Parentheses**: Ensure square roots with internal parentheses (e.g. Coulomb friction terms `\sqrt{...}`) enclose the full quotient without premature truncation.
   - **Pre-Process Sanitization Hook**: `renderMathInElement` must maintain an active `preProcess` filter so that any dynamic or client-rendered equations are sanitized before KaTeX parsing occurs.
 - **Verification Rule**: Every time numerical or formula code is modified, run the automated KaTeX validation script to ensure 0 display errors and 0 inline errors across all pages (`index.html` and `geotech_pyq_analysis.html`).
+
+---
+
+## 15. Formula Parameter Breakdown & Clean Typography Standard (Zero Separate Bg & Font)
+
+- **Parameter Breakdown Clean Architecture**:
+  - In formula cards (`#view-formulas`), parameter items must **NEVER** be wrapped in individual colored pill backgrounds (`--math-param-pill-bg`) or nested unit boxes (`--card`).
+  - **No Monospace Font Clutter**: Parameter symbols and units must **NOT** force monospace font (`var(--font-family-mono)`). KaTeX renders the mathematical symbols with standard math typography; descriptions and units inherit the clean, natural application sans-serif typography.
+  - **Structured 3-Column Alignment (`.formula-param-grid`)**: Parameters format as clean, seamless typographic rows using CSS Grid:
+    - **Container**: `display: grid; grid-template-columns: auto 1fr auto; column-gap: 0.85rem; row-gap: 0.45rem; align-items: baseline;`
+    - **Row Wrapper**: `.formula-param-row { display: contents; }` so that all rows across a card align into 3 synchronized columns.
+    - **Column 1 (`.param-sym`)**: Bold symbol, rendered via KaTeX (`$p.sym$`), crisp and left-aligned.
+    - **Column 2 (`.param-desc`)**: High-contrast, highly readable description (`color: var(--foreground); font-size: 0.875rem; line-height: 1.5;`).
+    - **Column 3 (`.param-unit`)**: Clean, subtle SI unit (`color: var(--muted-foreground); font-size: 0.8125rem; font-weight: 500; justify-self: end; text-align: right; background: none; border-radius: 0; padding: 0;`).
+  - **Mobile Fluidity (`@media (max-width: 540px)`)**: Switches smoothly to a flexible wrapping flex layout (`.param-sym { min-width: 44px; }`, `.param-desc { flex: 1 1 180px; }`, `.param-unit { margin-left: auto; }`).
+- **Exam Insight Callout Removal**:
+  - The redundant `.formula-exam-notes` ("Exam Insight") callout box at the bottom of formula cards is removed to eliminate visual clutter and keep cards focused strictly on governing equations and parameter definitions.
+  - In the formula table view, the 4th column displays the clean parameter list rather than repetitive note blocks.
+
+---
+
+## 14. Star & Mark-for-Later Question Tracking Engine
+
+- **Overview & User Intent**:
+  - Allows students to star high-yield questions for fast revision and mark secondary or deferred questions as "Later".
+  - **Zero Text Mandate**: Star and Later controls must be purely visual icon-only buttons ("notext just icon"), never rendering text labels inside the buttons.
+- **Card-Level Quick Actions (`.icon-action-btn`)**:
+  - Integrated directly in `.q-item-actions` (Question Bank) and `.checklist-card-actions` (PYQ Checklist), positioned immediately adjacent to Note, Mark Done, and accordion chevron controls.
+  - Sized uniformly at `28px × 28px` with rounded pill curves (`var(--radius-full)`), subtle scale transitions (`scale(1.08)` hover, `scale(0.92)` active), and touch-friendly padding.
+  - **Star Button (`.star-action-btn`)**: Features a crisp 5-point star SVG (`<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">`). When active (`.is-starred`), fills with vibrant amber gold (`var(--pastel-amber-bg)` and `var(--pastel-amber-foreground)`).
+  - **Later Button (`.later-action-btn`)**: Features a clean watch/clock SVG (`<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>`). When active (`.is-later`), highlights with soft lavender (`var(--pastel-lavender-bg)` and `var(--pastel-lavender-foreground)`).
+  - **Card Dimming (`.q-item.is-later` / `.checklist-card.is-later`)**: When a question is postponed for later, its card adopts a subtle reduced opacity (`0.65`) that smoothly restores to `1.0` on hover, providing instant visual hierarchy.
+  - **Accordion Shield**: Clicking either icon button stops event propagation (`event.stopPropagation()`) and never triggers card accordion expansion or collapse.
+- **Strict Exclusion from Total Count (MANDATORY)**:
+  - **Core Rule**: Questions marked as "Later" are strictly **excluded from total counts and completion denominators** across the entire application.
+  - **Question Bank Denominator**: `totalSource = items.filter(q => !laterQuestions.has(q.id)).length`. Total matched and completion percentage (`doneCount / total Done (%)`) reflect only active questions.
+  - **PYQ Checklist Metrics**: Overall completion meter (`checklistTotalCount`), percentage badge (`checklistTotalPct`), overline badge (`checklistOverlineCount`), and status counts (`checklistAllCount`, `checklistIncompleteCount`) exclude questions marked as "Later".
+  - **Year & Unit Breakdown Denominators**: `yearTotal[y]` and `subheadTotal[yuKey]` tally only active questions, guaranteeing that postponed questions never distort syllabus mastery progress.
+  - **Navbar Badges**: Desktop header and mobile navigation badges reflect the active non-later count (e.g. `76 PYQs` instead of `78 PYQs`).
+- **One-Click Segmented Filtering**:
+  - The Question Bank Control Panel and PYQ Checklist Toolbar include dedicated `Starred` and `Later` segmented status pills (`All`, `Incomplete`, `Completed`, `Starred`, `Later`).
+  - Selecting `Starred` isolates only starred items. Selecting `Later` reviews all deferred items. Selecting `Incomplete` automatically excludes deferred items so students focus strictly on remaining active work.
+- **Multi-Tier Persistence**:
+  - Saved instantaneously to `localStorage` under `<prefix>_starred_questions` and `<prefix>_later_questions`.
+  - Asynchronously synchronized to `user_progress.json` on disk via `POST /api/progress`.
+  - Seed-injected during dashboard generation (`EMBEDDED_STARRED`, `EMBEDDED_LATER`) for instant zero-latency bootstrapping.
+
+---
+
+## 15. Minimal Favicon & Touch Icon Architecture
+
+- **Minimalist Aesthetic & Brand Identity**:
+  - Pure geometric "E" lettermark (Exam Intelligence & Engineering Precision) centered within a dark obsidian/zinc squircle (`#09090b` canvas, `rx=7` on 32×32 grid).
+  - Subtle perimeter border (`rgba(255, 255, 255, 0.15)`) ensuring crisp edge contrast against both light and dark browser tab strips.
+  - Crisp high-contrast white glyph (`#fcfcfd`) with mathematically balanced arm proportions (80% golden ratio middle arm).
+- **Pixel-Perfect Integer Alignment (Zero Subpixel Blur)**:
+  - Designed on a 32×32 grid with all vertices on even integer coordinates (`M8 6h16v4H12v4h9v4H12v4h12v4H8z`), scaling by 0.5 to 16×16 with exact 1-to-1 pixel alignment (2px stem, 2px arm thickness, 2px uniform gaps).
+- **Multi-Tier Deployment Standard**:
+  1. **Inline URL-Safe SVG Data URI**: Embedded directly in `<link rel="icon" type="image/svg+xml">` without literal `</style>` tags to ensure instant rendering when opened locally via `file://` offline and zero extra HTTP roundtrips.
+  2. **Standalone Vector (`favicon.svg`)**: Root asset supporting `@media (prefers-color-scheme: light / dark)` theme adaptation and infinite retina scaling.
+  3. **Multi-Resolution Windows/Legacy Icon (`favicon.ico`)**: Root asset containing 16×16, 32×32, and 48×48 downsampled bitmaps with Lanczos filtering.
+  4. **High-DPI Touch Icon (`apple-touch-icon.png`)**: 180×180 PNG asset for iOS Safari homescreen shortcuts and macOS Safari bookmarks.
+- **Generator Integration**:
+  - Both `generate_dashboard.py` and `tools/timetable/build_timetable.py` embed identical favicon declarations in the `<head>` section of `index.html`, `geotech_pyq_analysis.html`, and `timetable.html`.
+
+---
+
+## 16. Unified Hugeicons Icon System Standard (MANDATORY)
+
+- **Official Icon Family**: **Hugeicons** (Stroke-Rounded collection).
+- **CDN & 100% Offline Dual Architecture**:
+  - Loaded via CDN with automatic local vendored fallback:
+    ```html
+    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" onerror="this.onerror=null;this.href='vendor/hugeicons/icons.css'">
+    <link rel="stylesheet" href="vendor/hugeicons/icons.css">
+    ```
+  - Local assets vendored in `vendor/hugeicons/` (`icons.css` and `hgi-stroke-rounded.woff2`) ensure zero latency and full offline operation when accessed via `file://`.
+- **Icon Sizing & Typography Proportions**:
+  - Base `.icon`: `1.25rem` (20px)
+  - `.icon-xs`: `1rem` (16px)
+  - `.icon-sm`: `1.125rem` (18px)
+  - `.icon-md`: `1.375rem` (22px)
+  - `.icon-lg`: `1.75rem` (28px)
+  - Mobile bottom nav icons (`.mobile-nav-icon`): `22px`
+  - Floating back-to-top (`.scroll-to-top-btn i`): `24px`
+- **Icon Mapping Catalog**:
+  - **Question Bank**: `<i class="icon icon-sm hgi-stroke hgi-book-open-01"></i>`
+  - **Unit Checklist**: `<i class="icon icon-sm hgi-stroke hgi-task-01"></i>`
+  - **Formulas**: `<i class="icon icon-sm hgi-stroke hgi-function-of-x"></i>`
+  - **Notes / Scratchpad**: `<i class="icon icon-sm hgi-stroke hgi-note-01"></i>`
+  - **Timetable**: `<i class="icon icon-sm hgi-stroke hgi-calendar-03"></i>`
+  - **Theme Toggle**: `<i class="icon hgi-stroke hgi-sun-01"></i>` (dark) / `<i class="icon hgi-stroke hgi-moon-02"></i>` (light)
+  - **Search**: `<i class="icon icon-sm search-icon hgi-stroke hgi-search-01"></i>`
+  - **Search Clear**: `<i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>`
+  - **Reset Filters**: `<i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>`
+  - **Clear Done**: `<i class="icon icon-xs hgi-stroke hgi-delete-02"></i>`
+  - **Star Question**: `<i class="icon icon-xs star-icon hgi-stroke hgi-star"></i>`
+  - **Later Question**: `<i class="icon icon-xs clock-icon hgi-stroke hgi-clock-01"></i>`
+  - **Personal Note**: `<i class="icon icon-xs pen-icon hgi-stroke hgi-pencil-edit-01"></i>`
+  - **Mark Done**: `<i class="icon icon-xs check-icon hgi-stroke hgi-checkmark-circle-02"></i>`
+  - **Accordion Chevron**: `<i class="icon icon-sm chevron-icon hgi-stroke hgi-chevron-down"></i>` (rotates 180° when expanded)
+  - **Checklist Tick**: `<i class="icon chk-svg hgi-stroke hgi-tick-01"></i>`
+  - **Verified Solution Tab**: `<i class="icon icon-xs hgi-stroke hgi-checkmark-badge-01"></i>`
+  - **Copy Action**: `<i class="icon icon-sm hgi-stroke hgi-copy-01"></i>`
+  - **Scroll to Top**: `<i class="hgi-stroke hgi-arrow-up-01"></i>`
+- **Zero Sparkle Rule Preserved**: Never use AI star glyphs, sparkles, or multi-point sparkles (`hgi-stars`, `hgi-sparkle`). Star questions strictly use standard 5-point star (`hgi-star`).
+

@@ -416,6 +416,49 @@ formulas_css = """
             margin: 0.25rem 0;
         }
 
+        /* KATEX FRACTION DIVIDING LINE & MATHEMATICAL BORDER ENFORCEMENT */
+        .katex * {
+            border-color: currentColor;
+        }
+
+        .katex .mfrac .frac-line {
+            display: inline-block !important;
+            width: 100% !important;
+            border-bottom-style: solid !important;
+            border-bottom-width: 0.06em !important;
+            border-bottom-width: max(1.2px, 0.05em) !important;
+            border-bottom-color: currentColor !important;
+            min-height: 1.2px !important;
+        }
+
+        .katex .overline .overline-line,
+        .katex .underline .underline-line {
+            border-bottom-style: solid !important;
+            border-bottom-width: 0.06em !important;
+            border-bottom-width: max(1.2px, 0.05em) !important;
+            border-bottom-color: currentColor !important;
+            min-height: 1.2px !important;
+        }
+
+        .katex .hdashline {
+            border-bottom-style: dashed !important;
+            border-bottom-width: 0.06em !important;
+            border-bottom-width: max(1.2px, 0.05em) !important;
+            border-bottom-color: currentColor !important;
+        }
+
+        .katex .hline {
+            border-bottom-style: solid !important;
+            border-bottom-width: 0.06em !important;
+            border-bottom-width: max(1.2px, 0.05em) !important;
+            border-bottom-color: currentColor !important;
+        }
+
+        .katex .rule {
+            border-style: solid !important;
+            border-color: currentColor !important;
+        }
+
         .sol-math-inline {
             display: inline-block;
             background-color: var(--secondary);
@@ -471,69 +514,6 @@ formulas_css = """
         }
 
         /* Formula Reference Hub */
-        .formula-toolbar {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .formula-toolbar-top {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.75rem;
-        }
-
-        .formula-search-box {
-            position: relative;
-            flex: 1;
-            min-width: 260px;
-        }
-
-        .formula-view-toggle {
-            display: inline-flex;
-            background-color: var(--secondary);
-            padding: 0.25rem;
-            border-radius: var(--radius-md);
-            gap: 0.25rem;
-        }
-
-        .formula-view-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.8125rem;
-            font-weight: 500;
-            padding: 0.4rem 0.75rem;
-            border-radius: calc(var(--radius-md) - 2px);
-            background: transparent;
-            color: var(--muted-foreground);
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .formula-view-btn:hover {
-            color: var(--foreground);
-        }
-
-        .formula-view-btn.active {
-            background-color: var(--card);
-            color: var(--foreground);
-            box-shadow: var(--shadow-sm);
-            font-weight: 600;
-        }
-
-        .formula-unit-filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Formula Showcase Cards Grid */
         .formula-cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
@@ -653,7 +633,8 @@ formulas_css = """
         .formula-param-section {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
         }
 
         .formula-param-header {
@@ -665,64 +646,79 @@ formulas_css = """
         }
 
         .formula-param-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            row-gap: 0.45rem;
+            column-gap: 0.85rem;
+            align-items: baseline;
         }
 
+        .formula-param-row,
         .formula-param-pill {
-            background-color: var(--math-param-pill-bg);
-            color: var(--foreground);
-            padding: 0.3rem 0.6rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.78125rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            line-height: 1.3;
+            display: contents;
         }
 
+        .formula-param-row .param-sym,
         .formula-param-pill .param-sym {
-            font-family: var(--font-family-mono);
             font-weight: 600;
             color: var(--foreground);
+            white-space: nowrap;
         }
 
+        .formula-param-row .param-sym .katex,
         .formula-param-pill .param-sym .katex {
-            font-size: 0.875rem;
+            font-size: 0.9375rem;
         }
 
+        .formula-param-row .param-desc,
         .formula-param-pill .param-desc {
-            color: var(--muted-foreground);
-            font-size: 0.75rem;
-        }
-
-        .formula-param-pill .param-unit {
-            background-color: var(--card);
             color: var(--foreground);
-            padding: 0.05rem 0.3rem;
-            border-radius: 3px;
-            font-size: 0.6875rem;
-            font-family: var(--font-family-mono);
-            font-weight: 500;
-        }
-
-        .formula-exam-notes {
-            background-color: var(--secondary);
-            border-radius: var(--radius-sm);
-            padding: 0.65rem 0.85rem;
-            font-size: 0.8125rem;
+            font-size: 0.875rem;
             line-height: 1.5;
-            color: var(--foreground);
-            display: flex;
-            gap: 0.5rem;
-            align-items: flex-start;
         }
 
-        .formula-exam-notes svg {
-            flex-shrink: 0;
-            margin-top: 0.15rem;
+        .formula-param-row .param-unit,
+        .formula-param-pill .param-unit {
+            background: none !important;
             color: var(--muted-foreground);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            white-space: nowrap;
+            text-align: right;
+            justify-self: end;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        @media (max-width: 540px) {
+            .formula-param-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .formula-param-row,
+            .formula-param-pill {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                gap: 0.25rem 0.6rem;
+            }
+
+            .formula-param-row .param-sym,
+            .formula-param-pill .param-sym {
+                min-width: 44px;
+            }
+
+            .formula-param-row .param-desc,
+            .formula-param-pill .param-desc {
+                flex: 1 1 180px;
+            }
+
+            .formula-param-row .param-unit,
+            .formula-param-pill .param-unit {
+                margin-left: auto;
+            }
         }
 
         .table-formula-cell {
@@ -735,38 +731,6 @@ formulas_css = """
         }
 
         @media (max-width: 768px) {
-            .formula-toolbar-top {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.65rem;
-            }
-            .formula-search-box {
-                min-width: 100%;
-                width: 100%;
-            }
-            .formula-view-toggle {
-                width: 100%;
-                display: flex;
-            }
-            .formula-view-btn {
-                flex: 1;
-                justify-content: center;
-                text-align: center;
-                padding: 0.4rem 0.5rem;
-            }
-            .formula-unit-filter-row {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                flex-wrap: nowrap;
-                padding: 2px 0;
-            }
-            .formula-unit-filter-row::-webkit-scrollbar {
-                display: none;
-            }
-            .formula-unit-filter-row .filter-pill-btn {
-                flex-shrink: 0;
-            }
             .formula-cards-grid {
                 grid-template-columns: 1fr !important;
                 gap: 1rem;
@@ -789,47 +753,56 @@ formulas_css = """
 """
 
 view_formulas_html = """<div class="app-page-view" id="view-formulas">
-            <div class="page-header-row">
-                <span class="card-overline">Interactive Mathematical Reference &bull; 21 Core Engineering Formulations</span>
-                <h1 class="page-title">Master Formulas &amp; Governing Equations</h1>
-                <p class="page-subtitle">
-                    Fully typeset equations, parameter definitions, standard units, and exam derivation tips covering 100% of numerical problems across all 5 units.
-                </p>
-            </div>
-
-            <!-- Formula Toolbar -->
-            <div class="formula-toolbar">
-                <div class="formula-toolbar-top">
-                    <div class="formula-search-box">
-                        <svg class="icon icon-sm search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" class="search-input" id="formulaSearchInput" placeholder="Search formulas, variables (Ka, qu, SPT, φ, Nc), or topics... (Press 'f' to focus)" aria-label="Search formulas">
-                    </div>
-                    <div class="formula-view-toggle" role="tablist">
-                        <button class="formula-view-btn active" id="btnFormulaCards" onclick="setFormulaLayout('cards')">
-                            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                            Showcase Cards
+            <!-- Compact, Space-Efficient Formula Control Panel -->
+            <div class="control-panel">
+                <!-- TOP UTILITY & SEARCH TOOLBAR -->
+                <div class="control-panel-toolbar">
+                    <div class="search-box-wrapper">
+                        <i class="icon icon-sm search-icon hgi-stroke hgi-search-01"></i>
+                        <input type="text" class="search-input" id="formulaSearchInput" placeholder="Search formulas, variables (Ka, qu, SPT, φ), topics..." aria-label="Search formulas">
+                        <kbd class="search-kbd-hint" aria-hidden="true">f</kbd>
+                        <button class="search-clear-btn" id="formulaSearchClearBtn" title="Clear search" aria-label="Clear search" style="display: none;">
+                            <i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>
                         </button>
-                        <button class="formula-view-btn" id="btnFormulaTable" onclick="setFormulaLayout('table')">
-                            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-                            Quick-Revision Matrix
+                    </div>
+
+                    <div class="control-panel-actions">
+                        <span class="badge badge-subtle" id="formulaMatchCounter" style="height: 30px; display: inline-flex; align-items: center; padding: 0 0.75rem; font-size: 0.75rem; font-weight: 500; border-radius: var(--radius-full);">21 formulas</span>
+
+                        <div class="filter-pills-row" role="tablist">
+                            <button class="filter-pill-btn active" id="btnFormulaCards" onclick="setFormulaLayout('cards')" title="Cards layout">
+                                <i class="icon icon-xs hgi-stroke hgi-grid-view"></i>
+                                Cards
+                            </button>
+                            <button class="filter-pill-btn" id="btnFormulaTable" onclick="setFormulaLayout('table')" title="Table matrix layout">
+                                <i class="icon icon-xs hgi-stroke hgi-layout-list"></i>
+                                Table
+                            </button>
+                        </div>
+
+                        <button class="reset-filters-btn" id="formulaResetBtn" title="Reset search & filters" style="display: none;">
+                            <i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>
+                            Reset
                         </button>
                     </div>
                 </div>
 
-                <div class="formula-unit-filter-row" id="formulaUnitFilters">
-                    <button class="filter-pill-btn active" data-unit="all">All Units (21)</button>
-                    <button class="filter-pill-btn" data-unit="1">Unit 1: Earth Pressure (5)</button>
-                    <button class="filter-pill-btn" data-unit="2">Unit 2: Shear &amp; Slopes (4)</button>
-                    <button class="filter-pill-btn" data-unit="3">Unit 3: Foundations (4)</button>
-                    <button class="filter-pill-btn" data-unit="4">Unit 4: Piles &amp; Caissons (4)</button>
-                    <button class="filter-pill-btn" data-unit="5">Unit 5: Soil Exploration (4)</button>
+                <!-- FILTER ROW: UNIT -->
+                <div class="control-panel-filters">
+                    <div class="control-panel-filter-row">
+                        <div class="filter-subgroup">
+                            <span class="filter-group-label">Unit</span>
+                            <div id="formulaUnitFilters" class="filter-pills-row">
+                                <button class="filter-pill-btn active" data-unit="all">All</button>
+                                <button class="filter-pill-btn" data-unit="1" title="Unit 1: Earth Pressure (5 formulas)">Unit 1</button>
+                                <button class="filter-pill-btn" data-unit="2" title="Unit 2: Shear &amp; Slopes (4 formulas)">Unit 2</button>
+                                <button class="filter-pill-btn" data-unit="3" title="Unit 3: Foundations (4 formulas)">Unit 3</button>
+                                <button class="filter-pill-btn" data-unit="4" title="Unit 4: Piles &amp; Caissons (4 formulas)">Unit 4</button>
+                                <button class="filter-pill-btn" data-unit="5" title="Unit 5: Soil Exploration (4 formulas)">Unit 5</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Active Filter Status -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding: 0 0.25rem;">
-                <span class="card-overline" id="formulaFilterSummary">Showing all 21 master engineering formulas</span>
-                <span class="text-body-small" id="formulaMatchCounter">21 of 21 matched</span>
             </div>
 
             <!-- Cards Container -->
@@ -982,7 +955,8 @@ formulas_js_template = """
                     s = s.replace(/Peck\\s*&\\s*Hanson/g, 'Peck \\\\& Hanson');
                     return s;
                 },
-                throwOnError: false
+                throwOnError: false,
+                minRuleThickness: 0.05
             });
         }
     }
@@ -1017,7 +991,7 @@ formulas_js_template = """
             const originalHtml = btn.innerHTML;
             btn.classList.add('copied');
             btn.innerHTML = `
-                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <i class="icon icon-sm hgi-stroke hgi-tick-01"></i>
                 Copied!
             `;
             setTimeout(() => {
@@ -1058,13 +1032,25 @@ formulas_js_template = """
             return true;
         });
 
-        if (counterEl) counterEl.textContent = `${filtered.length} of ${MASTER_FORMULAS.length} matched`;
+        if (counterEl) {
+            if (filtered.length === MASTER_FORMULAS.length) {
+                counterEl.textContent = `${MASTER_FORMULAS.length} formulas`;
+            } else {
+                counterEl.textContent = `${filtered.length} of ${MASTER_FORMULAS.length} matched`;
+            }
+        }
         if (summaryEl) summaryEl.textContent = `Showing ${filtered.length} master engineering formulas`;
+
+        const resetBtn = document.getElementById('formulaResetBtn');
+        if (resetBtn) {
+            const isCustom = (currentFormulaUnit !== 'all' || Boolean(formulaSearchQuery));
+            resetBtn.style.display = isCustom ? 'inline-flex' : 'none';
+        }
 
         if (filtered.length === 0) {
             cardsGrid.innerHTML = `
                 <div class="empty-results" style="grid-column: 1 / -1;">
-                    <svg class="icon icon-lg" style="margin-bottom: 0.5rem; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <i class="icon icon-lg hgi-stroke hgi-search-01" style="margin-bottom: 0.5rem; color: var(--muted-foreground);"></i>
                     <div class="empty-results-title">No matching formulas found</div>
                     <p class="text-body-small">Try clearing search terms or selecting "All Units".</p>
                 </div>
@@ -1076,7 +1062,7 @@ formulas_js_template = """
         // Render Cards
         cardsGrid.innerHTML = filtered.map(item => {
             const paramsHtml = item.params.map(p => `
-                <div class="formula-param-pill">
+                <div class="formula-param-row">
                     <span class="param-sym">$${p.sym}$</span>
                     <span class="param-desc">${p.name}</span>
                     <span class="param-unit">${p.unit}</span>
@@ -1100,7 +1086,7 @@ formulas_js_template = """
                     </div>
                     <div class="formula-card-actions">
                         <button class="btn-copy-formula" onclick="copyLatex(this, '${safeLatex}')" title="Copy LaTeX code">
-                            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <i class="icon icon-sm hgi-stroke hgi-copy-01"></i>
                             Copy LaTeX
                         </button>
                     </div>
@@ -1119,17 +1105,17 @@ formulas_js_template = """
                         ${paramsHtml}
                     </div>
                 </div>
-
-                <div class="formula-exam-notes">
-                    <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    <div><strong>Exam Insight:</strong> ${item.notes}</div>
-                </div>
             </div>
             `;
         }).join('');
 
         // Render Table
-        tableBody.innerHTML = filtered.map(item => `
+        tableBody.innerHTML = filtered.map(item => {
+            const paramsList = (item.params || []).map(p => `
+                <li><strong>$${p.sym}$</strong> &ndash; ${p.name} <span class="text-body-small" style="color: var(--muted-foreground);">(${p.unit})</span></li>
+            `).join('');
+
+            return `
             <tr>
                 <td><span class="badge badge-unit-${item.unit}">Unit ${item.unit}</span></td>
                 <td>
@@ -1143,10 +1129,13 @@ formulas_js_template = """
                     </div>
                 </td>
                 <td>
-                    <div style="font-size: 0.8125rem; line-height: 1.5;">${item.notes}</div>
+                    <ul class="table-list table-list-compact" style="margin: 0; padding-left: 1rem;">
+                        ${paramsList}
+                    </ul>
                 </td>
             </tr>
-        `).join('');
+            `;
+        }).join('');
 
         renderAllMath();
     }
@@ -1171,16 +1160,52 @@ formulas_js_template = """
 
         let formulaSearchTimeout;
         const fInput = document.getElementById('formulaSearchInput');
+        const fClearBtn = document.getElementById('formulaSearchClearBtn');
+        const fResetBtn = document.getElementById('formulaResetBtn');
+
         if (fInput) {
-            if (formulaSearchQuery) fInput.value = formulaSearchQuery;
+            if (formulaSearchQuery) {
+                fInput.value = formulaSearchQuery;
+                if (fClearBtn) fClearBtn.style.display = 'inline-flex';
+            }
             fInput.addEventListener('input', (e) => {
                 clearTimeout(formulaSearchTimeout);
                 formulaSearchTimeout = setTimeout(() => {
                     formulaSearchQuery = e.target.value.trim();
+                    if (fClearBtn) {
+                        fClearBtn.style.display = formulaSearchQuery ? 'inline-flex' : 'none';
+                    }
                     saveFormulaFilters();
                     renderFormulas();
                 }, 200);
             });
+        }
+
+        if (fClearBtn && fInput) {
+            fClearBtn.addEventListener('click', () => {
+                fInput.value = '';
+                formulaSearchQuery = '';
+                fClearBtn.style.display = 'none';
+                saveFormulaFilters();
+                renderFormulas();
+                fInput.focus();
+            });
+        }
+
+        window.resetFormulaFilters = function() {
+            currentFormulaUnit = 'all';
+            formulaSearchQuery = '';
+            if (fInput) fInput.value = '';
+            if (fClearBtn) fClearBtn.style.display = 'none';
+            unitFilters.forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-unit') === 'all');
+            });
+            saveFormulaFilters();
+            renderFormulas();
+        };
+
+        if (fResetBtn) {
+            fResetBtn.addEventListener('click', window.resetFormulaFilters);
         }
 
         window.addEventListener('keydown', (e) => {
@@ -1190,7 +1215,10 @@ formulas_js_template = """
                     window.switchPageView('formulas');
                 }
                 const fi = document.getElementById('formulaSearchInput');
-                if (fi) fi.focus();
+                if (fi) {
+                    fi.focus();
+                    fi.select();
+                }
             }
         });
 
@@ -1253,7 +1281,7 @@ def build_initial_cards_html():
     cards = []
     for item in master_formulas:
         params_html = "".join([
-            f'<div class="formula-param-pill"><span class="param-sym">${p["sym"]}$</span><span class="param-desc">{p["name"]}</span><span class="param-unit">{p["unit"]}</span></div>' for p in item["params"]
+            f'<div class="formula-param-row"><span class="param-sym">${p["sym"]}$</span><span class="param-desc">{p["name"]}</span><span class="param-unit">{p["unit"]}</span></div>' for p in item["params"]
         ])
         sub_box = f'<div class="formula-secondary-box">$${item["latex_sub"]}$$</div>' if item.get("latex_sub") else ""
         safe_latex = item["latex_raw"].replace("'", "\\'").replace('"', '&quot;')
@@ -1266,7 +1294,7 @@ def build_initial_cards_html():
                 </div>
                 <div class="formula-card-actions">
                     <button class="btn-copy-formula" onclick="copyLatex(this, '{safe_latex}')" title="Copy LaTeX code">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <i class="icon icon-sm hgi-stroke hgi-copy-01"></i>
                         Copy LaTeX
                     </button>
                 </div>
@@ -1285,11 +1313,6 @@ def build_initial_cards_html():
                     {params_html}
                 </div>
             </div>
-
-            <div class="formula-exam-notes">
-                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                <div><strong>Exam Insight:</strong> {item['notes']}</div>
-            </div>
         </div>''')
     return "\n".join(cards)
 
@@ -1297,6 +1320,9 @@ def build_initial_table_rows():
     rows = []
     for item in master_formulas:
         sub_latex = f'<div style="font-size: 0.85rem; color: var(--muted-foreground); margin-top: 0.35rem;">$${item["latex_sub"]}$$</div>' if item.get("latex_sub") else ""
+        params_list = "".join([
+            f'<li><strong>${p["sym"]}$</strong> &ndash; {p["name"]} <span class="text-body-small" style="color: var(--muted-foreground);">({p["unit"]})</span></li>' for p in item["params"]
+        ])
         rows.append(f'''
         <tr>
             <td><span class="badge badge-unit-{item['unit']}">Unit {item['unit']}</span></td>
@@ -1311,7 +1337,9 @@ def build_initial_table_rows():
                 </div>
             </td>
             <td>
-                <div style="font-size: 0.8125rem; line-height: 1.5;">{item['notes']}</div>
+                <ul class="table-list table-list-compact" style="margin: 0; padding-left: 1rem;">
+                    {params_list}
+                </ul>
             </td>
         </tr>''')
     return "\n".join(rows)
@@ -1515,7 +1543,7 @@ def enhance_html(html_str):
         out = re.sub(pat, lambda m, r=rep_str: r, out)
 
     # 4. Replace view-formulas
-    old_formulas_view_regex = r'<div class="app-page-view" id="view-formulas">.*?(?=\s*</div>\s*\n\s*(?:<!-- =+\s*\n\s*PAGE VIEW: NOTES|<div class="app-page-view" id="view-notes"|<!-- Embedded High-Performance Data Arrays))'
+    old_formulas_view_regex = r'<div class="app-page-view" id="view-formulas">.*?\s*</div>\s*</div>(?=\s*\n\s*(?:<!-- =+\s*\n\s*PAGE VIEW: NOTES|<div class="app-page-view" id="view-notes"|<!-- Embedded High-Performance Data Arrays))'
     out = re.sub(old_formulas_view_regex, lambda m, r=view_html_ready: r, out, count=1, flags=re.DOTALL)
 
     # 5. Insert formulas_js before </body>
