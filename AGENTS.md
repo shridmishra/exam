@@ -99,7 +99,7 @@ Adhere strictly to the project typography hierarchy specification:
 - **Question Bank Engine Directives**:
   - **Zero Heading Clutter**: The Question Bank view starts immediately with the space-efficient Control Panel, removing unnecessary top headings and subheadings for maximum vertical workspace.
   - **Minimal Grid-Based Control Panel (Zero Separate Backgrounds & Proper Grid System)**:
-    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Clean, responsive search input spanning across (`flex: 1`) with search shortcut hint badge (`/`) and clear `✕` button, paired with the `Reset` action on the right.
+    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Clean, responsive search input spanning across (`flex: 1`) with search shortcut hint badge (`/`) and clear `✕` button, paired with the live match counter pill, dynamic `Expand All` / `Collapse All` toggle button (`.expand-all-btn`), and the `Reset` action on the right.
     - **Zero Separate Pill Track Backgrounds (Pure Minimal Flow)**: Filter button groups (`.filter-pill-group`) feature NO separate recessed background capsule containers (`var(--secondary)` track removed), NO divider lines (`|`), and NO nested background boxes. Inactive buttons are transparent with muted text, while the active filter button features a subtle, refined background highlight pill (`var(--secondary)` in light mode, `#27272a` in dark mode).
     - **Proper CSS Grid System (`.control-panel-grid`)**: All 6 filter dimensions are laid out in a symmetrical 3-column CSS Grid (`grid-template-columns: repeat(3, 1fr)`) that utilizes 100% of the horizontal workspace without empty voids:
       - **Column 1 (Scope & Syllabus)**: `Year` (`All`, `2025`, `2024`, `2023`, `2022`) and `Unit` (`All`, `Unit 1..5`).
@@ -129,9 +129,14 @@ Adhere strictly to the project typography hierarchy specification:
   - `canonical_data.json` (59 clean, deduplicated core topics)
   - `compile_data.py` (106 verified raw questions across 4 exam years: 2025, 2024, 2023, 2022)
 - **Master Formulas & Governing Equations Engine Directives**:
-  - **Zero Heading Clutter**: Removes redundant overlines, giant page titles, and dense paragraph descriptions. The view starts immediately with the space-efficient `.control-panel` matching the Question Bank architecture.
-  - **Top Utility & Search Toolbar**: Clean search input with `f` keyboard shortcut badge and `✕` clear button, paired horizontally with the live match counter pill (`21 formulas` or `4 of 21 matched`), segmented capsule layout switcher (`Cards` / `Table`), and smart `Reset` button.
-  - **Segmented Unit Capsule Track**: Minimal, non-wrapping unit filter pills (`All`, `Unit 1`, `Unit 2`, `Unit 3`, `Unit 4`, `Unit 5`) with informative hover tooltips (e.g., `Unit 1: Earth Pressure (5 formulas)`), completely replacing verbose multi-clause buttons.
+  - **Zero Heading Clutter**: Removes redundant overlines, giant page titles, and dense paragraph descriptions. The view starts immediately with the minimal `.formula-control-bar`.
+  - **Minimal Three-Part Control Bar (Zero Outer Background Separation)**:
+    - Eliminates outer card background (`background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important;`).
+    - Background separation is kept strictly in the unit div (`.formula-unit-wrapper` with `var(--secondary)`) and on the search input (`var(--input-bg)`).
+    - **Unit Switcher (Left)**: Uppercase `Unit` label with tactile unit pills (`All`, `Unit 1..5`).
+    - **Formula Counter (Left)**: Live match counter pill (`21 formulas` or `X of 21 matched`) with reactive `Reset` button.
+    - **Minimal Search Input (Right)**: Positioned on the right side of the column with minimal placeholder (`Search formulas...`), clear button (`✕`), and no `f` badge.
+  - **Cards Layout by Default**: Permanent cards layout with Cards/Table switch toggle buttons removed.
   - **Zero Redundant Status Row**: Completely eliminates redundant all-caps summary bars (`SHOWING 4 MASTER ENGINEERING FORMULATIONS`), saving ~180px-200px of vertical viewport space so mathematical formulas appear immediately.
 - **PYQ Checklist Engine Directives (Year-wise, then Unit-wise)**:
   - Replaces the legacy static syllabus breakdown table with an interactive, year-wise and unit-wise PYQ checklist across all 106 verified questions (2025: 28 Qs, 2024: 25 Qs, 2023: 28 Qs, 2022: 25 Qs, covering Units 1 to 5 within each exam paper).
@@ -140,7 +145,7 @@ Adhere strictly to the project typography hierarchy specification:
   - **Two-Way Real-Time Synchronization**: Toggling a question's completion state in either the Checklist or Question Bank instantly synchronizes `localStorage` (`geotech_completed_questions`), overall completion counters, year-level toolbar progress pills, and unit-level subhead counters.
   - **In-Place Accordion Engine (`toggleChecklistSolution`)**: Clicking any checklist card smoothly toggles its solution container (`chk-sol-*`), rotates the `.chk-chevron` icon (180&deg;), and sets `.is-open`. Clicking inside the solution text, highlighting/copying formulas, or toggling completion never collapses the card. KaTeX math typesetting is automatically triggered on toggle.
   - **Checklist Controls & Filtering (Full 6-Dimension Control Panel & Live Question Counters)**: Features total completion progress, quick year-jump pills (`2025`, `2024`, `2023`, `2022`), and the complete 6-dimension `.control-panel`:
-    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Sleek, compact search input (`.search-box-wrapper`, 260px) with `/` shortcut hint and `✕` clear button, paired with the live match counter pill (`.match-counter-pill`: e.g. `106 questions` or `24 of 106 questions`) and instant `Reset` button.
+    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Sleek, compact search input (`.search-box-wrapper`, 260px) with `/` shortcut hint and `✕` clear button, paired with the live match counter pill (`.match-counter-pill`: e.g. `106 questions` or `24 of 106 questions`), dynamic `Expand All` / `Collapse All` toggle button (`.expand-all-btn`), and instant `Reset` button.
     - **Proper CSS Grid System (`.control-panel-grid`)**: Symmetrical 3-column grid containing all 6 filter dimensions with clean, uncluttered filter pill buttons:
       - **Column 1**: `Year` (`All`, `2025`, `2024`, `2023`, `2022`) and `Unit` (`All`, `Unit 1..5`).
       - **Column 2**: `Repeated` (`All`, `Most Repeated`, `4x`, `3x`, `2x`) and `Type` (`All`, `Theory`, `Numerical`, `Derivation`).
@@ -427,4 +432,27 @@ Adhere strictly to the project typography hierarchy specification:
   - **Copy Action**: `<i class="icon icon-sm hgi-stroke hgi-copy-01"></i>`
   - **Scroll to Top**: `<i class="hgi-stroke hgi-arrow-up-01"></i>`
 - **Zero Sparkle Rule Preserved**: Never use AI star glyphs, sparkles, or multi-point sparkles (`hgi-stars`, `hgi-sparkle`). Star questions strictly use standard 5-point star (`hgi-star`).
+
+---
+
+## 17. Layout ID Shared Sliding Pill Engine & Smooth Div Transitions (MANDATORY)
+
+- **Layout ID Shared Pill Standard (Framer-Motion / Apple Style)**:
+  - In all switches, filters, tab bars, and segmented controls (`.filter-pill-group`, `.nav-links`, `.sol-view-pills`, `.notes-unit-pills`, `.mobile-bottom-nav`, `.filter-tabs-minimal`, `.view-switchers-minimal`), the active state must NEVER snap abruptly between buttons.
+  - A single dedicated `.layout-pill-indicator` element sits inside the group container and physically glides, expands, and contracts across options using sub-pixel accurate translations (`transform: translate3d(x, y, 0)`) and dimensions (`width`, `height`).
+  - **Motion Dynamics & Easing**:
+    - Uses Apple / Emil Kowalski's custom cubic-bezier spring-like curve: `cubic-bezier(0.16, 1, 0.3, 1)`.
+    - Timing: `0.28s` duration, ensuring snappy, fluid, and interruptible motion without perceptual lag.
+  - **Single Background Integrity**:
+    - When `.layout-pill-indicator` is active, the individual button itself (`.filter-pill-btn.active`, `.nav-link-btn.active`, `.sol-view-pill.active`, `.view-pill.active`, `.tab-pill.active`) has `background: transparent !important; box-shadow: none !important;`.
+    - The moving indicator IS the active background. Buttons sit on `position: relative; z-index: 2;` with smooth text color transitions (`transition: color 0.18s ease`).
+  - **Dynamic Color Morphing (Timetable Filter Tabs)**:
+    - In `.filter-tabs-minimal`, the indicator dynamically adapts its background color (`#205c36` for Regular, `#9a4318` for Backlog, neutral for All) with `transition: background-color 0.28s cubic-bezier(0.16, 1, 0.3, 1)` so the pill glides and morphs its hue seamlessly.
+- **Smooth Div & Content Pane Transitions (Zero Abrupt Display Swaps)**:
+  - Whenever view containers, content panes, or solution tabs are shifted or toggled, elements must transition smoothly rather than snapping:
+    - App page views (`.app-page-view.active`): `@keyframes appPageViewEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`
+    - Solution panes (`.solution-pane`): `@keyframes solPaneFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`
+    - Question accordions (`.checklist-solution-content.open`, `.q-solution-content.open`): `@keyframes chkSolSlideOpen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }`
+    - Timetable view switchers (`#calendar-view, #table-view, #timeline-view`): `@keyframes timetableViewEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`
+
 

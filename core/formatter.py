@@ -30,7 +30,7 @@ def format_solution(html: str, math_enhancer=None) -> str:
     html = html.replace("•", "&bull;").replace("·", "&bull;")
     html = html.replace("<br>\n<br>", "<br>").replace("<br><br>", "<br>")
     
-    split_pattern = r'<br>\s*(?=(?:<strong>|\d+\.\s*|[a-zA-Z]\)\s*|[a-zA-Z]\.\s*|&bull;\s*|\(\d+\)\s*|\([a-zA-Z]\)\s*))'
+    split_pattern = r'(?:<br\s*/?>\s*|\n\s*|(?=<div class="sol-diagram-box">|<div class="sol-table-wrap">)|(?<=</div>)\s*(?=(?:<br\s*/?>|\n|<strong>|\d+\.)))(?=(?:<strong>|\d+\.\s*|[a-zA-Z]\)\s*|[a-zA-Z]\.\s*|&bull;\s*|\(\d+\)\s*|\([a-zA-Z]\)\s*|<div class="sol-diagram-box">|<div class="sol-table-wrap">|$))'
     parts = re.split(split_pattern, html)
     formatted = []
     
@@ -108,7 +108,10 @@ def format_solution(html: str, math_enhancer=None) -> str:
     </div>
 </div>""")
         else:
-            p_clean = re.sub(r"^(\d+\.|[a-zA-Z]\)|[a-zA-Z]\.|\(\d+\)|\([a-zA-Z]\)|&bull;)\s*", r'<span class="sol-item-num">\1</span> ', p)
-            formatted.append(f'<div class="sol-step">{p_clean}</div>')
+            if p.startswith('<div class="sol-diagram-box">') or p.startswith('<div class="sol-table-wrap">'):
+                formatted.append(p)
+            else:
+                p_clean = re.sub(r"^(\d+\.|[a-zA-Z]\)|[a-zA-Z]\.|\(\d+\)|\([a-zA-Z]\)|&bull;)\s*", r'<span class="sol-item-num">\1</span> ', p)
+                formatted.append(f'<div class="sol-step">{p_clean}</div>')
             
     return "".join(formatted)

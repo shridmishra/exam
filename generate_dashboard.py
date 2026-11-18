@@ -104,6 +104,10 @@ def build_unit_checklist_html(questions, unit_titles=None):
 
                     <div class="control-panel-meta">
                         <span class="match-counter-pill" id="checklistMatchCounter">{total_q} questions</span>
+                        <button type="button" class="expand-all-btn" id="checklistExpandAllBtn" title="Expand all visible questions" aria-label="Expand all visible questions" onclick="toggleExpandAll()">
+                            <i class="icon icon-xs hgi-stroke hgi-unfold-more" id="expandAllIcon"></i>
+                            <span id="expandAllText">Expand All</span>
+                        </button>
                         <button class="reset-filters-btn" id="checklistResetFiltersBtn" title="Reset all checklist filters to default" style="display: none;" onclick="resetChecklistFilters()">
                             <i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>
                             Reset
@@ -878,10 +882,32 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             list-style: none;
             overflow-x: auto;
             scrollbar-width: none;
+            position: relative;
         }}
 
         .nav-links::-webkit-scrollbar {{
             display: none;
+        }}
+
+        .nav-links .layout-pill-indicator {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-color: var(--secondary);
+            border-radius: var(--radius-md);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.2s ease;
+            will-change: transform, width, height;
+        }}
+
+        [data-theme="dark"] .nav-links .layout-pill-indicator {{
+            background-color: #27272a;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
         }}
 
         .nav-link-btn {{
@@ -889,25 +915,32 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             align-items: center;
             gap: 0.45rem;
             padding: 0.5rem 0.85rem;
-            background-color: transparent;
+            background-color: transparent !important;
+            box-shadow: none !important;
             color: var(--muted-foreground);
             font-size: 0.875rem;
             font-weight: 500;
             border-radius: var(--radius-md);
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: color 0.18s ease, transform 0.1s ease;
             white-space: nowrap;
             text-decoration: none;
+            position: relative;
+            z-index: 2;
         }}
 
-        .nav-link-btn:hover {{
+        .nav-link-btn:hover:not(.active) {{
             color: var(--foreground);
-            background-color: var(--secondary);
+        }}
+
+        .nav-link-btn:active {{
+            transform: scale(0.96);
         }}
 
         .nav-link-btn.active {{
-            background-color: var(--secondary);
-            color: var(--foreground);
+            background-color: transparent !important;
+            box-shadow: none !important;
+            color: var(--foreground) !important;
             font-weight: 600;
         }}
 
@@ -1125,6 +1158,18 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .app-page-view.active {{
             display: block;
+            animation: appPageViewEnter 0.26s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }}
+
+        @keyframes appPageViewEnter {{
+            0% {{
+                opacity: 0;
+                transform: translateY(6px);
+            }}
+            100% {{
+                opacity: 1;
+                transform: translateY(0);
+            }}
         }}
 
         .page-header-row {{
@@ -1445,6 +1490,50 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             transform: scale(0.97);
         }}
 
+        .expand-all-btn {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.65rem;
+            background-color: var(--secondary);
+            color: var(--muted-foreground);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+            white-space: nowrap;
+            height: 32px;
+            box-sizing: border-box;
+            line-height: 1;
+            flex-shrink: 0;
+            user-select: none;
+            border: none;
+            outline: none;
+        }}
+
+        .expand-all-btn:hover {{
+            background-color: var(--secondary-hover);
+            color: var(--foreground);
+        }}
+
+        .expand-all-btn:active {{
+            transform: scale(0.97);
+        }}
+
+        .expand-all-btn.is-expanded {{
+            background-color: var(--secondary-hover);
+            color: var(--foreground);
+            font-weight: 600;
+        }}
+
+        .expand-all-btn .icon {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }}
+
         .control-panel-actions {{
             display: inline-flex;
             align-items: center;
@@ -1522,7 +1611,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             width: 62px;
         }}
 
-        .filter-pill-group {{
+        .filter-pill-group,
+        .notes-unit-pills {{
+            position: relative;
             display: inline-flex;
             align-items: center;
             gap: 2px;
@@ -1535,8 +1626,32 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             -webkit-overflow-scrolling: touch;
         }}
 
-        .filter-pill-group::-webkit-scrollbar {{
+        .filter-pill-group::-webkit-scrollbar,
+        .notes-unit-pills::-webkit-scrollbar {{
             display: none;
+        }}
+
+        .filter-pill-group .layout-pill-indicator,
+        .notes-unit-pills .layout-pill-indicator {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-color: #ffffff;
+            border-radius: var(--radius-full);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.2s ease;
+            will-change: transform, width, height;
+        }}
+
+        [data-theme="dark"] .filter-pill-group .layout-pill-indicator,
+        [data-theme="dark"] .notes-unit-pills .layout-pill-indicator {{
+            background-color: #27272a;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
         }}
 
         .filter-pill-btn {{
@@ -1545,40 +1660,42 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             justify-content: center;
             gap: 0.25rem;
             padding: 0.22rem 0.55rem;
-            background: transparent;
+            background: transparent !important;
+            box-shadow: none !important;
             color: var(--muted-foreground);
             border-radius: var(--radius-full);
             font-size: 0.75rem;
             font-weight: 500;
             cursor: pointer;
-            transition: color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
+            transition: color 0.18s ease, transform 0.1s ease;
             white-space: nowrap;
             user-select: none;
             line-height: 1.25;
             box-sizing: border-box;
             flex-shrink: 0;
+            position: relative;
+            z-index: 2;
         }}
 
-        .filter-pill-btn:hover {{
+        .filter-pill-btn:hover:not(.active) {{
             color: var(--foreground);
-            background-color: var(--secondary-hover);
         }}
 
         .filter-pill-btn:active {{
-            transform: scale(0.97);
+            transform: scale(0.96);
         }}
 
         .filter-pill-btn.active {{
-            background-color: #ffffff;
-            color: var(--foreground);
+            background: transparent !important;
+            box-shadow: none !important;
+            color: var(--foreground) !important;
             font-weight: 600;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
         }}
 
         [data-theme="dark"] .filter-pill-btn.active {{
-            background-color: #27272a;
-            color: #fcfcfd;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            background: transparent !important;
+            box-shadow: none !important;
+            color: #fcfcfd !important;
         }}
 
         .filter-pill-btn .nav-badge {{
@@ -2004,6 +2121,18 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .q-solution-content.open {{
             display: block;
+            animation: qSolSlideOpen 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }}
+
+        @keyframes qSolSlideOpen {{
+            0% {{
+                opacity: 0;
+                transform: translateY(-4px);
+            }}
+            100% {{
+                opacity: 1;
+                transform: translateY(0);
+            }}
         }}
 
         /* SOLUTION VIEW TOGGLE TOOLBAR (SWITCH BETWEEN VERIFIED SOLUTION & MY ANSWER) */
@@ -2019,6 +2148,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .sol-view-pills {{
+            position: relative;
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
@@ -2027,7 +2157,30 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             border-radius: var(--radius-full);
         }}
 
+        .sol-view-pills .layout-pill-indicator {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-color: #ffffff;
+            border-radius: var(--radius-full);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.2s ease;
+            will-change: transform, width, height;
+        }}
+
+        [data-theme="dark"] .sol-view-pills .layout-pill-indicator {{
+            background-color: #27272a;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+        }}
+
         .sol-view-pill {{
+            position: relative;
+            z-index: 2;
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
@@ -2035,23 +2188,34 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             font-size: 0.78rem;
             font-weight: 500;
             color: var(--muted-foreground);
-            background: transparent;
+            background: transparent !important;
+            box-shadow: none !important;
             border: none;
             border-radius: var(--radius-full);
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: color 0.18s ease, transform 0.1s ease;
             user-select: none;
         }}
 
-        .sol-view-pill:hover {{
+        .sol-view-pill:hover:not(.active) {{
             color: var(--foreground);
         }}
 
+        .sol-view-pill:active {{
+            transform: scale(0.96);
+        }}
+
         .sol-view-pill.active {{
-            background-color: var(--filter-pill-active-bg);
-            color: var(--filter-pill-active-fg);
+            background: transparent !important;
+            box-shadow: none !important;
+            color: var(--foreground) !important;
             font-weight: 600;
-            box-shadow: var(--filter-pill-active-shadow);
+        }}
+
+        [data-theme="dark"] .sol-view-pill.active {{
+            color: #fcfcfd !important;
+            background: transparent !important;
+            box-shadow: none !important;
         }}
 
         .sol-view-quick-actions {{
@@ -2874,31 +3038,36 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         /* SOLUTION DIAGRAMS & ILLUSTRATIONS (THEORY ANSWERS) */
         .sol-diagram-box {{
-            margin: 0.85rem 0;
-            padding: 1rem 1.15rem;
+            margin: 1.25rem 0;
+            padding: 1.25rem 1.5rem;
             background-color: var(--secondary);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg, 12px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow-x: auto;
+            position: relative;
         }}
 
         .sol-diagram-title {{
-            font-size: 0.78125rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.05em;
             color: var(--muted-foreground);
-            margin-bottom: 0.65rem;
+            margin-bottom: 0.85rem;
             align-self: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }}
 
         .sol-diagram-svg {{
-            max-width: 100%;
+            width: 100%;
             height: auto;
             display: block;
+            margin: 0 auto;
         }}
 
         /* COMPARISON TABLES IN SOLUTIONS */
@@ -3419,6 +3588,33 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .checklist-solution-content.open {{
             display: block;
+            animation: chkSolSlideOpen 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }}
+
+        @keyframes chkSolSlideOpen {{
+            0% {{
+                opacity: 0;
+                transform: translateY(-4px);
+            }}
+            100% {{
+                opacity: 1;
+                transform: translateY(0);
+            }}
+        }}
+
+        .solution-pane {{
+            animation: solPaneFadeIn 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }}
+
+        @keyframes solPaneFadeIn {{
+            0% {{
+                opacity: 0;
+                transform: translateY(4px);
+            }}
+            100% {{
+                opacity: 1;
+                transform: translateY(0);
+            }}
         }}
 
         .checklist-solution-footer {{
@@ -3482,6 +3678,25 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             border-top-color: var(--secondary-hover);
         }}
 
+        .mobile-bottom-nav .layout-pill-indicator {{
+            position: absolute;
+            top: 4px;
+            bottom: calc(4px + env(safe-area-inset-bottom, 0px));
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-color: var(--secondary);
+            border-radius: var(--radius-md);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.2s ease;
+            will-change: transform, width;
+        }}
+
+        [data-theme="dark"] .mobile-bottom-nav .layout-pill-indicator {{
+            background-color: #27272a;
+        }}
+
         .mobile-nav-item {{
             flex: 1;
             display: flex;
@@ -3489,15 +3704,16 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             align-items: center;
             justify-content: center;
             gap: 3px;
-            background: transparent;
+            background: transparent !important;
             color: var(--muted-foreground);
             border: none;
             cursor: pointer;
             text-decoration: none;
             padding: 6px 0 4px;
             position: relative;
+            z-index: 2;
             user-select: none;
-            transition: color 0.15s ease, transform 0.1s ease;
+            transition: color 0.18s ease, transform 0.1s ease;
             touch-action: manipulation;
         }}
 
@@ -3506,7 +3722,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .mobile-nav-item.active {{
-            color: var(--foreground);
+            color: var(--foreground) !important;
             font-weight: 600;
         }}
 
@@ -3691,7 +3907,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 flex-shrink: 0;
             }}
 
-            .reset-filters-btn, .panel-year-toggle-btn {{
+            .reset-filters-btn, .panel-year-toggle-btn, .expand-all-btn {{
                 font-size: 0.72rem;
                 padding: 0.2rem 0.5rem;
                 height: 28px;
@@ -4237,6 +4453,109 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         const EMBEDDED_LATER = {embedded_later_json};
         const EMBEDDED_GEN_NOTES = {embedded_general_notes};
 
+        /* ====================================================
+           LAYOUT ID PILL ENGINE (APPLE / FRAMER-MOTION SMOOTH SLIDING PILLS)
+           ==================================================== */
+        const LayoutPillEngine = (function() {{
+            const SELECTORS = [
+                '.filter-pill-group',
+                '.nav-links',
+                '.notes-unit-pills',
+                '.sol-view-pills',
+                '.mobile-bottom-nav'
+            ];
+
+            function getContainers() {{
+                return document.querySelectorAll(SELECTORS.join(', '));
+            }}
+
+            function updatePill(container, immediate = false) {{
+                if (!container || !container.isConnected) return;
+
+                let indicator = container.querySelector(':scope > .layout-pill-indicator');
+                if (!indicator) {{
+                    indicator = document.createElement('span');
+                    indicator.className = 'layout-pill-indicator';
+                    indicator.setAttribute('aria-hidden', 'true');
+                    container.prepend(indicator);
+                }}
+
+                // Locate active item
+                let activeItem = container.querySelector(':scope > .active, :scope > * > .active, :scope > .filter-pill-btn.active, :scope > .nav-link-btn.active, :scope > .sol-view-pill.active, :scope > .mobile-nav-item.active');
+
+                if (!activeItem || activeItem.offsetParent === null) {{
+                    indicator.style.opacity = '0';
+                    return;
+                }}
+
+                const cRect = container.getBoundingClientRect();
+                const iRect = activeItem.getBoundingClientRect();
+
+                const x = (iRect.left - cRect.left) + container.scrollLeft;
+                const y = (iRect.top - cRect.top) + container.scrollTop;
+                const w = iRect.width;
+                const h = iRect.height;
+
+                if (w === 0 || h === 0) {{
+                    indicator.style.opacity = '0';
+                    return;
+                }}
+
+                if (immediate || !indicator.dataset.initialized) {{
+                    indicator.style.transition = 'none';
+                    indicator.style.transform = `translate3d(${{x}}px, ${{y}}px, 0)`;
+                    indicator.style.width = `${{w}}px`;
+                    indicator.style.height = `${{h}}px`;
+                    indicator.style.opacity = '1';
+                    indicator.dataset.initialized = 'true';
+                    void indicator.offsetHeight; // force reflow
+                    indicator.style.transition = '';
+                }} else {{
+                    indicator.style.transform = `translate3d(${{x}}px, ${{y}}px, 0)`;
+                    indicator.style.width = `${{w}}px`;
+                    indicator.style.height = `${{h}}px`;
+                    indicator.style.opacity = '1';
+                }}
+            }}
+
+            function updateAll(immediate = false) {{
+                requestAnimationFrame(() => {{
+                    getContainers().forEach(c => updatePill(c, immediate));
+                }});
+            }}
+
+            function init() {{
+                updateAll(true);
+                setTimeout(() => updateAll(true), 60);
+
+                // Global delegated click listener for instant 0ms feedback
+                document.addEventListener('click', (e) => {{
+                    const btn = e.target.closest('.filter-pill-btn, .nav-link-btn, .sol-view-pill, .mobile-nav-item');
+                    if (btn) {{
+                        const container = btn.closest(SELECTORS.join(', '));
+                        if (container) {{
+                            requestAnimationFrame(() => updatePill(container, false));
+                        }}
+                    }}
+                }}, true);
+
+                let resizeTimer = null;
+                window.addEventListener('resize', () => {{
+                    if (resizeTimer) cancelAnimationFrame(resizeTimer);
+                    resizeTimer = requestAnimationFrame(() => {{
+                        getContainers().forEach(c => updatePill(c, true));
+                    }});
+                }}, {{ passive: true }});
+            }}
+
+            return {{
+                init,
+                updatePill,
+                updateAll
+            }};
+        }})();
+        window.LayoutPillEngine = LayoutPillEngine;
+
         let hide2023 = false;
         try {{
             localStorage.removeItem(STORAGE_KEY_HIDE_2023);
@@ -4573,6 +4892,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }}
             updateResetButton();
             updateMetrics();
+            if (window.LayoutPillEngine) {{
+                window.LayoutPillEngine.updateAll();
+            }}
         }}
 
         function updateResetButton() {{
@@ -4708,6 +5030,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 if (searchClearBtn) {{
                     searchClearBtn.style.display = checklistSearchQuery ? 'inline-flex' : 'none';
                 }}
+            }}
+            if (window.LayoutPillEngine) {{
+                window.LayoutPillEngine.updateAll();
             }}
         }}
 
@@ -5013,6 +5338,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             if (checklistPill2023) {{
                 checklistPill2023.style.display = hide2023 ? 'none' : 'inline-flex';
             }}
+
+            if (typeof updateExpandAllButtonState === 'function') {{
+                updateExpandAllButtonState();
+            }}
         }}
 
         window.jumpToChecklistYear = function(year, event) {{
@@ -5052,6 +5381,115 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 if (window.renderAllMath) {{
                     try {{ window.renderAllMath(); }} catch(e) {{}}
                 }}
+                if (window.LayoutPillEngine) {{
+                    setTimeout(() => {{
+                        const row = document.getElementById('chk-switch-row-' + id);
+                        if (row) {{
+                            const pills = row.querySelector('.sol-view-pills');
+                            if (pills) window.LayoutPillEngine.updatePill(pills, true);
+                        }}
+                    }}, 20);
+                }}
+            }}
+
+            if (typeof updateExpandAllButtonState === 'function') {{
+                updateExpandAllButtonState();
+            }}
+        }};
+
+        // EXPAND ALL / COLLAPSE ALL QUESTIONS ENGINE
+        window.toggleExpandAll = function(forceState) {{
+            const visibleCards = Array.from(document.querySelectorAll('.checklist-card')).filter(card => card.style.display !== 'none');
+            const visibleQItems = Array.from(document.querySelectorAll('.q-item')).filter(item => item.style.display !== 'none');
+
+            const totalVisible = visibleCards.length + visibleQItems.length;
+            if (totalVisible === 0) return;
+
+            const openCardsCount = visibleCards.filter(card => card.classList.contains('is-open')).length;
+            const openQItemsCount = visibleQItems.filter(item => item.classList.contains('is-open')).length;
+            const allAreOpen = (openCardsCount + openQItemsCount) === totalVisible;
+
+            const shouldExpand = (typeof forceState === 'boolean') ? forceState : !allAreOpen;
+
+            visibleCards.forEach(card => {{
+                const id = card.getAttribute('data-id');
+                const solEl = document.getElementById('chk-sol-' + id);
+                if (shouldExpand) {{
+                    card.classList.add('is-open');
+                    if (solEl) solEl.classList.add('open');
+                    const box = document.getElementById('chk-my-answer-box-' + id);
+                    if (box && typeof renderAnswerBoxInner === 'function') {{
+                        box.innerHTML = renderAnswerBoxInner(id, true);
+                    }}
+                }} else {{
+                    card.classList.remove('is-open');
+                    if (solEl) solEl.classList.remove('open');
+                }}
+            }});
+
+            visibleQItems.forEach(item => {{
+                const solEl = document.getElementById('sol-' + item.id);
+                if (shouldExpand) {{
+                    item.classList.add('is-open');
+                    if (solEl) solEl.classList.add('open');
+                    const box = document.getElementById('my-answer-box-' + item.id);
+                    if (box && typeof renderAnswerBoxInner === 'function') {{
+                        box.innerHTML = renderAnswerBoxInner(item.id, false);
+                    }}
+                }} else {{
+                    item.classList.remove('is-open');
+                    if (solEl) solEl.classList.remove('open');
+                }}
+            }});
+
+            if (shouldExpand && window.renderAllMath) {{
+                try {{ window.renderAllMath(); }} catch (e) {{}}
+            }}
+
+            if (typeof updateExpandAllButtonState === 'function') {{
+                updateExpandAllButtonState();
+            }}
+        }};
+
+        window.expandAllQuestions = function() {{ window.toggleExpandAll(true); }};
+        window.collapseAllQuestions = function() {{ window.toggleExpandAll(false); }};
+
+        window.updateExpandAllButtonState = function() {{
+            const btn = document.getElementById('checklistExpandAllBtn');
+            if (!btn) return;
+            const icon = document.getElementById('expandAllIcon');
+            const text = document.getElementById('expandAllText');
+
+            const visibleCards = Array.from(document.querySelectorAll('.checklist-card')).filter(card => card.style.display !== 'none');
+            const visibleQItems = Array.from(document.querySelectorAll('.q-item')).filter(item => item.style.display !== 'none');
+            const totalVisible = visibleCards.length + visibleQItems.length;
+
+            if (totalVisible === 0) {{
+                btn.style.display = 'none';
+                return;
+            }}
+            btn.style.display = 'inline-flex';
+
+            const openCardsCount = visibleCards.filter(card => card.classList.contains('is-open')).length;
+            const openQItemsCount = visibleQItems.filter(item => item.classList.contains('is-open')).length;
+            const isAllExpanded = (openCardsCount + openQItemsCount) === totalVisible;
+
+            if (isAllExpanded) {{
+                btn.classList.add('is-expanded');
+                btn.title = 'Collapse all visible questions';
+                btn.setAttribute('aria-label', 'Collapse all visible questions');
+                if (icon) {{
+                    icon.className = 'icon icon-xs hgi-stroke hgi-unfold-less';
+                }}
+                if (text) text.textContent = 'Collapse All';
+            }} else {{
+                btn.classList.remove('is-expanded');
+                btn.title = 'Expand all visible questions';
+                btn.setAttribute('aria-label', 'Expand all visible questions');
+                if (icon) {{
+                    icon.className = 'icon icon-xs hgi-stroke hgi-unfold-more';
+                }}
+                if (text) text.textContent = 'Expand All';
             }}
         }};
 
@@ -5074,6 +5512,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             document.querySelectorAll('.nav-link-btn').forEach(btn => {{
                 btn.classList.toggle('active', btn.getAttribute('data-view') === pageId);
             }});
+
+            if (window.LayoutPillEngine) {{
+                window.LayoutPillEngine.updateAll();
+            }}
 
             try {{
                 localStorage.setItem(STORAGE_KEY_VIEW, pageId);
@@ -5154,6 +5596,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }}
             updateNavBadges();
             renderNotesPage();
+            if (window.LayoutPillEngine) {{
+                window.LayoutPillEngine.init();
+            }}
         }});
 
         window.addEventListener('hashchange', () => {{
@@ -5680,6 +6125,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             if (window.renderAllMath) {{
                 try {{ window.renderAllMath(); }} catch(e) {{}}
             }}
+
+            if (window.LayoutPillEngine && switchRow) {{
+                const pills = switchRow.querySelector('.sol-view-pills');
+                if (pills) window.LayoutPillEngine.updatePill(pills);
+            }}
         }};
 
         window.openNoteEditor = function(qid, event, isChecklist = false) {{
@@ -5764,6 +6214,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             switchSolutionTab(qid, activeSolutionTab[qid], null, isChecklist);
             updateNavBadges();
             renderNotesPage();
+            if (window.LayoutPillEngine) {{
+                window.LayoutPillEngine.updateAll();
+            }}
             showQuickToast(text ? 'Answer saved in your data!' : 'Answer removed');
 
             // Also synchronize the counterpart view if open
@@ -5794,6 +6247,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             switchSolutionTab(qid, 'standard', null, isChecklist);
             updateNavBadges();
             renderNotesPage();
+            if (window.LayoutPillEngine) {{
+                window.LayoutPillEngine.updateAll();
+            }}
             showQuickToast('Answer removed');
         }};
 
@@ -5824,6 +6280,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 parent.querySelectorAll('.filter-pill-btn').forEach(b => b.classList.remove('active'));
             }}
             if (btn) btn.classList.add('active');
+            if (window.LayoutPillEngine && parent) {{
+                window.LayoutPillEngine.updatePill(parent);
+            }}
             renderNotesPage();
         }};
 
@@ -6427,6 +6886,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }});
 
             container.innerHTML = htmlParts.join('');
+            if (typeof updateExpandAllButtonState === 'function') {{
+                updateExpandAllButtonState();
+            }}
         }}
 
         // TOGGLE SOLUTION ON ENTIRE CARD CLICK
@@ -6455,6 +6917,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 if (window.renderAllMath) {{
                     try {{ window.renderAllMath(); }} catch(e) {{}}
                 }}
+            }}
+
+            if (typeof updateExpandAllButtonState === 'function') {{
+                updateExpandAllButtonState();
             }}
         }};
 

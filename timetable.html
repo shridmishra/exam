@@ -267,35 +267,63 @@
             list-style: none;
             overflow-x: auto;
             scrollbar-width: none;
+            position: relative;
         }
 
         .nav-links::-webkit-scrollbar { display: none; }
+
+        .nav-links .layout-pill-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-color: var(--secondary);
+            border-radius: var(--radius-md);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.2s ease;
+            will-change: transform, width, height;
+        }
+
+        [data-theme="dark"] .nav-links .layout-pill-indicator {
+            background-color: #27272a;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
 
         .nav-link-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.45rem;
             padding: 0.5rem 0.85rem;
-            background-color: transparent;
+            background-color: transparent !important;
             color: var(--muted-foreground);
             font-size: 0.875rem;
             font-weight: 500;
             border-radius: var(--radius-md);
             cursor: pointer;
             border: none;
-            transition: all 0.15s ease;
+            transition: color 0.18s ease, transform 0.1s ease;
             white-space: nowrap;
             text-decoration: none;
+            position: relative;
+            z-index: 2;
         }
 
-        .nav-link-btn:hover {
+        .nav-link-btn:hover:not(.active) {
             color: var(--foreground);
-            background-color: var(--secondary);
+        }
+
+        .nav-link-btn:active {
+            transform: scale(0.96);
         }
 
         .nav-link-btn.active {
-            background-color: var(--secondary);
-            color: var(--foreground);
+            background-color: transparent !important;
+            box-shadow: none !important;
+            color: var(--foreground) !important;
             font-weight: 600;
         }
 
@@ -418,13 +446,38 @@
         }
 
         .filter-tabs-minimal {
+            position: relative;
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
 
+        .filter-tabs-minimal .layout-pill-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-color: var(--foreground);
+            border-radius: var(--radius-full);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.2s ease;
+            will-change: transform, width, height, background-color;
+        }
+
+        [data-theme="dark"] .filter-tabs-minimal .layout-pill-indicator {
+            background-color: #27272a;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+        }
+
         .tab-pill {
+            position: relative;
+            z-index: 2;
             border: none !important;
             font-size: var(--font-size-button);
             font-weight: 600;
@@ -434,16 +487,17 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            transition: all 0.15s ease;
+            transition: color 0.18s ease, transform 0.1s ease;
             user-select: none;
         }
 
-        .tab-pill:hover {
-            transform: translateY(-1px);
+        .tab-pill:active {
+            transform: scale(0.96);
         }
 
-        .tab-pill:active {
-            transform: translateY(0);
+        .tab-pill.active {
+            background-color: transparent !important;
+            box-shadow: none !important;
         }
 
         .pill-count {
@@ -567,6 +621,7 @@
         }
 
         .view-switchers-minimal {
+            position: relative;
             display: flex;
             background: var(--secondary);
             padding: 3px;
@@ -574,8 +629,32 @@
             border: none;
         }
 
+        .view-switchers-minimal .layout-pill-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: var(--card);
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.2s ease;
+            will-change: transform, width, height;
+        }
+
+        [data-theme="dark"] .view-switchers-minimal .layout-pill-indicator {
+            background: #27272a;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+        }
+
         .view-pill {
-            background: transparent;
+            position: relative;
+            z-index: 2;
+            background: transparent !important;
+            box-shadow: none !important;
             border: none;
             color: var(--muted-foreground);
             font-size: var(--font-size-body-small);
@@ -583,14 +662,37 @@
             padding: 4px 10px;
             border-radius: var(--radius-full);
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: color 0.18s ease, transform 0.1s ease;
+        }
+
+        .view-pill:hover:not(.active) {
+            color: var(--foreground);
+        }
+
+        .view-pill:active {
+            transform: scale(0.96);
         }
 
         .view-pill.active {
-            background: var(--card);
-            color: var(--foreground);
+            background: transparent !important;
+            box-shadow: none !important;
+            color: var(--foreground) !important;
             font-weight: 600;
-            box-shadow: var(--shadow-sm);
+        }
+
+        #calendar-view, #table-view, #timeline-view {
+            animation: timetableViewEnter 0.26s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes timetableViewEnter {
+            0% {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ----------------------------------------------------
@@ -1986,11 +2088,128 @@
             }
         }
 
+        /* ====================================================
+           LAYOUT ID PILL ENGINE (APPLE / FRAMER-MOTION SMOOTH SLIDING PILLS)
+           ==================================================== */
+        const LayoutPillEngine = (function() {
+            const SELECTORS = [
+                '.filter-tabs-minimal',
+                '.view-switchers-minimal',
+                '.nav-links'
+            ];
+
+            function getContainers() {
+                return document.querySelectorAll(SELECTORS.join(', '));
+            }
+
+            function updatePill(container, immediate = false) {
+                if (!container || !container.isConnected) return;
+
+                let indicator = container.querySelector(':scope > .layout-pill-indicator');
+                if (!indicator) {
+                    indicator = document.createElement('span');
+                    indicator.className = 'layout-pill-indicator';
+                    indicator.setAttribute('aria-hidden', 'true');
+                    container.prepend(indicator);
+                }
+
+                const activeItem = container.querySelector(':scope > .active, :scope > * > .active, :scope > .tab-pill.active, :scope > .view-pill.active, :scope > .nav-link-btn.active');
+
+                if (!activeItem || activeItem.offsetParent === null) {
+                    indicator.style.opacity = '0';
+                    return;
+                }
+
+                const cRect = container.getBoundingClientRect();
+                const iRect = activeItem.getBoundingClientRect();
+
+                const x = (iRect.left - cRect.left) + container.scrollLeft;
+                const y = (iRect.top - cRect.top) + container.scrollTop;
+                const w = iRect.width;
+                const h = iRect.height;
+
+                if (w === 0 || h === 0) {
+                    indicator.style.opacity = '0';
+                    return;
+                }
+
+                // Color-adaptive layout pill for filter-tabs-minimal
+                if (container.classList.contains('filter-tabs-minimal')) {
+                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    if (activeItem.classList.contains('tab-pill-regular')) {
+                        indicator.style.backgroundColor = isDark ? '#059669' : '#205c36';
+                    } else if (activeItem.classList.contains('tab-pill-old')) {
+                        indicator.style.backgroundColor = isDark ? '#ea580c' : '#9a4318';
+                    } else if (activeItem.classList.contains('tab-pill-done')) {
+                        indicator.style.backgroundColor = isDark ? '#059669' : '#205c36';
+                    } else {
+                        indicator.style.backgroundColor = isDark ? '#27272a' : 'var(--foreground)';
+                    }
+                }
+
+                if (immediate || !indicator.dataset.initialized) {
+                    indicator.style.transition = 'none';
+                    indicator.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                    indicator.style.width = `${w}px`;
+                    indicator.style.height = `${h}px`;
+                    indicator.style.opacity = '1';
+                    indicator.dataset.initialized = 'true';
+                    void indicator.offsetHeight;
+                    indicator.style.transition = '';
+                } else {
+                    indicator.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                    indicator.style.width = `${w}px`;
+                    indicator.style.height = `${h}px`;
+                    indicator.style.opacity = '1';
+                }
+            }
+
+            function updateAll(immediate = false) {
+                requestAnimationFrame(() => {
+                    getContainers().forEach(c => updatePill(c, immediate));
+                });
+            }
+
+            function init() {
+                updateAll(true);
+                setTimeout(() => updateAll(true), 60);
+
+                document.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.tab-pill, .view-pill, .nav-link-btn');
+                    if (btn) {
+                        const container = btn.closest(SELECTORS.join(', '));
+                        if (container) {
+                            requestAnimationFrame(() => updatePill(container, false));
+                        }
+                    }
+                }, true);
+
+                let resizeTimer = null;
+                window.addEventListener('resize', () => {
+                    if (resizeTimer) cancelAnimationFrame(resizeTimer);
+                    resizeTimer = requestAnimationFrame(() => {
+                        getContainers().forEach(c => updatePill(c, true));
+                    });
+                }, { passive: true });
+            }
+
+            return {
+                init,
+                updatePill,
+                updateAll
+            };
+        })();
+        window.LayoutPillEngine = LayoutPillEngine;
+
         function setFilter(filter) {
             activeFilter = filter;
             document.querySelectorAll('.tab-pill').forEach(b => {
                 b.classList.toggle('active', b.getAttribute('data-filter') === filter);
             });
+            if (window.LayoutPillEngine) {
+                const tabs = document.querySelector('.filter-tabs-minimal');
+                if (tabs) window.LayoutPillEngine.updatePill(tabs);
+            }
             renderAll();
         }
 
@@ -2009,6 +2228,11 @@
             document.getElementById('btnCalendar').classList.toggle('active', view === 'calendar');
             document.getElementById('btnTable').classList.toggle('active', view === 'table');
             document.getElementById('btnTimeline').classList.toggle('active', view === 'timeline');
+
+            if (window.LayoutPillEngine) {
+                const switchers = document.querySelector('.view-switchers-minimal');
+                if (switchers) window.LayoutPillEngine.updatePill(switchers);
+            }
         }
 
         function toggleExamDone(id) {
@@ -2531,6 +2755,9 @@
         })();
 
         renderAll();
+        if (window.LayoutPillEngine) {
+            window.LayoutPillEngine.init();
+        }
     </script>
 
     <!-- Floating Back to Top Button -->

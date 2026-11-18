@@ -730,6 +730,87 @@ formulas_css = """
             margin: 0.25rem 0;
         }
 
+        /* Minimal Formula Control Bar */
+        .formula-control-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+        }
+
+        .formula-control-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .formula-unit-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background-color: var(--secondary);
+            padding: 2.5px 3px 2.5px 0.75rem;
+            border-radius: var(--radius-full);
+            max-width: 100%;
+        }
+
+        .formula-unit-label {
+            font-size: var(--font-size-overline);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--muted-foreground);
+            user-select: none;
+            white-space: nowrap;
+            padding-right: 0.15rem;
+        }
+
+        #formulaUnitFilters {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #formulaUnitFilters::-webkit-scrollbar {
+            display: none;
+        }
+
+        .formula-search-box {
+            margin-left: auto;
+            width: 260px;
+            max-width: 100%;
+            position: relative;
+        }
+
+        .formula-search-box .search-input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border-radius: var(--radius-full);
+            padding: 0.4rem 2rem 0.4rem 2.2rem;
+            font-size: 0.8125rem;
+            color: var(--foreground);
+            height: 32px;
+            box-sizing: border-box;
+            border: none;
+            outline: none;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .formula-search-box .search-input:focus {
+            background-color: var(--card);
+            box-shadow: 0 0 0 2px var(--secondary-hover);
+        }
+
         @media (max-width: 768px) {
             .formula-cards-grid {
                 grid-template-columns: 1fr !important;
@@ -749,82 +830,58 @@ formulas_css = """
             .syllabus-formula-stack {
                 min-width: 100%;
             }
+            .formula-control-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+            .formula-control-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .formula-search-box {
+                width: 100%;
+                margin-left: 0;
+            }
         }
 """
 
 view_formulas_html = """<div class="app-page-view" id="view-formulas">
-            <!-- Compact, Space-Efficient Formula Control Panel -->
-            <div class="control-panel">
-                <!-- TOP UTILITY & SEARCH TOOLBAR -->
-                <div class="control-panel-toolbar">
-                    <div class="search-box-wrapper">
-                        <i class="icon icon-sm search-icon hgi-stroke hgi-search-01"></i>
-                        <input type="text" class="search-input" id="formulaSearchInput" placeholder="Search formulas, variables (Ka, qu, SPT, φ), topics..." aria-label="Search formulas">
-                        <kbd class="search-kbd-hint" aria-hidden="true">f</kbd>
-                        <button class="search-clear-btn" id="formulaSearchClearBtn" title="Clear search" aria-label="Clear search" style="display: none;">
-                            <i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>
-                        </button>
-                    </div>
-
-                    <div class="control-panel-actions">
-                        <span class="badge badge-subtle" id="formulaMatchCounter" style="height: 30px; display: inline-flex; align-items: center; padding: 0 0.75rem; font-size: 0.75rem; font-weight: 500; border-radius: var(--radius-full);">21 formulas</span>
-
-                        <div class="filter-pills-row" role="tablist">
-                            <button class="filter-pill-btn active" id="btnFormulaCards" onclick="setFormulaLayout('cards')" title="Cards layout">
-                                <i class="icon icon-xs hgi-stroke hgi-grid-view"></i>
-                                Cards
-                            </button>
-                            <button class="filter-pill-btn" id="btnFormulaTable" onclick="setFormulaLayout('table')" title="Table matrix layout">
-                                <i class="icon icon-xs hgi-stroke hgi-layout-list"></i>
-                                Table
-                            </button>
+            <!-- Minimal Formula Control Bar: Unit & Counter on Left, Minimal Search on Right -->
+            <div class="formula-control-bar">
+                <div class="formula-control-left">
+                    <div class="formula-unit-wrapper">
+                        <span class="formula-unit-label">Unit</span>
+                        <div class="filter-pills-row" id="formulaUnitFilters">
+                            <button class="filter-pill-btn active" data-unit="all">All</button>
+                            <button class="filter-pill-btn" data-unit="1" title="Unit 1: Earth Pressure (5 formulas)">Unit 1</button>
+                            <button class="filter-pill-btn" data-unit="2" title="Unit 2: Shear &amp; Slopes (4 formulas)">Unit 2</button>
+                            <button class="filter-pill-btn" data-unit="3" title="Unit 3: Foundations (4 formulas)">Unit 3</button>
+                            <button class="filter-pill-btn" data-unit="4" title="Unit 4: Piles &amp; Caissons (4 formulas)">Unit 4</button>
+                            <button class="filter-pill-btn" data-unit="5" title="Unit 5: Soil Exploration (4 formulas)">Unit 5</button>
                         </div>
-
-                        <button class="reset-filters-btn" id="formulaResetBtn" title="Reset search & filters" style="display: none;">
-                            <i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>
-                            Reset
-                        </button>
                     </div>
+
+                    <span class="match-counter-pill" id="formulaMatchCounter">21 formulas</span>
+
+                    <button class="reset-filters-btn" id="formulaResetBtn" title="Reset search & filters" style="display: none;">
+                        <i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>
+                        Reset
+                    </button>
                 </div>
 
-                <!-- FILTER ROW: UNIT -->
-                <div class="control-panel-filters">
-                    <div class="control-panel-filter-row">
-                        <div class="filter-subgroup">
-                            <span class="filter-group-label">Unit</span>
-                            <div id="formulaUnitFilters" class="filter-pills-row">
-                                <button class="filter-pill-btn active" data-unit="all">All</button>
-                                <button class="filter-pill-btn" data-unit="1" title="Unit 1: Earth Pressure (5 formulas)">Unit 1</button>
-                                <button class="filter-pill-btn" data-unit="2" title="Unit 2: Shear &amp; Slopes (4 formulas)">Unit 2</button>
-                                <button class="filter-pill-btn" data-unit="3" title="Unit 3: Foundations (4 formulas)">Unit 3</button>
-                                <button class="filter-pill-btn" data-unit="4" title="Unit 4: Piles &amp; Caissons (4 formulas)">Unit 4</button>
-                                <button class="filter-pill-btn" data-unit="5" title="Unit 5: Soil Exploration (4 formulas)">Unit 5</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="search-box-wrapper formula-search-box">
+                    <i class="icon icon-sm search-icon hgi-stroke hgi-search-01"></i>
+                    <input type="text" class="search-input" id="formulaSearchInput" placeholder="Search formulas..." aria-label="Search formulas">
+                    <button class="search-clear-btn" id="formulaSearchClearBtn" title="Clear search" aria-label="Clear search" style="display: none;">
+                        <i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- Cards Container -->
+            <!-- Cards Container (Default & Permanent) -->
             <div class="formula-cards-grid" id="formulaCardsGrid">
                 <!-- Rendered dynamically by JavaScript -->
-            </div>
-
-            <!-- Table Container (Initially Hidden) -->
-            <div class="table-responsive-wrapper" id="formulaTableWrapper" style="display: none;">
-                <table class="master-data-table" id="formulaMasterTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 110px;">Unit</th>
-                            <th style="width: 220px;">Topic &amp; Application</th>
-                            <th style="width: 380px;">Governing Equation</th>
-                            <th>Parameter Definitions &amp; Units</th>
-                        </tr>
-                    </thead>
-                    <tbody id="formulaTableBody">
-                        <!-- Rendered dynamically by JavaScript -->
-                    </tbody>
-                </table>
             </div>
         </div>"""
 
@@ -910,13 +967,11 @@ formulas_js_template = """
     const STORAGE_KEY_FORMULA_FILTERS = 'geotech_formula_filters';
     let currentFormulaUnit = 'all';
     let formulaSearchQuery = '';
-    let currentFormulaLayout = 'cards';
 
     try {
         const savedF = JSON.parse(localStorage.getItem(STORAGE_KEY_FORMULA_FILTERS) || '{}');
         if (savedF.unit) currentFormulaUnit = savedF.unit;
         if (typeof savedF.search === 'string') formulaSearchQuery = savedF.search;
-        if (savedF.layout) currentFormulaLayout = savedF.layout;
     } catch(e) {}
 
     function saveFormulaFilters() {
@@ -924,7 +979,7 @@ formulas_js_template = """
             localStorage.setItem(STORAGE_KEY_FORMULA_FILTERS, JSON.stringify({
                 unit: currentFormulaUnit,
                 search: formulaSearchQuery,
-                layout: currentFormulaLayout
+                layout: 'cards'
             }));
         } catch(e) {}
     }
@@ -964,25 +1019,9 @@ formulas_js_template = """
     window.renderAllMath = renderAllMath;
 
     window.setFormulaLayout = function(layout) {
-        currentFormulaLayout = layout;
-        saveFormulaFilters();
-        const btnCards = document.getElementById('btnFormulaCards');
-        const btnTable = document.getElementById('btnFormulaTable');
         const cardsGrid = document.getElementById('formulaCardsGrid');
-        const tableWrap = document.getElementById('formulaTableWrapper');
-
-        if (btnCards && btnTable && cardsGrid && tableWrap) {
-            if (layout === 'cards') {
-                btnCards.classList.add('active');
-                btnTable.classList.remove('active');
-                cardsGrid.style.display = 'grid';
-                tableWrap.style.display = 'none';
-            } else {
-                btnCards.classList.remove('active');
-                btnTable.classList.add('active');
-                cardsGrid.style.display = 'none';
-                tableWrap.style.display = 'block';
-            }
+        if (cardsGrid) {
+            cardsGrid.style.display = 'grid';
         }
         renderAllMath();
     };
@@ -1010,7 +1049,7 @@ formulas_js_template = """
         const summaryEl = document.getElementById('formulaFilterSummary');
         const counterEl = document.getElementById('formulaMatchCounter');
 
-        if (!cardsGrid || !tableBody) return;
+        if (!cardsGrid) return;
 
         const filtered = MASTER_FORMULAS.filter(item => {
             if (currentFormulaUnit !== 'all' && String(item.unit) !== String(currentFormulaUnit)) {
@@ -1056,7 +1095,7 @@ formulas_js_template = """
                     <p class="text-body-small">Try clearing search terms or selecting "All Units".</p>
                 </div>
             `;
-            tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem; color: var(--muted-foreground);">No matching formulas found.</td></tr>`;
+            if (tableBody) tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem; color: var(--muted-foreground);">No matching formulas found.</td></tr>`;
             return;
         }
 
@@ -1110,33 +1149,35 @@ formulas_js_template = """
             `;
         }).join('');
 
-        // Render Table
-        tableBody.innerHTML = filtered.map(item => {
-            const paramsList = (item.params || []).map(p => `
-                <li><strong>$${p.sym}$</strong> &ndash; ${p.name} <span class="text-body-small" style="color: var(--muted-foreground);">(${p.unit})</span></li>
-            `).join('');
+        // Render Table (if present)
+        if (tableBody) {
+            tableBody.innerHTML = filtered.map(item => {
+                const paramsList = (item.params || []).map(p => `
+                    <li><strong>$${p.sym}$</strong> &ndash; ${p.name} <span class="text-body-small" style="color: var(--muted-foreground);">(${p.unit})</span></li>
+                `).join('');
 
-            return `
-            <tr>
-                <td><span class="badge badge-unit-${item.unit}">Unit ${item.unit}</span></td>
-                <td>
-                    <strong>${item.title}</strong>
-                    <div class="text-body-small" style="color: var(--muted-foreground); margin-top: 0.25rem;">${item.frequency}</div>
-                </td>
-                <td>
-                    <div class="table-formula-cell">
-                        $$${item.latex_main}$$
-                        ${item.latex_sub ? `<div style="font-size: 0.85rem; color: var(--muted-foreground); margin-top: 0.35rem;">$$${item.latex_sub}$$</div>` : ''}
-                    </div>
-                </td>
-                <td>
-                    <ul class="table-list table-list-compact" style="margin: 0; padding-left: 1rem;">
-                        ${paramsList}
-                    </ul>
-                </td>
-            </tr>
-            `;
-        }).join('');
+                return `
+                <tr>
+                    <td><span class="badge badge-unit-${item.unit}">Unit ${item.unit}</span></td>
+                    <td>
+                        <strong>${item.title}</strong>
+                        <div class="text-body-small" style="color: var(--muted-foreground); margin-top: 0.25rem;">${item.frequency}</div>
+                    </td>
+                    <td>
+                        <div class="table-formula-cell">
+                            $$${item.latex_main}$$
+                            ${item.latex_sub ? `<div style="font-size: 0.85rem; color: var(--muted-foreground); margin-top: 0.35rem;">$$${item.latex_sub}$$</div>` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <ul class="table-list table-list-compact" style="margin: 0; padding-left: 1rem;">
+                            ${paramsList}
+                        </ul>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
 
         renderAllMath();
     }
@@ -1154,10 +1195,6 @@ formulas_js_template = """
                 renderFormulas();
             });
         });
-
-        if (currentFormulaLayout !== 'cards') {
-            window.setFormulaLayout(currentFormulaLayout);
-        }
 
         let formulaSearchTimeout;
         const fInput = document.getElementById('formulaSearchInput');
@@ -1208,20 +1245,6 @@ formulas_js_template = """
         if (fResetBtn) {
             fResetBtn.addEventListener('click', window.resetFormulaFilters);
         }
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'f' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-                e.preventDefault();
-                if (typeof window.switchPageView === 'function') {
-                    window.switchPageView('formulas');
-                }
-                const fi = document.getElementById('formulaSearchInput');
-                if (fi) {
-                    fi.focus();
-                    fi.select();
-                }
-            }
-        });
 
         // Hook into switchPageView
         if (typeof window.switchPageView === 'function') {
@@ -1495,11 +1518,9 @@ def enhance_html(html_str):
     formulas_json = json.dumps(master_formulas).replace("</script>", "<\\/script>")
     formulas_js = formulas_js_template.replace("__MASTER_FORMULAS_JSON__", formulas_json)
 
-    # Pre-render initial cards and table rows into view_formulas_html
+    # Pre-render initial cards into view_formulas_html
     view_html_ready = view_formulas_html.replace(
         '<!-- Rendered dynamically by JavaScript -->', build_initial_cards_html(), 1
-    ).replace(
-        '<!-- Rendered dynamically by JavaScript -->', build_initial_table_rows(), 1
     )
 
     out = html_str

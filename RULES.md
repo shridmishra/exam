@@ -65,7 +65,7 @@
 - **Question Bank Control Panel**:
   - Unnecessary top headings and subheadings are removed from the Question Bank view for an immediate, high-efficiency dashboard workspace.
   - **Minimal Grid-Based Control Panel (Zero Separate Backgrounds & Proper Grid System)**:
-    - **Top Toolbar (`.control-panel-toolbar`)**: Responsive search input with search shortcut hint badge (`/`) on the left spanning across (`flex: 1`), paired horizontally with `Reset` on the right. 2023 toggle is permanently removed.
+    - **Top Toolbar (`.control-panel-toolbar`)**: Responsive search input with search shortcut hint badge (`/`) on the left spanning across (`flex: 1`), paired horizontally with live match counter pill, dynamic `Expand All` / `Collapse All` toggle button (`.expand-all-btn`), and `Reset` on the right. 2023 toggle is permanently removed.
     - **Zero Separate Pill Track Backgrounds**: Filter button groups (`.filter-pill-group`) feature NO separate recessed background capsule containers, NO divider lines (`|`), and NO nested background boxes. Inactive buttons are transparent with muted text; active buttons feature a refined, subtle elevated highlight pill.
     - **Proper CSS Grid System (`.control-panel-grid`)**: Symmetrical 3-column CSS Grid (`grid-template-columns: repeat(3, 1fr)`) utilizing 100% of the horizontal space without empty voids:
       - Column 1: `Year` (`All`, `2025`, `2024`, `2023`, `2022`) and `Unit` (`All`, `Unit 1..5`).
@@ -270,15 +270,17 @@
 
 - **Zero Heading Clutter**:
   - The Formulas view (`#view-formulas`) completely eliminates the top `.page-header-row`, removing the redundant overline (`Interactive Mathematical Reference...`), giant H1 headline, and dense paragraph description for maximum vertical workspace.
-- **Unified Space-Efficient Control Panel (`.control-panel`)**:
-  - Adopts the project's standard compact control bar (`var(--card)` background, `var(--radius-lg)` radius, and `var(--shadow-sm)`).
-- **Top Utility & Search Toolbar (`.control-panel-toolbar`)**:
-  - **Search Box**: Responsive search input with search icon, concise placeholder (`Search formulas, variables (Ka, qu, SPT, φ), topics...`), keyboard shortcut hint badge (`f`), and clear button (`✕`).
-  - **Match Counter Pill**: Dedicated subtle pill (`.badge-subtle`) displaying `21 formulas` when unfiltered, or `X of 21 matched` when filtered.
-  - **Segmented Capsule Layout Switcher**: Compact Apple/Linear style capsule pill group (`.filter-pills-row`) with `Cards` and `Table` toggles.
-  - **Smart Reset Button**: Appears smoothly when any search query or custom unit filter is active to reset all formula filters to default.
-- **Segmented Unit Filter Row**:
-  - Compact capsule buttons (`All`, `Unit 1`, `Unit 2`, `Unit 3`, `Unit 4`, `Unit 5`) with hover tooltips displaying unit topics (e.g. `Unit 1: Earth Pressure (5 formulas)`), eliminating wrapping and verbose button titles.
+- **Minimal Formula Control Bar (`.formula-control-bar`)**:
+  - The outer bar eliminates arbitrary background separation (`background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin-bottom: 1.5rem;`), sitting seamlessly on the canvas.
+  - Background separation is strictly maintained on:
+    1. **The Unit Div (`.formula-unit-wrapper`)**: Tactile segmented capsule (`background-color: var(--secondary); border-radius: var(--radius-full); padding: 2.5px 3px 2.5px 0.75rem;`) housing the `Unit` label and all unit filter buttons in one unified pill track.
+    2. **The Search Input**: Rounded pill input (`.search-input` with `background-color: var(--input-bg); border-radius: var(--radius-full);`).
+- **Three-Part Symmetrical Layout**:
+  - **Left - Unit Switcher**: Clean, non-wrapping uppercase label (`Unit`, `var(--font-size-overline)`, `var(--muted-foreground)`) followed by tactile unit pills (`All`, `Unit 1..5`).
+  - **Left - Live Match Counter**: Minimal match counter pill (`.match-counter-pill`) displaying `21 formulas` or `X of 21 matched`, paired with a smart `Reset` button that appears when filters or queries are active.
+  - **Right - Minimal Search Input**: Moved cleanly to the right side of the column with minimal placeholder (`Search formulas...`), search icon, clear button (`✕`), and zero `f` shortcut badge clutter.
+- **Cards by Default**:
+  - Cards layout is kept permanently by default (`#formulaCardsGrid`), eliminating the Cards/Table switch toggle buttons and layout switcher clutter.
 - **Zero Redundant Status Row**:
   - Eliminates the duplicate all-caps summary row (`SHOWING 4 MASTER ENGINEERING FORMULATIONS`), saving ~180px-200px of vertical space so equations and cards appear immediately at the top of the viewport.
 
@@ -302,6 +304,28 @@
   - Mobile bottom nav (`.mobile-nav-icon`): `22px`
   - Floating back-to-top (`.scroll-to-top-btn i`): `24px`
 - **Zero Sparkle Mandate**: Never use AI sparkle icons or multi-point stars (`hgi-stars`, `hgi-sparkle`). Questions are starred strictly using standard 5-point star (`hgi-star`).
+
+---
+
+### [RULE 19] Layout ID Shared Sliding Pill Engine & Smooth Div Transitions
+- **Layout ID Shared Pill Standard**:
+  - In all switches, filters, tab bars, and segmented controls (`.filter-pill-group`, `.nav-links`, `.sol-view-pills`, `.notes-unit-pills`, `.mobile-bottom-nav`, `.filter-tabs-minimal`, `.view-switchers-minimal`), the active state must NEVER snap abruptly between buttons.
+  - A single dedicated `.layout-pill-indicator` element sits inside the group container and physically glides, expands, and contracts across options using sub-pixel accurate translations (`transform: translate3d(x, y, 0)`) and dimensions (`width`, `height`).
+  - **Motion Dynamics & Easing**:
+    - Uses Apple / Emil Kowalski's custom cubic-bezier spring-like curve: `cubic-bezier(0.16, 1, 0.3, 1)`.
+    - Timing: `0.28s` duration, ensuring snappy, fluid, and interruptible motion without perceptual lag.
+  - **Single Background Integrity**:
+    - When `.layout-pill-indicator` is active, the individual button itself (`.filter-pill-btn.active`, `.nav-link-btn.active`, `.sol-view-pill.active`, `.view-pill.active`, `.tab-pill.active`) has `background: transparent !important; box-shadow: none !important;`.
+    - The moving indicator IS the active background. Buttons sit on `position: relative; z-index: 2;` with smooth text color transitions (`transition: color 0.18s ease`).
+  - **Dynamic Color Morphing (Timetable Filter Tabs)**:
+    - In `.filter-tabs-minimal`, the indicator dynamically adapts its background color (`#205c36` for Regular, `#9a4318` for Backlog, neutral for All) with `transition: background-color 0.28s cubic-bezier(0.16, 1, 0.3, 1)` so the pill glides and morphs its hue seamlessly.
+- **Smooth Div & Content Pane Transitions (Zero Abrupt Display Swaps)**:
+  - Whenever view containers, content panes, or solution tabs are shifted or toggled, elements must transition smoothly rather than snapping:
+    - App page views (`.app-page-view.active`): `@keyframes appPageViewEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`
+    - Solution panes (`.solution-pane`): `@keyframes solPaneFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`
+    - Question accordions (`.checklist-solution-content.open`, `.q-solution-content.open`): `@keyframes chkSolSlideOpen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }`
+    - Timetable view switchers (`#calendar-view, #table-view, #timeline-view`): `@keyframes timetableViewEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`
+
 
 
 
