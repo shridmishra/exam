@@ -411,7 +411,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             /* Neutral Color Palette (Light Mode - Harmonized with Timetable warm canvas) */
             --background: #fbfaf8;
             --foreground: #1e293b;
-            --card: #fbfaf8;
+            --card: #ffffff;
             --card-foreground: #1e293b;
             --popover: #ffffff;
             --popover-foreground: #1e293b;
@@ -485,7 +485,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             /* Neutral Color Palette (Dark Mode - Harmonized with Timetable zinc canvas) */
             --background: #09090b;
             --foreground: #fcfcfd;
-            --card: #09090b;
+            --card: #141416;
             --card-foreground: #fcfcfd;
             --popover: #141416;
             --popover-foreground: #fcfcfd;
@@ -1212,15 +1212,12 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         .badge-unit-3 {{ background-color: var(--pastel-peach-bg); color: var(--pastel-peach-foreground); }}
         .badge-unit-4 {{ background-color: var(--pastel-sage-bg); color: var(--pastel-sage-foreground); }}
         .badge-unit-5 {{ background-color: var(--pastel-rose-bg); color: var(--pastel-rose-foreground); }}
-        .badge-subtle,
-        .badge-year,
-        .badge-year-2025,
-        .badge-year-2024,
-        .badge-year-2023,
-        .badge-year-2022 {{
-            background-color: var(--secondary);
-            color: var(--muted-foreground);
-        }}
+        .badge-subtle {{ background-color: var(--secondary); color: var(--muted-foreground); }}
+        .badge-year {{ background-color: var(--pastel-sand-bg); color: var(--pastel-sand-foreground); }}
+        .badge-year-2025 {{ background-color: var(--pastel-sage-bg); color: var(--pastel-sage-foreground); }}
+        .badge-year-2024 {{ background-color: var(--pastel-sky-bg); color: var(--pastel-sky-foreground); }}
+        .badge-year-2023 {{ background-color: var(--pastel-lavender-bg); color: var(--pastel-lavender-foreground); }}
+        .badge-year-2022 {{ background-color: var(--pastel-sand-bg); color: var(--pastel-sand-foreground); }}
         .badge-repeat-4x {{ background-color: var(--pastel-rose-bg); color: var(--pastel-rose-foreground); font-weight: 700; }}
         .badge-repeat-3x {{ background-color: var(--pastel-sky-bg); color: var(--pastel-sky-foreground); font-weight: 700; }}
         .badge-repeat-2x {{ background-color: var(--pastel-lavender-bg); color: var(--pastel-lavender-foreground); font-weight: 700; }}
@@ -1234,14 +1231,14 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         /* ----------------------------------------------------
-           MINIMAL GRID-BASED CONTROL BAR (ZERO SEPARATE BG)
+           MINIMAL GRID-BASED CONTROL BAR
            ---------------------------------------------------- */
         .control-panel {{
-            background-color: transparent;
-            border-radius: 0;
-            padding: 0.5rem 0;
+            background-color: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 0.85rem 1.15rem;
             margin-bottom: 1.25rem;
-            box-shadow: none;
+            box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
@@ -1402,13 +1399,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             width: 62px;
         }}
 
-        /* Zero separate background for pill tracks! Pure minimal flow */
         .filter-pill-group {{
             display: inline-flex;
             align-items: center;
             gap: 2px;
-            background: transparent;
-            padding: 0;
+            background-color: var(--secondary);
+            padding: 2.5px 3px;
+            border-radius: var(--radius-full);
             min-width: 0;
             overflow-x: auto;
             scrollbar-width: none;
@@ -1427,7 +1424,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             padding: 0.22rem 0.55rem;
             background: transparent;
             color: var(--muted-foreground);
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-full);
             font-size: 0.75rem;
             font-weight: 500;
             cursor: pointer;
@@ -1449,16 +1446,16 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .filter-pill-btn.active {{
-            background-color: var(--secondary);
+            background-color: #ffffff;
             color: var(--foreground);
             font-weight: 600;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
         }}
 
         [data-theme="dark"] .filter-pill-btn.active {{
             background-color: #27272a;
             color: #fcfcfd;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
         }}
 
         .filter-pill-btn .nav-badge {{
@@ -1755,18 +1752,17 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .q-item {{
-            background-color: transparent;
+            background-color: var(--card);
             border-radius: var(--radius-lg);
             padding: 1.6rem 2rem;
-            box-shadow: none;
+            box-shadow: var(--shadow-sm);
             cursor: pointer;
             user-select: none;
-            transition: background-color 0.15s ease;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
         }}
 
         .q-item:hover {{
-            box-shadow: none;
-            background-color: var(--secondary);
+            box-shadow: var(--shadow-md);
         }}
 
         .q-item.is-open {{
@@ -1776,6 +1772,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .q-item.is-open:hover {{
             background-color: transparent;
+            box-shadow: none;
         }}
 
         .q-item-header {{
@@ -3159,22 +3156,21 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         /* INDIVIDUAL CHECKLIST ITEM CARD */
         .checklist-card {{
-            background-color: transparent;
+            background-color: var(--card);
             border-radius: var(--radius-lg);
             padding: 1rem 1.25rem;
-            box-shadow: none;
+            box-shadow: var(--shadow-sm);
             display: flex;
             align-items: flex-start;
             gap: 0.85rem;
             cursor: pointer;
             user-select: none;
-            transition: background-color 0.15s ease;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
             position: relative;
         }}
 
         .checklist-card:hover {{
-            background-color: var(--secondary);
-            box-shadow: none;
+            box-shadow: var(--shadow-md);
         }}
 
         .checklist-card.is-open {{
@@ -3185,6 +3181,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .checklist-card.is-open:hover {{
             background-color: transparent;
+            box-shadow: none;
         }}
 
         .checklist-card.is-completed {{
