@@ -246,14 +246,16 @@ def generate_timetable_html():
         }
 
         .nav {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: space-between;
             height: 60px;
             gap: 1rem;
         }
 
         .brand {
+            justify-self: start;
+            min-width: 0;
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -271,6 +273,7 @@ def generate_timetable_html():
         }
 
         .nav-links {
+            justify-self: center;
             display: flex;
             align-items: center;
             gap: 0.35rem;
@@ -310,6 +313,7 @@ def generate_timetable_html():
         }
 
         .nav-actions {
+            justify-self: end;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -1361,7 +1365,10 @@ def generate_timetable_html():
                 display: none !important;
             }
             .nav {
+                display: flex;
+                justify-content: space-between;
                 height: 52px;
+                gap: 0.5rem;
             }
             .brand-title {
                 font-size: 0.95rem;
@@ -1447,19 +1454,13 @@ def generate_timetable_html():
             <!-- Nav links matching index.html navigation hierarchy -->
             <ul class="nav-links">
                 <li>
-                    <a href="index.html#questions" class="nav-link-btn" data-view="questions">
-                        <i class="icon icon-sm hgi-stroke hgi-help-circle"></i>
-                        Questions
-                    </a>
-                </li>
-                <li>
-                    <a href="index.html#syllabus" class="nav-link-btn" data-view="syllabus">
+                    <a href="index.html#syllabus" class="nav-link-btn" data-view="syllabus" title="PYQ Checklist">
                         <i class="icon icon-sm hgi-stroke hgi-task-01"></i>
                         Checklist
                     </a>
                 </li>
                 <li>
-                    <a href="index.html#formulas" class="nav-link-btn" data-view="formulas">
+                    <a href="index.html#formulas" class="nav-link-btn" data-view="formulas" title="Master Formulas">
                         <i class="icon icon-sm hgi-stroke hgi-function-of-x"></i>
                         Formulas
                     </a>
@@ -2552,10 +2553,6 @@ def generate_timetable_html():
 
     <!-- MOBILE BOTTOM APP NAVIGATION (MATCHING INDEX.HTML) -->
     <nav class="mobile-bottom-nav" aria-label="Mobile App Navigation">
-        <a href="index.html#questions" class="mobile-nav-item" aria-label="Question Bank">
-            <i class="mobile-nav-icon hgi-stroke hgi-help-circle"></i>
-            <span class="mobile-nav-label">Questions</span>
-        </a>
         <a href="index.html#syllabus" class="mobile-nav-item" aria-label="PYQ Checklist">
             <i class="mobile-nav-icon hgi-stroke hgi-task-01"></i>
             <span class="mobile-nav-label">Checklist</span>

@@ -140,11 +140,11 @@ Adhere strictly to the project typography hierarchy specification:
   - **Two-Way Real-Time Synchronization**: Toggling a question's completion state in either the Checklist or Question Bank instantly synchronizes `localStorage` (`geotech_completed_questions`), overall completion counters, year-level toolbar progress pills, and unit-level subhead counters.
   - **In-Place Accordion Engine (`toggleChecklistSolution`)**: Clicking any checklist card smoothly toggles its solution container (`chk-sol-*`), rotates the `.chk-chevron` icon (180&deg;), and sets `.is-open`. Clicking inside the solution text, highlighting/copying formulas, or toggling completion never collapses the card. KaTeX math typesetting is automatically triggered on toggle.
   - **Checklist Controls & Filtering (Full 6-Dimension Control Panel & Live Question Counters)**: Features total completion progress, quick year-jump pills (`2025`, `2024`, `2023`, `2022`), and the complete 6-dimension `.control-panel`:
-    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Responsive search input (`flex: 1`) with `/` shortcut hint and `✕` clear button, paired with the live match counter pill (`.match-counter-pill`: e.g. `106 questions` or `24 of 106 questions`) and instant `Reset` button.
-    - **Proper CSS Grid System (`.control-panel-grid`)**: Symmetrical 3-column grid containing all 6 filter dimensions with live question count micro-badges (`.nav-badge`) on every filter pill:
-      - **Column 1**: `Year` (`All (106)`, `2025 (28)`, `2024 (25)`, `2023 (28)`, `2022 (25)`) and `Unit` (`All (106)`, `Unit 1 (22)`, `Unit 2 (24)`, `Unit 3 (30)`, `Unit 4 (12)`, `Unit 5 (18)`).
-      - **Column 2**: `Repeated` (`All (106)`, `Most Repeated (78)`, `4x (16)`, `3x (18)`, `2x (44)`) and `Type` (`All (106)`, `Theory (55)`, `Numerical (47)`, `Derivation (6)`).
-      - **Column 3**: `Status` (`All (106)`, `Incomplete`, `Completed`, `Starred`, `Later`) and `Marks` (`All (106)`, `2M (28)`, `3M (36)`, `7M / 6M (40)`).
+    - **Top Utility & Search Toolbar (`.control-panel-toolbar`)**: Sleek, compact search input (`.search-box-wrapper`, 260px) with `/` shortcut hint and `✕` clear button, paired with the live match counter pill (`.match-counter-pill`: e.g. `106 questions` or `24 of 106 questions`) and instant `Reset` button.
+    - **Proper CSS Grid System (`.control-panel-grid`)**: Symmetrical 3-column grid containing all 6 filter dimensions with clean, uncluttered filter pill buttons:
+      - **Column 1**: `Year` (`All`, `2025`, `2024`, `2023`, `2022`) and `Unit` (`All`, `Unit 1..5`).
+      - **Column 2**: `Repeated` (`All`, `Most Repeated`, `4x`, `3x`, `2x`) and `Type` (`All`, `Theory`, `Numerical`, `Derivation`).
+      - **Column 3**: `Status` (`All`, `Incomplete`, `Completed`, `Starred`, `Later`) and `Marks` (`All`, `2M`, `3M`, `7M / 6M`).
     - **Reactive Match Counter & Zero-Match Empty State**: Both Question Bank and Checklist display live match counts (`X of Y questions`) and display `.empty-results` with a one-click Reset button when active filter combinations yield 0 matches.
     - **Local Persistence**: Checklist filter preferences (`geotech_checklist_filters`) persist in `localStorage` across page reloads.
 - **Rule**: Whenever modifying layout, tables, styles, or data, ALWAYS make changes in `generate_dashboard.py` (or data sources) and re-run `python3 generate_dashboard.py`. Do NOT make isolated manual edits to `index.html` without reflecting them in the generator.
@@ -198,9 +198,9 @@ Adhere strictly to the project typography hierarchy specification:
   - Dynamic `#metaThemeColor` updates with theme toggle (`#fbfaf8` light, `#09090b` dark).
 - **Native App-Style Mobile Bottom Navigation Bar**:
   - Fixed at viewport bottom on screens `<= 768px` with iOS safe area inset support (`env(safe-area-inset-bottom)`).
-  - 4 primary destinations: **Questions**, **Checklist**, **Formulas**, and **Timetable**.
+  - 3 primary destinations: **Checklist**, **Formulas**, and **Timetable**.
   - Synchronized in real time with `switchPageView(pageId)` and URL hash routing.
-  - On desktop (`> 768px`), automatically hidden, displaying the top header navigation.
+  - On desktop (`> 768px`), automatically hidden, displaying the top header navigation with centered tab navigation (`display: grid; grid-template-columns: 1fr auto 1fr;` placing navigation links perfectly in the center).
 - **Fluid Container & Measure**:
   - Container padding defaults to `padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right));` on mobile, scaling to `1.5rem` (tablets) and `2.5rem`-`3.5rem` (desktops).
   - `html, body { overflow-x: hidden; -webkit-text-size-adjust: 100%; }` prevents horizontal rubber-band blowout.

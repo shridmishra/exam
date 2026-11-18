@@ -95,7 +95,7 @@ def build_unit_checklist_html(questions, unit_titles=None):
                 <div class="control-panel-toolbar">
                     <div class="search-box-wrapper">
                         <i class="icon icon-sm search-icon hgi-stroke hgi-search-01"></i>
-                        <input type="text" class="search-input" id="checklistSearchInput" placeholder="Search checklist by questions, topics, formulas..." aria-label="Filter questions">
+                        <input type="text" class="search-input" id="checklistSearchInput" placeholder="Search questions..." aria-label="Filter questions">
                         <kbd class="search-kbd-hint" aria-hidden="true">/</kbd>
                         <button class="search-clear-btn" id="checklistSearchClearBtn" title="Clear search" aria-label="Clear search" style="display: none;">
                             <i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>
@@ -117,11 +117,11 @@ def build_unit_checklist_html(questions, unit_titles=None):
                     <div class="filter-grid-cell">
                         <span class="filter-grid-label">Year</span>
                         <div id="checklistYearFilters" class="filter-pill-group">
-                            <button type="button" class="filter-pill-btn active" data-year="all" onclick="setChecklistYear('all', this)">All <span class="nav-badge" id="chkCount-year-all">{total_q}</span></button>
-                            <button type="button" class="filter-pill-btn" data-year="2025" onclick="setChecklistYear('2025', this)">2025 <span class="nav-badge" id="chkCount-year-2025">{y_counts.get('2025', 0)}</span></button>
-                            <button type="button" class="filter-pill-btn" data-year="2024" onclick="setChecklistYear('2024', this)">2024 <span class="nav-badge" id="chkCount-year-2024">{y_counts.get('2024', 0)}</span></button>
-                            <button type="button" class="filter-pill-btn" data-year="2023" onclick="setChecklistYear('2023', this)">2023 <span class="nav-badge" id="chkCount-year-2023">{y_counts.get('2023', 0)}</span></button>
-                            <button type="button" class="filter-pill-btn" data-year="2022" onclick="setChecklistYear('2022', this)">2022 <span class="nav-badge" id="chkCount-year-2022">{y_counts.get('2022', 0)}</span></button>
+                            <button type="button" class="filter-pill-btn active" data-year="all" onclick="setChecklistYear('all', this)">All</button>
+                            <button type="button" class="filter-pill-btn" data-year="2025" onclick="setChecklistYear('2025', this)">2025</button>
+                            <button type="button" class="filter-pill-btn" data-year="2024" onclick="setChecklistYear('2024', this)">2024</button>
+                            <button type="button" class="filter-pill-btn" data-year="2023" onclick="setChecklistYear('2023', this)">2023</button>
+                            <button type="button" class="filter-pill-btn" data-year="2022" onclick="setChecklistYear('2022', this)">2022</button>
                         </div>
                     </div>
 
@@ -129,11 +129,11 @@ def build_unit_checklist_html(questions, unit_titles=None):
                     <div class="filter-grid-cell">
                         <span class="filter-grid-label">Repeated</span>
                         <div id="checklistRepeatFilters" class="filter-pill-group">
-                            <button type="button" class="filter-pill-btn active" data-repeat="all" onclick="setChecklistRepeat('all', this)">All <span class="nav-badge" id="chkCount-repeat-all">{total_q}</span></button>
-                            <button type="button" class="filter-pill-btn" data-repeat="repeated" onclick="setChecklistRepeat('repeated', this)" title="All Repeated Questions (4x, 3x, 2x)">Most Repeated <span class="nav-badge" id="chkCount-repeat-repeated">{rep_repeated}</span></button>
-                            <button type="button" class="filter-pill-btn" data-repeat="4x" onclick="setChecklistRepeat('4x', this)" title="Questions repeated across all 4 exam papers">4x <span class="nav-badge" id="chkCount-repeat-4x">{rep_4x}</span></button>
-                            <button type="button" class="filter-pill-btn" data-repeat="3x" onclick="setChecklistRepeat('3x', this)" title="Questions repeated across 3 exam papers">3x <span class="nav-badge" id="chkCount-repeat-3x">{rep_3x}</span></button>
-                            <button type="button" class="filter-pill-btn" data-repeat="2x" onclick="setChecklistRepeat('2x', this)" title="Questions repeated across 2 exam papers">2x <span class="nav-badge" id="chkCount-repeat-2x">{rep_2x}</span></button>
+                            <button type="button" class="filter-pill-btn active" data-repeat="all" onclick="setChecklistRepeat('all', this)">All</button>
+                            <button type="button" class="filter-pill-btn" data-repeat="repeated" onclick="setChecklistRepeat('repeated', this)" title="All Repeated Questions (4x, 3x, 2x)">Most Repeated</button>
+                            <button type="button" class="filter-pill-btn" data-repeat="4x" onclick="setChecklistRepeat('4x', this)" title="Questions repeated across all 4 exam papers">4x</button>
+                            <button type="button" class="filter-pill-btn" data-repeat="3x" onclick="setChecklistRepeat('3x', this)" title="Questions repeated across 3 exam papers">3x</button>
+                            <button type="button" class="filter-pill-btn" data-repeat="2x" onclick="setChecklistRepeat('2x', this)" title="Questions repeated across 2 exam papers">2x</button>
                         </div>
                     </div>
 
@@ -141,11 +141,11 @@ def build_unit_checklist_html(questions, unit_titles=None):
                     <div class="filter-grid-cell">
                         <span class="filter-grid-label">Status</span>
                         <div id="checklistStatusGroup" class="filter-pill-group">
-                            <button type="button" class="filter-pill-btn active" data-status="all" onclick="setChecklistStatus('all', this)">All <span class="nav-badge" id="checklistAllCount">{total_q}</span></button>
-                            <button type="button" class="filter-pill-btn" data-status="incomplete" onclick="setChecklistStatus('incomplete', this)" title="Hide completed questions">Incomplete <span class="nav-badge" id="checklistIncompleteCount">{total_q}</span></button>
-                            <button type="button" class="filter-pill-btn" data-status="completed" onclick="setChecklistStatus('completed', this)" title="Show only completed questions">Completed <span class="nav-badge" id="checklistCompletedCount">0</span></button>
-                            <button type="button" class="filter-pill-btn" data-status="starred" onclick="setChecklistStatus('starred', this)" title="Show only starred questions">Starred <span class="nav-badge" id="checklistStarredCount">0</span></button>
-                            <button type="button" class="filter-pill-btn" data-status="later" onclick="setChecklistStatus('later', this)" title="Show questions saved for later">Later <span class="nav-badge" id="checklistLaterCount">0</span></button>
+                            <button type="button" class="filter-pill-btn active" data-status="all" onclick="setChecklistStatus('all', this)">All</button>
+                            <button type="button" class="filter-pill-btn" data-status="incomplete" onclick="setChecklistStatus('incomplete', this)" title="Hide completed questions">Incomplete</button>
+                            <button type="button" class="filter-pill-btn" data-status="completed" onclick="setChecklistStatus('completed', this)" title="Show only completed questions">Completed</button>
+                            <button type="button" class="filter-pill-btn" data-status="starred" onclick="setChecklistStatus('starred', this)" title="Show only starred questions">Starred</button>
+                            <button type="button" class="filter-pill-btn" data-status="later" onclick="setChecklistStatus('later', this)" title="Show questions saved for later">Later</button>
                         </div>
                     </div>
 
@@ -153,12 +153,12 @@ def build_unit_checklist_html(questions, unit_titles=None):
                     <div class="filter-grid-cell">
                         <span class="filter-grid-label">Unit</span>
                         <div id="checklistUnitFilters" class="filter-pill-group">
-                            <button type="button" class="filter-pill-btn active" data-unit="all" onclick="setChecklistUnit('all', this)">All <span class="nav-badge" id="chkCount-unit-all">{total_q}</span></button>
-                            <button type="button" class="filter-pill-btn" data-unit="1" onclick="setChecklistUnit('1', this)">Unit 1 <span class="nav-badge" id="chkCount-unit-1">{u_counts.get('1', 0)}</span></button>
-                            <button type="button" class="filter-pill-btn" data-unit="2" onclick="setChecklistUnit('2', this)">Unit 2 <span class="nav-badge" id="chkCount-unit-2">{u_counts.get('2', 0)}</span></button>
-                            <button type="button" class="filter-pill-btn" data-unit="3" onclick="setChecklistUnit('3', this)">Unit 3 <span class="nav-badge" id="chkCount-unit-3">{u_counts.get('3', 0)}</span></button>
-                            <button type="button" class="filter-pill-btn" data-unit="4" onclick="setChecklistUnit('4', this)">Unit 4 <span class="nav-badge" id="chkCount-unit-4">{u_counts.get('4', 0)}</span></button>
-                            <button type="button" class="filter-pill-btn" data-unit="5" onclick="setChecklistUnit('5', this)">Unit 5 <span class="nav-badge" id="chkCount-unit-5">{u_counts.get('5', 0)}</span></button>
+                            <button type="button" class="filter-pill-btn active" data-unit="all" onclick="setChecklistUnit('all', this)">All</button>
+                            <button type="button" class="filter-pill-btn" data-unit="1" onclick="setChecklistUnit('1', this)">Unit 1</button>
+                            <button type="button" class="filter-pill-btn" data-unit="2" onclick="setChecklistUnit('2', this)">Unit 2</button>
+                            <button type="button" class="filter-pill-btn" data-unit="3" onclick="setChecklistUnit('3', this)">Unit 3</button>
+                            <button type="button" class="filter-pill-btn" data-unit="4" onclick="setChecklistUnit('4', this)">Unit 4</button>
+                            <button type="button" class="filter-pill-btn" data-unit="5" onclick="setChecklistUnit('5', this)">Unit 5</button>
                         </div>
                     </div>
 
@@ -166,10 +166,10 @@ def build_unit_checklist_html(questions, unit_titles=None):
                     <div class="filter-grid-cell">
                         <span class="filter-grid-label">Type</span>
                         <div id="checklistTypeFilters" class="filter-pill-group">
-                            <button type="button" class="filter-pill-btn active" data-type="all" onclick="setChecklistType('all', this)">All <span class="nav-badge" id="chkCount-type-all">{total_q}</span></button>
-                            <button type="button" class="filter-pill-btn" data-type="Theory" onclick="setChecklistType('Theory', this)">Theory <span class="nav-badge" id="chkCount-type-Theory">{type_th}</span></button>
-                            <button type="button" class="filter-pill-btn" data-type="Numerical" onclick="setChecklistType('Numerical', this)">Numerical <span class="nav-badge" id="chkCount-type-Numerical">{type_num}</span></button>
-                            <button type="button" class="filter-pill-btn" data-type="Derivation" onclick="setChecklistType('Derivation', this)">Derivation <span class="nav-badge" id="chkCount-type-Derivation">{type_der}</span></button>
+                            <button type="button" class="filter-pill-btn active" data-type="all" onclick="setChecklistType('all', this)">All</button>
+                            <button type="button" class="filter-pill-btn" data-type="Theory" onclick="setChecklistType('Theory', this)">Theory</button>
+                            <button type="button" class="filter-pill-btn" data-type="Numerical" onclick="setChecklistType('Numerical', this)">Numerical</button>
+                            <button type="button" class="filter-pill-btn" data-type="Derivation" onclick="setChecklistType('Derivation', this)">Derivation</button>
                         </div>
                     </div>
 
@@ -177,10 +177,10 @@ def build_unit_checklist_html(questions, unit_titles=None):
                     <div class="filter-grid-cell">
                         <span class="filter-grid-label">Marks</span>
                         <div id="checklistMarksFilters" class="filter-pill-group">
-                            <button type="button" class="filter-pill-btn active" data-marks="all" onclick="setChecklistMarks('all', this)">All <span class="nav-badge" id="chkCount-marks-all">{total_q}</span></button>
-                            <button type="button" class="filter-pill-btn" data-marks="2" onclick="setChecklistMarks('2', this)">2M <span class="nav-badge" id="chkCount-marks-2">{m_2}</span></button>
-                            <button type="button" class="filter-pill-btn" data-marks="3" onclick="setChecklistMarks('3', this)">3M <span class="nav-badge" id="chkCount-marks-3">{m_3}</span></button>
-                            <button type="button" class="filter-pill-btn" data-marks="7" onclick="setChecklistMarks('7', this)">7M / 6M <span class="nav-badge" id="chkCount-marks-7">{m_7}</span></button>
+                            <button type="button" class="filter-pill-btn active" data-marks="all" onclick="setChecklistMarks('all', this)">All</button>
+                            <button type="button" class="filter-pill-btn" data-marks="2" onclick="setChecklistMarks('2', this)">2M</button>
+                            <button type="button" class="filter-pill-btn" data-marks="3" onclick="setChecklistMarks('3', this)">3M</button>
+                            <button type="button" class="filter-pill-btn" data-marks="7" onclick="setChecklistMarks('7', this)">7M / 6M</button>
                         </div>
                     </div>
                 </div>
@@ -810,15 +810,17 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .nav {{
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: space-between;
             height: 60px;
             gap: 1rem;
         }}
 
         @media (max-width: 768px) {{
             .nav {{
+                display: flex;
+                justify-content: space-between;
                 height: 52px;
                 gap: 0.5rem;
             }}
@@ -838,6 +840,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .brand {{
+            justify-self: start;
+            min-width: 0;
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -867,6 +871,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .nav-links {{
+            justify-self: center;
             display: flex;
             align-items: center;
             gap: 0.35rem;
@@ -923,6 +928,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .nav-actions {{
+            justify-self: end;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -1337,8 +1343,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .search-box-wrapper {{
             position: relative;
-            flex: 1;
-            min-width: 200px;
+            width: 260px;
+            max-width: 100%;
         }}
 
         .search-input {{
@@ -3938,7 +3944,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     <button class="nav-link-btn active" data-view="syllabus" onclick="switchPageView('syllabus')">
                         <i class="icon icon-sm hgi-stroke hgi-task-01"></i>
                         Checklist
-                        <span class="nav-badge" id="navChecklistBadge">0/{len(raw_questions)}</span>
                     </button>
                 </li>
                 <li>
@@ -4835,63 +4840,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 navQBadge.textContent = `${{total}}`;
             }}
 
-            // Dynamic count calculation for all filter dimensions across the entire question pool
-            const counts = {{
-                year: {{ all: visibleQuestions.length, '2025': 0, '2024': 0, '2023': 0, '2022': 0 }},
-                repeat: {{ all: visibleQuestions.length, repeated: 0, '4x': 0, '3x': 0, '2x': 0 }},
-                status: {{
-                    all: visibleQuestions.length,
-                    incomplete: visibleQuestions.filter(q => !completedQuestions.has(q.id) && !laterQuestions.has(q.id)).length,
-                    completed: visibleQuestions.filter(q => completedQuestions.has(q.id)).length,
-                    starred: visibleQuestions.filter(q => starredQuestions.has(q.id)).length,
-                    later: visibleQuestions.filter(q => laterQuestions.has(q.id)).length
-                }},
-                unit: {{ all: visibleQuestions.length, '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 }},
-                type: {{ all: visibleQuestions.length, Theory: 0, Numerical: 0, Derivation: 0 }},
-                marks: {{ all: visibleQuestions.length, '2': 0, '3': 0, '7': 0 }}
-            }};
-
-            visibleQuestions.forEach(q => {{
-                const y = String(q.year);
-                if (counts.year[y] !== undefined) counts.year[y]++;
-
-                const u = String(q.unit);
-                if (counts.unit[u] !== undefined) counts.unit[u]++;
-
-                const rep = getRepeatInfo(q, RAW_QUESTIONS);
-                if (rep.isRep) {{
-                    counts.repeat.repeated++;
-                    if (counts.repeat[rep.countStr] !== undefined) counts.repeat[rep.countStr]++;
-                }}
-
-                const t = (q.type || '').toLowerCase();
-                if (t.includes('theory')) counts.type.Theory++;
-                if (t.includes('numerical')) counts.type.Numerical++;
-                if (t.includes('derivation')) counts.type.Derivation++;
-
-                if (q.marks === 2) counts.marks['2']++;
-                else if (q.marks === 3) counts.marks['3']++;
-                else if (q.marks === 7 || q.marks === 6) counts.marks['7']++;
-            }});
-
-            function setBadge(id, val) {{
-                const el = document.getElementById(id);
-                if (el) el.textContent = val;
-            }}
-
-            ['chkCount', 'qbCount'].forEach(prefix => {{
-                Object.keys(counts.year).forEach(k => setBadge(`${{prefix}}-year-${{k}}`, counts.year[k]));
-                Object.keys(counts.repeat).forEach(k => setBadge(`${{prefix}}-repeat-${{k}}`, counts.repeat[k]));
-                Object.keys(counts.status).forEach(k => setBadge(`${{prefix}}-status-${{k}}`, counts.status[k]));
-                Object.keys(counts.unit).forEach(k => setBadge(`${{prefix}}-unit-${{k}}`, counts.unit[k]));
-                Object.keys(counts.type).forEach(k => setBadge(`${{prefix}}-type-${{k}}`, counts.type[k]));
-                Object.keys(counts.marks).forEach(k => setBadge(`${{prefix}}-marks-${{k}}`, counts.marks[k]));
-            }});
-            setBadge('checklistAllCount', counts.status.all);
-            setBadge('checklistIncompleteCount', counts.status.incomplete);
-            setBadge('checklistCompletedCount', counts.status.completed);
-            setBadge('checklistStarredCount', counts.status.starred);
-            setBadge('checklistLaterCount', counts.status.later);
 
             const yearTotal = {{ '2025': 0, '2024': 0, '2023': 0, '2022': 0 }};
             const yearDone = {{ '2025': 0, '2024': 0, '2023': 0, '2022': 0 }};
