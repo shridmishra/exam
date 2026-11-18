@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """
 Civil Engineering Examination Timetable Generator.
-Produces timetable.html with customizable timetable engine, client-side localStorage persistence,
-dynamic month calendars, done (muted green) visual states, and official SGSITS defaults.
+Produces timetable.html with a super minimal, refined UI:
+- Space-efficient header with live countdown chip
+- Streamlined filter pills and micro-legend
+- Client-side localStorage persistence
+- Muted green completion ("Yes, this is done")
+- Dynamic separated calendars and edit modal
 """
 from pathlib import Path
 
@@ -18,7 +22,7 @@ def generate_timetable_html():
     <meta name="theme-color" id="metaThemeColor" content="#fbfaf8">
     <meta name="format-detection" content="telephone=no">
     <title>Civil Engineering Exam Timetable | Nov – Dec 2026</title>
-    <meta name="description" content="Civil Engineering Examination Timetable (Nov - Dec 2026). Customizable schedule stored in local storage with separated dynamic calendars, status tracking, and gap analysis.">
+    <meta name="description" content="Civil Engineering Examination Timetable (Nov - Dec 2026). Minimal, customizable schedule with client-side localStorage persistence, separated calendars, and gap analysis.">
     <!-- Minimalist Favicon & Touch Icons -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2309090b'/%3E%3Crect x='0.5' y='0.5' width='31' height='31' rx='6.5' fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cpath d='M8 6h16v4H12v4h9v4H12v4h12v4H8z' fill='%23fcfcfd'/%3E%3C/svg%3E">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -29,22 +33,22 @@ def generate_timetable_html():
     <link rel="stylesheet" href="vendor/hugeicons/icons.css">
     <style>
         :root {
-            --font-size-h1: 32px;
-            --line-height-h1: 42px;
+            --font-size-h1: 28px;
+            --line-height-h1: 36px;
             --font-size-h2: 22px;
-            --line-height-h2: 30px;
-            --font-size-h6: 16px;
-            --line-height-h6: 22px;
+            --line-height-h2: 28px;
+            --font-size-h6: 15px;
+            --line-height-h6: 20px;
             --font-size-body-large: 15px;
             --line-height-body-large: 22px;
-            --font-size-body-medium: 14px;
-            --line-height-body-medium: 20px;
+            --font-size-body-medium: 13.5px;
+            --line-height-body-medium: 19px;
             --font-size-body-small: 12px;
             --line-height-body-small: 16px;
             --font-size-button: 13px;
             --line-height-button: 18px;
-            --font-size-stat: 24px;
-            --line-height-stat: 32px;
+            --font-size-stat: 22px;
+            --line-height-stat: 28px;
             --font-size-overline: 11px;
 
             --background: #fbfaf8;
@@ -156,9 +160,9 @@ def generate_timetable_html():
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 1.25rem;
-            height: 1.25rem;
-            font-size: 1.25rem;
+            width: 1.15rem;
+            height: 1.15rem;
+            font-size: 1.15rem;
             line-height: 1;
             vertical-align: middle;
             flex-shrink: 0;
@@ -215,25 +219,24 @@ def generate_timetable_html():
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 56px;
+            height: 52px;
             gap: 12px;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-shrink: 0;
             white-space: nowrap;
         }
 
         .brand-badge {
-            background: var(--pastel-peach-bg);
-            border: 1px solid var(--pastel-peach-border);
-            color: var(--pastel-peach-foreground);
+            background: var(--muted);
+            color: var(--muted-foreground);
             font-size: var(--font-size-overline);
-            font-weight: 700;
-            padding: 2px 7px;
+            font-weight: 600;
+            padding: 2px 6px;
             border-radius: var(--radius-sm);
             text-transform: uppercase;
             flex-shrink: 0;
@@ -248,7 +251,7 @@ def generate_timetable_html():
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             list-style: none;
             flex-wrap: nowrap;
             overflow-x: auto;
@@ -276,8 +279,8 @@ def generate_timetable_html():
             background: var(--card);
             border: 1px solid var(--border);
             color: var(--foreground);
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: var(--radius-full);
             display: inline-flex;
             align-items: center;
@@ -292,8 +295,8 @@ def generate_timetable_html():
             bottom: 2rem !important;
             right: 2rem !important;
             z-index: 99999 !important;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: var(--radius-full);
             background: var(--primary);
             color: var(--primary-foreground);
@@ -308,212 +311,225 @@ def generate_timetable_html():
 
         .scroll-to-top-btn:hover {
             opacity: 1;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-        }
-
-        .scroll-to-top-btn:active {
-            transform: translateY(0) scale(0.96);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
         }
 
         @media (max-width: 640px) {
             .scroll-to-top-btn {
                 bottom: 1.25rem !important;
                 right: 1.25rem !important;
-                width: 42px;
-                height: 42px;
+                width: 40px;
+                height: 40px;
             }
         }
 
-        .hero {
-            padding: 20px 0 14px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .hero-meta {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            font-size: var(--font-size-body-small);
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: var(--radius-full);
-            border: 1px solid transparent;
-            text-decoration: none;
-            gap: 4px;
-        }
-
-        .badge-sage {
-            background: var(--pastel-sage-bg);
-            border-color: var(--pastel-sage-border);
-            color: var(--pastel-sage-foreground);
-        }
-
-        .badge-peach {
-            background: var(--pastel-peach-bg);
-            border-color: var(--pastel-peach-border);
-            color: var(--pastel-peach-foreground);
-        }
-
-        .badge-sky {
-            background: var(--pastel-sky-bg);
-            border-color: var(--pastel-sky-border);
-            color: var(--pastel-sky-foreground);
-        }
-
-        .badge-done {
-            background: var(--pastel-done-bg);
-            border-color: var(--pastel-done-border);
-            color: var(--pastel-done-foreground);
-            font-weight: 600;
-        }
-
-        .badge-subtle {
-            background: var(--muted);
-            border-color: var(--border);
-            color: var(--muted-foreground);
-        }
-
-        .hero-title {
-            font-size: var(--font-size-h1);
-            line-height: var(--line-height-h1);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 4px;
-        }
-
-        .notice-bar {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 8px 14px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            font-size: var(--font-size-body-small);
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 16px 0;
-        }
-
-        .stat-box {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 10px 14px;
-        }
-
-        .stat-label {
-            font-size: var(--font-size-overline);
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--muted-foreground);
-            margin-bottom: 2px;
-        }
-
-        .stat-value {
-            font-size: var(--font-size-stat);
-            line-height: var(--line-height-stat);
-            font-weight: 700;
-        }
-
-        .controls-bar {
+        /* ----------------------------------------------------
+           SUPER MINIMAL HEADER ROW
+           ---------------------------------------------------- */
+        .timetable-header-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 16px;
+            gap: 16px;
+            padding: 20px 0 12px 0;
+            border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
         }
 
-        .filter-tabs {
+        .timetable-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .timetable-title {
+            font-size: var(--font-size-h2);
+            line-height: var(--line-height-h2);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--foreground);
+            margin: 0;
+        }
+
+        .timetable-subtitle {
             display: flex;
             align-items: center;
             gap: 6px;
+            font-size: var(--font-size-body-small);
+            color: var(--muted-foreground);
             flex-wrap: wrap;
         }
 
-        .tab-btn {
+        .timetable-subtitle .sep {
+            opacity: 0.4;
+        }
+
+        .timetable-subtle-badge {
             background: var(--muted);
+            color: var(--muted-foreground);
+            padding: 1px 6px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Sleek Live Status Pill (Countdown + Today Indicator) */
+        .live-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card);
             border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-body-small);
+            font-weight: 500;
+            color: var(--foreground);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #38bdf8;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+            flex-shrink: 0;
+        }
+
+        .status-dot.all-done {
+            background: #22c55e;
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+        }
+
+        /* ----------------------------------------------------
+           SUPER MINIMAL CONTROLS BAR
+           ---------------------------------------------------- */
+        .controls-bar-minimal {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 0 16px 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-tabs-minimal {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .tab-pill {
+            background: transparent;
+            border: 1px solid transparent;
             color: var(--muted-foreground);
             font-size: var(--font-size-button);
             font-weight: 500;
-            padding: 5px 12px;
-            border-radius: var(--radius-full);
-            cursor: pointer;
-        }
-
-        .tab-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: var(--primary-foreground);
-            font-weight: 600;
-        }
-
-        .btn-action {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--foreground);
-            font-size: var(--font-size-button);
-            font-weight: 600;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: var(--radius-full);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            transition: background-color 0.15s ease, border-color 0.15s ease;
+            transition: all 0.15s ease;
         }
 
-        .btn-action:hover {
+        .tab-pill:hover {
+            color: var(--foreground);
             background: var(--muted);
-            border-color: var(--border-hover);
         }
 
-        .edit-timetable-btn {
-            background: var(--pastel-sage-bg);
-            border-color: var(--pastel-sage-border);
-            color: var(--pastel-sage-foreground);
+        .tab-pill.active {
+            background: var(--card);
+            border-color: var(--border);
+            color: var(--foreground);
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
         }
 
-        .edit-timetable-btn:hover {
-            background: var(--pastel-sage-border);
-        }
-
-        .sort-btn {
+        .pill-count {
+            font-size: 11px;
+            color: var(--muted-foreground);
             background: var(--muted);
+            padding: 1px 6px;
+            border-radius: var(--radius-full);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tab-pill.active .pill-count {
+            background: var(--background);
+            color: var(--foreground);
+        }
+
+        .controls-right-minimal {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Minimal Micro Legend */
+        .mini-legend {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: var(--font-size-overline);
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-right: 4px;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .legend-dot.reg {
+            background: var(--pastel-sage-foreground);
+        }
+
+        .legend-dot.old {
+            background: var(--pastel-peach-foreground);
+        }
+
+        .legend-dot.done {
+            background: var(--pastel-done-foreground);
+        }
+
+        .btn-subtle-action {
+            background: var(--card);
             border: 1px solid var(--border);
             color: var(--foreground);
             font-size: var(--font-size-button);
-            font-weight: 600;
-            padding: 5px 12px;
+            font-weight: 500;
+            padding: 4px 10px;
             border-radius: var(--radius-full);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.15s ease;
         }
 
-        .sort-btn:hover {
-            background: var(--card);
+        .btn-subtle-action:hover {
             border-color: var(--border-hover);
+            background: var(--muted);
         }
 
-        .view-switchers {
+        .view-switchers-minimal {
             display: flex;
             background: var(--muted);
             padding: 2px;
@@ -521,25 +537,27 @@ def generate_timetable_html():
             border: 1px solid var(--border);
         }
 
-        .view-btn {
+        .view-pill {
             background: transparent;
             border: none;
             color: var(--muted-foreground);
             font-size: var(--font-size-body-small);
             font-weight: 500;
-            padding: 4px 10px;
+            padding: 4px 9px;
             border-radius: var(--radius-full);
             cursor: pointer;
+            transition: all 0.15s ease;
         }
 
-        .view-btn.active {
+        .view-pill.active {
             background: var(--card);
             color: var(--foreground);
             font-weight: 600;
+            box-shadow: var(--shadow-sm);
         }
 
         /* ----------------------------------------------------
-           DYNAMIC SEPARATED CALENDARS (November & December)
+           DYNAMIC SEPARATED CALENDARS
            ---------------------------------------------------- */
         .cal-separated-container {
             display: grid;
@@ -677,53 +695,6 @@ def generate_timetable_html():
             box-shadow: 0 0 0 2px var(--pastel-sky-border);
         }
 
-        /* Dedicated blue box for current date inside the calendar view */
-        .cal-today-box {
-            background: var(--pastel-sky-bg);
-            border: 1px solid var(--pastel-sky-border);
-            color: var(--pastel-sky-foreground);
-            border-radius: var(--radius-md);
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .cal-today-box-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .cal-today-box-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: var(--font-size-body-small);
-        }
-
-        .cal-today-date-text {
-            font-size: var(--font-size-body-medium);
-            font-weight: 600;
-        }
-
-        .cal-today-countdown {
-            background: var(--card);
-            color: var(--foreground);
-            padding: 3px 10px;
-            border-radius: var(--radius-full);
-            font-weight: 600;
-            border: 1px solid var(--border);
-            font-size: var(--font-size-body-small);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
         .cal-cell-tag {
             font-size: 10px;
             line-height: 12px;
@@ -742,6 +713,49 @@ def generate_timetable_html():
             border-radius: var(--radius-sm);
             font-size: 9px;
             font-weight: 700;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: var(--font-size-body-small);
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            border: 1px solid transparent;
+            text-decoration: none;
+            gap: 4px;
+        }
+
+        .badge-sage {
+            background: var(--pastel-sage-bg);
+            border-color: var(--pastel-sage-border);
+            color: var(--pastel-sage-foreground);
+        }
+
+        .badge-peach {
+            background: var(--pastel-peach-bg);
+            border-color: var(--pastel-peach-border);
+            color: var(--pastel-peach-foreground);
+        }
+
+        .badge-sky {
+            background: var(--pastel-sky-bg);
+            border-color: var(--pastel-sky-border);
+            color: var(--pastel-sky-foreground);
+        }
+
+        .badge-done {
+            background: var(--pastel-done-bg);
+            border-color: var(--pastel-done-border);
+            color: var(--pastel-done-foreground);
+            font-weight: 600;
+        }
+
+        .badge-subtle {
+            background: var(--muted);
+            border-color: var(--border);
+            color: var(--muted-foreground);
         }
 
         /* Table */
@@ -778,7 +792,7 @@ def generate_timetable_html():
         }
 
         td {
-            padding: 12px 14px;
+            padding: 11px 14px;
             border-bottom: 1px solid var(--border);
             vertical-align: middle;
         }
@@ -910,7 +924,7 @@ def generate_timetable_html():
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            max-width: 660px;
+            max-width: 640px;
             width: 100%;
             max-height: 88vh;
             display: flex;
@@ -935,9 +949,9 @@ def generate_timetable_html():
         }
 
         .modal-title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
-            line-height: 24px;
+            line-height: 22px;
             color: var(--foreground);
         }
 
@@ -977,7 +991,7 @@ def generate_timetable_html():
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             padding: 14px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .form-grid {
@@ -1285,7 +1299,7 @@ def generate_timetable_html():
                 display: none !important;
             }
             .nav {
-                height: 52px;
+                height: 50px;
             }
             .brand-title {
                 font-size: 0.95rem;
@@ -1294,81 +1308,33 @@ def generate_timetable_html():
                 text-overflow: ellipsis;
                 white-space: nowrap;
             }
-            .scroll-to-top-btn {
-                bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
-                right: 1.25rem !important;
-                width: 42px !important;
-                height: 42px !important;
-            }
-            .hero-title {
-                font-size: 22px !important;
-                line-height: 28px !important;
-            }
-            .hero-meta {
-                flex-wrap: wrap;
-                gap: 6px;
-            }
-            .notice-bar {
+            .timetable-header-row {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 6px;
+                gap: 10px;
+                padding: 16px 0 10px 0;
             }
-            .controls-bar {
+            .timetable-title {
+                font-size: 20px !important;
+                line-height: 26px !important;
+            }
+            .controls-bar-minimal {
                 flex-direction: column;
                 align-items: stretch;
                 gap: 10px;
             }
-            .filter-tabs {
+            .filter-tabs-minimal {
                 width: 100%;
-                display: flex;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 2px;
             }
-            .tab-btn {
-                flex: 1;
-                text-align: center;
-                padding: 6px 8px;
-                font-size: 12px;
-            }
-            .controls-bar > div:last-child {
-                width: 100%;
-                flex-direction: column;
-                gap: 8px !important;
-            }
-            .sort-btn, .edit-timetable-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            .view-switchers {
-                width: 100%;
-                display: flex;
-            }
-            .view-btn {
-                flex: 1;
-                text-align: center;
-                padding: 6px 4px;
-                font-size: 11px;
-            }
-            .stats-bar {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            .stat-box {
-                padding: 10px;
-            }
-            .stat-value {
-                font-size: 20px;
-                line-height: 26px;
-            }
-            .cal-today-box {
-                padding: 10px 12px;
-                gap: 8px;
-            }
-            .cal-today-box-left {
+            .controls-right-minimal {
                 width: 100%;
                 justify-content: space-between;
             }
-            .cal-today-box-right {
-                width: 100%;
-                justify-content: space-between;
+            .mini-legend {
+                display: none;
             }
             .cal-separated-container {
                 grid-template-columns: 1fr;
@@ -1404,9 +1370,9 @@ def generate_timetable_html():
         }
 
         @media print {
-            .header, .controls-bar, .theme-toggle-btn, .footer, .modal-overlay, .scroll-to-top-btn { display: none !important; }
+            .header, .controls-bar-minimal, .theme-toggle-btn, .footer, .modal-overlay, .scroll-to-top-btn { display: none !important; }
             body { background: #fff !important; color: #000 !important; }
-            .table-wrap, .stat-box, .cal-box { border: 1px solid #ccc !important; box-shadow: none !important; }
+            .table-wrap, .cal-box { border: 1px solid #ccc !important; box-shadow: none !important; }
         }
     </style>
 </head>
@@ -1415,12 +1381,12 @@ def generate_timetable_html():
     <header class="header">
         <div class="container nav">
             <div class="brand">
-                <span class="brand-badge">Nov – Dec</span>
+                <span class="brand-badge">SGSITS</span>
                 <span class="brand-title">Civil Engineering Timetable</span>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html" class="nav-link">← PYQ Master</a></li>
-                <li><a class="nav-link active" onclick="showView('calendar')">Separated Calendars</a></li>
+                <li><a class="nav-link active" onclick="showView('calendar')">Calendar</a></li>
                 <li><a class="nav-link" onclick="showView('table')">Table</a></li>
                 <li><a class="nav-link" onclick="showView('timeline')">Timeline</a></li>
             </ul>
@@ -1433,88 +1399,57 @@ def generate_timetable_html():
     </header>
 
     <main class="container">
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-meta">
-                <span class="badge badge-peach">Nov to Dec 2026</span>
-                <span class="badge badge-sky" id="heroTodayBadge">Today: Current Date</span>
-                <span class="badge badge-sky">Timing: 2:00 PM – 5:00 PM</span>
-                <span class="badge badge-sage">Revised Timetable (SGSITS Indore)</span>
+        <!-- Super Minimal Header Row -->
+        <div class="timetable-header-row">
+            <div class="timetable-header-left">
+                <h1 class="timetable-title">Examination Timetable</h1>
+                <div class="timetable-subtitle">
+                    <span>Nov – Dec 2026</span>
+                    <span class="sep">&bull;</span>
+                    <span>2:00 – 5:00 PM</span>
+                    <span class="sep">&bull;</span>
+                    <span class="timetable-subtle-badge">SGSITS Indore</span>
+                </div>
             </div>
-            <h1 class="hero-title">Civil Engineering Examination Timetable</h1>
-
-            <div class="notice-bar">
-                <!-- Dynamically populated by updateNoticeBar() -->
-            </div>
-        </section>
-
-        <!-- Stats Bar -->
-        <section class="stats-bar">
-            <div class="stat-box">
-                <div class="stat-label">Total Papers</div>
-                <div class="stat-value" id="statTotal">3</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Concluded / Done</div>
-                <div class="stat-value" id="statDone" style="color: var(--pastel-done-foreground);">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Regular Papers</div>
-                <div class="stat-value" id="statRegular" style="color: var(--pastel-sage-foreground);">3</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Old Syllabus</div>
-                <div class="stat-value" id="statOld" style="color: var(--pastel-peach-foreground);">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Date Range</div>
-                <div class="stat-value" id="statRange" style="font-size: 18px; line-height: 32px;">18 Nov – 12 Dec</div>
-            </div>
-        </section>
-
-        <!-- Filter Controls & Edit Button -->
-        <div class="controls-bar">
-            <div class="filter-tabs">
-                <button class="tab-btn active" data-filter="all" onclick="setFilter('all')">All (<span id="filterCountAll">3</span>)</button>
-                <button class="tab-btn" data-filter="regular" onclick="setFilter('regular')">Regular (<span id="filterCountReg">3</span>)</button>
-                <button class="tab-btn" data-filter="old" onclick="setFilter('old')">Old Syllabus (<span id="filterCountOld">0</span>)</button>
-                <button class="tab-btn" data-filter="done" onclick="setFilter('done')">Done (<span id="filterCountDone">0</span>)</button>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <button class="btn-action edit-timetable-btn" id="btnOpenEditModal" onclick="openEditModal()" title="Customize timetable, add/edit papers, or load backlogs">
-                    <i class="icon hgi-stroke hgi-pencil-edit-02"></i> Edit Timetable
-                </button>
-
-                <button class="sort-btn" id="sortDateBtn" onclick="toggleDateSort()">
-                    <span id="sortDirectionLabel">Sort Date: Ascending ▲</span>
-                </button>
-
-                <div class="view-switchers">
-                    <button class="view-btn active" id="btnCalendar" onclick="showView('calendar')">Separated Calendars</button>
-                    <button class="view-btn" id="btnTable" onclick="showView('table')">Table</button>
-                    <button class="view-btn" id="btnTimeline" onclick="showView('timeline')">Timeline</button>
+            <div class="timetable-header-right">
+                <div class="live-status-pill" id="liveStatusPill">
+                    <span class="status-dot"></span>
+                    <span id="liveStatusText">Loading upcoming exam...</span>
                 </div>
             </div>
         </div>
 
-        <!-- VIEW 1: SEPARATED CALENDARS (Dynamic November & December Grids) -->
-        <section id="calendar-view">
-            <!-- Dedicated Blue Box with Current Date & Next Exam Status -->
-            <div class="cal-today-box">
-                <div class="cal-today-box-left">
-                    <span class="badge badge-sky" style="font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Today</span>
-                    <span class="cal-today-date-text" id="calTodayDateText">Current Date: Today</span>
-                </div>
-                <div class="cal-today-box-right" id="calTodayCountdownBox">
-                    <span>Upcoming:</span>
-                    <span class="cal-today-countdown">
-                        <strong style="color: var(--pastel-sage-foreground);">Calculating...</strong>
-                    </span>
-                </div>
+        <!-- Super Minimal Controls & Filter Bar -->
+        <div class="controls-bar-minimal">
+            <div class="filter-tabs-minimal">
+                <button class="tab-pill active" data-filter="all" onclick="setFilter('all')">All <span class="pill-count" id="filterCountAll">0</span></button>
+                <button class="tab-pill" data-filter="regular" onclick="setFilter('regular')">Regular <span class="pill-count" id="filterCountReg">0</span></button>
+                <button class="tab-pill" data-filter="old" onclick="setFilter('old')">Backlog <span class="pill-count" id="filterCountOld">0</span></button>
+                <button class="tab-pill" data-filter="done" onclick="setFilter('done')">Done <span class="pill-count" id="filterCountDone">0</span></button>
             </div>
 
-            <!-- Dynamic separated months container -->
+            <div class="controls-right-minimal">
+                <div class="mini-legend">
+                    <span class="legend-item"><span class="legend-dot reg"></span> Regular</span>
+                    <span class="legend-item"><span class="legend-dot old"></span> Backlog</span>
+                    <span class="legend-item"><span class="legend-dot done"></span> Done</span>
+                </div>
+
+                <button class="btn-subtle-action" onclick="openEditModal()" title="Customize timetable">
+                    <i class="icon hgi-stroke hgi-pencil-edit-02"></i>
+                    <span>Edit</span>
+                </button>
+
+                <div class="view-switchers-minimal">
+                    <button class="view-pill active" id="btnCalendar" onclick="showView('calendar')" title="Monthly calendars">Calendar</button>
+                    <button class="view-pill" id="btnTable" onclick="showView('table')" title="Table view">Table</button>
+                    <button class="view-pill" id="btnTimeline" onclick="showView('timeline')" title="Timeline view">Timeline</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 1: SEPARATED CALENDARS -->
+        <section id="calendar-view">
             <div class="cal-separated-container" id="calSeparatedContainer"></div>
         </section>
 
@@ -1571,7 +1506,7 @@ def generate_timetable_html():
 
                         <div class="form-group">
                             <label class="form-label" for="formShortTag">Calendar Tag *</label>
-                            <input type="text" id="formShortTag" class="form-input" placeholder="e.g. Geo-2 (shown on calendar)" maxlength="8" required>
+                            <input type="text" id="formShortTag" class="form-input" placeholder="e.g. Geo-2 (max 7 chars)" maxlength="8" required>
                         </div>
 
                         <div class="form-group">
@@ -1611,7 +1546,7 @@ def generate_timetable_html():
                 </form>
 
                 <div class="modal-section-divider">
-                    <span>Scheduled Papers (<span id="modalExamCount">3</span>)</span>
+                    <span>Scheduled Papers (<span id="modalExamCount">0</span>)</span>
                 </div>
 
                 <!-- Subject List in Modal -->
@@ -1930,46 +1865,26 @@ def generate_timetable_html():
                 const y = now.getFullYear();
                 const m = now.getMonth() + 1;
                 const d = now.getDate();
-                const todayIso = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const todayMid = new Date(y, now.getMonth(), d);
                 
-                const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                const monthShortNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                
-                const dayName = weekdayNames[now.getDay()];
-                const monthName = monthNames[now.getMonth()];
-                const monthShort = monthShortNames[now.getMonth()];
-                
-                const formattedDate = `${dayName}, ${d} ${monthName} ${y}`;
-                
-                const calDateTextEl = document.getElementById('calTodayDateText');
-                if (calDateTextEl) {
-                    calDateTextEl.textContent = `Current Date: ${formattedDate}`;
-                }
+                let nextExam = null;
+                let daysDiff = 9999;
 
-                const heroBadge = document.getElementById('heroTodayBadge');
-                if (heroBadge) {
-                    heroBadge.textContent = `Today: ${d} ${monthShort} ${y}`;
-                }
-
-                // Calculate countdown to next UNCOMPLETED exam
-                const countdownBox = document.getElementById('calTodayCountdownBox');
-                if (countdownBox) {
-                    const todayMid = new Date(y, now.getMonth(), d);
-                    let nextExam = null;
-                    let daysDiff = 9999;
-
-                    for (const item of schedule) {
-                        if (!item.isoDate || item.completed) continue;
-                        const examDate = new Date(item.isoDate + 'T00:00:00');
-                        const diffTime = examDate.getTime() - todayMid.getTime();
-                        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-                        if (diffDays >= 0 && diffDays < daysDiff) {
-                            daysDiff = diffDays;
-                            nextExam = item;
-                        }
+                for (const item of schedule) {
+                    if (!item.isoDate || item.completed) continue;
+                    const examDate = new Date(item.isoDate + 'T00:00:00');
+                    const diffTime = examDate.getTime() - todayMid.getTime();
+                    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                    if (diffDays >= 0 && diffDays < daysDiff) {
+                        daysDiff = diffDays;
+                        nextExam = item;
                     }
+                }
 
+                const liveText = document.getElementById('liveStatusText');
+                const liveDot = document.querySelector('.live-status-pill .status-dot');
+
+                if (liveText) {
                     if (nextExam) {
                         let diffText = '';
                         if (daysDiff === 0) {
@@ -1981,20 +1896,18 @@ def generate_timetable_html():
                         }
 
                         const codeDisplay = (nextExam.shortTag || nextExam.code.replace('CE ', ''));
-                        countdownBox.innerHTML = `
-                            <span>Upcoming:</span>
-                            <span class="cal-today-countdown">
-                                <strong style="color: ${nextExam.isOld ? 'var(--pastel-peach-foreground)' : 'var(--pastel-sage-foreground)'};">${nextExam.date.split(' ').slice(0, 2).join(' ')} (${codeDisplay})</strong> &bull; ${diffText}
-                            </span>
-                        `;
+                        liveText.innerHTML = `Next: <strong>${nextExam.date.split(' ').slice(0, 2).join(' ')}</strong> (${codeDisplay}) &bull; ${diffText}`;
+                        if (liveDot) liveDot.className = 'status-dot';
                     } else {
                         const totalPapers = schedule.length;
                         const allDone = totalPapers > 0 && schedule.every(s => s.completed);
-                        countdownBox.innerHTML = `
-                            <span class="cal-today-countdown" style="color: ${allDone ? 'var(--pastel-done-foreground)' : 'var(--muted-foreground)'};">
-                                ${allDone ? '<i class="icon hgi-stroke hgi-tick-double-02"></i> All examinations concluded' : 'No upcoming papers scheduled'}
-                            </span>
-                        `;
+                        if (allDone) {
+                            liveText.innerHTML = `<span style="color: var(--pastel-done-foreground); font-weight: 600;">✓ All examinations concluded</span>`;
+                            if (liveDot) liveDot.className = 'status-dot all-done';
+                        } else {
+                            liveText.textContent = 'All scheduled papers concluded';
+                            if (liveDot) liveDot.className = 'status-dot';
+                        }
                     }
                 }
             } catch (err) {
@@ -2004,7 +1917,7 @@ def generate_timetable_html():
 
         function setFilter(filter) {
             activeFilter = filter;
-            document.querySelectorAll('.tab-btn').forEach(b => {
+            document.querySelectorAll('.tab-pill').forEach(b => {
                 b.classList.toggle('active', b.getAttribute('data-filter') === filter);
             });
             renderAll();
@@ -2012,7 +1925,6 @@ def generate_timetable_html():
 
         function toggleDateSort() {
             sortAscending = !sortAscending;
-            document.getElementById('sortDirectionLabel').textContent = sortAscending ? 'Sort Date: Ascending ▲' : 'Sort Date: Descending ▼';
             const thIcon = document.getElementById('thSortIcon');
             if (thIcon) thIcon.textContent = sortAscending ? '▲' : '▼';
             renderAll();
@@ -2310,67 +2222,6 @@ def generate_timetable_html():
             `).join('');
         }
 
-        function updateStats() {
-            const total = schedule.length;
-            const completedCount = schedule.filter(s => s.completed).length;
-            const regCount = schedule.filter(s => !s.isOld).length;
-            const oldCount = schedule.filter(s => s.isOld).length;
-
-            const statTotal = document.getElementById('statTotal');
-            if (statTotal) statTotal.textContent = total;
-
-            const statDone = document.getElementById('statDone');
-            if (statDone) statDone.textContent = `${completedCount} / ${total}`;
-
-            const statReg = document.getElementById('statRegular');
-            if (statReg) statReg.textContent = regCount;
-
-            const statOld = document.getElementById('statOld');
-            if (statOld) statOld.textContent = oldCount;
-
-            const statRange = document.getElementById('statRange');
-            if (statRange) {
-                if (total === 0) {
-                    statRange.textContent = '—';
-                } else {
-                    const first = schedule[0];
-                    const last = schedule[schedule.length - 1];
-                    statRange.textContent = `${first.date.split(' ').slice(0, 2).join(' ')} – ${last.date}`;
-                }
-            }
-
-            // Filter button counters
-            const fAll = document.getElementById('filterCountAll');
-            if (fAll) fAll.textContent = total;
-            const fReg = document.getElementById('filterCountReg');
-            if (fReg) fReg.textContent = regCount;
-            const fOld = document.getElementById('filterCountOld');
-            if (fOld) fOld.textContent = oldCount;
-            const fDone = document.getElementById('filterCountDone');
-            if (fDone) fDone.textContent = completedCount;
-        }
-
-        function updateNoticeBar() {
-            const noticeBar = document.querySelector('.notice-bar');
-            if (!noticeBar) return;
-
-            const regItems = schedule.filter(s => !s.isOld);
-            const oldItems = schedule.filter(s => s.isOld);
-            const doneCount = schedule.filter(s => s.completed).length;
-
-            const regNames = regItems.map(s => s.shortTag || s.code.replace('CE ', '')).join(', ') || 'None';
-            const oldNames = oldItems.map(s => s.shortTag || s.code.replace('CE ', '')).join(', ') || 'None';
-
-            noticeBar.innerHTML = `
-                <span><strong>Key:</strong></span>
-                <span><span class="badge badge-sky" style="padding: 1px 7px;">Today</span> Current Date</span>
-                <span><span class="badge badge-sage" style="padding: 1px 7px;">Regular</span> Normal Syllabus (${regNames})</span>
-                <span><span class="badge badge-peach" style="padding: 1px 7px;">Old Syllabus</span> Backlog (${oldNames})</span>
-                <span><span class="badge badge-done" style="padding: 1px 7px;">✓ Done</span> Concluded (${doneCount} finished)</span>
-                <span style="margin-left: auto; color: var(--muted-foreground);"><i class="icon hgi-stroke hgi-database-01" style="font-size: 13px; vertical-align: middle;"></i> Saved Locally</span>
-            `;
-        }
-
         function renderAll() {
             let filtered = schedule.filter(item => {
                 if (activeFilter === 'regular') return !item.isOld;
@@ -2387,8 +2238,22 @@ def generate_timetable_html():
             renderCalendar();
             renderTable(filtered);
             renderTimeline(filtered);
-            updateStats();
-            updateNoticeBar();
+
+            // Update filter counts
+            const total = schedule.length;
+            const completedCount = schedule.filter(s => s.completed).length;
+            const regCount = schedule.filter(s => !s.isOld).length;
+            const oldCount = schedule.filter(s => s.isOld).length;
+
+            const fAll = document.getElementById('filterCountAll');
+            if (fAll) fAll.textContent = total;
+            const fReg = document.getElementById('filterCountReg');
+            if (fReg) fReg.textContent = regCount;
+            const fOld = document.getElementById('filterCountOld');
+            if (fOld) fOld.textContent = oldCount;
+            const fDone = document.getElementById('filterCountDone');
+            if (fDone) fDone.textContent = completedCount;
+
             initCurrentDateTracker();
         }
 
@@ -2471,7 +2336,6 @@ def generate_timetable_html():
             const isOld = (category === 'Old Syllabus');
 
             if (idVal) {
-                // Edit existing
                 const existing = schedule.find(s => String(s.id) === String(idVal));
                 if (existing) {
                     existing.subject = subject;
@@ -2484,7 +2348,6 @@ def generate_timetable_html():
                     existing.completed = completed;
                 }
             } else {
-                // Add new
                 const newId = Date.now();
                 schedule.push({
                     id: newId,
@@ -2634,4 +2497,4 @@ if __name__ == "__main__":
     content = generate_timetable_html()
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(content)
-    print(f"Successfully generated {out_file} with customizable timetable and local persistence!")
+    print(f"Successfully generated {out_file} with super minimal UI and local persistence!")
