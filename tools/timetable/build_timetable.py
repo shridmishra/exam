@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 Civil Engineering Examination Timetable Generator.
-Produces timetable.html with a super minimal, refined UI:
-- Space-efficient header with live countdown chip
-- Streamlined filter pills and micro-legend
-- Client-side localStorage persistence
-- Muted green completion ("Yes, this is done")
-- Dynamic separated calendars and edit modal
+Produces timetable.html adhering strictly to:
+- Shared unified navbar identical to index.html (Geotechnical Engineering - II branding, identical nav links)
+- Colored filter badges (Regular = Sage Green, Backlog = Peach Orange, Done = Muted Green, All = Neutral)
+- Zero separate color legends
+- ZERO borders across the whole page (borderless design using pure tonal background separation)
+- LocalStorage persistence with local environment preservation
 """
 from pathlib import Path
 
@@ -22,7 +22,7 @@ def generate_timetable_html():
     <meta name="theme-color" id="metaThemeColor" content="#fbfaf8">
     <meta name="format-detection" content="telephone=no">
     <title>Civil Engineering Exam Timetable | Nov – Dec 2026</title>
-    <meta name="description" content="Civil Engineering Examination Timetable (Nov - Dec 2026). Minimal, customizable schedule with client-side localStorage persistence, separated calendars, and gap analysis.">
+    <meta name="description" content="Civil Engineering Examination Timetable (Nov - Dec 2026). Seamless borderless schedule with colored filter badges, local storage persistence, and dynamic calendars.">
     <!-- Minimalist Favicon & Touch Icons -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2309090b'/%3E%3Crect x='0.5' y='0.5' width='31' height='31' rx='6.5' fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cpath d='M8 6h16v4H12v4h9v4H12v4h12v4H8z' fill='%23fcfcfd'/%3E%3C/svg%3E">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -51,37 +51,37 @@ def generate_timetable_html():
             --line-height-stat: 28px;
             --font-size-overline: 11px;
 
+            /* Neutral Color Palette (Light Mode - Warm Linen Paper) */
             --background: #fbfaf8;
             --foreground: #1e293b;
             --card: #ffffff;
             --card-foreground: #1e293b;
+            --secondary: #f3f1ec;
+            --secondary-hover: #e8e5dc;
+            --secondary-foreground: #1e293b;
             --muted: #f3f1ec;
             --muted-foreground: #64748b;
-            --border: #e8e5dc;
-            --border-hover: #d8d4c9;
             --primary: #2d3748;
             --primary-foreground: #ffffff;
 
+            /* Category Tokens (Zero Harsh Borders) */
             --pastel-sage-bg: #eaf4ed;
-            --pastel-sage-border: #c4e5ce;
             --pastel-sage-foreground: #205c36;
+            --pastel-sage-count-bg: rgba(32, 92, 54, 0.12);
 
             --pastel-peach-bg: #fff1e8;
-            --pastel-peach-border: #fed5c0;
             --pastel-peach-foreground: #9a4318;
+            --pastel-peach-count-bg: rgba(154, 67, 24, 0.12);
 
             --pastel-sky-bg: #ebf5fd;
-            --pastel-sky-border: #c1e0fa;
             --pastel-sky-foreground: #1a5a90;
 
-            /* Muted Green Concluded / Done Palette ("Yes, this is done") */
             --pastel-done-bg: #edf7ee;
-            --pastel-done-border: #b7e1be;
             --pastel-done-foreground: #205c36;
             --pastel-done-muted: #f4faf5;
-            --pastel-done-tag-bg: #dcf0e0;
+            --pastel-done-count-bg: rgba(32, 92, 54, 0.14);
 
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
             --radius-sm: 6px;
             --radius-md: 10px;
             --radius-full: 9999px;
@@ -90,35 +90,34 @@ def generate_timetable_html():
         }
 
         [data-theme="dark"] {
+            /* Neutral Color Palette (Dark Mode - Zinc 950 Canvas) */
             --background: #09090b;
             --foreground: #fcfcfd;
             --card: #141416;
             --card-foreground: #fcfcfd;
+            --secondary: #1c1c1f;
+            --secondary-hover: #27272a;
+            --secondary-foreground: #fcfcfd;
             --muted: #1c1c1f;
             --muted-foreground: #a1a1aa;
-            --border: #27272a;
-            --border-hover: #3f3f46;
             --primary: #fcfcfd;
             --primary-foreground: #09090b;
 
             --pastel-sage-bg: rgba(52, 211, 153, 0.16);
-            --pastel-sage-border: rgba(52, 211, 153, 0.35);
             --pastel-sage-foreground: #34d399;
+            --pastel-sage-count-bg: rgba(52, 211, 153, 0.22);
 
             --pastel-peach-bg: rgba(251, 146, 60, 0.16);
-            --pastel-peach-border: rgba(251, 146, 60, 0.35);
             --pastel-peach-foreground: #fb923c;
+            --pastel-peach-count-bg: rgba(251, 146, 60, 0.22);
 
             --pastel-sky-bg: rgba(56, 189, 248, 0.16);
-            --pastel-sky-border: rgba(56, 189, 248, 0.35);
             --pastel-sky-foreground: #38bdf8;
 
-            /* Dark mode Muted Green Concluded Palette */
             --pastel-done-bg: rgba(52, 211, 153, 0.14);
-            --pastel-done-border: rgba(52, 211, 153, 0.30);
             --pastel-done-foreground: #6ee7b7;
             --pastel-done-muted: rgba(52, 211, 153, 0.08);
-            --pastel-done-tag-bg: rgba(52, 211, 153, 0.22);
+            --pastel-done-count-bg: rgba(52, 211, 153, 0.22);
 
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
         }
@@ -128,7 +127,7 @@ def generate_timetable_html():
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
-            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+            transition: background-color 0.15s ease, color 0.15s ease;
         }
 
         html, body {
@@ -149,6 +148,8 @@ def generate_timetable_html():
 
         button, a, input, select {
             touch-action: manipulation;
+            border: none;
+            outline: none;
         }
 
         a { color: inherit; text-decoration: none; }
@@ -169,6 +170,12 @@ def generate_timetable_html():
             font-style: normal;
         }
 
+        .icon-sm {
+            width: 1rem;
+            height: 1rem;
+            font-size: 1rem;
+        }
+
         .mobile-nav-icon,
         .hgi-stroke.mobile-nav-icon {
             display: inline-flex;
@@ -182,14 +189,6 @@ def generate_timetable_html():
             font-style: normal;
         }
 
-        .scroll-to-top-btn i,
-        .scroll-to-top-btn .icon {
-            font-size: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .container {
             max-width: 1040px;
             margin: 0 auto;
@@ -198,15 +197,20 @@ def generate_timetable_html():
             box-sizing: border-box;
         }
 
+        /* ----------------------------------------------------
+           STICKY HEADER NAVBAR (MATCHING INDEX.HTML EXACTLY)
+           Zero Borders • Pure Background Separation
+           ---------------------------------------------------- */
         .header {
             position: sticky;
             top: 0;
-            z-index: 50;
-            background: var(--background);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(8px);
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+            z-index: 100;
+            background-color: var(--card);
+            box-shadow: var(--shadow-sm);
+            border: none;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
             will-change: transform;
+            padding-top: env(safe-area-inset-top, 0px);
         }
 
         .header.header-hidden {
@@ -219,121 +223,101 @@ def generate_timetable_html():
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 52px;
-            gap: 12px;
+            height: 60px;
+            gap: 1rem;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.75rem;
             flex-shrink: 0;
             white-space: nowrap;
-        }
-
-        .brand-badge {
-            background: var(--muted);
-            color: var(--muted-foreground);
-            font-size: var(--font-size-overline);
-            font-weight: 600;
-            padding: 2px 6px;
-            border-radius: var(--radius-sm);
-            text-transform: uppercase;
-            flex-shrink: 0;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .brand-title {
-            font-size: var(--font-size-body-large);
-            font-weight: 600;
-            white-space: nowrap;
+            font-size: 1.0625rem;
+            font-weight: 700;
+            color: var(--foreground);
+            letter-spacing: -0.015em;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 0.35rem;
             list-style: none;
-            flex-wrap: nowrap;
             overflow-x: auto;
             scrollbar-width: none;
         }
 
         .nav-links::-webkit-scrollbar { display: none; }
 
-        .nav-link {
-            font-size: var(--font-size-button);
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.5rem 0.85rem;
+            background-color: transparent;
             color: var(--muted-foreground);
-            padding: 4px 10px;
-            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: var(--radius-md);
             cursor: pointer;
+            border: none;
+            transition: all 0.15s ease;
             white-space: nowrap;
-            flex-shrink: 0;
+            text-decoration: none;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link-btn:hover {
             color: var(--foreground);
-            background: var(--muted);
+            background-color: var(--secondary);
+        }
+
+        .nav-link-btn.active {
+            background-color: var(--secondary);
+            color: var(--foreground);
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
         }
 
         .theme-toggle-btn {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--foreground);
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius-full);
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 38px;
+            height: 38px;
+            background-color: var(--secondary);
+            color: var(--foreground);
+            border-radius: var(--radius-md);
+            border: none;
             cursor: pointer;
-            flex-shrink: 0;
+            transition: background-color 0.15s ease;
         }
 
-        /* Floating Scroll to Top Button */
-        .scroll-to-top-btn {
-            position: fixed !important;
-            bottom: 2rem !important;
-            right: 2rem !important;
-            z-index: 99999 !important;
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-full);
-            background: var(--primary);
-            color: var(--primary-foreground);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
-            display: inline-flex !important;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0.95;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .scroll-to-top-btn:hover {
-            opacity: 1;
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-        }
-
-        @media (max-width: 640px) {
-            .scroll-to-top-btn {
-                bottom: 1.25rem !important;
-                right: 1.25rem !important;
-                width: 40px;
-                height: 40px;
-            }
+        .theme-toggle-btn:hover {
+            background-color: var(--secondary-hover);
         }
 
         /* ----------------------------------------------------
-           SUPER MINIMAL HEADER ROW
+           SUPER MINIMAL HEADER ROW (ZERO BORDERS)
            ---------------------------------------------------- */
         .timetable-header-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
-            padding: 20px 0 12px 0;
-            border-bottom: 1px solid var(--border);
+            padding: 24px 0 14px 0;
+            border: none;
             flex-wrap: wrap;
         }
 
@@ -366,27 +350,27 @@ def generate_timetable_html():
         }
 
         .timetable-subtle-badge {
-            background: var(--muted);
+            background: var(--secondary);
             color: var(--muted-foreground);
             padding: 1px 6px;
             border-radius: var(--radius-sm);
             font-size: 11px;
             font-weight: 600;
+            border: none;
         }
 
-        /* Sleek Live Status Pill (Countdown + Today Indicator) */
+        /* Sleek Live Status Pill (Zero Borders) */
         .live-status-pill {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 5px 12px;
+            background: var(--secondary);
+            padding: 6px 14px;
             border-radius: var(--radius-full);
             font-size: var(--font-size-body-small);
             font-weight: 500;
             color: var(--foreground);
-            box-shadow: var(--shadow-sm);
+            border: none;
         }
 
         .status-dot {
@@ -404,137 +388,173 @@ def generate_timetable_html():
         }
 
         /* ----------------------------------------------------
-           SUPER MINIMAL CONTROLS BAR
+           DIRECTLY COLORED FILTERS (ZERO BORDERS, NO SEPARATE LEGEND)
            ---------------------------------------------------- */
         .controls-bar-minimal {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            padding: 12px 0 16px 0;
+            padding: 8px 0 20px 0;
+            border: none;
             flex-wrap: wrap;
         }
 
         .filter-tabs-minimal {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .tab-pill {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--muted-foreground);
+            border: none !important;
             font-size: var(--font-size-button);
-            font-weight: 500;
-            padding: 4px 10px;
+            font-weight: 600;
+            padding: 6px 13px;
             border-radius: var(--radius-full);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
             transition: all 0.15s ease;
+            user-select: none;
         }
 
         .tab-pill:hover {
-            color: var(--foreground);
-            background: var(--muted);
+            transform: translateY(-1px);
         }
 
-        .tab-pill.active {
-            background: var(--card);
-            border-color: var(--border);
-            color: var(--foreground);
-            font-weight: 600;
-            box-shadow: var(--shadow-sm);
+        .tab-pill:active {
+            transform: translateY(0);
         }
 
         .pill-count {
             font-size: 11px;
-            color: var(--muted-foreground);
-            background: var(--muted);
             padding: 1px 6px;
             border-radius: var(--radius-full);
             font-variant-numeric: tabular-nums;
+            font-weight: 700;
+            border: none;
         }
 
-        .tab-pill.active .pill-count {
-            background: var(--background);
+        /* 1. All Filter (Neutral) */
+        .tab-pill-all {
+            background-color: var(--secondary);
             color: var(--foreground);
         }
+        .tab-pill-all .pill-count {
+            background-color: var(--card);
+            color: var(--foreground);
+        }
+        .tab-pill-all.active {
+            background-color: var(--foreground);
+            color: var(--background);
+        }
+        .tab-pill-all.active .pill-count {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--background);
+        }
+        [data-theme="dark"] .tab-pill-all.active .pill-count {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--background);
+        }
 
+        /* 2. Regular Filter (Sage Green Directly on Filter) */
+        .tab-pill-regular {
+            background-color: var(--pastel-sage-bg);
+            color: var(--pastel-sage-foreground);
+        }
+        .tab-pill-regular .pill-count {
+            background-color: var(--pastel-sage-count-bg);
+            color: var(--pastel-sage-foreground);
+        }
+        .tab-pill-regular.active {
+            background-color: #205c36;
+            color: #ffffff;
+        }
+        [data-theme="dark"] .tab-pill-regular.active {
+            background-color: #059669;
+            color: #ffffff;
+        }
+        .tab-pill-regular.active .pill-count {
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        /* 3. Backlog Filter (Peach / Orange Directly on Filter) */
+        .tab-pill-old {
+            background-color: var(--pastel-peach-bg);
+            color: var(--pastel-peach-foreground);
+        }
+        .tab-pill-old .pill-count {
+            background-color: var(--pastel-peach-count-bg);
+            color: var(--pastel-peach-foreground);
+        }
+        .tab-pill-old.active {
+            background-color: #9a4318;
+            color: #ffffff;
+        }
+        [data-theme="dark"] .tab-pill-old.active {
+            background-color: #ea580c;
+            color: #ffffff;
+        }
+        .tab-pill-old.active .pill-count {
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        /* 4. Done Filter (Muted Green Directly on Filter) */
+        .tab-pill-done {
+            background-color: var(--pastel-done-bg);
+            color: var(--pastel-done-foreground);
+        }
+        .tab-pill-done .pill-count {
+            background-color: var(--pastel-done-count-bg);
+            color: var(--pastel-done-foreground);
+        }
+        .tab-pill-done.active {
+            background-color: var(--pastel-done-foreground);
+            color: #ffffff;
+        }
+        .tab-pill-done.active .pill-count {
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        /* Controls Actions (Zero Borders) */
         .controls-right-minimal {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
-        /* Minimal Micro Legend */
-        .mini-legend {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: var(--font-size-overline);
-            color: var(--muted-foreground);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-right: 4px;
-        }
-
-        .legend-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .legend-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .legend-dot.reg {
-            background: var(--pastel-sage-foreground);
-        }
-
-        .legend-dot.old {
-            background: var(--pastel-peach-foreground);
-        }
-
-        .legend-dot.done {
-            background: var(--pastel-done-foreground);
-        }
-
         .btn-subtle-action {
-            background: var(--card);
-            border: 1px solid var(--border);
+            background: var(--secondary);
             color: var(--foreground);
             font-size: var(--font-size-button);
             font-weight: 500;
-            padding: 4px 10px;
+            padding: 6px 12px;
             border-radius: var(--radius-full);
             cursor: pointer;
+            border: none;
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            box-shadow: var(--shadow-sm);
             transition: all 0.15s ease;
         }
 
         .btn-subtle-action:hover {
-            border-color: var(--border-hover);
-            background: var(--muted);
+            background: var(--secondary-hover);
         }
 
         .view-switchers-minimal {
             display: flex;
-            background: var(--muted);
-            padding: 2px;
+            background: var(--secondary);
+            padding: 3px;
             border-radius: var(--radius-full);
-            border: 1px solid var(--border);
+            border: none;
         }
 
         .view-pill {
@@ -543,7 +563,7 @@ def generate_timetable_html():
             color: var(--muted-foreground);
             font-size: var(--font-size-body-small);
             font-weight: 500;
-            padding: 4px 9px;
+            padding: 4px 10px;
             border-radius: var(--radius-full);
             cursor: pointer;
             transition: all 0.15s ease;
@@ -557,20 +577,22 @@ def generate_timetable_html():
         }
 
         /* ----------------------------------------------------
-           DYNAMIC SEPARATED CALENDARS
+           DYNAMIC SEPARATED CALENDARS (ZERO BORDERS)
            ---------------------------------------------------- */
         .cal-separated-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
+            border: none;
         }
 
         .cal-box {
             background: var(--card);
-            border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 18px;
+            border: none;
+            box-shadow: var(--shadow-sm);
         }
 
         .cal-box-header {
@@ -580,12 +602,14 @@ def generate_timetable_html():
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border: none;
         }
 
         .cal-grid-vertical {
             display: grid;
             gap: 4px;
             align-items: center;
+            border: none;
         }
 
         .cal-col-label {
@@ -595,6 +619,7 @@ def generate_timetable_html():
             text-align: center;
             padding: 4px 0;
             text-transform: uppercase;
+            border: none;
         }
 
         .cal-row-label {
@@ -603,6 +628,7 @@ def generate_timetable_html():
             color: var(--muted-foreground);
             text-align: left;
             padding: 6px 2px;
+            border: none;
         }
 
         .cal-cell {
@@ -614,85 +640,80 @@ def generate_timetable_html():
             border-radius: var(--radius-sm);
             font-size: var(--font-size-body-small);
             font-weight: 500;
-            border: 1px solid transparent;
             background: var(--background);
+            border: none !important;
             text-align: center;
             padding: 2px;
             position: relative;
-            transition: transform 0.1s ease, border-color 0.15s ease;
+            transition: transform 0.1s ease;
         }
 
         .cal-cell:hover:not(.empty) {
-            border-color: var(--border-hover);
+            background: var(--secondary-hover);
         }
 
         .cal-cell.empty {
             background: transparent;
             color: transparent;
             pointer-events: none;
-            border-color: transparent;
+            border: none !important;
         }
 
         .cal-cell.exam-reg {
-            background: var(--pastel-sage-bg);
-            border-color: var(--pastel-sage-border);
-            color: var(--pastel-sage-foreground);
+            background: var(--pastel-sage-bg) !important;
+            color: var(--pastel-sage-foreground) !important;
             font-weight: 700;
             cursor: pointer;
+            border: none !important;
         }
 
         .cal-cell.exam-old {
-            background: var(--pastel-peach-bg);
-            border-color: var(--pastel-peach-border);
-            color: var(--pastel-peach-foreground);
+            background: var(--pastel-peach-bg) !important;
+            color: var(--pastel-peach-foreground) !important;
             font-weight: 700;
             cursor: pointer;
+            border: none !important;
         }
 
-        /* Done Paper Cell Style: Muted Green "Yes, this is done" */
+        /* Done Paper Cell Style: Muted Green "Yes, this is done" (Zero Borders) */
         .cal-cell.exam-done {
             background: var(--pastel-done-bg) !important;
-            border-color: var(--pastel-done-border) !important;
             color: var(--pastel-done-foreground) !important;
             font-weight: 700;
             position: relative;
-            box-shadow: 0 1px 3px rgba(32, 92, 54, 0.08);
             cursor: pointer;
+            border: none !important;
         }
 
         .cal-cell.today,
         .cal-cell.current-date {
-            background: var(--pastel-sky-bg);
-            border-color: var(--pastel-sky-border);
-            color: var(--pastel-sky-foreground);
+            background: var(--pastel-sky-bg) !important;
+            color: var(--pastel-sky-foreground) !important;
             font-weight: 700;
             position: relative;
-            box-shadow: 0 0 0 1px var(--pastel-sky-border);
             cursor: pointer;
+            border: none !important;
         }
 
         .cal-cell.today.exam-done,
         .cal-cell.current-date.exam-done {
             background: var(--pastel-done-bg) !important;
-            border-color: var(--pastel-sky-foreground);
-            color: var(--pastel-done-foreground);
-            box-shadow: 0 0 0 2px var(--pastel-sky-border);
+            color: var(--pastel-done-foreground) !important;
+            border: none !important;
         }
 
         .cal-cell.today.exam-reg,
         .cal-cell.current-date.exam-reg {
-            background: var(--pastel-sage-bg);
-            border-color: var(--pastel-sky-foreground);
-            color: var(--pastel-sage-foreground);
-            box-shadow: 0 0 0 2px var(--pastel-sky-border);
+            background: var(--pastel-sage-bg) !important;
+            color: var(--pastel-sage-foreground) !important;
+            border: none !important;
         }
 
         .cal-cell.today.exam-old,
         .cal-cell.current-date.exam-old {
-            background: var(--pastel-peach-bg);
-            border-color: var(--pastel-sky-foreground);
-            color: var(--pastel-peach-foreground);
-            box-shadow: 0 0 0 2px var(--pastel-sky-border);
+            background: var(--pastel-peach-bg) !important;
+            color: var(--pastel-peach-foreground) !important;
+            border: none !important;
         }
 
         .cal-cell-tag {
@@ -704,15 +725,17 @@ def generate_timetable_html():
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
+            border: none;
         }
 
         .cal-cell-tag.cal-cell-tag-done {
-            background: var(--pastel-done-tag-bg);
+            background: var(--pastel-done-count-bg);
             color: var(--pastel-done-foreground);
             padding: 1px 4px;
             border-radius: var(--radius-sm);
             font-size: 9px;
             font-weight: 700;
+            border: none;
         }
 
         .badge {
@@ -722,49 +745,47 @@ def generate_timetable_html():
             font-weight: 600;
             padding: 2px 8px;
             border-radius: var(--radius-full);
-            border: 1px solid transparent;
             text-decoration: none;
             gap: 4px;
+            border: none !important;
         }
 
         .badge-sage {
             background: var(--pastel-sage-bg);
-            border-color: var(--pastel-sage-border);
             color: var(--pastel-sage-foreground);
         }
 
         .badge-peach {
             background: var(--pastel-peach-bg);
-            border-color: var(--pastel-peach-border);
             color: var(--pastel-peach-foreground);
         }
 
         .badge-sky {
             background: var(--pastel-sky-bg);
-            border-color: var(--pastel-sky-border);
             color: var(--pastel-sky-foreground);
         }
 
         .badge-done {
             background: var(--pastel-done-bg);
-            border-color: var(--pastel-done-border);
             color: var(--pastel-done-foreground);
             font-weight: 600;
         }
 
         .badge-subtle {
-            background: var(--muted);
-            border-color: var(--border);
+            background: var(--secondary);
             color: var(--muted-foreground);
         }
 
-        /* Table */
+        /* ----------------------------------------------------
+           TABLE VIEW (ZERO BORDERS • PURE BG SEPARATION)
+           ---------------------------------------------------- */
         .table-wrap {
             background: var(--card);
-            border: 1px solid var(--border);
             border-radius: var(--radius-md);
             overflow-x: auto;
             margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            border: none;
         }
 
         table {
@@ -772,19 +793,20 @@ def generate_timetable_html():
             border-collapse: collapse;
             text-align: left;
             font-size: var(--font-size-body-medium);
+            border: none;
         }
 
         th {
-            background: var(--muted);
+            background: var(--secondary);
             color: var(--muted-foreground);
             font-size: var(--font-size-overline);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             padding: 10px 14px;
-            border-bottom: 1px solid var(--border);
             cursor: pointer;
             user-select: none;
+            border: none;
         }
 
         th:hover {
@@ -793,28 +815,34 @@ def generate_timetable_html():
 
         td {
             padding: 11px 14px;
-            border-bottom: 1px solid var(--border);
             vertical-align: middle;
+            border: none;
         }
 
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: var(--muted); }
+        tr:nth-child(even) td {
+            background: rgba(0, 0, 0, 0.015);
+        }
+
+        [data-theme="dark"] tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        tr:hover td {
+            background: var(--secondary);
+        }
 
         tr.row-done td {
-            background: var(--pastel-done-muted);
-        }
-
-        tr.row-done td:first-child {
-            border-left: 3px solid var(--pastel-done-foreground);
+            background: var(--pastel-done-muted) !important;
         }
 
         .code-tag {
             font-family: var(--font-mono);
             font-size: var(--font-size-body-small);
-            background: var(--muted);
+            background: var(--secondary);
             padding: 2px 6px;
             border-radius: var(--radius-sm);
             font-weight: 600;
+            border: none;
         }
 
         .status-btn {
@@ -826,30 +854,29 @@ def generate_timetable_html():
             padding: 3px 8px;
             border-radius: var(--radius-full);
             cursor: pointer;
-            border: 1px solid var(--border);
-            background: var(--muted);
+            border: none;
+            background: var(--secondary);
             color: var(--muted-foreground);
             transition: all 0.15s ease;
         }
 
         .status-btn:hover {
-            border-color: var(--border-hover);
+            background: var(--secondary-hover);
             color: var(--foreground);
         }
 
         .status-btn-done {
             background: var(--pastel-done-bg);
-            border-color: var(--pastel-done-border);
             color: var(--pastel-done-foreground);
         }
 
         .status-btn-done:hover {
-            background: var(--pastel-done-tag-bg);
+            background: var(--pastel-done-count-bg);
         }
 
         .btn-icon-action {
             background: transparent;
-            border: 1px solid transparent;
+            border: none;
             color: var(--muted-foreground);
             width: 28px;
             height: 28px;
@@ -862,46 +889,53 @@ def generate_timetable_html():
         }
 
         .btn-icon-action:hover {
-            background: var(--muted);
-            border-color: var(--border);
+            background: var(--secondary);
             color: var(--foreground);
         }
 
         .btn-icon-danger:hover {
             background: rgba(239, 68, 68, 0.12);
-            border-color: rgba(239, 68, 68, 0.25);
             color: #ef4444;
         }
 
-        /* Timeline */
+        /* ----------------------------------------------------
+           TIMELINE VIEW (ZERO BORDERS)
+           ---------------------------------------------------- */
         .timeline-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 24px;
+            border: none;
         }
 
         .timeline-card {
             background: var(--card);
-            border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 12px 16px;
+            padding: 14px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
             flex-wrap: wrap;
+            border: none;
+            box-shadow: var(--shadow-sm);
         }
 
-        .timeline-card.regular { border-left: 4px solid var(--pastel-sage-foreground); }
-        .timeline-card.old { border-left: 4px solid var(--pastel-peach-foreground); }
+        .timeline-card.regular {
+            background: var(--pastel-sage-bg);
+        }
+
+        .timeline-card.old {
+            background: var(--pastel-peach-bg);
+        }
+
         .timeline-card.done {
             background: var(--pastel-done-muted);
-            border-left: 4px solid var(--pastel-done-foreground);
         }
 
         /* ----------------------------------------------------
-           CUSTOMIZE TIMETABLE MODAL
+           CUSTOMIZE TIMETABLE MODAL (ZERO BORDERS)
            ---------------------------------------------------- */
         .modal-overlay {
             position: fixed;
@@ -918,19 +952,20 @@ def generate_timetable_html():
             justify-content: center;
             padding: 16px;
             box-sizing: border-box;
+            border: none;
         }
 
         .modal-card {
             background: var(--card);
-            border: 1px solid var(--border);
             border-radius: var(--radius-md);
             max-width: 640px;
             width: 100%;
             max-height: 88vh;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.28);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
             overflow: hidden;
+            border: none;
             animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -940,12 +975,12 @@ def generate_timetable_html():
         }
 
         .modal-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
+            padding: 18px 22px;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
             gap: 12px;
+            border: none;
         }
 
         .modal-title {
@@ -976,22 +1011,23 @@ def generate_timetable_html():
         }
 
         .modal-close-btn:hover {
-            background: var(--muted);
+            background: var(--secondary);
             color: var(--foreground);
         }
 
         .modal-body {
-            padding: 16px 20px;
+            padding: 0 22px 18px;
             overflow-y: auto;
             flex: 1;
+            border: none;
         }
 
         .exam-form {
-            background: var(--background);
-            border: 1px solid var(--border);
+            background: var(--secondary);
             border-radius: var(--radius-sm);
             padding: 14px;
             margin-bottom: 16px;
+            border: none;
         }
 
         .form-grid {
@@ -1020,17 +1056,17 @@ def generate_timetable_html():
 
         .form-input, .form-select {
             background: var(--card);
-            border: 1px solid var(--border);
             color: var(--foreground);
             font-size: var(--font-size-body-medium);
             font-family: var(--font-sans);
-            padding: 6px 10px;
+            padding: 7px 10px;
             border-radius: var(--radius-sm);
+            border: none;
             outline: none;
         }
 
         .form-input:focus, .form-select:focus {
-            border-color: var(--foreground);
+            box-shadow: 0 0 0 2px var(--foreground);
         }
 
         .form-checkbox-group {
@@ -1075,9 +1111,9 @@ def generate_timetable_html():
         }
 
         .btn-secondary {
-            background: var(--muted);
+            background: var(--card);
             color: var(--foreground);
-            border: 1px solid var(--border);
+            border: none;
             padding: 6px 12px;
             border-radius: var(--radius-sm);
             font-size: var(--font-size-button);
@@ -1086,7 +1122,7 @@ def generate_timetable_html():
         }
 
         .btn-secondary:hover {
-            background: var(--card);
+            background: var(--secondary-hover);
         }
 
         .modal-section-divider {
@@ -1104,8 +1140,9 @@ def generate_timetable_html():
         .modal-section-divider::after {
             content: '';
             flex: 1;
-            height: 1px;
-            background: var(--border);
+            height: 2px;
+            background: var(--secondary);
+            border-radius: var(--radius-full);
         }
 
         .modal-subject-list {
@@ -1113,6 +1150,7 @@ def generate_timetable_html():
             flex-direction: column;
             gap: 6px;
             margin-bottom: 16px;
+            border: none;
         }
 
         .modal-subject-item {
@@ -1121,20 +1159,17 @@ def generate_timetable_html():
             justify-content: space-between;
             gap: 10px;
             padding: 8px 12px;
-            background: var(--background);
-            border: 1px solid var(--border);
+            background: var(--secondary);
             border-radius: var(--radius-sm);
-            transition: border-color 0.15s ease;
+            border: none;
         }
 
         .modal-subject-item.is-done {
             background: var(--pastel-done-muted);
-            border-color: var(--pastel-done-border);
         }
 
         .modal-presets {
-            background: var(--background);
-            border: 1px solid var(--border);
+            background: var(--secondary);
             border-radius: var(--radius-sm);
             padding: 10px 12px;
             display: flex;
@@ -1142,6 +1177,7 @@ def generate_timetable_html():
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 8px;
+            border: none;
         }
 
         .preset-label {
@@ -1161,17 +1197,17 @@ def generate_timetable_html():
 
         .btn-preset {
             background: var(--card);
-            border: 1px solid var(--border);
             color: var(--foreground);
             font-size: 11px;
             font-weight: 600;
             padding: 4px 8px;
             border-radius: var(--radius-sm);
             cursor: pointer;
+            border: none;
         }
 
         .btn-preset:hover {
-            background: var(--muted);
+            background: var(--secondary-hover);
         }
 
         .btn-preset-danger {
@@ -1180,17 +1216,16 @@ def generate_timetable_html():
 
         .btn-preset-danger:hover {
             background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.3);
         }
 
         .modal-footer {
-            padding: 12px 20px;
-            border-top: 1px solid var(--border);
+            padding: 14px 22px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            background: var(--card);
+            background: var(--secondary);
+            border: none;
         }
 
         .storage-notice {
@@ -1202,15 +1237,42 @@ def generate_timetable_html():
         }
 
         .footer {
-            border-top: 1px solid var(--border);
-            padding: 16px 0;
+            border: none;
+            padding: 24px 0 16px;
             text-align: center;
             color: var(--muted-foreground);
             font-size: var(--font-size-body-small);
             margin-top: 20px;
         }
 
-        /* Mobile Bottom Nav */
+        /* Floating Scroll to Top Button (Zero Borders) */
+        .scroll-to-top-btn {
+            position: fixed !important;
+            bottom: 2rem !important;
+            right: 2rem !important;
+            z-index: 99999 !important;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-full);
+            background: var(--primary);
+            color: var(--primary-foreground);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+            border: none !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.95;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, opacity 0.2s ease;
+        }
+
+        .scroll-to-top-btn:hover {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Mobile Bottom Nav (Zero Borders) */
         .mobile-bottom-nav {
             display: none;
             position: fixed;
@@ -1219,8 +1281,8 @@ def generate_timetable_html():
             right: 0;
             z-index: 9999;
             background-color: var(--card);
-            border-top: 1px solid var(--border);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            border: none;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.05);
             padding-bottom: env(safe-area-inset-bottom, 0px);
             height: calc(56px + env(safe-area-inset-bottom, 0px));
             align-items: stretch;
@@ -1230,8 +1292,7 @@ def generate_timetable_html():
         }
 
         [data-theme="dark"] .mobile-bottom-nav {
-            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.5);
-            border-top-color: var(--border);
+            box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.5);
         }
 
         .mobile-nav-item {
@@ -1262,22 +1323,6 @@ def generate_timetable_html():
             font-weight: 600;
         }
 
-        .mobile-nav-icon {
-            width: 20px;
-            height: 20px;
-            stroke-width: 2.2;
-            stroke: currentColor;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: transform 0.15s ease;
-        }
-
-        .mobile-nav-item.active .mobile-nav-icon {
-            stroke-width: 2.5;
-            transform: translateY(-1px);
-        }
-
         .mobile-nav-label {
             font-size: 11px;
             line-height: 1.2;
@@ -1299,11 +1344,11 @@ def generate_timetable_html():
                 display: none !important;
             }
             .nav {
-                height: 50px;
+                height: 52px;
             }
             .brand-title {
                 font-size: 0.95rem;
-                max-width: calc(100vw - 120px);
+                max-width: calc(100vw - 110px);
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
@@ -1332,9 +1377,6 @@ def generate_timetable_html():
             .controls-right-minimal {
                 width: 100%;
                 justify-content: space-between;
-            }
-            .mini-legend {
-                display: none;
             }
             .cal-separated-container {
                 grid-template-columns: 1fr;
@@ -1372,27 +1414,50 @@ def generate_timetable_html():
         @media print {
             .header, .controls-bar-minimal, .theme-toggle-btn, .footer, .modal-overlay, .scroll-to-top-btn { display: none !important; }
             body { background: #fff !important; color: #000 !important; }
-            .table-wrap, .cal-box { border: 1px solid #ccc !important; box-shadow: none !important; }
+            .table-wrap, .cal-box { box-shadow: none !important; }
         }
     </style>
 </head>
 <body>
 
+    <!-- STICKY HEADER NAVBAR (MATCHING INDEX.HTML EXACTLY) -->
     <header class="header">
         <div class="container nav">
-            <div class="brand">
-                <span class="brand-badge">SGSITS</span>
-                <span class="brand-title">Civil Engineering Timetable</span>
-            </div>
+            <a href="index.html" class="brand" title="Geotechnical Engineering - II">
+                <span class="brand-title">Geotechnical Engineering - II</span>
+            </a>
+
+            <!-- Nav links matching index.html navigation hierarchy -->
             <ul class="nav-links">
-                <li><a href="index.html" class="nav-link">← PYQ Master</a></li>
-                <li><a class="nav-link active" onclick="showView('calendar')">Calendar</a></li>
-                <li><a class="nav-link" onclick="showView('table')">Table</a></li>
-                <li><a class="nav-link" onclick="showView('timeline')">Timeline</a></li>
+                <li>
+                    <a href="index.html#questions" class="nav-link-btn" data-view="questions">
+                        <i class="icon icon-sm hgi-stroke hgi-help-circle"></i>
+                        Questions
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html#syllabus" class="nav-link-btn" data-view="syllabus">
+                        <i class="icon icon-sm hgi-stroke hgi-task-01"></i>
+                        Checklist
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html#formulas" class="nav-link-btn" data-view="formulas">
+                        <i class="icon icon-sm hgi-stroke hgi-function-of-x"></i>
+                        Formulas
+                    </a>
+                </li>
+                <li>
+                    <a href="timetable.html" class="nav-link-btn nav-link-timetable active" title="View Exam Timetable">
+                        <i class="icon icon-sm hgi-stroke hgi-calendar-03"></i>
+                        Timetable
+                    </a>
+                </li>
             </ul>
-            <div style="display: flex; gap: 8px;">
-                <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle Theme" title="Toggle Theme">
-                    <i class="icon hgi-stroke hgi-moon-02" id="themeIcon"></i>
+
+            <div class="nav-actions">
+                <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
+                    <i class="icon hgi-stroke hgi-sun-01" id="themeIcon"></i>
                 </button>
             </div>
         </div>
@@ -1404,6 +1469,8 @@ def generate_timetable_html():
             <div class="timetable-header-left">
                 <h1 class="timetable-title">Examination Timetable</h1>
                 <div class="timetable-subtitle">
+                    <span>Civil Engineering</span>
+                    <span class="sep">&bull;</span>
                     <span>Nov – Dec 2026</span>
                     <span class="sep">&bull;</span>
                     <span>2:00 – 5:00 PM</span>
@@ -1419,22 +1486,24 @@ def generate_timetable_html():
             </div>
         </div>
 
-        <!-- Super Minimal Controls & Filter Bar -->
+        <!-- Super Minimal Controls & Directly Colored Filter Badges -->
         <div class="controls-bar-minimal">
             <div class="filter-tabs-minimal">
-                <button class="tab-pill active" data-filter="all" onclick="setFilter('all')">All <span class="pill-count" id="filterCountAll">0</span></button>
-                <button class="tab-pill" data-filter="regular" onclick="setFilter('regular')">Regular <span class="pill-count" id="filterCountReg">0</span></button>
-                <button class="tab-pill" data-filter="old" onclick="setFilter('old')">Backlog <span class="pill-count" id="filterCountOld">0</span></button>
-                <button class="tab-pill" data-filter="done" onclick="setFilter('done')">Done <span class="pill-count" id="filterCountDone">0</span></button>
+                <button class="tab-pill tab-pill-all active" data-filter="all" onclick="setFilter('all')">
+                    All <span class="pill-count" id="filterCountAll">0</span>
+                </button>
+                <button class="tab-pill tab-pill-regular" data-filter="regular" onclick="setFilter('regular')">
+                    Regular <span class="pill-count" id="filterCountReg">0</span>
+                </button>
+                <button class="tab-pill tab-pill-old" data-filter="old" onclick="setFilter('old')">
+                    Backlog <span class="pill-count" id="filterCountOld">0</span>
+                </button>
+                <button class="tab-pill tab-pill-done" data-filter="done" onclick="setFilter('done')">
+                    Done <span class="pill-count" id="filterCountDone">0</span>
+                </button>
             </div>
 
             <div class="controls-right-minimal">
-                <div class="mini-legend">
-                    <span class="legend-item"><span class="legend-dot reg"></span> Regular</span>
-                    <span class="legend-item"><span class="legend-dot old"></span> Backlog</span>
-                    <span class="legend-item"><span class="legend-dot done"></span> Done</span>
-                </div>
-
                 <button class="btn-subtle-action" onclick="openEditModal()" title="Customize timetable">
                     <i class="icon hgi-stroke hgi-pencil-edit-02"></i>
                     <span>Edit</span>
@@ -1478,7 +1547,7 @@ def generate_timetable_html():
         <section id="timeline-view" class="timeline-list" style="display: none;"></section>
     </main>
 
-    <!-- CUSTOMIZE TIMETABLE MODAL -->
+    <!-- CUSTOMIZE TIMETABLE MODAL (ZERO BORDERS) -->
     <div id="editModal" class="modal-overlay" style="display: none;" onclick="handleModalOverlayClick(event)">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
             <div class="modal-header">
@@ -1828,7 +1897,7 @@ def generate_timetable_html():
         let activeFilter = 'all';
         let sortAscending = true;
 
-        // Theme management
+        // Theme management (harmonized with index.html)
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
 
@@ -1848,6 +1917,7 @@ def generate_timetable_html():
         }
 
         function updateIcon(theme) {
+            if (!themeIcon) return;
             themeIcon.className = theme === 'dark' ? 'icon hgi-stroke hgi-sun-01' : 'icon hgi-stroke hgi-moon-02';
             themeIcon.innerHTML = '';
             const metaTheme = document.getElementById('metaThemeColor');
@@ -1856,7 +1926,9 @@ def generate_timetable_html():
             }
         }
 
-        themeToggle.addEventListener('click', toggleTheme);
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
         initTheme();
 
         function initCurrentDateTracker() {
@@ -1989,12 +2061,11 @@ def generate_timetable_html():
             }
         }
 
-        // Render Separated Calendar Grids
+        // Render Separated Calendar Grids (Zero Borders)
         function renderCalendar() {
             const container = document.getElementById('calSeparatedContainer');
             if (!container) return;
 
-            // Collect all months to show: at least Nov 2026 and Dec 2026
             const monthSet = new Set(['2026-11', '2026-12']);
             schedule.forEach(item => {
                 if (item.isoDate && item.isoDate.length >= 7) {
@@ -2088,7 +2159,7 @@ def generate_timetable_html():
                                     cellContent += `<span class="cal-cell-tag cal-cell-tag-done" title="Concluded Paper">✓ ${tagText}</span>`;
                                 } else if (exam.isOld) {
                                     cellClasses.push('exam-old');
-                                    cellTitle += `: ${exam.subject} (Old Syllabus)`;
+                                    cellTitle += `: ${exam.subject} (Backlog)`;
                                     cellContent += `<span class="cal-cell-tag">${tagText}</span>`;
                                 } else {
                                     cellClasses.push('exam-reg');
@@ -2213,7 +2284,7 @@ def generate_timetable_html():
                         <div style="font-size: 14px; font-weight: 600;">${item.subject}</div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 12px; font-weight: 600; background: var(--muted); padding: 4px 10px; border-radius: var(--radius-full);">${item.gap}</span>
+                        <span style="font-size: 12px; font-weight: 600; background: var(--secondary); padding: 4px 10px; border-radius: var(--radius-full);">${item.gap}</span>
                         <button class="status-btn ${item.completed ? 'status-btn-done' : 'status-btn-pending'}" onclick="toggleExamDone(${item.id})">
                             ${item.completed ? '✓ Done' : 'Mark Done'}
                         </button>
@@ -2258,7 +2329,7 @@ def generate_timetable_html():
         }
 
         // ----------------------------------------------------
-        // EDIT TIMETABLE MODAL ENGINE
+        // EDIT TIMETABLE MODAL ENGINE (ZERO BORDERS)
         // ----------------------------------------------------
         const editModal = document.getElementById('editModal');
 
@@ -2468,7 +2539,7 @@ def generate_timetable_html():
         <i class="hgi-stroke hgi-arrow-up-01"></i>
     </button>
 
-    <!-- MOBILE BOTTOM APP NAVIGATION -->
+    <!-- MOBILE BOTTOM APP NAVIGATION (MATCHING INDEX.HTML) -->
     <nav class="mobile-bottom-nav" aria-label="Mobile App Navigation">
         <a href="index.html#questions" class="mobile-nav-item" aria-label="Question Bank">
             <i class="mobile-nav-icon hgi-stroke hgi-help-circle"></i>
@@ -2497,4 +2568,4 @@ if __name__ == "__main__":
     content = generate_timetable_html()
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(content)
-    print(f"Successfully generated {out_file} with super minimal UI and local persistence!")
+    print(f"Successfully generated {out_file} with borderless design, colored filter badges, and unified navbar!")

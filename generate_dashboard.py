@@ -32,18 +32,26 @@ def build_unit_checklist_html(questions, unit_titles=None):
 
     years = sorted(tree.keys(), reverse=True)
 
-    distinct_units = sorted(list(set(int(q['unit']) for q in questions if q.get('unit'))))
-    unit_buttons = ['<button type="button" class="filter-pill-btn active" data-unit="all" onclick="setChecklistUnit(\'all\', this)">All</button>']
-    for u in distinct_units:
-        unit_buttons.append(f'<button type="button" class="filter-pill-btn" data-unit="{u}" onclick="setChecklistUnit(\'{u}\', this)">Unit {u}</button>')
-    unit_pills_html = "".join(unit_buttons)
+    total_q = len(questions)
+    y_counts = {str(y): sum(1 for q in questions if str(q.get('year')) == str(y)) for y in ['2025', '2024', '2023', '2022']}
+    u_counts = {str(u): sum(1 for q in questions if str(q.get('unit')) == str(u)) for u in [1, 2, 3, 4, 5]}
+    rep_repeated = sum(1 for q in questions if q.get('repeat_count_str') in ['4x', '3x', '2x'])
+    rep_4x = sum(1 for q in questions if q.get('repeat_count_str') == '4x')
+    rep_3x = sum(1 for q in questions if q.get('repeat_count_str') == '3x')
+    rep_2x = sum(1 for q in questions if q.get('repeat_count_str') == '2x')
+    type_th = sum(1 for q in questions if 'theory' in (q.get('type') or '').lower())
+    type_num = sum(1 for q in questions if 'numerical' in (q.get('type') or '').lower())
+    type_der = sum(1 for q in questions if 'derivation' in (q.get('type') or '').lower())
+    m_2 = sum(1 for q in questions if q.get('marks') == 2)
+    m_3 = sum(1 for q in questions if q.get('marks') == 3)
+    m_7 = sum(1 for q in questions if q.get('marks') in [7, 6])
 
     html = []
     html.append(f'''
         <!-- ====================================================
-             PAGE VIEW 2: PYQ CHECKLIST (YEAR-WISE & UNIT-WISE)
+             PAGE VIEW 1: PYQ CHECKLIST & QUESTION BANK (PRIMARY)
              ==================================================== -->
-        <div class="app-page-view" id="view-syllabus">
+        <div class="app-page-view active" id="view-syllabus">
             <div class="checklist-header-row">
                 <h1 class="page-title">Checklist</h1>
 
@@ -81,45 +89,112 @@ def build_unit_checklist_html(questions, unit_titles=None):
                 </div>
             </div>
 
-            <!-- CHECKLIST CONTROLS & SEARCH TOOLBAR (MINIMAL, ZERO BG SEPARATION) -->
-            <div class="checklist-toolbar">
-                <div class="checklist-toolbar-filters">
-                    <!-- STATUS -->
-                    <div id="checklistStatusGroup" class="filter-pill-group">
-                        <button type="button" class="filter-pill-btn active" data-status="all" onclick="setChecklistStatus('all')">
-                            All <span class="nav-badge" id="checklistAllCount">{len(questions)}</span>
-                        </button>
-                        <button type="button" class="filter-pill-btn" data-status="incomplete" onclick="setChecklistStatus('incomplete')">
-                            Incomplete <span class="nav-badge" id="checklistIncompleteCount">{len(questions)}</span>
-                        </button>
-                        <button type="button" class="filter-pill-btn" data-status="completed" onclick="setChecklistStatus('completed')">
-                            Done <span class="nav-badge" id="checklistCompletedCount">0</span>
-                        </button>
-                        <button type="button" class="filter-pill-btn" data-status="starred" onclick="setChecklistStatus('starred')">
-                            Starred <span class="nav-badge" id="checklistStarredCount">0</span>
-                        </button>
-                        <button type="button" class="filter-pill-btn" data-status="later" onclick="setChecklistStatus('later')">
-                            Later <span class="nav-badge" id="checklistLaterCount">0</span>
+            <!-- COMPACT CONTROL PANEL (FULL 6-DIMENSION FILTER SYSTEM FOR CHECKLIST) -->
+            <div class="control-panel checklist-control-panel">
+                <!-- TOP UTILITY & SEARCH TOOLBAR -->
+                <div class="control-panel-toolbar">
+                    <div class="search-box-wrapper">
+                        <i class="icon icon-sm search-icon hgi-stroke hgi-search-01"></i>
+                        <input type="text" class="search-input" id="checklistSearchInput" placeholder="Search checklist by questions, topics, formulas..." aria-label="Filter questions">
+                        <kbd class="search-kbd-hint" aria-hidden="true">/</kbd>
+                        <button class="search-clear-btn" id="checklistSearchClearBtn" title="Clear search" aria-label="Clear search" style="display: none;">
+                            <i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>
                         </button>
                     </div>
 
-                    <div class="checklist-filter-divider" aria-hidden="true"></div>
-
-                    <!-- UNIT -->
-                    <div class="checklist-unit-group" id="checklistUnitGroup">
-                        <span class="checklist-filter-label">Unit</span>
-                        <div id="checklistUnitFilters" class="filter-pill-group">
-                            {unit_pills_html}
-                        </div>
+                    <div class="control-panel-meta">
+                        <span class="match-counter-pill" id="checklistMatchCounter">{total_q} questions</span>
+                        <button class="reset-filters-btn" id="checklistResetFiltersBtn" title="Reset all checklist filters to default" style="display: none;" onclick="resetChecklistFilters()">
+                            <i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>
+                            Reset
+                        </button>
                     </div>
                 </div>
 
-                <!-- MINIMAL COMPACT SEARCH BOX ON RIGHT -->
-                <div class="checklist-search-box">
-                    <i class="icon icon-sm checklist-search-icon hgi-stroke hgi-search-01"></i>
-                    <input type="text" class="checklist-search-input" id="checklistSearchInput" placeholder="Filter questions..." aria-label="Filter questions">
-                    <button type="button" class="checklist-search-clear-btn" id="checklistSearchClearBtn" title="Clear search" aria-label="Clear search" style="display: none;">
-                        <i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>
+                <!-- PROPER CSS GRID FOR ALL 6 FILTER DIMENSIONS -->
+                <div class="control-panel-grid" id="checklistControlPanelGrid">
+                    <!-- CELL 1: YEAR -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Year</span>
+                        <div id="checklistYearFilters" class="filter-pill-group">
+                            <button type="button" class="filter-pill-btn active" data-year="all" onclick="setChecklistYear('all', this)">All <span class="nav-badge" id="chkCount-year-all">{total_q}</span></button>
+                            <button type="button" class="filter-pill-btn" data-year="2025" onclick="setChecklistYear('2025', this)">2025 <span class="nav-badge" id="chkCount-year-2025">{y_counts.get('2025', 0)}</span></button>
+                            <button type="button" class="filter-pill-btn" data-year="2024" onclick="setChecklistYear('2024', this)">2024 <span class="nav-badge" id="chkCount-year-2024">{y_counts.get('2024', 0)}</span></button>
+                            <button type="button" class="filter-pill-btn" data-year="2023" onclick="setChecklistYear('2023', this)">2023 <span class="nav-badge" id="chkCount-year-2023">{y_counts.get('2023', 0)}</span></button>
+                            <button type="button" class="filter-pill-btn" data-year="2022" onclick="setChecklistYear('2022', this)">2022 <span class="nav-badge" id="chkCount-year-2022">{y_counts.get('2022', 0)}</span></button>
+                        </div>
+                    </div>
+
+                    <!-- CELL 2: REPEATED -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Repeated</span>
+                        <div id="checklistRepeatFilters" class="filter-pill-group">
+                            <button type="button" class="filter-pill-btn active" data-repeat="all" onclick="setChecklistRepeat('all', this)">All <span class="nav-badge" id="chkCount-repeat-all">{total_q}</span></button>
+                            <button type="button" class="filter-pill-btn" data-repeat="repeated" onclick="setChecklistRepeat('repeated', this)" title="All Repeated Questions (4x, 3x, 2x)">Most Repeated <span class="nav-badge" id="chkCount-repeat-repeated">{rep_repeated}</span></button>
+                            <button type="button" class="filter-pill-btn" data-repeat="4x" onclick="setChecklistRepeat('4x', this)" title="Questions repeated across all 4 exam papers">4x <span class="nav-badge" id="chkCount-repeat-4x">{rep_4x}</span></button>
+                            <button type="button" class="filter-pill-btn" data-repeat="3x" onclick="setChecklistRepeat('3x', this)" title="Questions repeated across 3 exam papers">3x <span class="nav-badge" id="chkCount-repeat-3x">{rep_3x}</span></button>
+                            <button type="button" class="filter-pill-btn" data-repeat="2x" onclick="setChecklistRepeat('2x', this)" title="Questions repeated across 2 exam papers">2x <span class="nav-badge" id="chkCount-repeat-2x">{rep_2x}</span></button>
+                        </div>
+                    </div>
+
+                    <!-- CELL 3: STATUS -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Status</span>
+                        <div id="checklistStatusGroup" class="filter-pill-group">
+                            <button type="button" class="filter-pill-btn active" data-status="all" onclick="setChecklistStatus('all', this)">All <span class="nav-badge" id="checklistAllCount">{total_q}</span></button>
+                            <button type="button" class="filter-pill-btn" data-status="incomplete" onclick="setChecklistStatus('incomplete', this)" title="Hide completed questions">Incomplete <span class="nav-badge" id="checklistIncompleteCount">{total_q}</span></button>
+                            <button type="button" class="filter-pill-btn" data-status="completed" onclick="setChecklistStatus('completed', this)" title="Show only completed questions">Completed <span class="nav-badge" id="checklistCompletedCount">0</span></button>
+                            <button type="button" class="filter-pill-btn" data-status="starred" onclick="setChecklistStatus('starred', this)" title="Show only starred questions">Starred <span class="nav-badge" id="checklistStarredCount">0</span></button>
+                            <button type="button" class="filter-pill-btn" data-status="later" onclick="setChecklistStatus('later', this)" title="Show questions saved for later">Later <span class="nav-badge" id="checklistLaterCount">0</span></button>
+                        </div>
+                    </div>
+
+                    <!-- CELL 4: UNIT -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Unit</span>
+                        <div id="checklistUnitFilters" class="filter-pill-group">
+                            <button type="button" class="filter-pill-btn active" data-unit="all" onclick="setChecklistUnit('all', this)">All <span class="nav-badge" id="chkCount-unit-all">{total_q}</span></button>
+                            <button type="button" class="filter-pill-btn" data-unit="1" onclick="setChecklistUnit('1', this)">Unit 1 <span class="nav-badge" id="chkCount-unit-1">{u_counts.get('1', 0)}</span></button>
+                            <button type="button" class="filter-pill-btn" data-unit="2" onclick="setChecklistUnit('2', this)">Unit 2 <span class="nav-badge" id="chkCount-unit-2">{u_counts.get('2', 0)}</span></button>
+                            <button type="button" class="filter-pill-btn" data-unit="3" onclick="setChecklistUnit('3', this)">Unit 3 <span class="nav-badge" id="chkCount-unit-3">{u_counts.get('3', 0)}</span></button>
+                            <button type="button" class="filter-pill-btn" data-unit="4" onclick="setChecklistUnit('4', this)">Unit 4 <span class="nav-badge" id="chkCount-unit-4">{u_counts.get('4', 0)}</span></button>
+                            <button type="button" class="filter-pill-btn" data-unit="5" onclick="setChecklistUnit('5', this)">Unit 5 <span class="nav-badge" id="chkCount-unit-5">{u_counts.get('5', 0)}</span></button>
+                        </div>
+                    </div>
+
+                    <!-- CELL 5: TYPE -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Type</span>
+                        <div id="checklistTypeFilters" class="filter-pill-group">
+                            <button type="button" class="filter-pill-btn active" data-type="all" onclick="setChecklistType('all', this)">All <span class="nav-badge" id="chkCount-type-all">{total_q}</span></button>
+                            <button type="button" class="filter-pill-btn" data-type="Theory" onclick="setChecklistType('Theory', this)">Theory <span class="nav-badge" id="chkCount-type-Theory">{type_th}</span></button>
+                            <button type="button" class="filter-pill-btn" data-type="Numerical" onclick="setChecklistType('Numerical', this)">Numerical <span class="nav-badge" id="chkCount-type-Numerical">{type_num}</span></button>
+                            <button type="button" class="filter-pill-btn" data-type="Derivation" onclick="setChecklistType('Derivation', this)">Derivation <span class="nav-badge" id="chkCount-type-Derivation">{type_der}</span></button>
+                        </div>
+                    </div>
+
+                    <!-- CELL 6: MARKS -->
+                    <div class="filter-grid-cell">
+                        <span class="filter-grid-label">Marks</span>
+                        <div id="checklistMarksFilters" class="filter-pill-group">
+                            <button type="button" class="filter-pill-btn active" data-marks="all" onclick="setChecklistMarks('all', this)">All <span class="nav-badge" id="chkCount-marks-all">{total_q}</span></button>
+                            <button type="button" class="filter-pill-btn" data-marks="2" onclick="setChecklistMarks('2', this)">2M <span class="nav-badge" id="chkCount-marks-2">{m_2}</span></button>
+                            <button type="button" class="filter-pill-btn" data-marks="3" onclick="setChecklistMarks('3', this)">3M <span class="nav-badge" id="chkCount-marks-3">{m_3}</span></button>
+                            <button type="button" class="filter-pill-btn" data-marks="7" onclick="setChecklistMarks('7', this)">7M / 6M <span class="nav-badge" id="chkCount-marks-7">{m_7}</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EMPTY RESULTS BLOCK WHEN FILTER COMBINATION MATCHES 0 -->
+            <div class="empty-results" id="checklistEmptyResults" style="display: none; margin-bottom: 2rem;">
+                <i class="icon icon-lg hgi-stroke hgi-search-01" style="margin-bottom: 0.5rem; color: var(--muted-foreground);"></i>
+                <div class="empty-results-title">No matching questions found</div>
+                <p class="text-body-small">Your active checklist filter combination has no matches.</p>
+                <div style="margin-top: 1rem;">
+                    <button type="button" class="reset-filters-btn" style="display: inline-flex;" onclick="resetChecklistFilters()">
+                        <i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>
+                        <span>Reset All Filters</span>
                     </button>
                 </div>
             </div>
@@ -245,12 +320,6 @@ def build_unit_checklist_html(questions, unit_titles=None):
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <div class="checklist-solution-footer">
-                                                <button type="button" class="checklist-jump-link" onclick="jumpToQuestionBank('{q['id']}'); event.stopPropagation();" title="Open question in Questions">
-                                                    <span>Open in Questions &rarr;</span>
-                                                </button>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -350,6 +419,20 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
     embedded_notes_json = json.dumps(sub_prog.get("notes", {})).replace("</script>", r"<\/script>")
     embedded_general_notes = json.dumps(sub_prog.get("general_notes", "")).replace("</script>", r"<\/script>")
     subject_id_str = ctx.id
+
+    total_q = len(raw_questions)
+    qb_y_counts = {str(y): sum(1 for q in raw_questions if str(q.get('year')) == str(y)) for y in ['2025', '2024', '2023', '2022']}
+    qb_u_counts = {str(u): sum(1 for q in raw_questions if str(q.get('unit')) == str(u)) for u in [1, 2, 3, 4, 5]}
+    qb_rep_repeated = sum(1 for q in raw_questions if q.get('repeat_count_str') in ['4x', '3x', '2x'])
+    qb_rep_4x = sum(1 for q in raw_questions if q.get('repeat_count_str') == '4x')
+    qb_rep_3x = sum(1 for q in raw_questions if q.get('repeat_count_str') == '3x')
+    qb_rep_2x = sum(1 for q in raw_questions if q.get('repeat_count_str') == '2x')
+    qb_type_th = sum(1 for q in raw_questions if 'theory' in (q.get('type') or '').lower())
+    qb_type_num = sum(1 for q in raw_questions if 'numerical' in (q.get('type') or '').lower())
+    qb_type_der = sum(1 for q in raw_questions if 'derivation' in (q.get('type') or '').lower())
+    qb_m_2 = sum(1 for q in raw_questions if q.get('marks') == 2)
+    qb_m_3 = sum(1 for q in raw_questions if q.get('marks') == 3)
+    qb_m_7 = sum(1 for q in raw_questions if q.get('marks') in [7, 6])
 
     unit_checklist_html = build_unit_checklist_html(raw_questions, unit_titles)
 
@@ -1362,6 +1445,40 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             gap: 0.45rem;
             margin-left: auto;
             flex-wrap: wrap;
+        }}
+
+        .control-panel-meta {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+            margin-left: auto;
+        }}
+
+        .match-counter-pill {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem 0.65rem;
+            background-color: var(--secondary);
+            color: var(--muted-foreground);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            height: 32px;
+            box-sizing: border-box;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            transition: background-color 0.15s ease, color 0.15s ease;
+            user-select: none;
+            flex-shrink: 0;
+        }}
+
+        .match-counter-pill.is-filtered {{
+            background-color: var(--secondary-hover);
+            color: var(--foreground);
+            font-weight: 600;
         }}
 
         .filter-pills-row {{
@@ -3811,21 +3928,14 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
     <!-- STICKY HEADER NAVBAR (WITH TABS VIEW) -->
     <header class="header">
         <div class="container nav">
-            <div class="brand" onclick="switchPageView('questions')" title="{subject_name}">
+            <div class="brand" onclick="switchPageView('syllabus')" title="{subject_name}">
                 <span class="brand-title">{subject_name}</span>
             </div>
 
             <!-- Nav links with badge view -->
             <ul class="nav-links">
                 <li>
-                    <button class="nav-link-btn active" data-view="questions" onclick="switchPageView('questions')">
-                        <i class="icon icon-sm hgi-stroke hgi-help-circle"></i>
-                        Questions
-                        <span class="nav-badge" id="navQuestionsBadge">{len(raw_questions)}</span>
-                    </button>
-                </li>
-                <li>
-                    <button class="nav-link-btn" data-view="syllabus" onclick="switchPageView('syllabus')">
+                    <button class="nav-link-btn active" data-view="syllabus" onclick="switchPageView('syllabus')">
                         <i class="icon icon-sm hgi-stroke hgi-task-01"></i>
                         Checklist
                         <span class="nav-badge" id="navChecklistBadge">0/{len(raw_questions)}</span>
@@ -3854,110 +3964,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
     </header>
 
     <div class="container">
-
-        <!-- ====================================================
-             PAGE VIEW 1: QUESTIONS & SOLUTIONS ENGINE (DEFAULT)
-             ==================================================== -->
-        <div class="app-page-view active" id="view-questions">
-            <!-- Compact, Space-Efficient Control Panel (Minimal Grid Architecture) -->
-            <div class="control-panel">
-                <!-- TOP UTILITY & SEARCH TOOLBAR -->
-                <div class="control-panel-toolbar">
-                    <div class="search-box-wrapper">
-                        <i class="icon icon-sm search-icon hgi-stroke hgi-search-01"></i>
-                        <input type="text" class="search-input" id="searchInput" placeholder="Search topics, questions, formulas..." aria-label="Search questions">
-                        <kbd class="search-kbd-hint" aria-hidden="true">/</kbd>
-                        <button class="search-clear-btn" id="searchClearBtn" title="Clear search" aria-label="Clear search" style="display: none;">
-                            <i class="icon icon-xs hgi-stroke hgi-cancel-01"></i>
-                        </button>
-                    </div>
-
-                    <button class="reset-filters-btn" id="resetFiltersBtn" title="Reset all filters to default" style="display: none;">
-                        <i class="icon icon-xs hgi-stroke hgi-arrow-reload-horizontal"></i>
-                        Reset
-                    </button>
-                </div>
-
-                <!-- PROPER CSS GRID FOR ALL 6 FILTER DIMENSIONS -->
-                <div class="control-panel-grid">
-                    <!-- CELL 1: YEAR -->
-                    <div class="filter-grid-cell">
-                        <span class="filter-grid-label">Year</span>
-                        <div id="yearFilters" class="filter-pill-group">
-                            <button class="filter-pill-btn active" data-year="all">All</button>
-                            <button class="filter-pill-btn" data-year="2025">2025</button>
-                            <button class="filter-pill-btn" data-year="2024">2024</button>
-                            <button class="filter-pill-btn" data-year="2023" id="filterPill2023">2023</button>
-                            <button class="filter-pill-btn" data-year="2022">2022</button>
-                        </div>
-                    </div>
-
-                    <!-- CELL 2: REPEATED -->
-                    <div class="filter-grid-cell">
-                        <span class="filter-grid-label">Repeated</span>
-                        <div id="repeatFilters" class="filter-pill-group">
-                            <button class="filter-pill-btn active" data-repeat="all">All</button>
-                            <button class="filter-pill-btn" data-repeat="repeated" title="All Repeated Questions (4x, 3x, 2x)">Most Repeated</button>
-                            <button class="filter-pill-btn" data-repeat="4x" title="Questions repeated across all 4 exam papers">4x</button>
-                            <button class="filter-pill-btn" data-repeat="3x" title="Questions repeated across 3 exam papers">3x</button>
-                            <button class="filter-pill-btn" data-repeat="2x" title="Questions repeated across 2 exam papers">2x</button>
-                        </div>
-                    </div>
-
-                    <!-- CELL 3: STATUS -->
-                    <div class="filter-grid-cell">
-                        <span class="filter-grid-label">Status</span>
-                        <div id="statusFilters" class="filter-pill-group">
-                            <button class="filter-pill-btn active" data-status="all">All</button>
-                            <button class="filter-pill-btn" data-status="incomplete" title="Hide completed questions">Incomplete</button>
-                            <button class="filter-pill-btn" data-status="completed" title="Show only completed questions">Completed</button>
-                            <button class="filter-pill-btn" data-status="starred" title="Show only starred questions">Starred</button>
-                            <button class="filter-pill-btn" data-status="later" title="Show questions saved for later">Later</button>
-                        </div>
-                    </div>
-
-                    <!-- CELL 4: UNIT -->
-                    <div class="filter-grid-cell">
-                        <span class="filter-grid-label">Unit</span>
-                        <div id="unitFilters" class="filter-pill-group">
-                            <button class="filter-pill-btn active" data-unit="all">All</button>
-                            <button class="filter-pill-btn" data-unit="1">Unit 1</button>
-                            <button class="filter-pill-btn" data-unit="2">Unit 2</button>
-                            <button class="filter-pill-btn" data-unit="3">Unit 3</button>
-                            <button class="filter-pill-btn" data-unit="4">Unit 4</button>
-                            <button class="filter-pill-btn" data-unit="5">Unit 5</button>
-                        </div>
-                    </div>
-
-                    <!-- CELL 5: TYPE -->
-                    <div class="filter-grid-cell">
-                        <span class="filter-grid-label">Type</span>
-                        <div id="typeFilters" class="filter-pill-group">
-                            <button class="filter-pill-btn active" data-type="all">All</button>
-                            <button class="filter-pill-btn" data-type="Theory">Theory</button>
-                            <button class="filter-pill-btn" data-type="Numerical">Numerical</button>
-                            <button class="filter-pill-btn" data-type="Derivation">Derivation</button>
-                        </div>
-                    </div>
-
-                    <!-- CELL 6: MARKS -->
-                    <div class="filter-grid-cell">
-                        <span class="filter-grid-label">Marks</span>
-                        <div id="marksFilters" class="filter-pill-group">
-                            <button class="filter-pill-btn active" data-marks="all">All</button>
-                            <button class="filter-pill-btn" data-marks="2">2M</button>
-                            <button class="filter-pill-btn" data-marks="3">3M</button>
-                            <button class="filter-pill-btn" data-marks="7">7M / 6M</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dynamic Question List Container -->
-            <div class="questions-list-wrapper" id="questionsContainer">
-                <!-- Rendered dynamically by JavaScript -->
-            </div>
-        </div>
 
         {unit_checklist_html}
 
@@ -4633,20 +4639,143 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             syncChecklistUI();
         }};
 
-        // UNIT CHECKLIST & SYNCHRONIZATION ENGINE (YEAR-WISE & UNIT-WISE)
+        // UNIT CHECKLIST & SYNCHRONIZATION ENGINE (FULL 6-DIMENSION FILTERING)
+        const STORAGE_KEY_CHECKLIST_FILTERS = 'geotech_checklist_filters';
+        let currentChecklistYear = 'all';
+        let currentChecklistRepeat = 'all';
         let currentChecklistStatus = 'all';
         let currentChecklistUnit = 'all';
+        let currentChecklistType = 'all';
+        let currentChecklistMarks = 'all';
         let checklistSearchQuery = '';
+
+        function loadSavedChecklistFilters() {{
+            try {{
+                const saved = JSON.parse(localStorage.getItem(STORAGE_KEY_CHECKLIST_FILTERS) || '{{}}');
+                if (saved.year) currentChecklistYear = saved.year;
+                if (saved.repeat) currentChecklistRepeat = saved.repeat;
+                if (saved.status) currentChecklistStatus = saved.status;
+                if (saved.unit) currentChecklistUnit = saved.unit;
+                if (saved.type) currentChecklistType = saved.type;
+                if (saved.marks) currentChecklistMarks = saved.marks;
+                if (typeof saved.search === 'string') checklistSearchQuery = saved.search;
+            }} catch (e) {{
+                console.error('Error loading checklist filters:', e);
+            }}
+        }}
+
+        function saveChecklistFilters() {{
+            try {{
+                localStorage.setItem(STORAGE_KEY_CHECKLIST_FILTERS, JSON.stringify({{
+                    year: currentChecklistYear,
+                    repeat: currentChecklistRepeat,
+                    status: currentChecklistStatus,
+                    unit: currentChecklistUnit,
+                    type: currentChecklistType,
+                    marks: currentChecklistMarks,
+                    search: checklistSearchQuery
+                }}));
+            }} catch (e) {{
+                console.error('Error saving checklist filters:', e);
+            }}
+        }}
+
+        function syncChecklistFilterButtons() {{
+            function setActive(containerId, attr, value) {{
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                container.querySelectorAll('.filter-pill-btn').forEach(btn => {{
+                    btn.classList.toggle('active', btn.getAttribute(attr) === String(value));
+                }});
+            }}
+
+            setActive('checklistYearFilters', 'data-year', currentChecklistYear);
+            setActive('checklistRepeatFilters', 'data-repeat', currentChecklistRepeat);
+            setActive('checklistStatusGroup', 'data-status', currentChecklistStatus);
+            setActive('checklistUnitFilters', 'data-unit', currentChecklistUnit);
+            setActive('checklistTypeFilters', 'data-type', currentChecklistType);
+            setActive('checklistMarksFilters', 'data-marks', currentChecklistMarks);
+
+            const searchInput = document.getElementById('checklistSearchInput');
+            const searchClearBtn = document.getElementById('checklistSearchClearBtn');
+            if (searchInput) {{
+                searchInput.value = checklistSearchQuery;
+                if (searchClearBtn) {{
+                    searchClearBtn.style.display = checklistSearchQuery ? 'inline-flex' : 'none';
+                }}
+            }}
+        }}
+
+        window.setChecklistYear = function(year, btn) {{
+            currentChecklistYear = String(year);
+            if (currentChecklistYear !== 'all' && currentChecklistRepeat !== 'all') {{
+                currentChecklistRepeat = 'all';
+            }}
+            saveChecklistFilters();
+            syncChecklistFilterButtons();
+            syncChecklistUI();
+        }};
+
+        window.setChecklistRepeat = function(repeat, btn) {{
+            currentChecklistRepeat = String(repeat);
+            if (currentChecklistRepeat !== 'all') {{
+                currentChecklistYear = 'all';
+                currentChecklistType = 'all';
+                currentChecklistMarks = 'all';
+            }}
+            saveChecklistFilters();
+            syncChecklistFilterButtons();
+            syncChecklistUI();
+        }};
+
+        window.setChecklistStatus = function(status, btn) {{
+            currentChecklistStatus = String(status);
+            saveChecklistFilters();
+            syncChecklistFilterButtons();
+            syncChecklistUI();
+        }};
 
         window.setChecklistUnit = function(unit, btn) {{
             currentChecklistUnit = String(unit);
-            const container = document.getElementById('checklistUnitFilters');
-            if (container) {{
-                container.querySelectorAll('.filter-pill-btn').forEach(b => {{
-                    b.classList.toggle('active', b.getAttribute('data-unit') === String(unit));
-                }});
-            }}
+            saveChecklistFilters();
+            syncChecklistFilterButtons();
             syncChecklistUI();
+        }};
+
+        window.setChecklistType = function(type, btn) {{
+            currentChecklistType = String(type);
+            saveChecklistFilters();
+            syncChecklistFilterButtons();
+            syncChecklistUI();
+        }};
+
+        window.setChecklistMarks = function(marks, btn) {{
+            currentChecklistMarks = String(marks);
+            saveChecklistFilters();
+            syncChecklistFilterButtons();
+            syncChecklistUI();
+        }};
+
+        window.resetChecklistFilters = function() {{
+            currentChecklistYear = 'all';
+            currentChecklistRepeat = 'all';
+            currentChecklistStatus = 'all';
+            currentChecklistUnit = 'all';
+            currentChecklistType = 'all';
+            currentChecklistMarks = 'all';
+            checklistSearchQuery = '';
+            const searchInput = document.getElementById('checklistSearchInput');
+            if (searchInput) searchInput.value = '';
+            const clearBtn = document.getElementById('checklistSearchClearBtn');
+            if (clearBtn) clearBtn.style.display = 'none';
+            saveChecklistFilters();
+            syncChecklistFilterButtons();
+            syncChecklistUI();
+        }};
+
+        window.toggleChecklistProgressFilter = function() {{
+            const nextStatus = (currentChecklistStatus === 'incomplete') ? 'all' : 'incomplete';
+            window.setChecklistStatus(nextStatus);
         }};
 
         function syncChecklistUI() {{
@@ -4706,21 +4835,69 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 navQBadge.textContent = `${{total}}`;
             }}
 
-            const allCountEl = document.getElementById('checklistAllCount');
-            const incCountEl = document.getElementById('checklistIncompleteCount');
-            const compCountEl = document.getElementById('checklistCompletedCount');
-            const starCountEl = document.getElementById('checklistStarredCount');
-            const laterCountEl = document.getElementById('checklistLaterCount');
-            if (allCountEl) allCountEl.textContent = total;
-            if (incCountEl) incCountEl.textContent = total - completedCount;
-            if (compCountEl) compCountEl.textContent = completedCount;
-            if (starCountEl) starCountEl.textContent = visibleQuestions.filter(q => starredQuestions.has(q.id)).length;
-            if (laterCountEl) laterCountEl.textContent = visibleQuestions.filter(q => laterQuestions.has(q.id)).length;
+            // Dynamic count calculation for all filter dimensions across the entire question pool
+            const counts = {{
+                year: {{ all: visibleQuestions.length, '2025': 0, '2024': 0, '2023': 0, '2022': 0 }},
+                repeat: {{ all: visibleQuestions.length, repeated: 0, '4x': 0, '3x': 0, '2x': 0 }},
+                status: {{
+                    all: visibleQuestions.length,
+                    incomplete: visibleQuestions.filter(q => !completedQuestions.has(q.id) && !laterQuestions.has(q.id)).length,
+                    completed: visibleQuestions.filter(q => completedQuestions.has(q.id)).length,
+                    starred: visibleQuestions.filter(q => starredQuestions.has(q.id)).length,
+                    later: visibleQuestions.filter(q => laterQuestions.has(q.id)).length
+                }},
+                unit: {{ all: visibleQuestions.length, '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 }},
+                type: {{ all: visibleQuestions.length, Theory: 0, Numerical: 0, Derivation: 0 }},
+                marks: {{ all: visibleQuestions.length, '2': 0, '3': 0, '7': 0 }}
+            }};
+
+            visibleQuestions.forEach(q => {{
+                const y = String(q.year);
+                if (counts.year[y] !== undefined) counts.year[y]++;
+
+                const u = String(q.unit);
+                if (counts.unit[u] !== undefined) counts.unit[u]++;
+
+                const rep = getRepeatInfo(q, RAW_QUESTIONS);
+                if (rep.isRep) {{
+                    counts.repeat.repeated++;
+                    if (counts.repeat[rep.countStr] !== undefined) counts.repeat[rep.countStr]++;
+                }}
+
+                const t = (q.type || '').toLowerCase();
+                if (t.includes('theory')) counts.type.Theory++;
+                if (t.includes('numerical')) counts.type.Numerical++;
+                if (t.includes('derivation')) counts.type.Derivation++;
+
+                if (q.marks === 2) counts.marks['2']++;
+                else if (q.marks === 3) counts.marks['3']++;
+                else if (q.marks === 7 || q.marks === 6) counts.marks['7']++;
+            }});
+
+            function setBadge(id, val) {{
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
+            }}
+
+            ['chkCount', 'qbCount'].forEach(prefix => {{
+                Object.keys(counts.year).forEach(k => setBadge(`${{prefix}}-year-${{k}}`, counts.year[k]));
+                Object.keys(counts.repeat).forEach(k => setBadge(`${{prefix}}-repeat-${{k}}`, counts.repeat[k]));
+                Object.keys(counts.status).forEach(k => setBadge(`${{prefix}}-status-${{k}}`, counts.status[k]));
+                Object.keys(counts.unit).forEach(k => setBadge(`${{prefix}}-unit-${{k}}`, counts.unit[k]));
+                Object.keys(counts.type).forEach(k => setBadge(`${{prefix}}-type-${{k}}`, counts.type[k]));
+                Object.keys(counts.marks).forEach(k => setBadge(`${{prefix}}-marks-${{k}}`, counts.marks[k]));
+            }});
+            setBadge('checklistAllCount', counts.status.all);
+            setBadge('checklistIncompleteCount', counts.status.incomplete);
+            setBadge('checklistCompletedCount', counts.status.completed);
+            setBadge('checklistStarredCount', counts.status.starred);
+            setBadge('checklistLaterCount', counts.status.later);
 
             const yearTotal = {{ '2025': 0, '2024': 0, '2023': 0, '2022': 0 }};
             const yearDone = {{ '2025': 0, '2024': 0, '2023': 0, '2022': 0 }};
             const subheadTotal = {{}};
             const subheadDone = {{}};
+            let visibleCount = 0;
 
             RAW_QUESTIONS.forEach(item => {{
                 const y = String(item.year);
@@ -4730,6 +4907,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 const isLater = laterQuestions.has(item.id);
                 const isDone = completedQuestions.has(item.id);
                 const isStarred = starredQuestions.has(item.id);
+                const repInfo = getRepeatInfo(item, RAW_QUESTIONS);
 
                 if (!isLater) {{
                     if (yearTotal[y] !== undefined) {{
@@ -4753,25 +4931,57 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
                     let visible = true;
                     if (hide2023 && y === '2023') visible = false;
-                    if (currentChecklistUnit !== 'all' && u !== String(currentChecklistUnit)) visible = false;
+
+                    // 1. Year Filter
+                    if (currentChecklistYear !== 'all' && y !== String(currentChecklistYear)) visible = false;
+
+                    // 2. Repeat Filter
+                    if (currentChecklistRepeat === 'repeated') {{
+                        if (!repInfo.isRep) visible = false;
+                    }} else if (currentChecklistRepeat === '4x' || currentChecklistRepeat === '3x' || currentChecklistRepeat === '2x') {{
+                        if (repInfo.countStr !== currentChecklistRepeat) visible = false;
+                    }}
+
+                    // 3. Status Filter
                     if (currentChecklistStatus === 'incomplete' && (isDone || isLater)) visible = false;
                     if (currentChecklistStatus === 'completed' && !isDone) visible = false;
                     if (currentChecklistStatus === 'starred' && !isStarred) visible = false;
                     if (currentChecklistStatus === 'later' && !isLater) visible = false;
 
+                    // 4. Unit Filter
+                    if (currentChecklistUnit !== 'all' && u !== String(currentChecklistUnit)) visible = false;
+
+                    // 5. Type Filter
+                    if (currentChecklistType !== 'all') {{
+                        const t = (item.type || '').toLowerCase();
+                        if (!t.includes(currentChecklistType.toLowerCase())) visible = false;
+                    }}
+
+                    // 6. Marks Filter
+                    if (currentChecklistMarks !== 'all') {{
+                        if (currentChecklistMarks === '7') {{
+                            if (item.marks !== 7 && item.marks !== 6) visible = false;
+                        }} else if (String(item.marks) !== String(currentChecklistMarks)) {{
+                            visible = false;
+                        }}
+                    }}
+
+                    // 7. Search Query
                     if (visible && checklistSearchQuery) {{
+                        const q = checklistSearchQuery.toLowerCase();
                         const qText = (item.question || '').toLowerCase();
                         const tText = (item.topic || '').toLowerCase();
                         const noText = (item.q_no || '').toLowerCase();
                         const yText = String(item.year || '');
                         const mText = `${{item.marks}}m ${{item.marks}} marks`;
                         const sText = (item.solution || '').toLowerCase();
-                        if (!qText.includes(checklistSearchQuery) && !tText.includes(checklistSearchQuery) && !noText.includes(checklistSearchQuery) && !yText.includes(checklistSearchQuery) && !mText.includes(checklistSearchQuery) && !sText.includes(checklistSearchQuery)) {{
+                        if (!qText.includes(q) && !tText.includes(q) && !noText.includes(q) && !yText.includes(q) && !mText.includes(q) && !sText.includes(q)) {{
                             visible = false;
                         }}
                     }}
 
                     cardEl.style.display = visible ? 'flex' : 'none';
+                    if (visible) visibleCount++;
                 }}
 
                 if (btnEl) {{
@@ -4787,6 +4997,26 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 }}
                 updateNoteButtonsAndBadges(item.id);
             }});
+
+            const clCounterEl = document.getElementById('checklistMatchCounter');
+            const isCustomChecklist = (currentChecklistYear !== 'all' || currentChecklistRepeat !== 'all' || currentChecklistStatus !== 'all' || currentChecklistUnit !== 'all' || currentChecklistType !== 'all' || currentChecklistMarks !== 'all' || checklistSearchQuery !== '');
+            if (clCounterEl) {{
+                if (isCustomChecklist) {{
+                    clCounterEl.textContent = `${{visibleCount}} of ${{total}} questions`;
+                    clCounterEl.classList.add('is-filtered');
+                }} else {{
+                    clCounterEl.textContent = `${{total}} questions`;
+                    clCounterEl.classList.remove('is-filtered');
+                }}
+            }}
+            const clResetBtn = document.getElementById('checklistResetFiltersBtn');
+            if (clResetBtn) {{
+                clResetBtn.style.display = isCustomChecklist ? 'inline-flex' : 'none';
+            }}
+            const emptyEl = document.getElementById('checklistEmptyResults');
+            if (emptyEl) {{
+                emptyEl.style.display = (visibleCount === 0) ? 'block' : 'none';
+            }}
 
             ['2025', '2024', '2023', '2022'].forEach(y => {{
                 const yTot = yearTotal[y] || 0;
@@ -4807,11 +5037,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     if (subGroup) {{
                         if (hide2023 && y === '2023') {{
                             subGroup.style.display = 'none';
+                        }} else if (currentChecklistYear !== 'all' && y !== String(currentChecklistYear)) {{
+                            subGroup.style.display = 'none';
                         }} else if (currentChecklistUnit !== 'all' && String(u) !== String(currentChecklistUnit)) {{
                             subGroup.style.display = 'none';
                         }} else {{
                             const visibleCards = subGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
-                            subGroup.style.display = (visibleCards.length > 0 || (!checklistSearchQuery && currentChecklistStatus === 'all' && currentChecklistUnit === 'all')) ? 'flex' : 'none';
+                            subGroup.style.display = visibleCards.length > 0 ? 'flex' : 'none';
                         }}
                     }}
                 }}
@@ -4820,9 +5052,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 if (yearGroup) {{
                     if (hide2023 && y === '2023') {{
                         yearGroup.style.display = 'none';
+                    }} else if (currentChecklistYear !== 'all' && y !== String(currentChecklistYear)) {{
+                        yearGroup.style.display = 'none';
                     }} else {{
                         const visibleInYear = yearGroup.querySelectorAll('.checklist-card:not([style*="display: none"])');
-                        yearGroup.style.display = (visibleInYear.length > 0 || (!checklistSearchQuery && currentChecklistStatus === 'all' && currentChecklistUnit === 'all')) ? 'block' : 'none';
+                        yearGroup.style.display = visibleInYear.length > 0 ? 'block' : 'none';
                     }}
                 }}
             }});
@@ -4835,26 +5069,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         window.jumpToChecklistYear = function(year, event) {{
             if (event) event.preventDefault();
+            if (currentChecklistYear !== 'all' && currentChecklistYear !== String(year)) {{
+                window.setChecklistYear('all');
+            }}
             const section = document.getElementById(`year-section-${{year}}`);
             if (section) {{
                 section.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
             }}
-        }};
-
-        window.setChecklistStatus = function(status) {{
-            currentChecklistStatus = status;
-            const group = document.getElementById('checklistStatusGroup');
-            if (group) {{
-                group.querySelectorAll('.filter-pill-btn, .checklist-status-pill').forEach(btn => {{
-                    btn.classList.toggle('active', btn.getAttribute('data-status') === status);
-                }});
-            }}
-            syncChecklistUI();
-        }};
-
-        window.toggleChecklistProgressFilter = function() {{
-            const nextStatus = (currentChecklistStatus === 'incomplete') ? 'all' : 'incomplete';
-            window.setChecklistStatus(nextStatus);
         }};
 
         window.toggleChecklistSolution = function(id, event) {{
@@ -4887,93 +5108,12 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }};
 
         window.jumpToQuestionBank = function(questionId) {{
-            const qObj = RAW_QUESTIONS.find(q => q.id === questionId);
-            if (!qObj) return;
-
-            if (String(qObj.year) === '2023' && hide2023) {{
-                setHide2023(false);
-            }}
-
-            let filtersNeedReset = false;
-            if (currentYear !== 'all' && String(currentYear) !== String(qObj.year)) {{
-                currentYear = 'all';
-                filtersNeedReset = true;
-            }}
-            if (currentUnit !== 'all' && String(currentUnit) !== String(qObj.unit)) {{
-                currentUnit = 'all';
-                filtersNeedReset = true;
-            }}
-            if (currentType !== 'all' && !qObj.type.toLowerCase().includes(currentType.toLowerCase())) {{
-                currentType = 'all';
-                filtersNeedReset = true;
-            }}
-            if (currentMarks !== 'all') {{
-                if (currentMarks === '7' && qObj.marks !== 7 && qObj.marks !== 6) {{
-                    currentMarks = 'all';
-                    filtersNeedReset = true;
-                }} else if (String(currentMarks) !== String(qObj.marks)) {{
-                    currentMarks = 'all';
-                    filtersNeedReset = true;
-                }}
-            }}
-            if (currentRepeat === 'repeated') {{
-                const repInfo = getRepeatInfo(qObj, RAW_QUESTIONS);
-                if (!repInfo.isRep) {{
-                    currentRepeat = 'all';
-                    filtersNeedReset = true;
-                }}
-            }} else if (currentRepeat === '4x' || currentRepeat === '3x' || currentRepeat === '2x') {{
-                const repInfo = getRepeatInfo(qObj, RAW_QUESTIONS);
-                if (repInfo.countStr !== currentRepeat) {{
-                    currentRepeat = 'all';
-                    filtersNeedReset = true;
-                }}
-            }}
-            if (currentStatus === 'incomplete' && completedQuestions.has(questionId)) {{
-                currentStatus = 'all';
-                filtersNeedReset = true;
-            }} else if (currentStatus === 'completed' && !completedQuestions.has(questionId)) {{
-                currentStatus = 'all';
-                filtersNeedReset = true;
-            }}
-            if (searchQuery) {{
-                const q = searchQuery.toLowerCase();
-                const matches = (qObj.question || '').toLowerCase().includes(q) ||
-                                (qObj.topic || '').toLowerCase().includes(q) ||
-                                (qObj.id || '').toLowerCase().includes(q);
-                if (!matches) {{
-                    searchQuery = '';
-                    filtersNeedReset = true;
-                }}
-            }}
-
-            if (filtersNeedReset) {{
-                saveFilters();
-                syncFilterUI();
-            }}
-
-            switchPageView('questions');
-            renderQuestions();
-
-            setTimeout(() => {{
-                const targetEl = document.getElementById(questionId);
-                if (targetEl) {{
-                    const solEl = document.getElementById('sol-' + questionId);
-                    if (solEl && !solEl.classList.contains('open')) {{
-                        solEl.classList.add('open');
-                        targetEl.classList.add('is-open');
-                    }}
-                    targetEl.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
-                    targetEl.classList.add('highlight-target');
-                    setTimeout(() => {{
-                        targetEl.classList.remove('highlight-target');
-                    }}, 2500);
-                }}
-            }}, 60);
+            window.jumpFromNotesToQuestion(questionId);
         }};
 
         // PAGE VIEW SWITCHER LOGIC
         window.switchPageView = function(pageId) {{
+            if (pageId === 'questions') pageId = 'syllabus';
             document.querySelectorAll('.app-page-view').forEach(p => {{
                 p.classList.remove('active');
             }});
@@ -5011,25 +5151,27 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         // Handle initial hash routing & restored state
         window.addEventListener('DOMContentLoaded', () => {{
             loadSavedFilters();
+            loadSavedChecklistFilters();
             syncFilterUI();
+            syncChecklistFilterButtons();
             sync2023ToggleUI();
             initProgressSync();
 
             let hash = window.location.hash.replace('#', '');
-            if (hash === 'checklist') hash = 'syllabus';
-            const validViews = ['questions', 'syllabus', 'formulas'];
+            if (hash === 'checklist' || hash === 'questions') hash = 'syllabus';
+            const validViews = ['syllabus', 'formulas'];
             const savedView = localStorage.getItem(STORAGE_KEY_VIEW);
 
             if (hash === 'repeated') {{
-                switchPageView('questions');
-                const repBtn = document.querySelector('#repeatFilters [data-repeat="repeated"]');
+                switchPageView('syllabus');
+                const repBtn = document.querySelector('#checklistRepeatFilters [data-repeat="repeated"]');
                 if (repBtn) repBtn.click();
             }} else if (validViews.includes(hash)) {{
                 switchPageView(hash);
             }} else if (savedView && validViews.includes(savedView)) {{
                 switchPageView(savedView);
             }} else {{
-                switchPageView('questions');
+                switchPageView('syllabus');
             }}
 
             const checklistSearchInput = document.getElementById('checklistSearchInput');
@@ -5041,6 +5183,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     clearTimeout(clTimeout);
                     clTimeout = setTimeout(() => {{
                         checklistSearchQuery = e.target.value.trim().toLowerCase();
+                        saveChecklistFilters();
                         syncChecklistUI();
                     }}, 150);
                 }});
@@ -5049,6 +5192,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                         checklistSearchInput.value = '';
                         clClearBtn.style.display = 'none';
                         checklistSearchQuery = '';
+                        saveChecklistFilters();
                         syncChecklistUI();
                         checklistSearchInput.focus();
                     }});
@@ -5108,10 +5252,17 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         // Keyboard Shortcut: '/' to search
         window.addEventListener('keydown', (e) => {{
-            if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {{
+            if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {{
                 e.preventDefault();
-                switchPageView('questions');
-                document.getElementById('searchInput').focus();
+                const syllabusView = document.getElementById('view-syllabus');
+                if (syllabusView && syllabusView.classList.contains('active')) {{
+                    const clInput = document.getElementById('checklistSearchInput');
+                    if (clInput) clInput.focus();
+                }} else {{
+                    switchPageView('questions');
+                    const qInput = document.getElementById('searchInput');
+                    if (qInput) qInput.focus();
+                }}
             }}
         }});
 
@@ -6112,13 +6263,20 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }}
 
             if (counterEl) {{
+                const isFiltered = (currentYear !== 'all' || currentUnit !== 'all' || currentType !== 'all' || currentMarks !== 'all' || currentRepeat !== 'all' || currentStatus !== 'all' || searchQuery !== '');
                 if (currentStatus === 'later') {{
-                    counterEl.textContent = `${{filtered.length}} marked for later`;
+                    counterEl.textContent = `${{filtered.length}} of ${{totalSource}} questions`;
+                    counterEl.classList.add('is-filtered');
                 }} else if (currentStatus === 'starred') {{
-                    counterEl.textContent = `${{filtered.length}} of ${{totalSource}} starred`;
-                }} else {{
+                    counterEl.textContent = `${{filtered.length}} of ${{totalSource}} questions`;
+                    counterEl.classList.add('is-filtered');
+                }} else if (isFiltered) {{
                     const matchedActive = filtered.filter(q => !laterQuestions.has(q.id)).length;
-                    counterEl.textContent = `${{matchedActive}} of ${{totalSource}} matched`;
+                    counterEl.textContent = `${{matchedActive}} of ${{totalSource}} questions`;
+                    counterEl.classList.add('is-filtered');
+                }} else {{
+                    counterEl.textContent = `${{totalSource}} questions`;
+                    counterEl.classList.remove('is-filtered');
                 }}
             }}
 
