@@ -61,8 +61,13 @@ Adhere strictly to the project typography hierarchy specification:
 ## 3. Pure Background Separation (Zero Arbitrary Borders) & Unified Canvas Palette
 
 - **Unified Canvas Palette (Shared Across Timetable & PYQ Master)**:
-  - **Light Mode Canvas**: `--background: #fbfaf8` (warm, natural linen/paper canvas), `--card: #ffffff`, `--secondary: #f3f1ec`, `--muted: #f3f1ec`, `--foreground: #1e293b`.
-  - **Dark Mode Canvas**: `--background: #09090b` (zinc-950 deep obsidian neutral black), `--card: #141416` (zinc-900 surface), `--secondary: #1c1c1f`, `--muted: #1c1c1f`, `--foreground: #fcfcfd`.
+  - **Light Mode Canvas**: `--background: #fbfaf8` (warm, natural linen/paper canvas), `--card: #fbfaf8` (merged seamlessly with canvas), `--secondary: #f3f1ec`, `--muted: #f3f1ec`, `--foreground: #1e293b`.
+  - **Dark Mode Canvas**: `--background: #09090b` (zinc-950 deep obsidian neutral black), `--card: #09090b` (merged seamlessly with canvas), `--secondary: #1c1c1f`, `--muted: #1c1c1f`, `--foreground: #fcfcfd`.
+- **Card & Container Background Integration (Zero Separate Gray Box Divs)**:
+  - Question cards (`.checklist-card`, `.q-item`), control panels (`.control-panel`), and checklist containers feature NO separate gray background fills (`background-color: transparent`, `box-shadow: none`), merging seamlessly directly into the canvas background.
+  - Hover states apply subtle tactile feedback (`var(--secondary)`), while expanded/opened cards remain completely transparent and integrated with the canvas background.
+- **Neutral Year Badges (Zero Color Policy)**:
+  - All year badges (`.badge-year`, `.badge-year-2025`, `.badge-year-2024`, `.badge-year-2023`, `.badge-year-2022`) adopt neutral subtle styling (`background-color: var(--secondary)`, `color: var(--muted-foreground)`), completely free of arbitrary pastel colors.
 - **No 1px Structural Borders**: Structure containers, cards, and table headers using tonal background shifts (`--background`, `--card`, `--secondary`, `--muted`) rather than harsh borders.
 - **KaTeX Mathematical Fraction Line & Border Immunity (Zero Universal `border: none !important` Anti-pattern)**:
   - KaTeX mathematical rendering relies on CSS borders for fraction division lines (`.mfrac .frac-line`), square roots (`.sqrt-line`), overlines, underlines, and rules.

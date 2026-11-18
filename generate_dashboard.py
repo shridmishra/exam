@@ -411,7 +411,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             /* Neutral Color Palette (Light Mode - Harmonized with Timetable warm canvas) */
             --background: #fbfaf8;
             --foreground: #1e293b;
-            --card: #ffffff;
+            --card: #fbfaf8;
             --card-foreground: #1e293b;
             --popover: #ffffff;
             --popover-foreground: #1e293b;
@@ -485,7 +485,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             /* Neutral Color Palette (Dark Mode - Harmonized with Timetable zinc canvas) */
             --background: #09090b;
             --foreground: #fcfcfd;
-            --card: #141416;
+            --card: #09090b;
             --card-foreground: #fcfcfd;
             --popover: #141416;
             --popover-foreground: #fcfcfd;
@@ -1212,12 +1212,15 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         .badge-unit-3 {{ background-color: var(--pastel-peach-bg); color: var(--pastel-peach-foreground); }}
         .badge-unit-4 {{ background-color: var(--pastel-sage-bg); color: var(--pastel-sage-foreground); }}
         .badge-unit-5 {{ background-color: var(--pastel-rose-bg); color: var(--pastel-rose-foreground); }}
-        .badge-subtle {{ background-color: var(--secondary); color: var(--muted-foreground); }}
-        .badge-year {{ background-color: var(--pastel-sand-bg); color: var(--pastel-sand-foreground); }}
-        .badge-year-2025 {{ background-color: var(--pastel-sage-bg); color: var(--pastel-sage-foreground); }}
-        .badge-year-2024 {{ background-color: var(--pastel-sky-bg); color: var(--pastel-sky-foreground); }}
-        .badge-year-2023 {{ background-color: var(--pastel-lavender-bg); color: var(--pastel-lavender-foreground); }}
-        .badge-year-2022 {{ background-color: var(--pastel-sand-bg); color: var(--pastel-sand-foreground); }}
+        .badge-subtle,
+        .badge-year,
+        .badge-year-2025,
+        .badge-year-2024,
+        .badge-year-2023,
+        .badge-year-2022 {{
+            background-color: var(--secondary);
+            color: var(--muted-foreground);
+        }}
         .badge-repeat-4x {{ background-color: var(--pastel-rose-bg); color: var(--pastel-rose-foreground); font-weight: 700; }}
         .badge-repeat-3x {{ background-color: var(--pastel-sky-bg); color: var(--pastel-sky-foreground); font-weight: 700; }}
         .badge-repeat-2x {{ background-color: var(--pastel-lavender-bg); color: var(--pastel-lavender-foreground); font-weight: 700; }}
@@ -1234,11 +1237,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
            MINIMAL GRID-BASED CONTROL BAR (ZERO SEPARATE BG)
            ---------------------------------------------------- */
         .control-panel {{
-            background-color: var(--card);
-            border-radius: var(--radius-lg);
-            padding: 0.85rem 1.15rem;
+            background-color: transparent;
+            border-radius: 0;
+            padding: 0.5rem 0;
             margin-bottom: 1.25rem;
-            box-shadow: var(--shadow-sm);
+            box-shadow: none;
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
@@ -1752,18 +1755,27 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .q-item {{
-            background-color: var(--card);
+            background-color: transparent;
             border-radius: var(--radius-lg);
             padding: 1.6rem 2rem;
-            box-shadow: var(--shadow-sm);
+            box-shadow: none;
             cursor: pointer;
             user-select: none;
-            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+            transition: background-color 0.15s ease;
         }}
 
         .q-item:hover {{
-            box-shadow: var(--shadow-md);
-            background-color: var(--card);
+            box-shadow: none;
+            background-color: var(--secondary);
+        }}
+
+        .q-item.is-open {{
+            background-color: transparent;
+            box-shadow: none;
+        }}
+
+        .q-item.is-open:hover {{
+            background-color: transparent;
         }}
 
         .q-item-header {{
@@ -3147,26 +3159,32 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         /* INDIVIDUAL CHECKLIST ITEM CARD */
         .checklist-card {{
-            background-color: var(--card);
+            background-color: transparent;
             border-radius: var(--radius-lg);
             padding: 1rem 1.25rem;
-            box-shadow: var(--shadow-sm);
+            box-shadow: none;
             display: flex;
             align-items: flex-start;
             gap: 0.85rem;
             cursor: pointer;
             user-select: none;
-            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+            transition: background-color 0.15s ease;
             position: relative;
         }}
 
         .checklist-card:hover {{
-            box-shadow: var(--shadow-md);
+            background-color: var(--secondary);
+            box-shadow: none;
         }}
 
         .checklist-card.is-open {{
-            box-shadow: var(--shadow-md);
+            background-color: transparent;
+            box-shadow: none;
             opacity: 1 !important;
+        }}
+
+        .checklist-card.is-open:hover {{
+            background-color: transparent;
         }}
 
         .checklist-card.is-completed {{

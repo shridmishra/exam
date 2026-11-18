@@ -47,9 +47,9 @@
   - **Light Mode**: `--background: #fbfaf8` (warm linen/paper ivory), `--card: #ffffff`, `--secondary: #f3f1ec`, `--muted: #f3f1ec`, `--foreground: #1e293b`.
   - **Dark Mode**: `--background: #09090b` (zinc-950 deep obsidian black), `--card: #141416`, `--secondary: #1c1c1f`, `--muted: #1c1c1f`, `--foreground: #fcfcfd`.
 - Separate regions, cards, and tables using background tonal elevation:
-  - `--background`: base canvas
-  - `--card`: elevated surface
-  - `--secondary`: pills, chips, inputs, code blocks
+  - `--background`: base canvas (`#fbfaf8` light / `#09090b` dark)
+  - `--card`: merged seamlessly with base canvas (`#fbfaf8` light / `#09090b` dark) with zero gray box separation
+  - `--secondary`: pills, chips, inputs, code blocks, and subtle hover states
   - `--table-header-bg` & `--table-row-hover`: subtle contrast for data tables
 
 ---
@@ -103,11 +103,8 @@
 
 ### [RULE 7] PYQ Checklist (Year-wise, then Unit-wise) & Distinct Year Badges
 - **Year-wise, then Unit-wise Structure**: The checklist organizes questions primarily by Exam Year (2025, 2024, 2023, 2022), and inside each year by syllabus Unit (Unit 1 to 5).
-- **Distinct Color Year Badges**: Always use dedicated pastel color classes for exam years across both Question Bank and Checklist cards:
-  - 2025: Sage Green (`.badge-year-2025`)
-  - 2024: Sky Blue (`.badge-year-2024`)
-  - 2023: Lavender Purple (`.badge-year-2023`)
-  - 2022: Warm Sand / Gold (`.badge-year-2022`)
+- **Neutral Year Badges (Zero Color Policy)**: All exam years (2025, 2024, 2023, 2022) use neutral subtle styling (`.badge-subtle`, `background-color: var(--secondary)`, `color: var(--muted-foreground)`) with zero arbitrary pastel colors across both Question Bank and Checklist cards.
+- **Zero Gray Box Background Separation**: Question cards (`.checklist-card`, `.q-item`) and control panels have `background-color: transparent` and `box-shadow: none`, seamlessly merging directly into the page canvas background. Hover states apply subtle tactile feedback (`var(--secondary)`), while expanded/opened cards remain completely transparent.
 - **Zero-Clutter Directive & In-Place Answer Expansion**: Eliminate uppercase overlines, redundant explanatory paragraphs, boilerplate slogans, duplicate action buttons, and bulky full-width summary cards. Completion progress is displayed via a precision circular progress indicator (`.checklist-progress-circle` with 42px diameter, edge-aligned SVG ring with gradient stroke, dark-mode luminous OLED glow, optical tabular percentage with subscript `%` unit, and click-to-filter action) positioned directly to the right of the `PYQ Checklist` title alongside the year jump pills (`.checklist-summary-units`). Monospace fonts are strictly prohibited for counters and percentages—standard app typography with tabular numbers is enforced. The entire card is clickable to reveal its complete step-by-step verified solution right there in place without redirecting to the Question Bank. A subtle "Open in Question Bank &rarr;" jump button is located at the bottom of the expanded solution for deep cross-question study when needed.
 - **Two-Way Completion Synchronization**: Toggling question completion from either the Question Bank or the Checklist immediately synchronizes `localStorage` (`geotech_completed_questions`), overall completion counters, year-level toolbar progress pills, and unit subhead counters.
 - **In-Place Solution Accordion (`toggleChecklistSolution`)**: Clicking any checklist card smoothly toggles its solution container (`chk-sol-*`), rotates the chevron icon (`.chk-chevron`), and sets `.is-open`. Clicking inside the solution text, copying formulas, or clicking the completion button never collapses the card. KaTeX math typesetting is automatically triggered on toggle.
