@@ -122,6 +122,9 @@ Adhere strictly to the project typography hierarchy specification:
   - **Question Card Header Layout (Badges Left, Actions Right)**: Every question card anchors the question number (e.g. `Q.1 (b)`) and all metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`) together on the **left side** as `.q-item-left-meta` / `.q-item-badges`. Action controls (`Personal Note` button, `Mark Done` / `Completed` button, and accordion chevron) remain cleanly anchored on the **far right corner** as `.q-item-right-meta` / `.q-item-actions`.
   - **Clean & Un-Cardified Editorial Solutions (Zero Sub-Card Boxes)**: Individual solution points, assumptions, and steps must NEVER be wrapped in nested card containers (`.sol-item-card`), background fills (`--solution-card-bg`), box shadows, or square badge boxes (`.sol-item-badge`). Instead, solutions format as clean, elegant typographic rows (`.sol-item-row`) with natural numbers (`1.`, `2.`), bold concept titles, comfortable line-height (`1.75`), and dedicated lines for examples (`Example: ...`). Multi-line text wraps cleanly under the text margin via flex alignment, preserving effortless readability and zero wall-of-text fatigue.
   - **Verbatim PYQ Question as Card Headline & Zero Topic Clutter**: Every question card presents the actual verbatim question statement asked in the PYQ paper (`item.question`) cleanly as its primary heading (`.q-item-title`) without bracket `[]` marks and without any intermediate topic overlines (`Topic:` removed from question cards). Metadata chips clearly display Exam Year, Unit, Question Type, Marks (`2M`, `3M`, `7M` as a normal `.badge-subtle` badge with no mono font and no bold), and Repeat Count (`4x`, `3x`, or `2x`). Dedicated Marks filter and search support allow filtering specifically by marks.
+  - **Personal Notes & Custom Answers Engine (Markdown Tables & KaTeX Immunity)**:
+    - **Balanced Comparison Tables (`table-layout: fixed`)**: Markdown tables in user personal answers dynamically assign proportional column widths (`width: (100 / colCount)%`) and enforce `table-layout: fixed;` with word-wrap protection (`word-wrap: break-word`, `overflow-wrap: break-word`). NEVER clamp the first column to an arbitrary width (e.g. `width: 230px`) and NEVER force bold weight (`font-weight: 600`) onto the first cell (`td:first-child`), ensuring two-column comparisons (such as Shallow vs Deep Foundations) span the full width symmetrically without lopsided void space.
+    - **KaTeX Formula Rendering & Delimiter Immunity**: User solutions support all standard mathematical notation: LaTeX display blocks (`$$...$$`, `\\[...\\\]`, `\[...\]`) and inline formulas (`$...$`, `\\(...\\)`, `\(...\)`). Display math blocks are pre-extracted prior to line splitting to protect equations from being fractured across paragraphs, escaped underscores (e.g. `BN\_\gamma`) are automatically sanitized to valid subscript syntax (`BN_\gamma`), and math is synchronously rendered into `.sol-math-block` containers using KaTeX (`katex.renderToString`).
 - **Data inputs**:
   - `canonical_data.json` (59 clean, deduplicated core topics)
   - `compile_data.py` (106 verified raw questions across 4 exam years: 2025, 2024, 2023, 2022)
@@ -241,10 +244,12 @@ Adhere strictly to the project typography hierarchy specification:
   - **Template Scaffold (`subjects/_template/`)**: Rapid onboarding scaffold for any new subject.
 - **Root Compatibility Proxies**:
   - Root `compile_data.py` and `formula_showcase.py` proxy directly to `subjects/geotech-2/` so legacy tools and imports continue to function without disruption.
-- **Local-Only Timetable Policy (Gitignored)**:
-  - The exam timetable is **local-only** and must never be committed to git.
-  - `timetable.html`, `build_timetable.py`, `tools/timetable/`, and timetable PDFs/OCR files are strictly listed in `.gitignore`.
-  - `timetable.html` remains at the workspace root so local navigation from `index.html` resolves seamlessly in browsers.
+- **Timetable Policy & Local Storage Isolation**:
+  - The examination timetable (`timetable.html`, `build_timetable.py`, `tools/timetable/build_timetable.py`) is public and git-tracked, while source PDFs and OCR scratch files remain in `.gitignore`.
+  - The default public repository schedule contains only the 3 regular syllabus subjects (Geo-2, RCC, DHS).
+  - User modifications, additions, and deletions persist in client-side localStorage (`civil_exam_timetable_custom_v1`) without collision.
+  - Local host environments automatically preserve the user's 7-paper backlog schedule, with quick preset toggles in the Edit Timetable modal.
+  - Concluded papers adopt a calm muted green palette (`--pastel-done-bg`, `--pastel-done-border`, `--pastel-done-foreground`, and tag `✓ Done`) across calendar, table, and timeline views. Upcoming countdowns automatically skip completed papers.
 - **Master CLI Generation Engine (`generate_dashboard.py`)**:
   - Default build: `python3 generate_dashboard.py` (builds active default subject `geotech-2` -> `index.html` & `geotech_pyq_analysis.html`).
   - Specific subject: `python3 generate_dashboard.py <subject_id>`.

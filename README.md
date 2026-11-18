@@ -46,17 +46,17 @@ exam/
 │   └── test_solution_transformation.py # Editorial row transformation verification
 │
 ├── tools/                              # Tooling & local utilities
-│   ├── timetable/                      # (Local Only) Timetable generation engine & OCR tools
+│   ├── timetable/                      # Timetable generation engine & OCR tools
 │   │   ├── build_timetable.py          # Standalone timetable generator
-│   │   ├── Civil_Final_Year_*.pdf      # Timetable source documents
-│   │   ├── Revised Exam Timetable*.pdf # Revised date schedules
-│   │   └── ocr_*.txt                   # OCR extractions & layout logs
+│   │   ├── Civil_Final_Year_*.pdf      # Timetable source documents (Gitignored)
+│   │   ├── Revised Exam Timetable*.pdf # Revised date schedules (Gitignored)
+│   │   └── ocr_*.txt                   # OCR extractions & layout logs (Gitignored)
 │   └── archive/                        # Archived legacy exploratory scripts
 │
 ├── generate_dashboard.py               # Master CLI generator: python3 generate_dashboard.py [subject]
 ├── index.html                          # Primary production dashboard (active default subject)
 ├── geotech_pyq_analysis.html           # Canonical standalone Geotech-2 production build
-├── timetable.html                      # (Local Only, Gitignored) Civil examination timetable
+├── timetable.html                      # Civil examination timetable (customizable, localStorage isolated)
 ├── compile_data.py                     # Root compatibility proxy -> subjects/geotech-2
 └── formula_showcase.py                 # Root compatibility proxy -> subjects/geotech-2
 ```
@@ -137,13 +137,13 @@ python3 generate_dashboard.py --new rcc "Design of Reinforced Concrete Structure
 
 ---
 
-## 4. Local Timetable System (Gitignored)
+## 4. Examination Timetable System
 
-Per project policy:
-- The exam timetable is **strictly for local use** and is excluded from git tracking (`.gitignore`).
-- `timetable.html` lives at the workspace root so links from `index.html` resolve seamlessly in local browsers.
-- Timetable source scripts and PDFs reside in `tools/timetable/`.
-- To regenerate the timetable locally:
+- The exam timetable (`timetable.html`) is public and git-tracked, providing client-side `localStorage` isolation (`civil_exam_timetable_custom_v1`).
+- The default public repository schedule contains only the 3 regular syllabus subjects (Geo-2, RCC, DHS).
+- Local environments automatically preserve the user's 7-paper backlog schedule, and quick preset toggles allow loading either configuration instantly.
+- In-place customization allows users to add, edit, or remove examination subjects and track completed papers in a calm muted green palette.
+- To regenerate the timetable:
   ```bash
   python3 build_timetable.py
   ```

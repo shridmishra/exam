@@ -2102,6 +2102,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             font-size: 0.875rem;
             line-height: 1.6;
             text-align: left;
+            table-layout: fixed;
         }}
 
         .my-answer-table thead tr {{
@@ -2110,20 +2111,25 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         }}
 
         .my-answer-table th {{
-            padding: 0.75rem 1rem;
+            padding: 0.85rem 1.15rem;
             font-weight: 600;
             font-size: 0.8125rem;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             color: var(--muted-foreground);
-            white-space: nowrap;
+            border-bottom: 1px solid var(--border);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }}
 
         .my-answer-table td {{
-            padding: 0.75rem 1rem;
+            padding: 0.85rem 1.15rem;
             color: var(--foreground);
+            font-weight: 400;
             vertical-align: top;
             border-bottom: 1px solid var(--border);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }}
 
         .my-answer-table tbody tr:last-child td {{
@@ -2136,12 +2142,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         .my-answer-table tbody tr:hover {{
             background-color: var(--table-row-hover, var(--secondary-hover));
-        }}
-
-        .my-answer-table td:first-child {{
-            font-weight: 600;
-            color: var(--foreground);
-            width: 230px;
         }}
 
         .my-answer-table td strong {{
@@ -5135,24 +5135,86 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         // ----------------------------------------------------
         // PERSONAL NOTES & CUSTOM ANSWERS PERSISTENCE ENGINE
         // ----------------------------------------------------
+        function renderMath(latex, isDisplay) {{
+            if (!latex) return '';
+            let clean = latex.trim();
+            clean = clean.replace(/\\\\_/g, '_');
+            clean = clean.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+            if (typeof katex !== 'undefined' && typeof katex.renderToString === 'function') {{
+                try {{
+                    const rendered = katex.renderToString(clean, {{
+                        displayMode: isDisplay,
+                        throwOnError: false
+                    }});
+                    return isDisplay ? `<div class="sol-math-block">${{rendered}}</div>` : rendered;
+                }} catch(e) {{
+                    console.warn('KaTeX render error:', e);
+                }}
+            }}
+            return isDisplay ? `<div class="sol-math-block">$$${{clean}}$$</div>` : `$${{clean}}$`;
+        }}
+
         function renderUserAnswerHtml(raw) {{
             if (!raw) return '';
 
-            // First escape HTML entities
-            let s = raw
+            // 1. Extract block display math first so internal newlines and pipes are protected
+            const mathBlocks = [];
+            let s = raw;
+
+            // Matches $$...$$, display math brackets (including multiline)
+            const displayMathRegex = /(\\$\\$[\\s\\S]*?\\$\\$|\\\\{{1,2}}[[](?:[\\s\\S]*?)\\\\{{1,2}}[\\]])/g;
+            s = s.replace(displayMathRegex, function(match) {{
+                let inner = match.trim();
+                if (inner.startsWith('$$') && inner.endsWith('$$')) {{
+                    inner = inner.slice(2, -2);
+                }} else {{
+                    if (inner.startsWith('\\\\\\\\[')) inner = inner.slice(3);
+                    else if (inner.startsWith('\\\\[')) inner = inner.slice(2);
+                    if (inner.endsWith('\\\\\\\\]')) inner = inner.slice(0, -3);
+                    else if (inner.endsWith('\\\\]')) inner = inner.slice(0, -2);
+                }}
+                const token = `@@MATH_BLOCK_${{mathBlocks.length}}@@`;
+                mathBlocks.push(renderMath(inner.trim(), true));
+                return `\\n\\n${{token}}\\n\\n`;
+            }});
+
+            // 2. Escape basic HTML entities
+            s = s
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
 
-            // Markdown Bold: **text** or __text__
-            s = s.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');
-            s = s.replace(/__(.*?)__/g, '<strong>$1</strong>');
+            // 3. Helper to format inline elements (inline math, bold, italic, code)
+            function formatInline(text) {{
+                if (!text) return '';
+                let t = text;
 
-            // Markdown Italic: *text* (excluding already matched strong)
-            s = s.replace(/(^|[^\\*])\\*([^\\*]+)\\*([^\\*]|$)/g, '$1<em>$2</em>$3');
+                // 3a. Stash inline math tokens
+                const inlineMath = [];
+                t = t.replace(/\\\\{{1,2}}[(]([\\s\\S]*?)\\\\{{1,2}}[)]/g, function(m, c) {{
+                    const token = `@@INLINE_MATH_${{inlineMath.length}}@@`;
+                    inlineMath.push(renderMath(c, false));
+                    return token;
+                }});
+                t = t.replace(/(?<!\\$)\\$([^\\$\\n]+)\\$(?!\\$)/g, function(m, c) {{
+                    const token = `@@INLINE_MATH_${{inlineMath.length}}@@`;
+                    inlineMath.push(renderMath(c, false));
+                    return token;
+                }});
 
-            // Inline code: `code`
-            s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+                // 3b. Markdown formatting
+                t = t.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');
+                t = t.replace(/__(.*?)__/g, '<strong>$1</strong>');
+                t = t.replace(/(^|[^\\*])\\*([^\\*]+)\\*([^\\*]|$)/g, '$1<em>$2</em>$3');
+                t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+                // 3c. Restore inline math
+                t = t.replace(/@@INLINE_MATH_(\\d+)@@/g, function(m, idx) {{
+                    return inlineMath[parseInt(idx, 10)] || '';
+                }});
+
+                return t;
+            }}
 
             // Normalize newlines and split lines
             const rawLines = s.replaceAll(String.fromCharCode(13), '').split(String.fromCharCode(10));
@@ -5160,7 +5222,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
             function isTableDelimiter(line) {{
                 const trimmed = line.trim();
-                return /^\\|?(\\s*:?--+:?\\s*\\|)+\\s*:?--+:?\\s*\\|?$/.test(trimmed) || /^(\\s*:?--+:?\\s*\\|)+\\s*:?--+:?$/.test(trimmed);
+                if (!trimmed.includes('-')) return false;
+                const cells = splitRow(trimmed);
+                if (cells.length === 0) return false;
+                return cells.every(c => /^\\s*:?-{{2,}}:?\\s*$/.test(c));
             }}
 
             function isTableRow(line) {{
@@ -5185,12 +5250,24 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     continue;
                 }}
 
+                // Check for display math placeholder
+                const mbMatch = trimmed.match(/^@@MATH_BLOCK_(\\d+)@@$/);
+                if (mbMatch) {{
+                    const idx = parseInt(mbMatch[1], 10);
+                    if (mathBlocks[idx]) {{
+                        out.push(mathBlocks[idx]);
+                    }}
+                    i++;
+                    continue;
+                }}
+
                 // 1. Headings: #, ##, ###, ####
                 const headingMatch = trimmed.match(/^(#+)\\s+(.*)$/);
                 if (headingMatch && headingMatch[1].length <= 6) {{
                     const level = headingMatch[1].length;
                     let title = headingMatch[2].trim();
                     title = title.replace(/^<strong>(.*)<\\/strong>$/i, '$1');
+                    title = formatInline(title);
                     const hTag = level === 1 ? 'h3' : (level === 2 ? 'h4' : (level === 3 ? 'h5' : 'h6'));
                     const hClass = level === 1 ? 'my-answer-heading h1' : (level === 2 ? 'my-answer-heading h2' : (level === 3 ? 'my-answer-heading h3' : 'my-answer-heading h4'));
                     out.push(`<${{hTag}} class="${{hClass}}">${{title}}</${{hTag}}>`);
@@ -5222,10 +5299,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                         i++;
                     }}
 
+                    const colCount = headerCells.length;
+                    const colWidth = colCount > 0 ? (100 / colCount).toFixed(2) + '%' : 'auto';
+
                     let tableHtml = '<div class="my-answer-table-wrapper"><table class="my-answer-table"><thead><tr>';
                     headerCells.forEach((th, idx) => {{
                         const align = aligns[idx] || 'left';
-                        tableHtml += `<th style="text-align: ${{align}};">${{th}}</th>`;
+                        tableHtml += `<th style="text-align: ${{align}}; width: ${{colWidth}};">${{formatInline(th)}}</th>`;
                     }});
                     tableHtml += '</tr></thead><tbody>';
 
@@ -5233,7 +5313,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                         tableHtml += '<tr>';
                         row.forEach((td, idx) => {{
                             const align = aligns[idx] || 'left';
-                            tableHtml += `<td style="text-align: ${{align}};">${{td}}</td>`;
+                            tableHtml += `<td style="text-align: ${{align}};">${{formatInline(td)}}</td>`;
                         }});
                         tableHtml += '</tr>';
                     }});
@@ -5246,7 +5326,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 // 3. Examples
                 const exampleMatch = trimmed.match(/^(?:(?:<strong>)?(?:Example|Eg):?(?:<\\/strong>)?)\\s*(.*)$/i);
                 if (exampleMatch) {{
-                    out.push(`<div class="sol-example"><span class="example-tag">Eg</span> <span class="sol-example-text">${{exampleMatch[1]}}</span></div>`);
+                    out.push(`<div class="sol-example"><span class="example-tag">Eg</span> <span class="sol-example-text">${{formatInline(exampleMatch[1])}}</span></div>`);
                     i++;
                     continue;
                 }}
@@ -5254,17 +5334,17 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 // 4. Notes: Note: or **Note:**
                 const noteMatch = trimmed.match(/^(?:(?:<strong>)?Note:?(?:<\\/strong>)?)\\s*(.*)$/i);
                 if (noteMatch) {{
-                    out.push(`<div class="sol-note-box"><span class="note-tag">Note</span><div class="sol-note-text">${{noteMatch[1]}}</div></div>`);
+                    out.push(`<div class="sol-note-box"><span class="note-tag">Note</span><div class="sol-note-text">${{formatInline(noteMatch[1])}}</div></div>`);
                     i++;
                     continue;
                 }}
 
                 // 5. Numbered Lists: 1. or 1. or 1)
-                const numMatch = trimmed.match(/^(\\d+)(?:\\\\\\.|\\\\.|\\))\\s+(.*)$/);
+                const numMatch = trimmed.match(/^(\\d+)(?:\\.|\\)|\\\\\\\\\\.)\\s+(.*)$/);
                 if (numMatch) {{
                     const num = numMatch[1];
                     let content = numMatch[2].trim();
-                    out.push(`<div class="sol-item-row"><span class="sol-item-num">${{num}}.</span><div class="sol-item-content">${{content}}</div></div>`);
+                    out.push(`<div class="sol-item-row"><span class="sol-item-num">${{num}}.</span><div class="sol-item-content">${{formatInline(content)}}</div></div>`);
                     i++;
                     continue;
                 }}
@@ -5272,13 +5352,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 // 6. Bullet lists
                 const bulletMatch = trimmed.match(/^[-*•+]\\s+(.*)$/);
                 if (bulletMatch) {{
-                    out.push(`<div class="sol-item-row"><span class="sol-item-num">&bull;</span><div class="sol-item-content">${{bulletMatch[1]}}</div></div>`);
+                    out.push(`<div class="sol-item-row"><span class="sol-item-num">&bull;</span><div class="sol-item-content">${{formatInline(bulletMatch[1])}}</div></div>`);
                     i++;
                     continue;
                 }}
 
                 // 7. Regular paragraph
-                out.push(`<p class="my-answer-p">${{trimmed}}</p>`);
+                out.push(`<p class="my-answer-p">${{formatInline(trimmed)}}</p>`);
                 i++;
             }}
 

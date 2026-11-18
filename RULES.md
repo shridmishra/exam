@@ -179,7 +179,8 @@
 ### [RULE 15] Modular Multi-Subject Architecture & Local Timetable Isolation
 - **Self-Contained Subject Units**: All academic subjects must reside under `subjects/<subject_id>/` containing `subject.json`, `canonical_data.json`, `compile_data.py`, `master_formulas.json`, `formula_showcase.py`, and `papers/`.
 - **Subject State Isolation**: Each subject must declare a unique `storage_prefix` in `subject.json` (e.g. `geotech`, `rcc`) so user completion data and filters do not collide, while maintaining the shared `geotech_theme` key for global light/dark theme preference.
-- **Local Timetable Policy (Gitignored)**: The examination timetable is local-only. `timetable.html`, `build_timetable.py`, `tools/timetable/`, and source PDFs must remain in `.gitignore` and never be committed to git.
+- **Timetable Policy & Local Storage Isolation**: The examination timetable (`timetable.html`) is public and git-tracked, while heavy PDFs and OCR scratches remain gitignored. Default public repository schedule contains only the 3 regular syllabus subjects (Geo-2, RCC, DHS). User modifications, additions, and deletions persist in client-side localStorage (`civil_exam_timetable_custom_v1`) without collision. Local host environments automatically preserve the user's 7-paper backlog schedule, with quick preset toggles in the Edit Timetable modal.
+- **Concluded / Done Examination Indicator (Muted Green)**: Concluded papers adopt a calm muted green palette (`--pastel-done-bg`, `--pastel-done-border`, `--pastel-done-foreground`, and tag `✓ Done`) across the calendar grid, table rows, and timeline cards. Upcoming countdowns automatically skip completed papers.
 - **Master CLI Generation Engine**: `python3 generate_dashboard.py` builds the active default subject (`geotech-2`) into `index.html` and `geotech_pyq_analysis.html`. Passing `<subject_id>` builds that subject, `--list` inspects the registry, and `--new <id> "<name>" "<code>"` scaffolds a new subject module.
 - **Root Proxy Immutability**: Root `compile_data.py` and `formula_showcase.py` proxy directly to `subjects/geotech-2/` ensuring 100% backward compatibility for all scripts and agents.
 
@@ -211,7 +212,10 @@
 - **Negative Exponents**: Always format negative exponents with braces as `10^{-3}` or `x^{-n}`. Never output `^-3` or corrupted `⁻^3`.
 - **Entity Sanitization**: Replace all HTML entities (`&lt;` -> `<`, `&gt;` -> `>`, `&amp;` -> `\&`, `&nbsp;` -> ` `, `&mdash;` -> `\text{ --- }`).
 - **Percent Escaping**: Literal `%` in math mode must be escaped as `\%` to prevent line comment truncation.
-- **Client Pre-Processing**: Always ensure `renderMathInElement` runs with `preProcess` so all dynamic client math blocks are pre-sanitized before parsing.
+- **Client Pre-Processing**: Always ensure `renderMathInElement` runs with `preProcess` so all dynamic client math blocks are pre-sanitized before parsing (including escaped underscores like `\_` converted to valid subscripts `_`).
+- **Personal Answers & Notes Math & Table Rendering**:
+  - All LaTeX display blocks (`$$...$$`, `\\[...\\\]`, `\[...\]`) and inline formulas (`$...$`, `\\(...\\)`, `\(...\)`) in user answers are synchronously parsed into `.sol-math-block` and inline KaTeX spans via `katex.renderToString`.
+  - Markdown tables in personal answers enforce `table-layout: fixed;` with balanced, proportional column widths (`width: (100 / colCount)%`), never restricting the first column to arbitrary widths (e.g. `230px`) or forcing bold font weights.
 
 ---
 
@@ -224,7 +228,10 @@
 - **Visual Dimming (`.is-later`)**: Deferred question cards adopt a subtle `0.65` opacity, restoring to `1.0` on hover.
 - **Segmented Status Filters**: `Starred` and `Later` filters are added to status filter pills across Question Bank and PYQ Checklist. Selecting `Incomplete` automatically excludes deferred items.
 - **Multi-Tier Persistence**: Saved to `localStorage` (`<prefix>_starred_questions`, `<prefix>_later_questions`), synced to `user_progress.json`, and bootstrap seeded during dashboard generation.
-- **Client Pre-Processing**: Always ensure `renderMathInElement` runs with `preProcess` so all dynamic client math blocks are pre-sanitized before parsing.
+- **Client Pre-Processing**: Always ensure `renderMathInElement` runs with `preProcess` so all dynamic client math blocks are pre-sanitized before parsing (including escaped underscores like `\_` converted to valid subscripts `_`).
+- **Personal Answers & Notes Math & Table Rendering**:
+  - All LaTeX display blocks (`$$...$$`, `\\[...\\\]`, `\[...\]`) and inline formulas (`$...$`, `\\(...\\)`, `\(...\)`) in user answers are synchronously parsed into `.sol-math-block` and inline KaTeX spans via `katex.renderToString`.
+  - Markdown tables in personal answers enforce `table-layout: fixed;` with balanced, proportional column widths (`width: (100 / colCount)%`), never restricting the first column to arbitrary widths (e.g. `230px`) or forcing bold font weights.
 
 ---
 

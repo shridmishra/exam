@@ -943,6 +943,7 @@ formulas_js_template = """
                     if (!math) return "";
                     var s = math;
                     s = s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '\\\\&').replace(/&nbsp;/g, ' ').replace(/&mdash;/g, '\\\\text{ --- }').replace(/&ndash;/g, '\\\\text{ -- }');
+                    s = s.replace(/\\\\_/g, '_');
                     s = s.replace(/[⁻^\\\\-]*⁻[⁻^\\\\-]*\\^?(\\d+)/g, '^{-$1}');
                     s = s.replace(/10\\s*\\^-\\s*(\\d+)/g, '10^{-$1}');
                     var sup = {"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁺":"+","⁻":"-"};

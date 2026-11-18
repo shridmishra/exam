@@ -2,15 +2,14 @@
 # Exam Intelligence & PYQ Platform (.gitignore)
 # ==============================================================================
 
-# Local Exam Timetable (Local-only per project directive)
-timetable.html
-build_timetable.py
-*timetable*.html
+# Timetable Raw PDFs & OCR Scratch Files (Source scripts & timetable.html are tracked)
 *Timetable*.pdf
 *timetable*.pdf
+tools/timetable/*.pdf
+tools/timetable/*.txt
+tools/timetable/*.swift
 ocr_*.txt
 ocr_*.swift
-tools/timetable/
 local/
 
 # Python runtime & bytecode
