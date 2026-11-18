@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-17T19:01:38.172672+00:00",
+  "last_updated": "2026-11-18T04:49:13.253988+00:00",
   "active_subject": "geotech-2",
   "subjects": {
     "geotech-2": {
@@ -81,24 +81,29 @@
         "2023-Q2biii",
         "2023-Q3c",
         "2023-Q3c-OR",
-        "2022-Q4a"
+        "2022-Q4a",
+        "2022-Q4b"
       ],
       "filters": {
         "year": "all",
-        "unit": "4",
+        "unit": "all",
         "type": "all",
-        "marks": "all",
+        "marks": "7",
         "repeat": "all",
         "status": "incomplete",
         "search": ""
       },
       "active_view": "questions",
       "hide_2023": false,
-      "last_saved": "2026-11-17T19:01:38.172633+00:00",
+      "last_saved": "2026-11-18T04:49:13.253950+00:00",
       "notes": {
         "2024-Q5d": {
           "answer": "## **Depth of Exploration Required for Various Types of Structures / Foundations**\n\n**Depth of exploration** is the depth up to which soil investigation is carried out to determine the soil properties, groundwater conditions and bearing capacity of the soil for safe foundation design.\n\nThe required depth depends on the type, size and load of the structure.\n\n### **1. Depth of Exploration for Different Structures**\n\n| Type of structure/foundation   | Required depth of exploration                                                                                       |\n| ------------------------------ | ------------------------------------------------------------------------------------------------------------------- |\n| **Isolated footing**           | 1.5 to 2 times the width (B) of the footing below foundation level.                                                 |\n| **Combined footing**           | Approximately 1.5 to 2 times the width of the footing.                                                              |\n| **Raft foundation**            | Generally 1.5 times the width of the raft or until the significant stress zone is reached.                          |\n| **Pile foundation**            | At least 1.5 times the width of the pile group below the pile tip.                                                  |\n| **Bridge piers and abutments** | Sufficient depth below the anticipated foundation level to cover the zone of significant stress and possible scour. |\n| **Retaining walls**            | Generally up to a depth where the effect of foundation pressure becomes insignificant.                              |\n| **Dams**                       | Exploration should extend to a considerable depth to identify weak strata, seepage paths and bedrock conditions.    |\n\n### **2. General Criteria for Depth of Exploration**\n\nThe depth of exploration is generally decided based on the following criteria:\n\n1\\. **Stress criterion:** Exploration should continue until the increase in vertical stress due to the foundation load becomes insignificant (usually about 10% of the existing overburden pressure).\n\n2\\. **Soil condition:** If weak or compressible soil layers are encountered, exploration should extend through the entire weak layer.\n\n3\\. **Groundwater table:** The groundwater level and its seasonal variations should be determined.\n\n4\\. **Rock condition:** If rock is encountered, sufficient depth of drilling should be carried out to confirm the quality and continuity of the rock.\n\n### **3. Conclusion**\n\nThe depth of exploration should be sufficient to cover the entire zone of significant stress influence below the foundation so that the structure remains safe against bearing capacity failure and excessive settlement.\n\n**Note:** The numerical depths are general preliminary guidelines. Actual exploration depth depends on soil conditions, foundation dimensions and design requirements.",
           "updated_at": "2026-11-17T17:24:54.908Z"
+        },
+        "2022-Q4b": {
+          "answer": "## **Difference between Bearing Capacity of Shallow and Deep Foundations (2 Marks)**\n\n| Shallow Foundation                                                              | Deep Foundation                                                                      |\n| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |\n| 1. Load is transferred mainly through the base of the foundation.               | 1. Load is transferred through end bearing and skin friction.                        |\n| 2. Bearing capacity depends mainly on soil properties near the foundation base. | 2. Bearing capacity depends on soil properties along the pile length and at its tip. |\n| 3. Calculated using Terzaghi's bearing capacity equation.                       | 3. Calculated considering end resistance and shaft resistance.                       |\n| 4. Generally, depth of foundation is small compared to its width.               | 4. Depth of foundation is considerably greater than its width.                       |\n\n### **Important formulas**\n\n**1. Shallow foundation (Terzaghi's equation):**\n\n\\\\[ q_u=cN_c+\\gamma D_fN_q+\\frac12\\gamma BN\\_\\gamma \\\\]\n\n**2. Deep foundation (Pile foundation):**\n\n\\\\[ Q_u=Q_b+Q_s \\\\]\n\nWhere:\n\n- \\\\(Q_b\\\\) = End bearing resistance\n- \\\\(Q_s\\\\) = Skin friction resistance\n\n**Remember:** Shallow foundation → mainly base resistance; Deep foundation → end bearing + skin friction.",
+          "updated_at": "2026-11-18T02:52:47.123Z"
         }
       },
       "general_notes": "",
