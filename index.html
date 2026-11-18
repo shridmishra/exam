@@ -20399,11 +20399,11 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
 
         window.addEventListener('hashchange', () => {
             let hash = window.location.hash.replace('#', '');
-            if (hash === 'checklist') hash = 'syllabus';
-            const validViews = ['questions', 'syllabus', 'formulas'];
+            if (hash === 'checklist' || hash === 'questions') hash = 'syllabus';
+            const validViews = ['syllabus', 'formulas', 'notes'];
             if (hash === 'repeated') {
-                switchPageView('questions');
-                const repBtn = document.querySelector('#repeatFilters [data-repeat="repeated"]');
+                switchPageView('syllabus');
+                const repBtn = document.querySelector('#checklistRepeatFilters [data-repeat="repeated"]');
                 if (repBtn) repBtn.click();
             } else if (validViews.includes(hash)) {
                 switchPageView(hash);
@@ -20444,14 +20444,11 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
             if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                 e.preventDefault();
                 const syllabusView = document.getElementById('view-syllabus');
-                if (syllabusView && syllabusView.classList.contains('active')) {
-                    const clInput = document.getElementById('checklistSearchInput');
-                    if (clInput) clInput.focus();
-                } else {
-                    switchPageView('questions');
-                    const qInput = document.getElementById('searchInput');
-                    if (qInput) qInput.focus();
+                if (!syllabusView || !syllabusView.classList.contains('active')) {
+                    switchPageView('syllabus');
                 }
+                const clInput = document.getElementById('checklistSearchInput');
+                if (clInput) clInput.focus();
             }
         });
 
@@ -21121,12 +21118,12 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
                         <div class="empty-results-title">${qIds.length === 0 ? 'No personal answers saved yet' : 'No matching answers found'}</div>
                         <p class="text-body-small" style="max-width: 460px; margin: 0.5rem auto 1.25rem; color: var(--muted-foreground);">
                             ${qIds.length === 0 
-                                ? 'Click the ✍️ pen icon on any question card in Questions or Checklist to save your own answers and study notes.' 
+                                ? 'Click the ✍️ pen icon on any question card in Checklist to save your own answers and study notes.' 
                                 : 'Try clearing your search query or switching the unit filter to All Units.'}
                         </p>
                         ${qIds.length === 0 ? `
-                            <button type="button" class="complete-btn" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;" onclick="switchPageView('questions')">
-                                <span>Browse Questions &rarr;</span>
+                            <button type="button" class="complete-btn" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;" onclick="switchPageView('syllabus')">
+                                <span>Browse Checklist &rarr;</span>
                             </button>
                         ` : ''}
                     </div>
@@ -21157,7 +21154,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
                                 <span class="badge badge-subtle">${q.type}</span>
                             </div>
                             <div class="saved-note-actions">
-                                <button type="button" class="my-answer-btn-action" onclick="jumpFromNotesToQuestion('${q.id}')" title="Open question in Questions">
+                                <button type="button" class="my-answer-btn-action" onclick="jumpFromNotesToQuestion('${q.id}')" title="Open question in Checklist">
                                     <i class="icon icon-xs hgi-stroke hgi-view"></i>
                                     <span>View Question &rarr;</span>
                                 </button>
@@ -21192,27 +21189,27 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>.</span>
         }
 
         window.jumpFromNotesToQuestion = function(qid, openEdit = false) {
-            switchPageView('questions');
-            const qObj = RAW_QUESTIONS.find(q => q.id === qid);
-            if (qObj && String(qObj.year) === '2023' && hide2023) {
-                setHide2023(false);
-            }
-
-            if (currentYear !== 'all' || currentUnit !== 'all' || currentType !== 'all' || currentMarks !== 'all' || currentRepeat !== 'all' || currentStatus !== 'all' || searchQuery) {
-                resetFilters();
+            switchPageView('syllabus');
+            if (typeof resetChecklistFilters === 'function') {
+                resetChecklistFilters();
             }
 
             setTimeout(() => {
-                const el = document.getElementById(qid);
-                const solEl = document.getElementById('sol-' + qid);
+                const el = document.getElementById('chk-card-' + qid) || document.getElementById(qid);
+                const solEl = document.getElementById('chk-sol-' + qid) || document.getElementById('sol-' + qid);
                 if (el && solEl) {
                     if (!solEl.classList.contains('open')) {
                         solEl.classList.add('open');
                         el.classList.add('is-open');
+                        if (window.renderAllMath) {
+                            try { window.renderAllMath(); } catch(e) {}
+                        }
                     }
-                    switchSolutionTab(qid, 'mine');
-                    if (openEdit) {
-                        openNoteEditor(qid);
+                    if (typeof switchSolutionTab === 'function') {
+                        switchSolutionTab(qid, 'mine', null, true);
+                    }
+                    if (openEdit && typeof openNoteEditor === 'function') {
+                        openNoteEditor(qid, null, true);
                     }
                     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     el.classList.add('highlight-target');
@@ -21350,6 +21347,7 @@ ${ans}
         // Render Engine for Questions (Click to open, constrained optimal line length)
         function renderQuestions() {
             const container = document.getElementById('questionsContainer');
+            if (!container) return;
             const counterEl = document.getElementById('matchCounter');
 
             let items = RAW_QUESTIONS;
@@ -21891,11 +21889,7 @@ ${ans}
 
     <!-- MOBILE BOTTOM APP NAVIGATION (iOS/Android Native App Style) -->
     <nav class="mobile-bottom-nav" aria-label="Mobile App Navigation">
-        <button class="mobile-nav-item nav-link-btn active" data-view="questions" onclick="switchPageView('questions')" aria-label="Questions">
-            <i class="mobile-nav-icon hgi-stroke hgi-help-circle"></i>
-            <span class="mobile-nav-label">Questions</span>
-        </button>
-        <button class="mobile-nav-item nav-link-btn" data-view="syllabus" onclick="switchPageView('syllabus')" aria-label="Checklist">
+        <button class="mobile-nav-item nav-link-btn active" data-view="syllabus" onclick="switchPageView('syllabus')" aria-label="Checklist">
             <i class="mobile-nav-icon hgi-stroke hgi-task-01"></i>
             <span class="mobile-nav-label">Checklist</span>
         </button>

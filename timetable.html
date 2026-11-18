@@ -177,11 +177,37 @@
         }
 
         .container {
-            max-width: 1040px;
+            max-width: 1440px;
+            width: 100%;
             margin: 0 auto;
-            padding-left: max(16px, env(safe-area-inset-left));
-            padding-right: max(16px, env(safe-area-inset-right));
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
             box-sizing: border-box;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                padding-left: max(1.5rem, env(safe-area-inset-left));
+                padding-right: max(1.5rem, env(safe-area-inset-right));
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding-left: max(2.5rem, env(safe-area-inset-left));
+                padding-right: max(2.5rem, env(safe-area-inset-right));
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .container {
+                padding-left: max(3.5rem, env(safe-area-inset-left));
+                padding-right: max(3.5rem, env(safe-area-inset-right));
+            }
+        }
+
+        main.container {
+            padding-bottom: 3.5rem;
         }
 
         /* ----------------------------------------------------
@@ -1223,15 +1249,6 @@
             gap: 6px;
         }
 
-        .footer {
-            border: none;
-            padding: 24px 0 16px;
-            text-align: center;
-            color: var(--muted-foreground);
-            font-size: var(--font-size-body-small);
-            margin-top: 20px;
-        }
-
         /* Floating Scroll to Top Button (Zero Borders) */
         .scroll-to-top-btn {
             position: fixed !important;
@@ -1399,7 +1416,7 @@
         }
 
         @media print {
-            .header, .controls-bar-minimal, .theme-toggle-btn, .footer, .modal-overlay, .scroll-to-top-btn { display: none !important; }
+            .header, .controls-bar-minimal, .theme-toggle-btn, .modal-overlay, .scroll-to-top-btn { display: none !important; }
             body { background: #fff !important; color: #000 !important; }
             .table-wrap, .cal-box { box-shadow: none !important; }
         }
@@ -1633,12 +1650,6 @@
             </div>
         </div>
     </div>
-
-    <footer class="footer">
-        <div class="container">
-            <p>Civil Engineering Exam Schedule • Nov – Dec 2026 • Verified with Official Revised Timetable (SGSITS)</p>
-        </div>
-    </footer>
 
     <script>
         // Default 3 regular subjects (Normal Syllabus) for public repo
