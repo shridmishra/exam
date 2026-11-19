@@ -16,6 +16,12 @@ from core.subjects import (
     scaffold_new_subject,
 )
 from core.formatter import format_solution, clean_num
+from tools.timetable.build_timetable import (
+    get_timetable_styles,
+    get_timetable_html_view,
+    get_timetable_modal_html,
+    get_timetable_script,
+)
 
 def build_unit_checklist_html(questions, unit_titles=None):
     if not unit_titles:
@@ -238,7 +244,7 @@ def build_unit_checklist_html(questions, unit_titles=None):
                 q_type = q.get('type', 'Theory')
 
                 html.append(f'''
-                                <div class="checklist-card" id="chk-card-{q['id']}" data-id="{q['id']}" data-year="{y}" data-unit="{u}" onclick="toggleChecklistSolution('{q['id']}', event)" title="Click to view answer">
+                                <div class="checklist-card" id="chk-card-{q['id']}" data-id="{q['id']}" data-year="{y}" data-unit="{u}" onclick="toggleChecklistSolution('{q['id']}', event)" title="Click to view or close answer">
                                     <div class="checklist-card-check" onclick="event.stopPropagation()">
                                         <button class="checklist-checkbox-btn" 
                                                 id="chk-btn-{q['id']}"
@@ -439,6 +445,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
     qb_m_7 = sum(1 for q in raw_questions if q.get('marks') in [7, 6])
 
     unit_checklist_html = build_unit_checklist_html(raw_questions, unit_titles)
+
+    timetable_styles = get_timetable_styles()
+    timetable_html_view = get_timetable_html_view()
+    timetable_modal_html = get_timetable_modal_html()
+    timetable_script = get_timetable_script()
 
     html_template = f"""<!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -1147,6 +1158,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             background-color: var(--pastel-peach-bg);
             color: var(--pastel-peach-foreground);
         }}
+
+{timetable_styles}
 
         /* ----------------------------------------------------
            PAGE VIEWS (MULTI-VIEW TABBED APPLICATION)
@@ -2115,7 +2128,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             display: none;
             padding-top: 1.25rem;
             margin-top: 1rem;
-            cursor: default;
+            cursor: pointer;
             user-select: text; /* Allow text selection inside open answer */
         }}
 
@@ -2145,6 +2158,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             padding-bottom: 0.75rem;
             border-bottom: 1px solid var(--secondary);
             flex-wrap: wrap;
+            cursor: default;
         }}
 
         .sol-view-pills {{
@@ -2558,6 +2572,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             border-radius: var(--radius-lg);
             padding: 1.25rem 1.5rem;
             margin-top: 0.5rem;
+            cursor: default;
         }}
 
         .note-editor-header {{
@@ -3582,7 +3597,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             display: none;
             padding-top: 1rem;
             margin-top: 0.75rem;
-            cursor: default;
+            cursor: pointer;
             user-select: text;
         }}
 
@@ -4169,10 +4184,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                     </button>
                 </li>
                 <li>
-                    <a href="timetable.html" class="nav-link-btn nav-link-timetable" title="View Exam Timetable">
+                    <button class="nav-link-btn" data-view="timetable" onclick="switchPageView('timetable')" title="View Exam Timetable">
                         <i class="icon icon-sm hgi-stroke hgi-calendar-03"></i>
                         Timetable
-                    </a>
+                    </button>
                 </li>
             </ul>
 
@@ -4367,6 +4382,13 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         </div>
 
         <!-- ====================================================
+             PAGE VIEW 3: EXAMINATION TIMETABLE
+             ==================================================== -->
+        <div class="app-page-view" id="view-timetable">
+{timetable_html_view}
+        </div>
+
+        <!-- ====================================================
              PAGE VIEW: NOTES & CUSTOM ANSWERS ARCHIVE
              ==================================================== -->
         <div class="app-page-view" id="view-notes">
@@ -4434,6 +4456,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
     </div>
 
+{timetable_modal_html}
+
     <!-- Embedded High-Performance Data Arrays -->
     <script>
         const CANONICAL_TOPICS = {canonical_json_str};
@@ -4462,7 +4486,9 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 '.nav-links',
                 '.notes-unit-pills',
                 '.sol-view-pills',
-                '.mobile-bottom-nav'
+                '.mobile-bottom-nav',
+                '.filter-tabs-minimal',
+                '.view-switchers-minimal'
             ];
 
             function getContainers() {{
@@ -4481,7 +4507,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 }}
 
                 // Locate active item
-                let activeItem = container.querySelector(':scope > .active, :scope > * > .active, :scope > .filter-pill-btn.active, :scope > .nav-link-btn.active, :scope > .sol-view-pill.active, :scope > .mobile-nav-item.active');
+                let activeItem = container.querySelector(':scope > .active, :scope > * > .active, :scope > .filter-pill-btn.active, :scope > .nav-link-btn.active, :scope > .sol-view-pill.active, :scope > .mobile-nav-item.active, :scope > .tab-pill.active, :scope > .view-pill.active');
 
                 if (!activeItem || activeItem.offsetParent === null) {{
                     indicator.style.opacity = '0';
@@ -4499,6 +4525,20 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 if (w === 0 || h === 0) {{
                     indicator.style.opacity = '0';
                     return;
+                }}
+
+                // Color-adaptive layout pill for filter-tabs-minimal
+                if (container.classList.contains('filter-tabs-minimal')) {{
+                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    if (activeItem.classList.contains('tab-pill-regular')) {{
+                        indicator.style.backgroundColor = isDark ? '#059669' : '#205c36';
+                    }} else if (activeItem.classList.contains('tab-pill-old')) {{
+                        indicator.style.backgroundColor = isDark ? '#ea580c' : '#9a4318';
+                    }} else if (activeItem.classList.contains('tab-pill-done')) {{
+                        indicator.style.backgroundColor = isDark ? '#059669' : '#205c36';
+                    }} else {{
+                        indicator.style.backgroundColor = isDark ? '#27272a' : 'var(--foreground)';
+                    }}
                 }}
 
                 if (immediate || !indicator.dataset.initialized) {{
@@ -4530,7 +4570,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
                 // Global delegated click listener for instant 0ms feedback
                 document.addEventListener('click', (e) => {{
-                    const btn = e.target.closest('.filter-pill-btn, .nav-link-btn, .sol-view-pill, .mobile-nav-item');
+                    const btn = e.target.closest('.filter-pill-btn, .nav-link-btn, .sol-view-pill, .mobile-nav-item, .tab-pill, .view-pill');
                     if (btn) {{
                         const container = btn.closest(SELECTORS.join(', '));
                         if (container) {{
@@ -5357,13 +5397,21 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
         window.toggleChecklistSolution = function(id, event) {{
             if (event && event.target && (
-                event.target.closest('.checklist-solution-content') || 
                 event.target.closest('.checklist-card-check') || 
-                event.target.closest('.checklist-checkbox-btn') ||
-                event.target.closest('.note-action-btn') ||
-                event.target.closest('.icon-action-btn')
+                event.target.closest('.checklist-checkbox-btn') || 
+                event.target.closest('.note-action-btn') || 
+                event.target.closest('.icon-action-btn') ||
+                event.target.closest('.sol-view-switch-row') ||
+                event.target.closest('.note-editor-container') ||
+                event.target.closest('button') ||
+                event.target.closest('a') ||
+                event.target.closest('input') ||
+                event.target.closest('textarea')
             )) {{
-                return; // Do not collapse when selecting text inside answer, clicking checkbox, or note button!
+                return; // Do not collapse when clicking action buttons, checkboxes, tabs, or editor!
+            }}
+            if (window.getSelection && window.getSelection().toString().trim().length > 0) {{
+                return; // Do not collapse when selecting text inside answer!
             }}
             const cardEl = document.getElementById('chk-card-' + id);
             const solEl = document.getElementById('chk-sol-' + id);
@@ -5500,6 +5548,7 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         // PAGE VIEW SWITCHER LOGIC
         window.switchPageView = function(pageId) {{
             if (pageId === 'questions') pageId = 'syllabus';
+            if (pageId === 'schedule') pageId = 'timetable';
             document.querySelectorAll('.app-page-view').forEach(p => {{
                 p.classList.remove('active');
             }});
@@ -5512,10 +5561,6 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             document.querySelectorAll('.nav-link-btn').forEach(btn => {{
                 btn.classList.toggle('active', btn.getAttribute('data-view') === pageId);
             }});
-
-            if (window.LayoutPillEngine) {{
-                window.LayoutPillEngine.updateAll();
-            }}
 
             try {{
                 localStorage.setItem(STORAGE_KEY_VIEW, pageId);
@@ -5531,6 +5576,19 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 syncChecklistUI();
             }} else if (pageId === 'notes') {{
                 renderNotesPage();
+            }} else if (pageId === 'timetable') {{
+                if (typeof window.renderTimetableAll === 'function') {{
+                    window.renderTimetableAll();
+                }} else if (typeof renderAll === 'function') {{
+                    renderAll();
+                }}
+            }}
+
+            if (window.LayoutPillEngine) {{
+                window.LayoutPillEngine.updateAll();
+                setTimeout(() => {{
+                    window.LayoutPillEngine.updateAll();
+                }}, 20);
             }}
 
             window.scrollTo({{ top: 0, behavior: 'instant' }});
@@ -5549,7 +5607,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
 
             let hash = window.location.hash.replace('#', '');
             if (hash === 'checklist' || hash === 'questions') hash = 'syllabus';
-            const validViews = ['syllabus', 'formulas'];
+            if (hash === 'schedule') hash = 'timetable';
+            const validViews = ['syllabus', 'formulas', 'timetable'];
             const savedView = localStorage.getItem(STORAGE_KEY_VIEW);
 
             if (hash === 'repeated') {{
@@ -5562,6 +5621,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
                 switchPageView(savedView);
             }} else {{
                 switchPageView('syllabus');
+            }}
+
+            if (typeof window.renderTimetableAll === 'function') {{
+                window.renderTimetableAll();
             }}
 
             const checklistSearchInput = document.getElementById('checklistSearchInput');
@@ -5604,7 +5667,8 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         window.addEventListener('hashchange', () => {{
             let hash = window.location.hash.replace('#', '');
             if (hash === 'checklist' || hash === 'questions') hash = 'syllabus';
-            const validViews = ['syllabus', 'formulas', 'notes'];
+            if (hash === 'schedule') hash = 'timetable';
+            const validViews = ['syllabus', 'formulas', 'timetable', 'notes'];
             if (hash === 'repeated') {{
                 switchPageView('syllabus');
                 const repBtn = document.querySelector('#checklistRepeatFilters [data-repeat="repeated"]');
@@ -6894,12 +6958,20 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
         // TOGGLE SOLUTION ON ENTIRE CARD CLICK
         window.toggleSolution = function(id, event) {{
             if (event && event.target && (
-                event.target.closest('.q-solution-content') || 
                 event.target.closest('.complete-btn') ||
                 event.target.closest('.note-action-btn') ||
-                event.target.closest('.icon-action-btn')
+                event.target.closest('.icon-action-btn') ||
+                event.target.closest('.sol-view-switch-row') ||
+                event.target.closest('.note-editor-container') ||
+                event.target.closest('button') ||
+                event.target.closest('a') ||
+                event.target.closest('input') ||
+                event.target.closest('textarea')
             )) {{
-                return; // Do not collapse when clicking note button, complete button, or inside answer!
+                return; // Do not collapse when clicking note button, complete button, tabs, or editor!
+            }}
+            if (window.getSelection && window.getSelection().toString().trim().length > 0) {{
+                return; // Do not collapse when selecting text inside answer!
             }}
             const itemEl = document.getElementById(id);
             const solEl = document.getElementById('sol-' + id);
@@ -7091,6 +7163,11 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             }}, {{ passive: true }});
         }})();
 
+        /* ====================================================
+           EXAMINATION TIMETABLE ENGINE
+           ==================================================== */
+{timetable_script}
+
         renderQuestions();
     </script>
 
@@ -7109,10 +7186,10 @@ def build_dashboard_for_subject(subject_id=None, write_index=True):
             <i class="mobile-nav-icon hgi-stroke hgi-function-of-x"></i>
             <span class="mobile-nav-label">Formulas</span>
         </button>
-        <a href="timetable.html" class="mobile-nav-item nav-link-timetable" aria-label="Exam Timetable">
+        <button class="mobile-nav-item nav-link-btn" data-view="timetable" onclick="switchPageView('timetable')" aria-label="Exam Timetable">
             <i class="mobile-nav-icon hgi-stroke hgi-calendar-03"></i>
             <span class="mobile-nav-label">Timetable</span>
-        </a>
+        </button>
     </nav>
 </body>
 </html>"""

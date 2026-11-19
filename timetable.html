@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" onerror="this.onerror=null;this.href='vendor/hugeicons/icons.css'">
     <link rel="stylesheet" href="vendor/hugeicons/icons.css">
     <style>
-        :root {
+:root {
             --font-size-h1: 28px;
             --line-height-h1: 36px;
             --font-size-h2: 22px;
@@ -354,6 +354,27 @@
         }
 
         /* ----------------------------------------------------
+           TIMETABLE THEME TOKENS
+           ---------------------------------------------------- */
+        :root {
+            --pastel-sage-count-bg: rgba(32, 92, 54, 0.12);
+            --pastel-peach-count-bg: rgba(154, 67, 24, 0.12);
+            --pastel-done-bg: #edf7ee;
+            --pastel-done-foreground: #205c36;
+            --pastel-done-muted: #f4faf5;
+            --pastel-done-count-bg: rgba(32, 92, 54, 0.14);
+        }
+
+        [data-theme="dark"] {
+            --pastel-sage-count-bg: rgba(52, 211, 153, 0.22);
+            --pastel-peach-count-bg: rgba(251, 146, 60, 0.22);
+            --pastel-done-bg: rgba(52, 211, 153, 0.14);
+            --pastel-done-foreground: #6ee7b7;
+            --pastel-done-muted: rgba(52, 211, 153, 0.08);
+            --pastel-done-count-bg: rgba(52, 211, 153, 0.22);
+        }
+
+/* ----------------------------------------------------
            SUPER MINIMAL HEADER ROW (ZERO BORDERS)
            ---------------------------------------------------- */
         .timetable-header-row {
@@ -907,7 +928,7 @@
             border: none;
         }
 
-        table {
+        .table-wrap table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
@@ -915,7 +936,7 @@
             border: none;
         }
 
-        th {
+        .table-wrap th {
             background: var(--secondary);
             color: var(--muted-foreground);
             font-size: var(--font-size-overline);
@@ -928,29 +949,29 @@
             border: none;
         }
 
-        th:hover {
+        .table-wrap th:hover {
             color: var(--foreground);
         }
 
-        td {
+        .table-wrap td {
             padding: 11px 14px;
             vertical-align: middle;
             border: none;
         }
 
-        tr:nth-child(even) td {
+        .table-wrap tr:nth-child(even) td {
             background: rgba(0, 0, 0, 0.015);
         }
 
-        [data-theme="dark"] tr:nth-child(even) td {
+        [data-theme="dark"] .table-wrap tr:nth-child(even) td {
             background: rgba(255, 255, 255, 0.015);
         }
 
-        tr:hover td {
+        .table-wrap tr:hover td {
             background: var(--secondary);
         }
 
-        tr.row-done td {
+        .table-wrap tr.row-done td {
             background: var(--pastel-done-muted) !important;
         }
 
@@ -1355,7 +1376,68 @@
             gap: 6px;
         }
 
-        /* Floating Scroll to Top Button (Zero Borders) */
+        
+        @media (max-width: 768px) {
+            .timetable-header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 16px 0 10px 0;
+            }
+            .timetable-title {
+                font-size: 20px !important;
+                line-height: 26px !important;
+            }
+            .controls-bar-minimal {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .filter-tabs-minimal {
+                width: 100%;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+            .controls-right-minimal {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .cal-separated-container {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .cal-box {
+                padding: 12px 8px;
+            }
+            .cal-grid-vertical {
+                gap: 2px;
+            }
+            .cal-cell {
+                min-height: 38px;
+                font-size: 11px;
+                padding: 2px;
+            }
+            .cal-row-label {
+                font-size: 11px;
+            }
+            .cal-col-label {
+                font-size: 10px;
+            }
+            .table-wrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group-span2 {
+                grid-column: span 1;
+            }
+        }
+
+
+/* Floating Scroll to Top Button (Zero Borders) */
         .scroll-to-top-btn {
             position: fixed !important;
             bottom: 2rem !important;
@@ -1466,68 +1548,6 @@
                 text-overflow: ellipsis;
                 white-space: nowrap;
             }
-            .timetable-header-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-                padding: 16px 0 10px 0;
-            }
-            .timetable-title {
-                font-size: 20px !important;
-                line-height: 26px !important;
-            }
-            .controls-bar-minimal {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-            .filter-tabs-minimal {
-                width: 100%;
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 2px;
-            }
-            .controls-right-minimal {
-                width: 100%;
-                justify-content: space-between;
-            }
-            .cal-separated-container {
-                grid-template-columns: 1fr;
-                gap: 14px;
-            }
-            .cal-box {
-                padding: 12px 8px;
-            }
-            .cal-grid-vertical {
-                gap: 2px;
-            }
-            .cal-cell {
-                min-height: 38px;
-                font-size: 11px;
-                padding: 2px;
-            }
-            .cal-row-label {
-                font-size: 11px;
-            }
-            .cal-col-label {
-                font-size: 10px;
-            }
-            .table-wrap {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .form-group-span2 {
-                grid-column: span 1;
-            }
-        }
-
-        @media print {
-            .header, .controls-bar-minimal, .theme-toggle-btn, .modal-overlay, .scroll-to-top-btn { display: none !important; }
-            body { background: #fff !important; color: #000 !important; }
-            .table-wrap, .cal-box { box-shadow: none !important; }
         }
     </style>
 </head>
@@ -1536,7 +1556,7 @@
     <!-- STICKY HEADER NAVBAR (MATCHING INDEX.HTML EXACTLY) -->
     <header class="header">
         <div class="container nav">
-            <a href="index.html" class="brand" title="Geotechnical Engineering - II">
+            <a href="index.html#syllabus" class="brand" title="Geotechnical Engineering - II">
                 <span class="brand-title">Geotechnical Engineering - II</span>
             </a>
 
@@ -1571,7 +1591,7 @@
     </header>
 
     <main class="container">
-        <!-- Super Minimal Header Row -->
+<!-- Super Minimal Header Row -->
         <div class="timetable-header-row">
             <div class="timetable-header-left">
                 <h1 class="timetable-title">Examination Timetable</h1>
@@ -1654,7 +1674,7 @@
         <section id="timeline-view" class="timeline-list" style="display: none;"></section>
     </main>
 
-    <!-- CUSTOMIZE TIMETABLE MODAL (ZERO BORDERS) -->
+<!-- CUSTOMIZE TIMETABLE MODAL (ZERO BORDERS) -->
     <div id="editModal" class="modal-overlay" style="display: none;" onclick="handleModalOverlayClick(event)">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
             <div class="modal-header">
@@ -1711,51 +1731,8 @@
                         </div>
                     </div>
 
-                    <div class="form-actions">
-                        <button type="submit" class="btn-primary" id="formSubmitBtn">
-                            <i class="icon hgi-stroke hgi-plus-sign"></i> <span id="formSubmitBtnText">Add Subject</span>
-                        </button>
-                        <button type="button" class="btn-secondary" id="formCancelBtn" onclick="resetExamForm()" style="display: none;">
-                            Cancel Edit
-                        </button>
-                    </div>
-                </form>
-
-                <div class="modal-section-divider">
-                    <span>Scheduled Papers (<span id="modalExamCount">0</span>)</span>
-                </div>
-
-                <!-- Subject List in Modal -->
-                <div id="modalSubjectList" class="modal-subject-list"></div>
-
-                <!-- Presets & Quick Resets -->
-                <div class="modal-presets">
-                    <span class="preset-label">Quick Presets:</span>
-                    <div class="preset-buttons">
-                        <button type="button" class="btn-preset" onclick="loadPreset('default')" title="Reset to standard 3 regular papers">
-                            Reset to 3 Regular Papers
-                        </button>
-                        <button type="button" class="btn-preset" onclick="loadPreset('backlog')" title="Load full SGSITS timetable with 4 backlog subjects">
-                            Load 7 SGSITS Papers (with Backlogs)
-                        </button>
-                        <button type="button" class="btn-preset btn-preset-danger" onclick="loadPreset('clear')" title="Clear all subjects">
-                            Clear All
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <span class="storage-notice">
-                    <i class="icon hgi-stroke hgi-database-01"></i> Stored locally in your browser
-                </span>
-                <button class="btn-primary" onclick="closeEditModal()">Done</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Default 3 regular subjects (Normal Syllabus) for public repo
+// Default 3 regular subjects (Normal Syllabus) for public repo
         const DEFAULT_SCHEDULE = [
             {
                 id: 1,
@@ -1999,8 +1976,8 @@
         let sortAscending = true;
 
         // Theme management (harmonized with index.html)
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
+        const ttThemeToggle = document.getElementById('themeToggle');
+        const ttThemeIcon = document.getElementById('themeIcon');
 
         function initTheme() {
             const saved = localStorage.getItem('geotech_theme') || 
@@ -2018,19 +1995,21 @@
         }
 
         function updateIcon(theme) {
-            if (!themeIcon) return;
-            themeIcon.className = theme === 'dark' ? 'icon hgi-stroke hgi-sun-01' : 'icon hgi-stroke hgi-moon-02';
-            themeIcon.innerHTML = '';
+            if (!ttThemeIcon) return;
+            ttThemeIcon.className = theme === 'dark' ? 'icon hgi-stroke hgi-sun-01' : 'icon hgi-stroke hgi-moon-02';
+            ttThemeIcon.innerHTML = '';
             const metaTheme = document.getElementById('metaThemeColor');
             if (metaTheme) {
                 metaTheme.setAttribute('content', theme === 'dark' ? '#09090b' : '#fbfaf8');
             }
         }
 
-        if (themeToggle) {
-            themeToggle.addEventListener('click', toggleTheme);
+        if (!window.switchPageView) {
+            if (ttThemeToggle) {
+                ttThemeToggle.addEventListener('click', toggleTheme);
+            }
+            initTheme();
         }
-        initTheme();
 
         function initCurrentDateTracker() {
             try {
@@ -2091,7 +2070,8 @@
         /* ====================================================
            LAYOUT ID PILL ENGINE (APPLE / FRAMER-MOTION SMOOTH SLIDING PILLS)
            ==================================================== */
-        const LayoutPillEngine = (function() {
+        if (!window.LayoutPillEngine) {
+            const LayoutPillEngine = (function() {
             const SELECTORS = [
                 '.filter-tabs-minimal',
                 '.view-switchers-minimal',
@@ -2200,6 +2180,7 @@
             };
         })();
         window.LayoutPillEngine = LayoutPillEngine;
+        }
 
         function setFilter(filter) {
             activeFilter = filter;
@@ -2423,6 +2404,18 @@
             if (dateInput) dateInput.value = dateIso;
         }
 
+        function getPyqLink(item) {
+            if (!item.link) return '';
+            const isLocalIndex = (item.link === 'index.html' || item.link === 'index.html#syllabus' || item.link === '#syllabus');
+            if (isLocalIndex) {
+                if (window.switchPageView) {
+                    return `<a href="#syllabus" onclick="window.switchPageView('syllabus');return false;" style="color: var(--pastel-sky-foreground); font-weight: 600; font-size: 12px; margin-right: 4px;">PYQs →</a>`;
+                }
+                return `<a href="index.html#syllabus" style="color: var(--pastel-sky-foreground); font-weight: 600; font-size: 12px; margin-right: 4px;">PYQs →</a>`;
+            }
+            return `<a href="${item.link}" style="color: var(--pastel-sky-foreground); font-weight: 600; font-size: 12px; margin-right: 4px;">PYQs →</a>`;
+        }
+
         function renderTable(filtered) {
             const tbody = document.getElementById('tableBody');
             if (!tbody) return;
@@ -2463,7 +2456,7 @@
                     <td style="font-size: 13px; font-weight: 500;">${item.gap}</td>
                     <td style="text-align: right; white-space: nowrap;">
                         <div style="display: inline-flex; align-items: center; gap: 6px;">
-                            ${item.link ? `<a href="${item.link}" style="color: var(--pastel-sky-foreground); font-weight: 600; font-size: 12px; margin-right: 4px;">PYQs →</a>` : ''}
+                            ${getPyqLink(item)}
                             <button class="btn-icon-action" onclick="openEditModal(${item.id})" title="Edit paper details">
                                 <i class="icon hgi-stroke hgi-pencil-edit-02" style="font-size: 14px;"></i>
                             </button>
@@ -2716,9 +2709,10 @@
         };
 
         // Auto-hide navbar on scroll down, reveal on upscroll
-        (function() {
-            const header = document.querySelector('.header');
-            if (!header) return;
+        if (!window.switchPageView) {
+            (function() {
+                const header = document.querySelector('.header');
+                if (!header) return;
 
             let lastScrollY = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
             let ticking = false;
@@ -2752,12 +2746,32 @@
                     ticking = true;
                 }
             }, { passive: true });
-        })();
+            })();
+        }
 
         renderAll();
         if (window.LayoutPillEngine) {
             window.LayoutPillEngine.init();
         }
+
+        // Window Exports for Unified SPA & Inline Handlers
+        window.renderTimetableAll = renderAll;
+        window.renderAll = renderAll;
+        window.setFilter = setFilter;
+        window.showView = showView;
+        window.toggleDateSort = toggleDateSort;
+        window.toggleExamDone = toggleExamDone;
+        window.deleteExam = deleteExam;
+        window.loadPreset = loadPreset;
+        window.openEditModal = openEditModal;
+        window.closeEditModal = closeEditModal;
+        window.handleModalOverlayClick = handleModalOverlayClick;
+        window.resetExamForm = resetExamForm;
+        window.populateFormForEdit = populateFormForEdit;
+        window.handleFormSubmit = handleFormSubmit;
+        window.handleExamCellClick = handleExamCellClick;
+        window.handleEmptyDateClick = handleEmptyDateClick;
+
     </script>
 
     <!-- Floating Back to Top Button -->

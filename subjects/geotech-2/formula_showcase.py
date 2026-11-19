@@ -1565,7 +1565,7 @@ def enhance_html(html_str):
         out = re.sub(pat, lambda m, r=rep_str: r, out)
 
     # 4. Replace view-formulas
-    old_formulas_view_regex = r'<div class="app-page-view" id="view-formulas">.*?\s*</div>\s*</div>(?=\s*\n\s*(?:<!-- =+\s*\n\s*PAGE VIEW: NOTES|<div class="app-page-view" id="view-notes"|<!-- Embedded High-Performance Data Arrays))'
+    old_formulas_view_regex = r'<div class="app-page-view" id="view-formulas">.*?\s*</div>\s*</div>(?=\s*\n\s*(?:<!-- =+\s*\n\s*PAGE VIEW: NOTES|<!-- =+\s*\n\s*PAGE VIEW 3: EXAMINATION TIMETABLE|<div class="app-page-view" id="view-timetable"|<div class="app-page-view" id="view-notes"|<!-- Embedded High-Performance Data Arrays))'
     out = re.sub(old_formulas_view_regex, lambda m, r=view_html_ready: r, out, count=1, flags=re.DOTALL)
 
     # 5. Insert formulas_js before </body>

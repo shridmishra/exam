@@ -1,372 +1,43 @@
 #!/usr/bin/env python3
 """
-Civil Engineering Examination Timetable Generator.
-Produces timetable.html adhering strictly to:
-- Shared unified navbar identical to index.html (Geotechnical Engineering - II branding, identical nav links)
-- Colored filter badges (Regular = Sage Green, Backlog = Peach Orange, Done = Muted Green, All = Neutral)
-- Zero separate color legends
-- ZERO borders across the whole page (borderless design using pure tonal background separation)
-- LocalStorage persistence with local environment preservation
+Civil Engineering Examination Timetable Generator & Modular Component Provider.
+Produces timetable.html and exposes modular components for index.html:
+- get_timetable_styles()
+- get_timetable_html_view()
+- get_timetable_modal_html()
+- get_timetable_script()
+- generate_timetable_html()
 """
+import sys
 from pathlib import Path
 
-def generate_timetable_html():
-    html = """<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" id="metaThemeColor" content="#fbfaf8">
-    <meta name="format-detection" content="telephone=no">
-    <title>Civil Engineering Exam Timetable | Nov – Dec 2026</title>
-    <meta name="description" content="Civil Engineering Examination Timetable (Nov - Dec 2026). Seamless borderless schedule with colored filter badges, local storage persistence, and dynamic calendars.">
-    <!-- Minimalist Favicon & Touch Icons -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2309090b'/%3E%3Crect x='0.5' y='0.5' width='31' height='31' rx='6.5' fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cpath d='M8 6h16v4H12v4h9v4H12v4h12v4H8z' fill='%23fcfcfd'/%3E%3C/svg%3E">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <!-- Hugeicons Font (CDN with offline local fallback) -->
-    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" onerror="this.onerror=null;this.href='vendor/hugeicons/icons.css'">
-    <link rel="stylesheet" href="vendor/hugeicons/icons.css">
-    <style>
+# Ensure repo root is in sys.path
+_repo_root = Path(__file__).resolve().parent.parent.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+
+_TIMETABLE_STYLES = """        /* ----------------------------------------------------
+           TIMETABLE THEME TOKENS
+           ---------------------------------------------------- */
         :root {
-            --font-size-h1: 28px;
-            --line-height-h1: 36px;
-            --font-size-h2: 22px;
-            --line-height-h2: 28px;
-            --font-size-h6: 15px;
-            --line-height-h6: 20px;
-            --font-size-body-large: 15px;
-            --line-height-body-large: 22px;
-            --font-size-body-medium: 13.5px;
-            --line-height-body-medium: 19px;
-            --font-size-body-small: 12px;
-            --line-height-body-small: 16px;
-            --font-size-button: 13px;
-            --line-height-button: 18px;
-            --font-size-stat: 22px;
-            --line-height-stat: 28px;
-            --font-size-overline: 11px;
-
-            /* Neutral Color Palette (Light Mode - Warm Linen Paper) */
-            --background: #fbfaf8;
-            --foreground: #1e293b;
-            --card: #ffffff;
-            --card-foreground: #1e293b;
-            --secondary: #f3f1ec;
-            --secondary-hover: #e8e5dc;
-            --secondary-foreground: #1e293b;
-            --muted: #f3f1ec;
-            --muted-foreground: #64748b;
-            --primary: #2d3748;
-            --primary-foreground: #ffffff;
-
-            /* Category Tokens (Zero Harsh Borders) */
-            --pastel-sage-bg: #eaf4ed;
-            --pastel-sage-foreground: #205c36;
             --pastel-sage-count-bg: rgba(32, 92, 54, 0.12);
-
-            --pastel-peach-bg: #fff1e8;
-            --pastel-peach-foreground: #9a4318;
             --pastel-peach-count-bg: rgba(154, 67, 24, 0.12);
-
-            --pastel-sky-bg: #ebf5fd;
-            --pastel-sky-foreground: #1a5a90;
-
             --pastel-done-bg: #edf7ee;
             --pastel-done-foreground: #205c36;
             --pastel-done-muted: #f4faf5;
             --pastel-done-count-bg: rgba(32, 92, 54, 0.14);
-
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-full: 9999px;
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --font-mono: ui-monospace, Menlo, Monaco, Consolas, monospace;
         }
 
         [data-theme="dark"] {
-            /* Neutral Color Palette (Dark Mode - Zinc 950 Canvas) */
-            --background: #09090b;
-            --foreground: #fcfcfd;
-            --card: #141416;
-            --card-foreground: #fcfcfd;
-            --secondary: #1c1c1f;
-            --secondary-hover: #27272a;
-            --secondary-foreground: #fcfcfd;
-            --muted: #1c1c1f;
-            --muted-foreground: #a1a1aa;
-            --primary: #fcfcfd;
-            --primary-foreground: #09090b;
-
-            --pastel-sage-bg: rgba(52, 211, 153, 0.16);
-            --pastel-sage-foreground: #34d399;
             --pastel-sage-count-bg: rgba(52, 211, 153, 0.22);
-
-            --pastel-peach-bg: rgba(251, 146, 60, 0.16);
-            --pastel-peach-foreground: #fb923c;
             --pastel-peach-count-bg: rgba(251, 146, 60, 0.22);
-
-            --pastel-sky-bg: rgba(56, 189, 248, 0.16);
-            --pastel-sky-foreground: #38bdf8;
-
             --pastel-done-bg: rgba(52, 211, 153, 0.14);
             --pastel-done-foreground: #6ee7b7;
             --pastel-done-muted: rgba(52, 211, 153, 0.08);
             --pastel-done-count-bg: rgba(52, 211, 153, 0.22);
-
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-            transition: background-color 0.15s ease, color 0.15s ease;
-        }
-
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
-            -webkit-text-size-adjust: 100%;
-        }
-
-        body {
-            background-color: var(--background);
-            color: var(--foreground);
-            font-family: var(--font-sans);
-            font-size: var(--font-size-body-medium);
-            line-height: var(--line-height-body-medium);
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-        }
-
-        button, a, input, select {
-            touch-action: manipulation;
-            border: none;
-            outline: none;
-        }
-
-        a { color: inherit; text-decoration: none; }
-
-        /* Hugeicons Tokens */
-        .icon,
-        .hgi-stroke.icon,
-        i.hgi-stroke {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 1.15rem;
-            height: 1.15rem;
-            font-size: 1.15rem;
-            line-height: 1;
-            vertical-align: middle;
-            flex-shrink: 0;
-            font-style: normal;
-        }
-
-        .icon-sm {
-            width: 1rem;
-            height: 1rem;
-            font-size: 1rem;
-        }
-
-        .mobile-nav-icon,
-        .hgi-stroke.mobile-nav-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            font-size: 22px;
-            line-height: 1;
-            transition: transform 0.15s ease;
-            font-style: normal;
-        }
-
-        .container {
-            max-width: 1440px;
-            width: 100%;
-            margin: 0 auto;
-            padding-left: max(1rem, env(safe-area-inset-left));
-            padding-right: max(1rem, env(safe-area-inset-right));
-            box-sizing: border-box;
-        }
-
-        @media (min-width: 640px) {
-            .container {
-                padding-left: max(1.5rem, env(safe-area-inset-left));
-                padding-right: max(1.5rem, env(safe-area-inset-right));
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .container {
-                padding-left: max(2.5rem, env(safe-area-inset-left));
-                padding-right: max(2.5rem, env(safe-area-inset-right));
-            }
-        }
-
-        @media (min-width: 1440px) {
-            .container {
-                padding-left: max(3.5rem, env(safe-area-inset-left));
-                padding-right: max(3.5rem, env(safe-area-inset-right));
-            }
-        }
-
-        main.container {
-            padding-bottom: 3.5rem;
-        }
-
-        /* ----------------------------------------------------
-           STICKY HEADER NAVBAR (MATCHING INDEX.HTML EXACTLY)
-           Zero Borders • Pure Background Separation
-           ---------------------------------------------------- */
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background-color: var(--card);
-            box-shadow: var(--shadow-sm);
-            border: none;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
-            will-change: transform;
-            padding-top: env(safe-area-inset-top, 0px);
-        }
-
-        .header.header-hidden {
-            transform: translateY(-100%);
-            box-shadow: none;
-            pointer-events: none;
-        }
-
-        .nav {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            height: 60px;
-            gap: 1rem;
-        }
-
-        .brand {
-            justify-self: start;
-            min-width: 0;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-shrink: 0;
-            white-space: nowrap;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .brand-title {
-            font-size: 1.0625rem;
-            font-weight: 700;
-            color: var(--foreground);
-            letter-spacing: -0.015em;
-        }
-
-        .nav-links {
-            justify-self: center;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            list-style: none;
-            overflow-x: auto;
-            scrollbar-width: none;
-            position: relative;
-        }
-
-        .nav-links::-webkit-scrollbar { display: none; }
-
-        .nav-links .layout-pill-indicator {
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 1;
-            background-color: var(--secondary);
-            border-radius: var(--radius-md);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                        width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                        height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                        opacity 0.2s ease;
-            will-change: transform, width, height;
-        }
-
-        [data-theme="dark"] .nav-links .layout-pill-indicator {
-            background-color: #27272a;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-        }
-
-        .nav-link-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.5rem 0.85rem;
-            background-color: transparent !important;
-            color: var(--muted-foreground);
-            font-size: 0.875rem;
-            font-weight: 500;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            border: none;
-            transition: color 0.18s ease, transform 0.1s ease;
-            white-space: nowrap;
-            text-decoration: none;
-            position: relative;
-            z-index: 2;
-        }
-
-        .nav-link-btn:hover:not(.active) {
-            color: var(--foreground);
-        }
-
-        .nav-link-btn:active {
-            transform: scale(0.96);
-        }
-
-        .nav-link-btn.active {
-            background-color: transparent !important;
-            box-shadow: none !important;
-            color: var(--foreground) !important;
-            font-weight: 600;
-        }
-
-        .nav-actions {
-            justify-self: end;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-shrink: 0;
-        }
-
-        .theme-toggle-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            background-color: var(--secondary);
-            color: var(--foreground);
-            border-radius: var(--radius-md);
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.15s ease;
-        }
-
-        .theme-toggle-btn:hover {
-            background-color: var(--secondary-hover);
-        }
-
-        /* ----------------------------------------------------
+/* ----------------------------------------------------
            SUPER MINIMAL HEADER ROW (ZERO BORDERS)
            ---------------------------------------------------- */
         .timetable-header-row {
@@ -920,7 +591,7 @@ def generate_timetable_html():
             border: none;
         }
 
-        table {
+        .table-wrap table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
@@ -928,7 +599,7 @@ def generate_timetable_html():
             border: none;
         }
 
-        th {
+        .table-wrap th {
             background: var(--secondary);
             color: var(--muted-foreground);
             font-size: var(--font-size-overline);
@@ -941,29 +612,29 @@ def generate_timetable_html():
             border: none;
         }
 
-        th:hover {
+        .table-wrap th:hover {
             color: var(--foreground);
         }
 
-        td {
+        .table-wrap td {
             padding: 11px 14px;
             vertical-align: middle;
             border: none;
         }
 
-        tr:nth-child(even) td {
+        .table-wrap tr:nth-child(even) td {
             background: rgba(0, 0, 0, 0.015);
         }
 
-        [data-theme="dark"] tr:nth-child(even) td {
+        [data-theme="dark"] .table-wrap tr:nth-child(even) td {
             background: rgba(255, 255, 255, 0.015);
         }
 
-        tr:hover td {
+        .table-wrap tr:hover td {
             background: var(--secondary);
         }
 
-        tr.row-done td {
+        .table-wrap tr.row-done td {
             background: var(--pastel-done-muted) !important;
         }
 
@@ -1368,117 +1039,8 @@ def generate_timetable_html():
             gap: 6px;
         }
 
-        /* Floating Scroll to Top Button (Zero Borders) */
-        .scroll-to-top-btn {
-            position: fixed !important;
-            bottom: 2rem !important;
-            right: 2rem !important;
-            z-index: 99999 !important;
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-full);
-            background: var(--primary);
-            color: var(--primary-foreground);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
-            border: none !important;
-            display: inline-flex !important;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0.95;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, opacity 0.2s ease;
-        }
-
-        .scroll-to-top-btn:hover {
-            opacity: 1;
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-        }
-
-        /* Mobile Bottom Nav (Zero Borders) */
-        .mobile-bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 9999;
-            background-color: var(--card);
-            border: none;
-            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.05);
-            padding-bottom: env(safe-area-inset-bottom, 0px);
-            height: calc(56px + env(safe-area-inset-bottom, 0px));
-            align-items: stretch;
-            justify-content: space-around;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        [data-theme="dark"] .mobile-bottom-nav {
-            box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.5);
-        }
-
-        .mobile-nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            background: transparent;
-            color: var(--muted-foreground);
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            padding: 6px 0 4px;
-            position: relative;
-            user-select: none;
-            transition: color 0.15s ease, transform 0.1s ease;
-            touch-action: manipulation;
-        }
-
-        .mobile-nav-item:active {
-            transform: scale(0.94);
-        }
-
-        .mobile-nav-item.active {
-            color: var(--foreground);
-            font-weight: 600;
-        }
-
-        .mobile-nav-label {
-            font-size: 11px;
-            line-height: 1.2;
-            letter-spacing: -0.01em;
-        }
-
-        .mobile-nav-item.active .mobile-nav-label {
-            font-weight: 600;
-        }
-
+        
         @media (max-width: 768px) {
-            .mobile-bottom-nav {
-                display: flex;
-            }
-            body {
-                padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
-            }
-            .header .nav-links {
-                display: none !important;
-            }
-            .nav {
-                display: flex;
-                justify-content: space-between;
-                height: 52px;
-                gap: 0.5rem;
-            }
-            .brand-title {
-                font-size: 0.95rem;
-                max-width: calc(100vw - 110px);
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
             .timetable-header-row {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1536,55 +1098,9 @@ def generate_timetable_html():
                 grid-column: span 1;
             }
         }
+"""
 
-        @media print {
-            .header, .controls-bar-minimal, .theme-toggle-btn, .modal-overlay, .scroll-to-top-btn { display: none !important; }
-            body { background: #fff !important; color: #000 !important; }
-            .table-wrap, .cal-box { box-shadow: none !important; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- STICKY HEADER NAVBAR (MATCHING INDEX.HTML EXACTLY) -->
-    <header class="header">
-        <div class="container nav">
-            <a href="index.html" class="brand" title="Geotechnical Engineering - II">
-                <span class="brand-title">Geotechnical Engineering - II</span>
-            </a>
-
-            <!-- Nav links matching index.html navigation hierarchy -->
-            <ul class="nav-links">
-                <li>
-                    <a href="index.html#syllabus" class="nav-link-btn" data-view="syllabus" title="PYQ Checklist">
-                        <i class="icon icon-sm hgi-stroke hgi-task-01"></i>
-                        Checklist
-                    </a>
-                </li>
-                <li>
-                    <a href="index.html#formulas" class="nav-link-btn" data-view="formulas" title="Master Formulas">
-                        <i class="icon icon-sm hgi-stroke hgi-function-of-x"></i>
-                        Formulas
-                    </a>
-                </li>
-                <li>
-                    <a href="timetable.html" class="nav-link-btn nav-link-timetable active" title="View Exam Timetable">
-                        <i class="icon icon-sm hgi-stroke hgi-calendar-03"></i>
-                        Timetable
-                    </a>
-                </li>
-            </ul>
-
-            <div class="nav-actions">
-                <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
-                    <i class="icon hgi-stroke hgi-sun-01" id="themeIcon"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="container">
-        <!-- Super Minimal Header Row -->
+_TIMETABLE_HTML_VIEW = """<!-- Super Minimal Header Row -->
         <div class="timetable-header-row">
             <div class="timetable-header-left">
                 <h1 class="timetable-title">Examination Timetable</h1>
@@ -1664,10 +1180,9 @@ def generate_timetable_html():
         </section>
 
         <!-- VIEW 3: TIMELINE -->
-        <section id="timeline-view" class="timeline-list" style="display: none;"></section>
-    </main>
+        <section id="timeline-view" class="timeline-list" style="display: none;"></section>"""
 
-    <!-- CUSTOMIZE TIMETABLE MODAL (ZERO BORDERS) -->
+_TIMETABLE_MODAL_HTML = """<!-- CUSTOMIZE TIMETABLE MODAL (ZERO BORDERS) -->
     <div id="editModal" class="modal-overlay" style="display: none;" onclick="handleModalOverlayClick(event)">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
             <div class="modal-header">
@@ -1722,53 +1237,9 @@ def generate_timetable_html():
                                 <span>Mark paper as concluded / completed (Muted Green ✓)</span>
                             </label>
                         </div>
-                    </div>
+                    </div>"""
 
-                    <div class="form-actions">
-                        <button type="submit" class="btn-primary" id="formSubmitBtn">
-                            <i class="icon hgi-stroke hgi-plus-sign"></i> <span id="formSubmitBtnText">Add Subject</span>
-                        </button>
-                        <button type="button" class="btn-secondary" id="formCancelBtn" onclick="resetExamForm()" style="display: none;">
-                            Cancel Edit
-                        </button>
-                    </div>
-                </form>
-
-                <div class="modal-section-divider">
-                    <span>Scheduled Papers (<span id="modalExamCount">0</span>)</span>
-                </div>
-
-                <!-- Subject List in Modal -->
-                <div id="modalSubjectList" class="modal-subject-list"></div>
-
-                <!-- Presets & Quick Resets -->
-                <div class="modal-presets">
-                    <span class="preset-label">Quick Presets:</span>
-                    <div class="preset-buttons">
-                        <button type="button" class="btn-preset" onclick="loadPreset('default')" title="Reset to standard 3 regular papers">
-                            Reset to 3 Regular Papers
-                        </button>
-                        <button type="button" class="btn-preset" onclick="loadPreset('backlog')" title="Load full SGSITS timetable with 4 backlog subjects">
-                            Load 7 SGSITS Papers (with Backlogs)
-                        </button>
-                        <button type="button" class="btn-preset btn-preset-danger" onclick="loadPreset('clear')" title="Clear all subjects">
-                            Clear All
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <span class="storage-notice">
-                    <i class="icon hgi-stroke hgi-database-01"></i> Stored locally in your browser
-                </span>
-                <button class="btn-primary" onclick="closeEditModal()">Done</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Default 3 regular subjects (Normal Syllabus) for public repo
+_TIMETABLE_SCRIPT = """// Default 3 regular subjects (Normal Syllabus) for public repo
         const DEFAULT_SCHEDULE = [
             {
                 id: 1,
@@ -2012,8 +1483,8 @@ def generate_timetable_html():
         let sortAscending = true;
 
         // Theme management (harmonized with index.html)
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
+        const ttThemeToggle = document.getElementById('themeToggle');
+        const ttThemeIcon = document.getElementById('themeIcon');
 
         function initTheme() {
             const saved = localStorage.getItem('geotech_theme') || 
@@ -2031,19 +1502,21 @@ def generate_timetable_html():
         }
 
         function updateIcon(theme) {
-            if (!themeIcon) return;
-            themeIcon.className = theme === 'dark' ? 'icon hgi-stroke hgi-sun-01' : 'icon hgi-stroke hgi-moon-02';
-            themeIcon.innerHTML = '';
+            if (!ttThemeIcon) return;
+            ttThemeIcon.className = theme === 'dark' ? 'icon hgi-stroke hgi-sun-01' : 'icon hgi-stroke hgi-moon-02';
+            ttThemeIcon.innerHTML = '';
             const metaTheme = document.getElementById('metaThemeColor');
             if (metaTheme) {
                 metaTheme.setAttribute('content', theme === 'dark' ? '#09090b' : '#fbfaf8');
             }
         }
 
-        if (themeToggle) {
-            themeToggle.addEventListener('click', toggleTheme);
+        if (!window.switchPageView) {
+            if (ttThemeToggle) {
+                ttThemeToggle.addEventListener('click', toggleTheme);
+            }
+            initTheme();
         }
-        initTheme();
 
         function initCurrentDateTracker() {
             try {
@@ -2104,7 +1577,8 @@ def generate_timetable_html():
         /* ====================================================
            LAYOUT ID PILL ENGINE (APPLE / FRAMER-MOTION SMOOTH SLIDING PILLS)
            ==================================================== */
-        const LayoutPillEngine = (function() {
+        if (!window.LayoutPillEngine) {
+            const LayoutPillEngine = (function() {
             const SELECTORS = [
                 '.filter-tabs-minimal',
                 '.view-switchers-minimal',
@@ -2213,6 +1687,7 @@ def generate_timetable_html():
             };
         })();
         window.LayoutPillEngine = LayoutPillEngine;
+        }
 
         function setFilter(filter) {
             activeFilter = filter;
@@ -2436,6 +1911,18 @@ def generate_timetable_html():
             if (dateInput) dateInput.value = dateIso;
         }
 
+        function getPyqLink(item) {
+            if (!item.link) return '';
+            const isLocalIndex = (item.link === 'index.html' || item.link === 'index.html#syllabus' || item.link === '#syllabus');
+            if (isLocalIndex) {
+                if (window.switchPageView) {
+                    return `<a href="#syllabus" onclick="window.switchPageView('syllabus');return false;" style="color: var(--pastel-sky-foreground); font-weight: 600; font-size: 12px; margin-right: 4px;">PYQs →</a>`;
+                }
+                return `<a href="index.html#syllabus" style="color: var(--pastel-sky-foreground); font-weight: 600; font-size: 12px; margin-right: 4px;">PYQs →</a>`;
+            }
+            return `<a href="${item.link}" style="color: var(--pastel-sky-foreground); font-weight: 600; font-size: 12px; margin-right: 4px;">PYQs →</a>`;
+        }
+
         function renderTable(filtered) {
             const tbody = document.getElementById('tableBody');
             if (!tbody) return;
@@ -2476,7 +1963,7 @@ def generate_timetable_html():
                     <td style="font-size: 13px; font-weight: 500;">${item.gap}</td>
                     <td style="text-align: right; white-space: nowrap;">
                         <div style="display: inline-flex; align-items: center; gap: 6px;">
-                            ${item.link ? `<a href="${item.link}" style="color: var(--pastel-sky-foreground); font-weight: 600; font-size: 12px; margin-right: 4px;">PYQs →</a>` : ''}
+                            ${getPyqLink(item)}
                             <button class="btn-icon-action" onclick="openEditModal(${item.id})" title="Edit paper details">
                                 <i class="icon hgi-stroke hgi-pencil-edit-02" style="font-size: 14px;"></i>
                             </button>
@@ -2729,9 +2216,10 @@ def generate_timetable_html():
         };
 
         // Auto-hide navbar on scroll down, reveal on upscroll
-        (function() {
-            const header = document.querySelector('.header');
-            if (!header) return;
+        if (!window.switchPageView) {
+            (function() {
+                const header = document.querySelector('.header');
+                if (!header) return;
 
             let lastScrollY = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
             let ticking = false;
@@ -2765,12 +2253,574 @@ def generate_timetable_html():
                     ticking = true;
                 }
             }, { passive: true });
-        })();
+            })();
+        }
 
         renderAll();
         if (window.LayoutPillEngine) {
             window.LayoutPillEngine.init();
         }
+
+        // Window Exports for Unified SPA & Inline Handlers
+        window.renderTimetableAll = renderAll;
+        window.renderAll = renderAll;
+        window.setFilter = setFilter;
+        window.showView = showView;
+        window.toggleDateSort = toggleDateSort;
+        window.toggleExamDone = toggleExamDone;
+        window.deleteExam = deleteExam;
+        window.loadPreset = loadPreset;
+        window.openEditModal = openEditModal;
+        window.closeEditModal = closeEditModal;
+        window.handleModalOverlayClick = handleModalOverlayClick;
+        window.resetExamForm = resetExamForm;
+        window.populateFormForEdit = populateFormForEdit;
+        window.handleFormSubmit = handleFormSubmit;
+        window.handleExamCellClick = handleExamCellClick;
+        window.handleEmptyDateClick = handleEmptyDateClick;
+"""
+
+_BASE_CSS = """:root {
+            --font-size-h1: 28px;
+            --line-height-h1: 36px;
+            --font-size-h2: 22px;
+            --line-height-h2: 28px;
+            --font-size-h6: 15px;
+            --line-height-h6: 20px;
+            --font-size-body-large: 15px;
+            --line-height-body-large: 22px;
+            --font-size-body-medium: 13.5px;
+            --line-height-body-medium: 19px;
+            --font-size-body-small: 12px;
+            --line-height-body-small: 16px;
+            --font-size-button: 13px;
+            --line-height-button: 18px;
+            --font-size-stat: 22px;
+            --line-height-stat: 28px;
+            --font-size-overline: 11px;
+
+            /* Neutral Color Palette (Light Mode - Warm Linen Paper) */
+            --background: #fbfaf8;
+            --foreground: #1e293b;
+            --card: #ffffff;
+            --card-foreground: #1e293b;
+            --secondary: #f3f1ec;
+            --secondary-hover: #e8e5dc;
+            --secondary-foreground: #1e293b;
+            --muted: #f3f1ec;
+            --muted-foreground: #64748b;
+            --primary: #2d3748;
+            --primary-foreground: #ffffff;
+
+            /* Category Tokens (Zero Harsh Borders) */
+            --pastel-sage-bg: #eaf4ed;
+            --pastel-sage-foreground: #205c36;
+            --pastel-sage-count-bg: rgba(32, 92, 54, 0.12);
+
+            --pastel-peach-bg: #fff1e8;
+            --pastel-peach-foreground: #9a4318;
+            --pastel-peach-count-bg: rgba(154, 67, 24, 0.12);
+
+            --pastel-sky-bg: #ebf5fd;
+            --pastel-sky-foreground: #1a5a90;
+
+            --pastel-done-bg: #edf7ee;
+            --pastel-done-foreground: #205c36;
+            --pastel-done-muted: #f4faf5;
+            --pastel-done-count-bg: rgba(32, 92, 54, 0.14);
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-full: 9999px;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: ui-monospace, Menlo, Monaco, Consolas, monospace;
+        }
+
+        [data-theme="dark"] {
+            /* Neutral Color Palette (Dark Mode - Zinc 950 Canvas) */
+            --background: #09090b;
+            --foreground: #fcfcfd;
+            --card: #141416;
+            --card-foreground: #fcfcfd;
+            --secondary: #1c1c1f;
+            --secondary-hover: #27272a;
+            --secondary-foreground: #fcfcfd;
+            --muted: #1c1c1f;
+            --muted-foreground: #a1a1aa;
+            --primary: #fcfcfd;
+            --primary-foreground: #09090b;
+
+            --pastel-sage-bg: rgba(52, 211, 153, 0.16);
+            --pastel-sage-foreground: #34d399;
+            --pastel-sage-count-bg: rgba(52, 211, 153, 0.22);
+
+            --pastel-peach-bg: rgba(251, 146, 60, 0.16);
+            --pastel-peach-foreground: #fb923c;
+            --pastel-peach-count-bg: rgba(251, 146, 60, 0.22);
+
+            --pastel-sky-bg: rgba(56, 189, 248, 0.16);
+            --pastel-sky-foreground: #38bdf8;
+
+            --pastel-done-bg: rgba(52, 211, 153, 0.14);
+            --pastel-done-foreground: #6ee7b7;
+            --pastel-done-muted: rgba(52, 211, 153, 0.08);
+            --pastel-done-count-bg: rgba(52, 211, 153, 0.22);
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: var(--font-sans);
+            font-size: var(--font-size-body-medium);
+            line-height: var(--line-height-body-medium);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        button, a, input, select {
+            touch-action: manipulation;
+            border: none;
+            outline: none;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* Hugeicons Tokens */
+        .icon,
+        .hgi-stroke.icon,
+        i.hgi-stroke {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.15rem;
+            height: 1.15rem;
+            font-size: 1.15rem;
+            line-height: 1;
+            vertical-align: middle;
+            flex-shrink: 0;
+            font-style: normal;
+        }
+
+        .icon-sm {
+            width: 1rem;
+            height: 1rem;
+            font-size: 1rem;
+        }
+
+        .mobile-nav-icon,
+        .hgi-stroke.mobile-nav-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            font-size: 22px;
+            line-height: 1;
+            transition: transform 0.15s ease;
+            font-style: normal;
+        }
+
+        .container {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                padding-left: max(1.5rem, env(safe-area-inset-left));
+                padding-right: max(1.5rem, env(safe-area-inset-right));
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding-left: max(2.5rem, env(safe-area-inset-left));
+                padding-right: max(2.5rem, env(safe-area-inset-right));
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .container {
+                padding-left: max(3.5rem, env(safe-area-inset-left));
+                padding-right: max(3.5rem, env(safe-area-inset-right));
+            }
+        }
+
+        main.container {
+            padding-bottom: 3.5rem;
+        }
+
+        /* ----------------------------------------------------
+           STICKY HEADER NAVBAR (MATCHING INDEX.HTML EXACTLY)
+           Zero Borders • Pure Background Separation
+           ---------------------------------------------------- */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--card);
+            box-shadow: var(--shadow-sm);
+            border: none;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+            will-change: transform;
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+
+        .header.header-hidden {
+            transform: translateY(-100%);
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+        .nav {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            height: 60px;
+            gap: 1rem;
+        }
+
+        .brand {
+            justify-self: start;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+            white-space: nowrap;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .brand-title {
+            font-size: 1.0625rem;
+            font-weight: 700;
+            color: var(--foreground);
+            letter-spacing: -0.015em;
+        }
+
+        .nav-links {
+            justify-self: center;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            list-style: none;
+            overflow-x: auto;
+            scrollbar-width: none;
+            position: relative;
+        }
+
+        .nav-links::-webkit-scrollbar { display: none; }
+
+        .nav-links .layout-pill-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-color: var(--secondary);
+            border-radius: var(--radius-md);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.2s ease;
+            will-change: transform, width, height;
+        }
+
+        [data-theme="dark"] .nav-links .layout-pill-indicator {
+            background-color: #27272a;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.5rem 0.85rem;
+            background-color: transparent !important;
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            border: none;
+            transition: color 0.18s ease, transform 0.1s ease;
+            white-space: nowrap;
+            text-decoration: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-link-btn:hover:not(.active) {
+            color: var(--foreground);
+        }
+
+        .nav-link-btn:active {
+            transform: scale(0.96);
+        }
+
+        .nav-link-btn.active {
+            background-color: transparent !important;
+            box-shadow: none !important;
+            color: var(--foreground) !important;
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            justify-self: end;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background-color: var(--secondary);
+            color: var(--foreground);
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--secondary-hover);
+        }"""
+
+_EXTRA_CSS = """/* Floating Scroll to Top Button (Zero Borders) */
+        .scroll-to-top-btn {
+            position: fixed !important;
+            bottom: 2rem !important;
+            right: 2rem !important;
+            z-index: 99999 !important;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-full);
+            background: var(--primary);
+            color: var(--primary-foreground);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+            border: none !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.95;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, opacity 0.2s ease;
+        }
+
+        .scroll-to-top-btn:hover {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Mobile Bottom Nav (Zero Borders) */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background-color: var(--card);
+            border: none;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.05);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            height: calc(56px + env(safe-area-inset-bottom, 0px));
+            align-items: stretch;
+            justify-content: space-around;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        [data-theme="dark"] .mobile-bottom-nav {
+            box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.5);
+        }
+
+        .mobile-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            background: transparent;
+            color: var(--muted-foreground);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 6px 0 4px;
+            position: relative;
+            user-select: none;
+            transition: color 0.15s ease, transform 0.1s ease;
+            touch-action: manipulation;
+        }
+
+        .mobile-nav-item:active {
+            transform: scale(0.94);
+        }
+
+        .mobile-nav-item.active {
+            color: var(--foreground);
+            font-weight: 600;
+        }
+
+        .mobile-nav-label {
+            font-size: 11px;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        .mobile-nav-item.active .mobile-nav-label {
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-bottom-nav {
+                display: flex;
+            }
+            body {
+                padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+            }
+            .header .nav-links {
+                display: none !important;
+            }
+            .nav {
+                display: flex;
+                justify-content: space-between;
+                height: 52px;
+                gap: 0.5rem;
+            }
+            .brand-title {
+                font-size: 0.95rem;
+                max-width: calc(100vw - 110px);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }"""
+
+def get_timetable_styles() -> str:
+    """Returns CSS styles required for the examination timetable."""
+    return _TIMETABLE_STYLES
+
+def get_timetable_html_view() -> str:
+    """Returns HTML content for the timetable page view container."""
+    return _TIMETABLE_HTML_VIEW
+
+def get_timetable_modal_html() -> str:
+    """Returns HTML markup for the customize timetable modal."""
+    return _TIMETABLE_MODAL_HTML
+
+def get_timetable_script() -> str:
+    """Returns JavaScript code controlling the timetable engine."""
+    return _TIMETABLE_SCRIPT
+
+def generate_timetable_html() -> str:
+    """Generates the complete standalone timetable.html page."""
+    styles = get_timetable_styles()
+    view_html = get_timetable_html_view()
+    modal_html = get_timetable_modal_html()
+    script_js = get_timetable_script()
+
+    template = """<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" id="metaThemeColor" content="#fbfaf8">
+    <meta name="format-detection" content="telephone=no">
+    <title>Civil Engineering Exam Timetable | Nov – Dec 2026</title>
+    <meta name="description" content="Civil Engineering Examination Timetable (Nov - Dec 2026). Seamless borderless schedule with colored filter badges, local storage persistence, and dynamic calendars.">
+    <!-- Minimalist Favicon & Touch Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2309090b'/%3E%3Crect x='0.5' y='0.5' width='31' height='31' rx='6.5' fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cpath d='M8 6h16v4H12v4h9v4H12v4h12v4H8z' fill='%23fcfcfd'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <!-- Hugeicons Font (CDN with offline local fallback) -->
+    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" onerror="this.onerror=null;this.href='vendor/hugeicons/icons.css'">
+    <link rel="stylesheet" href="vendor/hugeicons/icons.css">
+    <style>
+__STYLES_PLACEHOLDER__
+    </style>
+</head>
+<body>
+
+    <!-- STICKY HEADER NAVBAR (MATCHING INDEX.HTML EXACTLY) -->
+    <header class="header">
+        <div class="container nav">
+            <a href="index.html#syllabus" class="brand" title="Geotechnical Engineering - II">
+                <span class="brand-title">Geotechnical Engineering - II</span>
+            </a>
+
+            <!-- Nav links matching index.html navigation hierarchy -->
+            <ul class="nav-links">
+                <li>
+                    <a href="index.html#syllabus" class="nav-link-btn" data-view="syllabus" title="PYQ Checklist">
+                        <i class="icon icon-sm hgi-stroke hgi-task-01"></i>
+                        Checklist
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html#formulas" class="nav-link-btn" data-view="formulas" title="Master Formulas">
+                        <i class="icon icon-sm hgi-stroke hgi-function-of-x"></i>
+                        Formulas
+                    </a>
+                </li>
+                <li>
+                    <a href="timetable.html" class="nav-link-btn nav-link-timetable active" title="View Exam Timetable">
+                        <i class="icon icon-sm hgi-stroke hgi-calendar-03"></i>
+                        Timetable
+                    </a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
+                    <i class="icon hgi-stroke hgi-sun-01" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+__VIEW_PLACEHOLDER__
+    </main>
+
+__MODAL_PLACEHOLDER__
+
+    <script>
+__SCRIPT_PLACEHOLDER__
     </script>
 
     <!-- Floating Back to Top Button -->
@@ -2795,12 +2845,24 @@ def generate_timetable_html():
     </nav>
 </body>
 </html>"""
-    return html
+
+    full_css = _BASE_CSS + "\n\n" + styles + "\n\n" + _EXTRA_CSS
+    out = template.replace("__STYLES_PLACEHOLDER__", full_css)
+    out = out.replace("__VIEW_PLACEHOLDER__", view_html)
+    out = out.replace("__MODAL_PLACEHOLDER__", modal_html)
+    out = out.replace("__SCRIPT_PLACEHOLDER__", script_js)
+    return out
 
 if __name__ == "__main__":
-    root_dir = Path(__file__).resolve().parent.parent.parent
-    out_file = root_dir / "timetable.html"
+    out_file = _repo_root / "timetable.html"
     content = generate_timetable_html()
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(content)
     print(f"Successfully generated {out_file} with borderless design, colored filter badges, and unified navbar!")
+
+    # Also rebuild index.html if generate_dashboard is available
+    try:
+        from generate_dashboard import build_dashboard_for_subject
+        build_dashboard_for_subject(write_index=True)
+    except Exception as e:
+        print(f"Notice: automatic index update encountered: {e}")
