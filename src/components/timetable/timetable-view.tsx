@@ -396,15 +396,6 @@ export function TimetableView({ presets }: TimetableProps) {
       <div className="timetable-header-row">
         <div className="timetable-header-left">
           <h1 className="timetable-title">Examination Timetable</h1>
-          <div className="timetable-subtitle">
-            <span>Civil Engineering</span>
-            <span className="sep">&bull;</span>
-            <span>Nov – Dec 2026</span>
-            <span className="sep">&bull;</span>
-            <span>2:00 – 5:00 PM</span>
-            <span className="sep">&bull;</span>
-            <span className="timetable-subtle-badge">SGSITS Indore</span>
-          </div>
         </div>
 
         <div className="timetable-header-right">

@@ -33,6 +33,9 @@ interface FilterButtonProps {
   className?: string;
 }
 
+const pillTrackClassName =
+  "no-scrollbar inline-flex min-w-0 items-center gap-0.5 overflow-x-auto rounded-lg bg-secondary/70 dark:bg-secondary/50 p-0.5 ring-1 ring-border/25 overscroll-x-contain";
+
 function FilterButton({
   active,
   onClick,
@@ -48,10 +51,10 @@ function FilterButton({
       onClick={onClick}
       title={title}
       className={cn(
-        "h-7 px-2 text-xs font-medium rounded-lg transition-all select-none shrink-0 whitespace-nowrap",
+        "h-7 px-2 text-xs font-medium rounded-md transition-all select-none shrink-0 whitespace-nowrap",
         active
-          ? "bg-filter-active text-filter-active-foreground font-semibold shadow-2xs ring-1 ring-border/40"
-          : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/60",
+          ? "bg-card text-foreground dark:bg-filter-active dark:text-filter-active-foreground font-semibold shadow-2xs ring-1 ring-border/20"
+          : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-card/40 dark:hover:bg-card/50",
         className
       )}
     >

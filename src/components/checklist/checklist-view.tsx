@@ -437,9 +437,6 @@ export function ChecklistView({
           <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
             Checklist
           </h1>
-          <h2 className="text-[11px] sm:text-xs font-medium text-muted-foreground mt-0.5">
-            Question Bank
-          </h2>
         </div>
 
         <div className="flex items-center gap-2.5 max-w-full overflow-x-auto no-scrollbar pb-1 overscroll-x-contain">

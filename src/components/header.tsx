@@ -109,8 +109,10 @@ export function Header({
     <header
       onFocusCapture={() => setIsVisible(true)}
       className={cn(
-        "sticky top-0 z-40 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform",
-        isVisible ? "translate-y-0" : "-translate-y-full pointer-events-none shadow-none"
+        "sticky top-0 z-40 w-full bg-card/90 backdrop-blur-md supports-[backdrop-filter]:bg-card/80 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform",
+        isVisible
+          ? "translate-y-0 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
+          : "-translate-y-full pointer-events-none shadow-none"
       )}
     >
       <div className="container relative flex h-14 sm:h-16 items-center justify-between gap-2 sm:gap-4">

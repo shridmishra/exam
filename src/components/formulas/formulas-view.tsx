@@ -54,9 +54,6 @@ export function FormulasView({ formulas, unitTitles }: FormulasViewProps) {
         <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
           Master Formulas
         </h1>
-        <h2 className="text-[11px] sm:text-xs font-medium text-muted-foreground mt-0.5">
-          Governing Equations
-        </h2>
       </div>
 
       {/* Refined Minimal Control Bar */}

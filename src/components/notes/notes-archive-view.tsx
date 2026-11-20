@@ -160,9 +160,6 @@ export function NotesArchiveView({
           <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
             Personal Study Archive
           </h1>
-          <h2 className="text-[11px] sm:text-xs font-medium text-muted-foreground mt-0.5">
-            Notes &amp; Custom Answers
-          </h2>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">

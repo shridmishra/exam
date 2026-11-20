@@ -7,7 +7,6 @@ import { FormulasView } from "@/components/formulas/formulas-view";
 import { TimetableView } from "@/components/timetable/timetable-view";
 import { NotesArchiveView } from "@/components/notes/notes-archive-view";
 import { MobileNav } from "@/components/common/mobile-nav";
-import { BackToTop } from "@/components/common/back-to-top";
 
 import rawQuestions from "@/data/questions.json";
 import rawClusters from "@/data/canonical.json";
@@ -191,7 +190,6 @@ export default function Home() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <BackToTop />
     </div>
   );
 }
