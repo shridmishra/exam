@@ -10,6 +10,11 @@ import {
   Calendar03Icon,
   Sun03Icon,
   Moon02Icon,
+  Computer01Icon,
+  Bulb01Icon,
+  MessageEdit01Icon,
+  GithubIcon,
+  UserIcon,
   ChevronDownIcon,
   Tick02Icon,
 } from "@/components/ui/icons";
@@ -21,6 +26,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { FeedbackDialog } from "@/components/common/feedback-dialog";
+import { Switch } from "@/components/ui/switch";
 import { SubjectOption } from "@/types";
 import { cn } from "@/lib/utils";
 import { tabSpringTransition } from "@/lib/motion";
@@ -50,12 +57,23 @@ export const Header = React.memo(function Header({
   subjectName = "Geotechnical Engineering - II",
   notesCount = 0,
 }: HeaderProps) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? (theme === "dark" || resolvedTheme === "dark") : true;
 
   const [isVisible, setIsVisible] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const dropdownOpenRef = useRef(false);
+  const userMenuOpenRef = useRef(false);
   dropdownOpenRef.current = dropdownOpen;
+  userMenuOpenRef.current = userMenuOpen;
 
   // Keep header visible whenever switching tabs or subjects
   useEffect(() => {
@@ -72,8 +90,8 @@ export const Header = React.memo(function Header({
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          // If dropdown menu is currently open, keep navbar visible
-          if (dropdownOpenRef.current) {
+          // If any dropdown menu is currently open, keep navbar visible
+          if (dropdownOpenRef.current || userMenuOpenRef.current) {
             setIsVisible(true);
             ticking = false;
             return;
@@ -268,40 +286,152 @@ export const Header = React.memo(function Header({
           })}
         </nav>
 
-        {/* Actions / Theme Toggle & Circular Profile Link */}
-        <div className="flex items-center gap-2 sm:gap-2.5 z-10 shrink-0">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            title="Toggle light/dark theme"
-            aria-label="Toggle theme"
-            className="h-9 w-9 text-muted-foreground hover:text-foreground outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 border-0"
-          >
-            <Sun03Icon className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon02Icon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </Button>
+        {/* User Avatar & Settings Dropdown (Pure Background Separation, Zero Border) */}
+        <div className="flex items-center z-10 shrink-0">
+          <DropdownMenu open={userMenuOpen} onOpenChange={setUserMenuOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="group relative flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full p-0 transition-all duration-200 hover:scale-105 active:scale-95 shadow-2xs outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 border-0 bg-secondary/80 cursor-pointer select-none overflow-hidden"
+                aria-label="Shrid Mishra - profile and settings"
+                title="Shrid Mishra"
+              >
+                <Image
+                  src="/shrid-avatar.jpg"
+                  alt="Shrid Mishra"
+                  width={36}
+                  height={36}
+                  className="h-8 w-8 sm:h-9 sm:w-9 object-cover rounded-full transition-transform duration-200 group-hover:scale-105"
+                  priority
+                />
+              </Button>
+            </DropdownMenuTrigger>
 
-          <a
-            href="https://shrid.site"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Visit shrid.site"
-            aria-label="Visit shrid.site"
-            className="group relative flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full overflow-hidden ring-1 ring-border/50 hover:ring-border transition-all duration-200 hover:scale-105 active:scale-95 shadow-2xs outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary shrink-0"
-          >
-            <Image
-              src="/shrid-avatar.jpg"
-              alt="Shrid Mishra"
-              width={34}
-              height={34}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-              priority
-            />
-          </a>
+            <DropdownMenuContent
+              align="end"
+              sideOffset={8}
+              className="w-[260px] p-2 rounded-2xl border-0 bg-card shadow-2xl"
+            >
+              {/* Shrid Mishra Profile (Clickable Link to https://shrid.site) */}
+              <a
+                href="https://shrid.site"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2.5 px-2.5 py-2 rounded-xl transition-colors hover:bg-secondary/70 border-0 outline-none"
+                title="Visit shrid.site"
+              >
+                <div className="h-8 w-8 rounded-full overflow-hidden shrink-0">
+                  <Image
+                    src="/shrid-avatar.jpg"
+                    alt="Shrid Mishra"
+                    width={32}
+                    height={32}
+                    className="h-full w-full object-cover rounded-full transition-transform duration-200 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="font-heading text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                    Shrid Mishra
+                  </span>
+                  <span className="text-[11px] text-muted-foreground truncate">
+                    shrid.site ↗
+                  </span>
+                </div>
+              </a>
+
+              <DropdownMenuSeparator className="my-1.5 bg-secondary/60 h-px border-0" />
+
+              {/* Dark Mode Toggle Switch (Icon beside text, normal switch, pure background separation) */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setTheme(isDark ? "light" : "dark");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setTheme(isDark ? "light" : "dark");
+                  }
+                }}
+                className="flex items-center justify-between px-2.5 py-2 rounded-xl cursor-pointer hover:bg-secondary/70 transition-colors select-none outline-none border-0"
+              >
+                <div className="flex items-center gap-2.5">
+                  {isDark ? (
+                    <Moon02Icon className="h-4 w-4 text-foreground shrink-0" />
+                  ) : (
+                    <Sun03Icon className="h-4 w-4 text-foreground shrink-0" />
+                  )}
+                  <span className="font-heading text-xs font-medium text-foreground">
+                    Dark mode
+                  </span>
+                </div>
+                <Switch
+                  checked={isDark}
+                  onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+                  aria-label="Toggle dark mode"
+                />
+              </div>
+
+              <DropdownMenuSeparator className="my-1.5 bg-secondary/60 h-px border-0" />
+
+              {/* Bugs & Suggestions Option */}
+              <DropdownMenuItem
+                onSelect={() => {
+                  setUserMenuOpen(false);
+                  setIsFeedbackOpen(true);
+                }}
+                onClick={() => {
+                  setUserMenuOpen(false);
+                  setIsFeedbackOpen(true);
+                }}
+                className="flex items-center gap-2.5 rounded-xl px-2.5 py-2 cursor-pointer transition-colors hover:bg-secondary/70 focus:bg-secondary/70 data-[highlighted]:bg-secondary/70 text-foreground border-0"
+              >
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-secondary text-foreground shrink-0">
+                  <MessageEdit01Icon className="h-4 w-4" />
+                </div>
+                <div className="flex flex-col min-w-0 flex-1">
+                  <span className="font-heading text-xs font-semibold text-foreground">
+                    Bugs & Suggestions
+                  </span>
+                  <span className="text-[11px] text-muted-foreground">
+                    Report an issue or suggest ideas
+                  </span>
+                </div>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator className="my-1.5 bg-secondary/60 h-px border-0" />
+
+              {/* GitHub Repository Link */}
+              <DropdownMenuItem asChild>
+                <a
+                  href="https://github.com/shridmishra/exam"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 rounded-xl px-2.5 py-2 cursor-pointer transition-colors hover:bg-secondary/70 focus:bg-secondary/70 data-[highlighted]:bg-secondary/70 text-foreground border-0"
+                >
+                  <GithubIcon className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-heading text-xs font-medium text-foreground">
+                    GitHub Repository
+                  </span>
+                </a>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
+
+    {/* Bugs & Suggestions Dialog */}
+    <FeedbackDialog
+      open={isFeedbackOpen}
+      onOpenChange={setIsFeedbackOpen}
+      currentSubject={displayName}
+      currentSubjectCode={currentSubject?.code}
+      activeTab={activeTab}
+    />
     </>
   );
 });

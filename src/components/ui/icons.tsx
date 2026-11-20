@@ -74,3 +74,50 @@ export const Download01Icon = createHugeicon([["path",{"d":"M2.99969 17.0002C2.9
 export const Upload01Icon = createHugeicon([["path",{"d":"M2.99994 17C2.99994 17.93 2.99994 18.395 3.10216 18.7765C3.37956 19.8117 4.18821 20.6204 5.22348 20.8978C5.60498 21 6.06997 21 6.99994 21L16.9999 21C17.9299 21 18.3949 21 18.7764 20.8978C19.8117 20.6204 20.6203 19.8117 20.8977 18.7765C20.9999 18.395 20.9999 17.93 20.9999 17","stroke":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.5","key":"0"}],["path",{"d":"M16.5 7.49993C16.5 7.49993 13.1858 2.99997 12 2.99996C10.8141 2.99995 7.50002 7.49996 7.50002 7.49996M12 3.99996V16","stroke":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.5","key":"1"}]], "Upload01Icon");
 export const Copy01Icon = createHugeicon([["path",{"d":"M7.5 14.5C7.5 11.2002 7.5 9.55025 8.52513 8.52513C9.55025 7.5 11.2002 7.5 14.5 7.5C17.7998 7.5 19.4497 7.5 20.4749 8.52513C21.5 9.55025 21.5 11.2002 21.5 14.5C21.5 17.7998 21.5 19.4497 20.4749 20.4749C19.4497 21.5 17.7998 21.5 14.5 21.5C11.2002 21.5 9.55025 21.5 8.52513 20.4749C7.5 19.4497 7.5 17.7998 7.5 14.5Z","stroke":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.5","key":"0"}],["path",{"d":"M7.5 16.5C6.10355 16.5 5.40533 16.5 4.84402 16.3036C3.83866 15.9518 3.0482 15.1613 2.69641 14.156C2.5 13.5947 2.5 12.8964 2.5 11.5V9.5C2.5 6.20017 2.5 4.55025 3.52513 3.52513C4.55025 2.5 6.20017 2.5 9.5 2.5H11.5C12.8964 2.5 13.5947 2.5 14.156 2.69641C15.1613 3.0482 15.9518 3.83866 16.3036 4.84402C16.5 5.40533 16.5 6.10355 16.5 7.5","stroke":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.5","key":"1"}]], "Copy01Icon");
 export const InformationCircleIcon = createHugeicon([["circle",{"cx":"12","cy":"12","r":"10","stroke":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.5","key":"0"}],["path",{"d":"M12 16V12","stroke":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.5","key":"1"}],["path",{"d":"M12.125 8.25H12M12.25 8.25C12.25 8.11193 12.1381 8 12 8C11.8619 8 11.75 8.11193 11.75 8.25C11.75 8.38807 11.8619 8.5 12 8.5C12.1381 8.5 12.25 8.38807 12.25 8.25Z","stroke":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.5","key":"2"}]], "InformationCircleIcon");
+
+export const Bug02Icon = createHugeicon([
+  ["path", {"d": "M12 9V20", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "key": "0"}],
+  ["path", {"d": "M19 13C19 16.866 15.866 20 12 20C8.13401 20 5 16.866 5 13V11C5 7.13401 8.13401 4 12 4C15.866 4 19 7.13401 19 11V13Z", "stroke": "currentColor", "strokeWidth": "1.5", "key": "1"}],
+  ["path", {"d": "M5 10H2M22 10H19M5 15H2M22 15H19M18 5L20 3M6 5L4 3", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "key": "2"}],
+], "Bug02Icon");
+
+export const Bulb01Icon = createHugeicon([
+  ["path", {"d": "M9 21H15M10 18H14", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "strokeLinejoin": "round", "key": "0"}],
+  ["path", {"d": "M12 3C7.58172 3 4 6.58172 4 11C4 13.5264 5.17112 15.7792 7 17.2454V18H17V17.2454C18.8289 15.7792 20 13.5264 20 11C20 6.58172 16.4183 3 12 3Z", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "strokeLinejoin": "round", "key": "1"}],
+], "Bulb01Icon");
+
+export const MessageEdit01Icon = createHugeicon([
+  ["path", {"d": "M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 13.4872 3.36093 14.89 4 16.1246L3 21L7.87542 20C9.10996 20.6391 10.5128 21 12 21Z", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "strokeLinejoin": "round", "key": "0"}],
+  ["path", {"d": "M9 12H15M12 9V15", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "strokeLinejoin": "round", "key": "1"}],
+], "MessageEdit01Icon");
+
+export const Send01Icon = createHugeicon([
+  ["path", {"d": "M22 2L11 13", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "strokeLinejoin": "round", "key": "0"}],
+  ["path", {"d": "M22 2L15 22L11 13L2 9L22 2Z", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "strokeLinejoin": "round", "key": "1"}],
+], "Send01Icon");
+
+export const Computer01Icon = createHugeicon([
+  ["path", {"d": "M3 5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V15C21 16.1046 20.1046 17 19 17H5C3.89543 17 3 16.1046 3 15V5Z", "stroke": "currentColor", "strokeWidth": "1.5", "key": "0"}],
+  ["path", {"d": "M12 17V21M8 21H16M7 14H17", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "key": "1"}],
+], "Computer01Icon");
+
+export const GithubIcon = createHugeicon([
+  ["path", {"d": "M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "strokeLinejoin": "round", "key": "0"}],
+], "GithubIcon");
+
+export const UserIcon = createHugeicon([
+  ["circle", {"cx": "12", "cy": "8", "r": "4", "stroke": "currentColor", "strokeWidth": "1.5", "key": "0"}],
+  ["path", {"d": "M20 21C20 16.5817 16.4183 13 12 13C7.58172 13 4 16.5817 4 21", "stroke": "currentColor", "strokeWidth": "1.5", "strokeLinecap": "round", "key": "1"}],
+], "UserIcon");
+
+export const MoreHorizontalIcon = createHugeicon([
+  ["circle", {"cx": "12", "cy": "12", "r": "1.75", "fill": "currentColor", "stroke": "currentColor", "strokeWidth": "0.5", "key": "0"}],
+  ["circle", {"cx": "19", "cy": "12", "r": "1.75", "fill": "currentColor", "stroke": "currentColor", "strokeWidth": "0.5", "key": "1"}],
+  ["circle", {"cx": "5", "cy": "12", "r": "1.75", "fill": "currentColor", "stroke": "currentColor", "strokeWidth": "0.5", "key": "2"}],
+], "MoreHorizontalIcon");
+
+export const MoreVerticalIcon = createHugeicon([
+  ["circle", {"cx": "12", "cy": "12", "r": "1.75", "fill": "currentColor", "stroke": "currentColor", "strokeWidth": "0.5", "key": "0"}],
+  ["circle", {"cx": "12", "cy": "5", "r": "1.75", "fill": "currentColor", "stroke": "currentColor", "strokeWidth": "0.5", "key": "1"}],
+  ["circle", {"cx": "12", "cy": "19", "r": "1.75", "fill": "currentColor", "stroke": "currentColor", "strokeWidth": "0.5", "key": "2"}],
+], "MoreVerticalIcon");

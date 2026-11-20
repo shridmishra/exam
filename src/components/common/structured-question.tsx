@@ -271,7 +271,7 @@ export const StructuredQuestion = React.memo(function StructuredQuestion({
             >
               {bIdx === 0 && qNo && (
                 <span
-                  className={`font-heading font-semibold mr-1.5 select-none ${
+                  className={`font-heading font-semibold mr-1.5 ${
                     isCompleted ? "text-muted-foreground" : "text-foreground"
                   }`}
                 >
@@ -290,8 +290,8 @@ export const StructuredQuestion = React.memo(function StructuredQuestion({
               className="my-2.5 rounded-lg border border-border/70 bg-secondary/35 p-3 sm:p-3.5 space-y-2 shadow-sm"
             >
               {block.title && (
-                <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.03em] text-muted-foreground select-none">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0" />
+                <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.03em] text-muted-foreground">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0 select-none" />
                   <span>{block.title}</span>
                 </div>
               )}
@@ -316,8 +316,8 @@ export const StructuredQuestion = React.memo(function StructuredQuestion({
           return (
             <div key={bIdx} className="my-2 space-y-1.5">
               {block.title && (
-                <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.03em] text-muted-foreground select-none mt-2.5 mb-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0" />
+                <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.03em] text-muted-foreground mt-2.5 mb-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0 select-none" />
                   <span>{block.title}</span>
                 </div>
               )}
@@ -328,7 +328,7 @@ export const StructuredQuestion = React.memo(function StructuredQuestion({
                     className="flex items-start gap-2.5 py-0.5 text-sm sm:text-[14.5px] leading-relaxed text-foreground/95"
                   >
                     {item.num ? (
-                      <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-secondary/80 text-foreground/80 select-none shrink-0 mt-0.5">
+                      <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-secondary/80 text-foreground/80 shrink-0 mt-0.5">
                         {item.num}
                       </span>
                     ) : (

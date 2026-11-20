@@ -527,7 +527,9 @@
   font-size: 0.90625rem;
   line-height: 1.75;
   color: hsl(var(--foreground));
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  max-width: 100%;
 }
 
 .solution-viewer p {
@@ -669,6 +671,7 @@
 
 .sol-item-content {
   flex: 1;
+  min-width: 0;
   font-size: 0.95rem;
   color: hsl(var(--foreground));
 }
@@ -731,18 +734,64 @@
   border: none;
   border-radius: 0.5rem;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  max-width: 100%;
   font-size: 1.025rem;
+}
+
+.sol-math-block::-webkit-scrollbar {
+  height: 5px;
+}
+
+.sol-math-block::-webkit-scrollbar-track {
+  background: hsl(var(--secondary) / 0.4);
+  border-radius: 9999px;
+}
+
+.sol-math-block::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 9999px;
+}
+
+/* Responsive Table Wrapper with Smooth Touch Momentum & Refined Scrollbars */
+.sol-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  margin: 0.85rem 0;
+  border-radius: 0.5rem;
+}
+
+.sol-table-wrap::-webkit-scrollbar {
+  height: 6px;
+}
+
+.sol-table-wrap::-webkit-scrollbar-track {
+  background: hsl(var(--secondary) / 0.5);
+  border-radius: 9999px;
+}
+
+.sol-table-wrap::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.35);
+  border-radius: 9999px;
+}
+
+.sol-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.55);
 }
 
 /* Balanced Markdown & Numerical Calculation Tables */
 .sol-table {
   width: 100%;
+  min-width: 540px;
   border-collapse: separate;
   border-spacing: 0;
   border-radius: 0.5rem;
-  overflow: hidden;
   margin: 0.95rem 0;
-  font-size: 0.925rem;
+  font-size: 0.90625rem;
   border: none;
   background-color: hsl(var(--card));
 }
@@ -752,8 +801,15 @@
   padding: 0.75rem 0.95rem;
   vertical-align: top;
   border: none;
-  word-wrap: break-word;
+  word-break: normal !important;
   overflow-wrap: break-word;
+  white-space: normal;
+  min-width: 120px;
+}
+
+.sol-table th:first-child,
+.sol-table td:first-child {
+  min-width: 75px;
 }
 
 .sol-table th:last-child,
@@ -800,7 +856,9 @@
   background-color: rgba(16, 185, 129, 0.15);
   color: #059669;
   border: none;
-  white-space: nowrap;
+  white-space: normal;
+  max-width: 100%;
+  word-break: normal;
 }
 
 .dark .sol-badge-safe {
@@ -820,7 +878,9 @@
   background-color: rgba(245, 158, 11, 0.15);
   color: #d97706;
   border: none;
-  white-space: nowrap;
+  white-space: normal;
+  max-width: 100%;
+  word-break: normal;
 }
 
 .dark .sol-badge-warning {
@@ -833,6 +893,94 @@
   background-color: hsl(var(--secondary));
   font-weight: 600;
   text-align: left;
+}
+
+/* ----------------------------------------------------
+   RESPONSIVE SOLUTION & ANSWER STYLES (MOBILE / TABLET)
+   Guarantees zero text squishing, fluid equations & tables
+   ---------------------------------------------------- */
+@media (max-width: 640px) {
+  .solution-viewer {
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .sol-heading {
+    font-size: 0.9375rem;
+    margin-top: 1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .sol-list {
+    gap: 0.75rem;
+    margin: 0.5rem 0 0.85rem 0;
+  }
+
+  .sol-list > li {
+    padding-left: 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .sol-list > li > strong:first-child {
+    font-size: 0.90625rem;
+  }
+
+  .sol-sublist {
+    gap: 0.45rem;
+    margin: 0.35rem 0 0.45rem 0;
+    padding-left: 0;
+  }
+
+  .sol-sublist > li {
+    padding-left: 1.15rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .sol-item-row {
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+  }
+
+  .sol-item-num {
+    min-width: 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .sol-item-content {
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .sol-math-block {
+    margin: 0.65rem 0;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.90625rem;
+  }
+
+  .sol-table {
+    min-width: 520px;
+    font-size: 0.8125rem;
+    margin: 0.65rem 0;
+  }
+
+  .sol-table th,
+  .sol-table td {
+    padding: 0.55rem 0.65rem;
+    min-width: 110px;
+  }
+
+  .sol-table th:first-child,
+  .sol-table td:first-child {
+    min-width: 70px;
+  }
+
+  .sol-badge-safe,
+  .sol-badge-warning {
+    padding: 0.1rem 0.5rem;
+    font-size: 0.75rem;
+  }
 }
 
 /* ----------------------------------------------------
@@ -1636,6 +1784,78 @@ i.hgi-stroke {
   color: #f87171 !important;
 }
 
+/* Compact & smaller toasts on mobile devices */
+@media (max-width: 640px) {
+  [data-sonner-toaster] {
+    --mobile-offset-top: max(10px, env(safe-area-inset-top, 10px));
+    --mobile-offset-right: 12px;
+    --mobile-offset-left: 12px;
+    top: max(10px, env(safe-area-inset-top, 10px)) !important;
+  }
+
+  [data-sonner-toast],
+  [data-sonner-toast][data-styled="true"] {
+    left: 0 !important;
+    right: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: fit-content !important;
+    max-width: min(calc(100vw - 24px), 340px) !important;
+    min-height: 34px !important;
+    padding: 6.5px 11px !important;
+    padding-right: 28px !important;
+    gap: 7px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.3), 0 2px 6px -1px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  :root:not(.dark) [data-sonner-toast] {
+    box-shadow: 0 6px 18px -3px rgba(0, 0, 0, 0.08), 0 2px 5px -1px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  [data-sonner-toast] [data-icon] {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  [data-sonner-toast] [data-icon] svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  [data-sonner-toast] [data-title] {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+    font-weight: 550 !important;
+  }
+
+  [data-sonner-toast] [data-description] {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+  }
+
+  [data-sonner-toast] [data-close-button] {
+    top: 7px !important;
+    right: 6px !important;
+    transform: none !important;
+    width: 17px !important;
+    height: 17px !important;
+    border-radius: 4px !important;
+  }
+
+  [data-sonner-toast] [data-close-button] svg {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  [data-sonner-toast] [data-button] {
+    font-size: 11px !important;
+    padding: 2.5px 8px !important;
+    height: 22px !important;
+    border-radius: 6px !important;
+  }
+}
+
 /* ====================================================
    QUESTION CARD QUICK ACTIONS ISLAND
    ==================================================== */
@@ -1653,6 +1873,26 @@ i.hgi-stroke {
 
 .dark .action-island {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* Strictly hide desktop action island on mobile (< 640px) */
+@media (max-width: 639px) {
+  .action-island {
+    display: none !important;
+  }
+}
+
+/* Strictly hide mobile action dropdown on desktop (>= 640px) */
+.action-mobile-dropdown {
+  display: none !important;
+}
+
+@media (max-width: 639px) {
+  .action-mobile-dropdown {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+  }
 }
 
 .action-island-btn {
@@ -1709,11 +1949,48 @@ i.hgi-stroke {
   background-color: hsl(var(--island-note-bg)) !important;
 }
 
+.action-island-mobile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px !important;
+  background-color: hsl(var(--island-bg));
+  border: 1px solid hsl(var(--island-border));
+  color: hsl(var(--island-icon));
+  transition: all 0.15s ease;
+  cursor: pointer;
+  padding: 0;
+}
+
+.action-island-mobile-btn:hover,
+.action-island-mobile-btn[data-state="open"] {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--island-btn-hover));
+}
+
+.action-island-mobile-btn.has-active {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--foreground) / 0.25);
+}
+
 /* Performance Optimization: Skip layout/paint calculations for off-screen cards */
 .card-content-visibility {
   content-visibility: auto;
   contain-intrinsic-size: auto 74px;
 }
+
+/* User Avatar Circular Profile */
+.user-avatar-circle {
+  background: linear-gradient(180deg, var(--avatar-gradient-start) 0%, var(--avatar-gradient-end) 100%);
+  box-shadow: 0 1px 3px var(--avatar-ring), inset 0 1px 1.5px rgba(255, 255, 255, 0.45);
+}
+
+.dark .user-avatar-circle {
+  box-shadow: 0 1px 4px var(--avatar-ring), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
 
 
 

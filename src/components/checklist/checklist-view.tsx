@@ -616,8 +616,8 @@ export function ChecklistView({
 
   return (
     <div className="space-y-6">
-      {/* Header Row: Title, Progress Ring, Year Pills */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      {/* Header Row: Title (Left), Progress Ring & Year Pills (Right) */}
+      <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2.5">
           <h1 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
             Checklist
@@ -642,7 +642,7 @@ export function ChecklistView({
           )}
         </div>
 
-        <div className="flex items-center gap-2.5 max-w-full overflow-x-auto no-scrollbar pb-1 overscroll-x-contain">
+        <div className="flex items-center gap-2.5 max-w-full overflow-x-auto no-scrollbar pb-1 overscroll-x-contain sm:ml-auto shrink-0">
           <ProgressRing
             completed={completedCount}
             total={questions.length}

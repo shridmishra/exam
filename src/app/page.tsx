@@ -6,6 +6,12 @@ import { Header } from "@/components/header";
 import { ChecklistView } from "@/components/checklist/checklist-view";
 import { MobileNav } from "@/components/common/mobile-nav";
 import { toast } from "@/components/ui/sonner";
+import {
+  ChecklistSkeleton,
+  FormulasSkeleton,
+  TimetableSkeleton,
+  NotesSkeleton,
+} from "@/components/skeletons";
 
 // Statically import only the default subject questions, subject meta, clusters, and subjects registry
 import rawQuestions from "@/data/questions.json";
@@ -30,11 +36,7 @@ const FormulasView = dynamic(
       (mod) => mod.FormulasView
     ),
   {
-    loading: () => (
-      <div className="py-16 text-center text-sm text-muted-foreground animate-pulse">
-        Loading Formulas...
-      </div>
-    ),
+    loading: () => <FormulasSkeleton />,
   }
 );
 
@@ -44,11 +46,7 @@ const TimetableView = dynamic(
       (mod) => mod.TimetableView
     ),
   {
-    loading: () => (
-      <div className="py-16 text-center text-sm text-muted-foreground animate-pulse">
-        Loading Examination Timetable...
-      </div>
-    ),
+    loading: () => <TimetableSkeleton />,
   }
 );
 
@@ -58,11 +56,7 @@ const NotesArchiveView = dynamic(
       (mod) => mod.NotesArchiveView
     ),
   {
-    loading: () => (
-      <div className="py-16 text-center text-sm text-muted-foreground animate-pulse">
-        Loading Notes Archive...
-      </div>
-    ),
+    loading: () => <NotesSkeleton />,
   }
 );
 
@@ -197,10 +191,6 @@ export default function Home() {
 
     if (subjectDatasets[subjectId]) {
       setSelectedSubjectId(subjectId);
-      const sub = subjectDatasets[subjectId].subject;
-      toast.success(`Switched to ${sub.name}`, {
-        description: `${sub.code} syllabus & questions loaded`,
-      });
       return;
     }
 
@@ -210,9 +200,6 @@ export default function Home() {
       if (data) {
         setSubjectDatasets((prev) => ({ ...prev, [subjectId]: data }));
         setSelectedSubjectId(subjectId);
-        toast.success(`Switched to ${data.subject.name}`, {
-          description: `${data.subject.code} syllabus & questions loaded`,
-        });
       }
     } catch (e) {
       console.error("Failed to load subject dataset:", e);
@@ -236,10 +223,15 @@ export default function Home() {
 
       <main className="container flex-1 py-4 sm:py-6 md:py-8 pb-24 md:pb-8">
         {isSwitchingSubject ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent mb-3" />
-            <p className="text-sm text-muted-foreground">Loading subject syllabus & questions...</p>
-          </div>
+          activeTab === "formulas" ? (
+            <FormulasSkeleton />
+          ) : activeTab === "timetable" ? (
+            <TimetableSkeleton />
+          ) : activeTab === "notes" ? (
+            <NotesSkeleton />
+          ) : (
+            <ChecklistSkeleton />
+          )
         ) : (
           <>
             {activeTab === "checklist" && (
