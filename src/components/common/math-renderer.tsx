@@ -85,7 +85,7 @@ export const RichMathText = React.memo(function RichMathText({
 
   return (
     <Tag
-      className={className}
+      className={`rich-math-text ${className || ""}`.trim()}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

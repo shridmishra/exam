@@ -490,6 +490,12 @@
   font-weight: 500;
 }
 
+/* Question Statement Lead Typography */
+.q-lead-statement strong {
+  font-weight: 600;
+  color: inherit;
+}
+
 /* ----------------------------------------------------
    KATEX FRACTION DIVIDING LINE & BORDER ENFORCEMENT
    ---------------------------------------------------- */
@@ -534,9 +540,31 @@
   font-weight: 700;
 }
 
-.solution-viewer em {
-  font-style: italic;
-  color: hsl(var(--muted-foreground));
+/* Zero Tilted / Italic Text in Answers: Ensure all sub-labels, em, i, cite, and emphasis render strictly upright */
+.solution-viewer em,
+.solution-viewer i,
+.solution-viewer cite,
+.solution-viewer dfn,
+.sol-item-label,
+.sol-list em,
+.sol-list i,
+.sol-sublist em,
+.sol-sublist i,
+.sol-item-row em,
+.sol-item-row i,
+.sol-item-text em,
+.sol-item-text i,
+.sol-item-content em,
+.sol-item-content i,
+.checklist-solution-content em,
+.checklist-solution-content i,
+.q-solution-content em,
+.q-solution-content i,
+.rich-math-text em,
+.rich-math-text i {
+  font-style: normal !important;
+  font-weight: 600;
+  color: hsl(var(--foreground));
 }
 
 .sol-heading {
@@ -1665,8 +1693,7 @@ i.hgi-stroke {
 /* Performance Optimization: Skip layout/paint calculations for off-screen cards */
 .card-content-visibility {
   content-visibility: auto;
-  contain-intrinsic-size: 0 74px;
-  contain: layout style;
+  contain-intrinsic-size: auto 74px;
 }
 
 

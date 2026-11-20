@@ -339,18 +339,18 @@ export function enhanceSolutionHtml(html: string): string {
   );
 
   s = s.replace(
-    /<div class="sol-item-row(\s+[^>]*)?"([\s\S]*?)<\/div>\s*<\/div>/gi,
-    (orig, extraClasses = "", content) => {
+    /(<div\b[^>]*\bclass="[^"]*sol-item-row[^"]*"[^>]*>)([\s\S]*?<\/div>\s*<\/div>)/gi,
+    (orig, openingTag, innerAndClosing) => {
       const isFinal =
-        content.includes('class="sol-badge-safe"') ||
-        content.includes('class="sol-ans-tag"') ||
-        content.includes('class="sol-math-badge-row"') ||
-        /\b(?:Net Safe Bearing Capacity|Final Answer|Ans:)\b/i.test(content);
+        innerAndClosing.includes('class="sol-badge-safe"') ||
+        innerAndClosing.includes('class="sol-ans-tag"') ||
+        innerAndClosing.includes('class="sol-math-badge-row"') ||
+        /\b(?:Net Safe Bearing Capacity|Final Answer|Ans:)\b/i.test(innerAndClosing);
 
-      if (!isFinal) return orig;
-      if (extraClasses && extraClasses.includes("sol-item-final")) return orig;
+      if (!isFinal || openingTag.includes("sol-item-final")) return orig;
 
-      return `<div class="sol-item-row sol-item-final${extraClasses || ""}"${content}</div></div>`;
+      const updatedTag = openingTag.replace(/class="([^"]*)"/i, 'class="$1 sol-item-final"');
+      return `${updatedTag}${innerAndClosing}`;
     }
   );
 
@@ -371,8 +371,7 @@ export function renderLatexInHtml(html: string): string {
   const cachedHtml = latexHtmlCache.get(html);
   if (cachedHtml !== undefined) return cachedHtml;
 
-  // Pre-process solution HTML with safety badges, final answer tags, and list item styling
-  let s = enhanceSolutionHtml(html);
+  let s = html;
 
   const preserved: string[] = [];
 

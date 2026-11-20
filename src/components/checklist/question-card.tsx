@@ -90,6 +90,7 @@ export const QuestionCard = React.memo(
         onClick={onToggleOpen}
         role="button"
         tabIndex={0}
+        aria-expanded={isOpen}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
@@ -225,15 +226,6 @@ export const QuestionCard = React.memo(
                 <PencilEdit01Icon className="h-3.5 w-3.5" />
               </Button>
             </div>
-
-            {/* Accordion Chevron */}
-            <div
-              className={`flex h-7 w-6 sm:w-7 items-center justify-center text-muted-foreground transition-transform duration-200 ${
-                isOpen ? "rotate-180 text-foreground" : ""
-              }`}
-            >
-              <ChevronDownIcon className="h-4 w-4" />
-            </div>
           </div>
         </div>
 
@@ -244,6 +236,19 @@ export const QuestionCard = React.memo(
             qNo={question.q_no}
             isCompleted={isCompleted}
           />
+        </div>
+
+        {/* View / Hide Answer Affordance Button */}
+        <div className="mt-2.5 flex items-center">
+          <span className="font-heading inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground bg-secondary/50 group-hover:bg-secondary group-hover:text-foreground transition-all duration-150 select-none">
+            <span>{isOpen ? "Hide Answer" : "View Answer"}</span>
+            <ChevronDownIcon
+              className={cn(
+                "h-3.5 w-3.5 transition-transform duration-200",
+                isOpen && "rotate-180"
+              )}
+            />
+          </span>
         </div>
       </div>
 

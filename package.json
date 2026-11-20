@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "python3 scripts/export-data.py && next dev",
     "dev:turbo": "python3 scripts/export-data.py && next dev --turbo",
-    "clean": "rm -rf .next",
+    "clean": "rm -rf .next .next-dev",
     "build": "node scripts/verify-formulas.js && next build",
     "start": "next start",
     "lint": "next lint",

@@ -28,6 +28,10 @@
   - Verification statements (`(Safe against Bligh creep)`, `[Safe & watertight]`, `(Safe)`, `(OK)`, etc.) render as `<span class="sol-badge-safe"><span class="sol-badge-check">✓</span> Safe against...</span>` pills.
   - Final answer prefixes (`Final Answer:`, `Ans:`, `Design Summary:`) render as `<span class="sol-ans-tag"><span class="sol-ans-tag-dot"></span>Ans</span>`.
   - Concluding rows and list items receive `.sol-item-final` for a subtle, minimal muted green wash and 2px left border accent.
+- **Zero Tilted / Italic Text in Answers (MANDATORY)**:
+  - Never render solution points, sub-item labels, notes, or explanations in tilted/italic font (`font-style: italic`).
+  - All sub-labels (e.g. `<em>Applied Loads:</em>`, `<em>Critical Design Cases:</em>`, `<em>Structural Behavior:</em>`, `<em>Soil Type:</em>`) must render strictly upright (`font-style: normal !important`), with clean semi-bold typographic contrast (`font-weight: 600`) and high-contrast foreground color (`color: hsl(var(--foreground))`).
+  - KaTeX mathematical variables and symbols typeset independently remain unaffected.
 
 ---
 

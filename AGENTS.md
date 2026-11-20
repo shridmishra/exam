@@ -43,6 +43,10 @@ Dense paragraphs, continuous multi-clause sentences, and single-line comma/bulle
     - Prefixes like `Final Answer:`, `Ans:`, `Answer:`, and `Design Summary:` format into a crisp micro-badge: `<span class="sol-ans-tag"><span class="sol-ans-tag-dot"></span>Ans</span>`.
   - **Conclusive List Items & Rows (`.sol-item-final`)**:
     - List items (`<li>`) and numerical calculation rows (`.sol-item-row`) that culminate in a final answer or safety check receive `.sol-item-final`: a soft muted green background tint, a subtle 2px muted green accent line on the left, muted green bullets, and highlighted strong text.
+- **Zero Tilted / Italic Text in Answers (MANDATORY)**:
+  - **NEVER** render solution points, sub-item labels, notes, or explanations in tilted/italic font (`font-style: italic`).
+  - **ALWAYS** render sub-labels (e.g. `<em>Applied Loads:</em>`, `<em>Critical Design Cases:</em>`, `<em>Structural Behavior:</em>`, `<em>Soil Type:</em>`) strictly upright (`font-style: normal !important`), with clean semi-bold typographic contrast (`font-weight: 600`) and high-contrast foreground color (`color: hsl(var(--foreground))`).
+  - KaTeX mathematical variables and symbols typeset independently remain unaffected.
 
 ---
 

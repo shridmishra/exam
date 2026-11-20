@@ -48,6 +48,7 @@ node_modules/
 
 # Next.js & build outputs
 .next/
+.next-dev/
 out/
 build/
 dist/
