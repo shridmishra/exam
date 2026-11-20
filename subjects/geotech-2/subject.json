@@ -9,7 +9,6 @@
   "academic_year": "2026",
   "description": "Previous Year Questions analysis, repeat trends, formula guides, and solutions for Geotechnical Engineering - II.",
   "storage_prefix": "geotech",
-  "output_filename": "geotech_pyq_analysis.html",
   "unit_titles": {
     "1": "Lateral Earth Pressure",
     "2": "Shear Strength & Slope Stability",

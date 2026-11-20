@@ -62,7 +62,7 @@ class SubjectContext:
         self.code = meta.get("code", "")
         self.alt_codes = meta.get("alt_codes", [])
         self.storage_prefix = meta.get("storage_prefix", subject_id.replace("-", "_"))
-        self.output_filename = meta.get("output_filename", f"{subject_id}_pyq_analysis.html")
+        self.output_filename = meta.get("output_filename", "")
         self.unit_titles = {int(k): v for k, v in meta.get("unit_titles", {}).items()}
         self.exam_years = meta.get("exam_years", [2025, 2024, 2023, 2022])
         self.hide_year_toggle = meta.get("hide_year_toggle", 2023)
@@ -71,7 +71,6 @@ class SubjectContext:
         self.canonical_topics = []
         self.raw_questions = []
         self.master_formulas = []
-        self.formula_module = None
 
     def __repr__(self):
         return f"<SubjectContext id='{self.id}' name='{self.name}' questions={len(self.raw_questions)}>"
@@ -87,11 +86,7 @@ def load_subject(subject_id: Optional[str] = None) -> SubjectContext:
         
     subject_dir = repo_root / "subjects" / subject_id
     if not subject_dir.exists():
-        # Fallback check for root geotech files
-        if subject_id == "geotech-2" and (repo_root / "canonical_data.json").exists():
-            subject_dir = repo_root
-        else:
-            raise FileNotFoundError(f"Subject directory not found: {subject_dir}")
+        raise FileNotFoundError(f"Subject directory not found: {subject_dir}")
 
     meta_file = subject_dir / "subject.json"
     if meta_file.exists():
@@ -100,52 +95,32 @@ def load_subject(subject_id: Optional[str] = None) -> SubjectContext:
     else:
         meta = {
             "id": subject_id,
-            "name": "Geotechnical Engineering - II",
-            "short_name": "Geo-2",
-            "code": "CE 41007",
-            "storage_prefix": "geotech",
-            "output_filename": "geotech_pyq_analysis.html",
-            "unit_titles": {
-                1: "Lateral Earth Pressure",
-                2: "Shear Strength & Slope Stability",
-                3: "Shallow Foundations",
-                4: "Deep Foundations (Piles)",
-                5: "Soil Exploration & Testing"
-            }
+            "name": subject_id,
+            "short_name": subject_id,
+            "code": "",
+            "storage_prefix": subject_id,
+            "unit_titles": {}
         }
 
     ctx = SubjectContext(subject_id, subject_dir, meta)
 
     # 1. Load canonical topics
     canonical_file = subject_dir / "canonical_data.json"
-    if not canonical_file.exists():
-        canonical_file = repo_root / "canonical_data.json"
     if canonical_file.exists():
         with open(canonical_file, "r", encoding="utf-8") as f:
             ctx.canonical_topics = json.load(f)
 
     # 2. Load compiled questions
     compile_file = subject_dir / "compile_data.py"
-    if not compile_file.exists():
-        compile_file = repo_root / "compile_data.py"
     if compile_file.exists():
         compile_mod = load_module_from_path(f"subject_{subject_id}_compile_data", compile_file)
         ctx.raw_questions = getattr(compile_mod, "questions", [])
 
     # 3. Load formulas JSON
     formulas_file = subject_dir / "master_formulas.json"
-    if not formulas_file.exists():
-        formulas_file = repo_root / "master_formulas.json"
     if formulas_file.exists():
         with open(formulas_file, "r", encoding="utf-8") as f:
             ctx.master_formulas = json.load(f)
-
-    # 4. Load formula showcase module
-    formula_mod_file = subject_dir / "formula_showcase.py"
-    if not formula_mod_file.exists():
-        formula_mod_file = repo_root / "formula_showcase.py"
-    if formula_mod_file.exists():
-        ctx.formula_module = load_module_from_path(f"subject_{subject_id}_formula_showcase", formula_mod_file)
 
     return ctx
 
@@ -173,7 +148,6 @@ def scaffold_new_subject(subject_id: str, name: str, code: str, short_name: Opti
     meta["code"] = code
     meta["short_name"] = short_name or subject_id.upper()
     meta["storage_prefix"] = subject_id.replace("-", "_")
-    meta["output_filename"] = f"{subject_id}_pyq_analysis.html"
     
     with open(subject_json_path, "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2, ensure_ascii=False)
@@ -188,8 +162,7 @@ def scaffold_new_subject(subject_id: str, name: str, code: str, short_name: Opti
             "name": name,
             "short_name": meta["short_name"],
             "code": code,
-            "status": "in-progress",
-            "output_filename": meta["output_filename"]
+            "status": "in-progress"
         })
         save_registry(reg)
         

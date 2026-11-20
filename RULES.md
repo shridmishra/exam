@@ -62,7 +62,7 @@
 ---
 
 ### [RULE 5] Pipeline Integrity & Automated Build Verification
-- Any modification to UI structure or content must be made in `generate_dashboard.py` (and relevant source data).
+- Any modification to UI structure or content must be made in the Next.js components (`src/components/`, `src/app/`) and relevant source data (`subjects/`, `src/data/`).
 - **Question Bank Control Panel**:
   - Unnecessary top headings and subheadings are removed from the Question Bank view for an immediate, high-efficiency dashboard workspace.
   - **Minimal Grid-Based Control Panel (Zero Separate Backgrounds & Proper Grid System)**:
@@ -77,11 +77,11 @@
 - The Question Bank view presents complete examination papers exclusively (106 questions across 2025, 2024, 2023, 2022). Recurring questions display frequency badges (`4x`, `3x`, `2x` with no text "Repeated") with tooltips. When `Most Repeated` (or repeat frequency: `4x`, `3x`, `2x`) is active, recurring questions are organized strictly by repeat frequency tier FIRST (Tier 1: 4x repeated across all 4 papers first, Tier 2: 3x repeated across 3 papers second, Tier 3: 2x repeated third), and within each tier by Unit (Unit 1–5), rendering a clear `.q-tier-section-divider` for each tier and `.q-topic-section-header` for each concept, followed by the question cards streaming consecutively in adjacent chronological order (e.g. 2025 card, followed by 2024, 2023, then 2022 card). Individual question cards are free of redundant topic overlines, keeping focus directly on the verbatim question statement. Selecting any repeat filter automatically resets Year, Type, and Marks to `All` so all cross-paper occurrences are visible. Generous distinguishing spacing (`.q-topic-section-header`, 2.5rem) separates topic sections, and Unit dividers (`.q-unit-section-divider`, 2rem) separate units. No nested sub-boxes and no batch headers. Standalone "Most Repeated" and "Overview" tabs are deprecated in favor of integrated filtering.
 - **Persistence Across Refresh**: Filter selections, search input, active page view, formula filters, and question completion states (`localStorage`) must persist reliably across reloads.
 - **Completion & Removal Controls**: Users must be able to mark individual questions as Done / Incomplete via dedicated card buttons (without toggling the solution open/closed). Completed questions must be filterable via the Status pills (`Incomplete` hides/removes completed questions, `Completed` isolates them). A progress badge and reset controls must be provided.
-- Always verify generation by executing:
+- Always verify changes by executing:
   ```bash
-  python3 generate_dashboard.py
+  npm run build && npx tsc --noEmit
   ```
-- Confirm `index.html` and `geotech_pyq_analysis.html` are regenerated cleanly with exit code 0.
+- Confirm Next.js build and TypeScript type-checking succeed cleanly with exit code 0.
 
 ---
 
@@ -170,20 +170,19 @@
 ---
 
 ### [RULE 14] Calendar Current Date Tracking & Blue Box System
-- **Current Date Blue Box in Calendar View**: The Separated Calendar view (`timetable.html`) must display a dedicated blue box (`.cal-today-box`) showing the active client date and an automatic countdown pill to the next upcoming examination paper.
+- **Current Date Blue Box in Calendar View**: The Calendar view (`src/components/timetable/timetable-view.tsx`) must display a dedicated blue box showing the active client date and an automatic countdown pill to the next upcoming examination paper.
 - **Calendar Grid Day Highlight**: The active day's cell in the November/December grid must be styled with the blue palette token (`.cal-cell.today` / `.cal-cell.current-date`), rendering `<span>[Day]</span><span class="cal-cell-tag">Today</span>` alongside the existing green (Regular) and peach (Old Syllabus) exam boxes.
 - **Color Token Compliance**: Never hardcode hex values. Use `var(--pastel-sky-bg)`, `var(--pastel-sky-border)`, and `var(--pastel-sky-foreground)` across all current date indicators.
-- **Automatic Client Synchronization**: `initCurrentDateTracker()` must dynamically match `new Date()` against `[data-date]` attributes while safely handling fallbacks.
+- **Automatic Client Synchronization**: Dynamic date calculations match `new Date()` against item dates with graceful fallbacks.
 
 ---
 
 ### [RULE 15] Modular Multi-Subject Architecture & Local Timetable Isolation
-- **Self-Contained Subject Units**: All academic subjects must reside under `subjects/<subject_id>/` containing `subject.json`, `canonical_data.json`, `compile_data.py`, `master_formulas.json`, `formula_showcase.py`, and `papers/`.
-- **Subject State Isolation**: Each subject must declare a unique `storage_prefix` in `subject.json` (e.g. `geotech`, `rcc`) so user completion data and filters do not collide, while maintaining the shared `geotech_theme` key for global light/dark theme preference.
-- **Timetable Policy & Local Storage Isolation**: The examination timetable (`timetable.html`) is public and git-tracked, while heavy PDFs and OCR scratches remain gitignored. Default public repository schedule contains only the 3 regular syllabus subjects (Geo-2, RCC, DHS). User modifications, additions, and deletions persist in client-side localStorage (`civil_exam_timetable_custom_v1`) without collision. Local host environments automatically preserve the user's 7-paper backlog schedule, with quick preset toggles in the Edit Timetable modal.
+- **Self-Contained Subject Units**: All academic subjects reside under `subjects/<subject_id>/` containing `subject.json`, `canonical_data.json`, `compile_data.py`, `master_formulas.json`, and `papers/`.
+- **Subject State Isolation**: Each subject declares a unique `storage_prefix` in `subject.json` (e.g. `geotech`, `rcc`) so user completion data and filters do not collide, while maintaining the shared `geotech_theme` key for global light/dark theme preference.
+- **Timetable Policy & Local Storage Isolation**: The examination timetable schedule is managed via `src/data/timetable.json` and client-side `localStorage` (`civil_exam_timetable_custom_v1`). Default public repository schedule contains the 3 regular syllabus subjects (Geo-2, RCC, DHS). User modifications, additions, and deletions persist in client-side localStorage without collision. Local host environments automatically preserve the user's 7-paper backlog schedule, with quick preset toggles in the Edit Timetable modal.
 - **Concluded / Done Examination Indicator (Muted Green)**: Concluded papers adopt a calm muted green palette (`--pastel-done-bg`, `--pastel-done-border`, `--pastel-done-foreground`, and tag `✓ Done`) across the calendar grid, table rows, and timeline cards. Upcoming countdowns automatically skip completed papers.
-- **Master CLI Generation Engine**: `python3 generate_dashboard.py` builds the active default subject (`geotech-2`) into `index.html` and `geotech_pyq_analysis.html`. Passing `<subject_id>` builds that subject, `--list` inspects the registry, and `--new <id> "<name>" "<code>"` scaffolds a new subject module.
-- **Root Proxy Immutability**: Root `compile_data.py` and `formula_showcase.py` proxy directly to `subjects/geotech-2/` ensuring 100% backward compatibility for all scripts and agents.
+- **Data Export Engine**: `npm run export:data` (or `python3 scripts/export-data.py`) compiles and exports all verified question datasets, canonical clusters, formulas, and timetable presets into strongly typed JSON files under `src/data/`.
 
 ---
 
@@ -245,7 +244,7 @@
   - Root `favicon.svg` for infinite retina scalability and dark/light system theme support.
   - Root `favicon.ico` (16×16, 32×32, 48×48) for legacy/Windows browsers.
   - Root `apple-touch-icon.png` (180×180) for iOS homescreen and Safari touch shortcuts.
-- **Generator Enforcement**: Always declare the full favicon stack in both `generate_dashboard.py` and `tools/timetable/build_timetable.py`.
+- **Next.js Metadata Integration**: Declared in `src/app/layout.tsx` referencing assets located in `public/` (`favicon.ico`, `favicon.svg`, `apple-touch-icon.png`).
 
 ---
 

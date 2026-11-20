@@ -1,0 +1,62 @@
+{
+  "id": "rcc",
+  "name": "Design of Advanced RCC Structures",
+  "short_name": "RCC",
+  "code": "CE 41001",
+  "alt_codes": [
+    "CE 4152",
+    "CE41001"
+  ],
+  "branch": "Civil Engineering",
+  "semester": "Final Year / 7th Sem",
+  "academic_year": "2026",
+  "description": "Previous Year Questions analysis, repeat trends, formula guides, and solutions for Design of Advanced RCC Structures.",
+  "storage_prefix": "rcc",
+  "unit_titles": {
+    "1": "Water Tanks (Ground & Underground)",
+    "2": "Overhead Water Tanks & Intze Tanks",
+    "3": "Storage Structures (Bunkers & Silos)",
+    "4": "Grid Floors / Grid Slabs",
+    "5": "Flat Slabs"
+  },
+  "units": [
+    {
+      "num": 1,
+      "title": "Water Tanks (Ground & Underground Rectangular & Circular)",
+      "short_title": "Water Tanks",
+      "co": "CO1"
+    },
+    {
+      "num": 2,
+      "title": "Overhead Water Tanks & Intze Tanks",
+      "short_title": "Intze Tanks",
+      "co": "CO2"
+    },
+    {
+      "num": 3,
+      "title": "Storage Structures (Bunkers & Silos)",
+      "short_title": "Bunkers & Silos",
+      "co": "CO3"
+    },
+    {
+      "num": 4,
+      "title": "Grid Floors / Grid Slabs (Waffle Slabs)",
+      "short_title": "Grid Floors",
+      "co": "CO4"
+    },
+    {
+      "num": 5,
+      "title": "Flat Slabs (Direct Design Method)",
+      "short_title": "Flat Slabs",
+      "co": "CO5"
+    }
+  ],
+  "exam_years": [
+    2025,
+    2024,
+    2023,
+    2022,
+    2019
+  ],
+  "hide_year_toggle": null
+}

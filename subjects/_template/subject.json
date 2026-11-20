@@ -9,7 +9,6 @@
   "academic_year": "2026",
   "description": "Previous Year Questions analysis, repeat trends, formula guides, and solutions for Subject Full Name.",
   "storage_prefix": "new_subject",
-  "output_filename": "new_subject_pyq_analysis.html",
   "unit_titles": {
     "1": "Unit 1 Title",
     "2": "Unit 2 Title",

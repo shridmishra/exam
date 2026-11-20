@@ -12,17 +12,29 @@
       "question_count": 106,
       "canonical_count": 59,
       "formula_count": 21,
-      "output_filename": "geotech_pyq_analysis.html",
       "is_default": true
     },
     {
       "id": "rcc",
       "path": "subjects/rcc",
-      "name": "Design of Reinforced Concrete Structures",
+      "name": "Design of Advanced RCC Structures",
       "short_name": "RCC",
       "code": "CE 41001",
-      "status": "planned",
-      "output_filename": "rcc_pyq_analysis.html"
+      "alt_codes": [
+        "CE 4152",
+        "CE41001"
+      ],
+      "status": "ready",
+      "question_count": 56,
+      "canonical_count": 13,
+      "formula_count": 20,
+      "exam_years": [
+        2025,
+        2024,
+        2023,
+        2022,
+        2019
+      ]
     },
     {
       "id": "dhs",
@@ -30,8 +42,20 @@
       "name": "Design of Hydraulic Structures",
       "short_name": "DHS",
       "code": "CE 41006",
-      "status": "planned",
-      "output_filename": "dhs_pyq_analysis.html"
+      "status": "ready",
+      "alt_codes": [
+        "CE4105",
+        "CE4106"
+      ],
+      "question_count": 57,
+      "canonical_count": 11,
+      "formula_count": 20,
+      "exam_years": [
+        2025,
+        2024,
+        2023,
+        2022
+      ]
     },
     {
       "id": "water",
@@ -39,8 +63,7 @@
       "name": "Water Resources Engineering",
       "short_name": "Water",
       "code": "CE 31713",
-      "status": "planned",
-      "output_filename": "water_pyq_analysis.html"
+      "status": "planned"
     },
     {
       "id": "sa-2",
@@ -48,8 +71,7 @@
       "name": "Structural Analysis - II",
       "short_name": "SA-2",
       "code": "CE 31505",
-      "status": "planned",
-      "output_filename": "sa2_pyq_analysis.html"
+      "status": "planned"
     },
     {
       "id": "sa-1",
@@ -57,8 +79,7 @@
       "name": "Structural Analysis - I",
       "short_name": "SA-1",
       "code": "CE 31007",
-      "status": "planned",
-      "output_filename": "sa1_pyq_analysis.html"
+      "status": "planned"
     },
     {
       "id": "geotech-1",
@@ -66,8 +87,7 @@
       "name": "Geotechnical Engineering - I",
       "short_name": "Geo-1",
       "code": "CE 31517",
-      "status": "planned",
-      "output_filename": "geotech1_pyq_analysis.html"
+      "status": "planned"
     }
   ]
 }

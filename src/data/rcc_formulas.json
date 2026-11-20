@@ -1,0 +1,587 @@
+[
+  {
+    "id": "rcc_formula_1",
+    "unit": 1,
+    "title": "Cylindrical Water Tank Maximum Hoop Tension & Steel Area",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "T_{max} = \\gamma_w \\cdot H \\cdot R = \\frac{\\gamma_w H D}{2}",
+    "latex_sub": "A_{st, hoop} = \\frac{T_{max}}{\\sigma_{st}} \\quad \\text{(Placed on both inner and outer faces)}",
+    "latex_raw": "T_max = gamma_w * H * R",
+    "params": [
+      {
+        "sym": "\\gamma_w",
+        "name": "Unit weight of water",
+        "unit": "10 kN/m³"
+      },
+      {
+        "sym": "H",
+        "name": "Maximum design liquid depth",
+        "unit": "m"
+      },
+      {
+        "sym": "R, D",
+        "name": "Internal radius and diameter of tank",
+        "unit": "m"
+      },
+      {
+        "sym": "\\sigma_{st}",
+        "name": "Permissible tensile stress in steel (IS 3370)",
+        "unit": "130 N/mm²"
+      }
+    ],
+    "notes": "Governs circumferential ring reinforcement sizing for circular water tanks resting on ground or elevated on staging."
+  },
+  {
+    "id": "rcc_formula_2",
+    "unit": 1,
+    "title": "Composite Direct Tensile Stress & Uncracked Concrete Wall Sizing",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "\\sigma_{ct} = \\frac{T_{max}}{1000 t + (m - 1) A_{st}} \\le \\sigma_{ct, perm}",
+    "latex_sub": "t_{min} \\approx 30 H + 50\\text{ mm} \\quad \\text{(Empirical trial thickness)}",
+    "latex_raw": "sigma_ct = T_max / (1000*t + (m-1)*Ast) <= sigma_ct_perm",
+    "params": [
+      {
+        "sym": "t",
+        "name": "Overall concrete wall thickness",
+        "unit": "mm"
+      },
+      {
+        "sym": "m",
+        "name": "Modular ratio = 280 / (3 * sigma_cbc)",
+        "unit": "unitless (9.33 for M30, 11 for M25)"
+      },
+      {
+        "sym": "A_{st}",
+        "name": "Total area of hoop steel per metre height",
+        "unit": "mm²/m"
+      },
+      {
+        "sym": "\\sigma_{ct, perm}",
+        "name": "Permissible concrete tensile stress (IS 3370)",
+        "unit": "1.3 N/mm² (M25), 1.5 N/mm² (M30)"
+      }
+    ],
+    "notes": "Mandatory serviceability check ensuring the uncracked concrete matrix resists direct tension without leak-inducing through-cracks."
+  },
+  {
+    "id": "rcc_formula_3",
+    "unit": 1,
+    "title": "IS 3370 Fixed-Base Dimension Parameter & Base Cantilever Moment",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "\\xi = \\frac{H^2}{D \\cdot t}",
+    "latex_sub": "M_{base} = \\text{Coeff} \\times \\gamma_w H^3, \\quad T_{max} = \\text{Coeff} \\times \\gamma_w H R",
+    "latex_raw": "xi = H^2 / (D * t)",
+    "params": [
+      {
+        "sym": "\\xi",
+        "name": "IS 3370 non-dimensional shell parameter",
+        "unit": "unitless"
+      },
+      {
+        "sym": "M_{base}",
+        "name": "Vertical cantilever bending moment at fixed base",
+        "unit": "kN·m/m"
+      },
+      {
+        "sym": "T_{max}",
+        "name": "Maximum hoop tension occurring around 0.6H from top",
+        "unit": "kN/m"
+      }
+    ],
+    "notes": "Coefficients from IS 3370 (Part IV) Table 9 & 10 capture the Reissner shell interaction between hoop dilation and base clamping."
+  },
+  {
+    "id": "rcc_formula_4",
+    "unit": 1,
+    "title": "Underground Tank Earth & Groundwater Lateral Pressure",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "p_{ext} = K_a \\gamma' H + \\gamma_w H",
+    "latex_sub": "K_a = \\frac{1 - \\sin\\phi}{1 + \\sin\\phi}, \\quad \\gamma' = \\gamma_{sat} - \\gamma_w",
+    "latex_raw": "p_ext = Ka * gamma_sub * H + gamma_w * H",
+    "params": [
+      {
+        "sym": "K_a",
+        "name": "Rankine active earth pressure coefficient",
+        "unit": "unitless (~0.33 for phi=30°)"
+      },
+      {
+        "sym": "\\gamma'",
+        "name": "Submerged buoyant unit weight of soil",
+        "unit": "kN/m³ (~10 kN/m³)"
+      },
+      {
+        "sym": "H",
+        "name": "Total backfill / tank excavation depth",
+        "unit": "m"
+      }
+    ],
+    "notes": "Critical loading condition occurs when tank is completely empty and groundwater rises to ground level, tripling external lateral thrust."
+  },
+  {
+    "id": "rcc_formula_5",
+    "unit": 1,
+    "title": "Underground Rectangular Tank Cantilever Base Moments",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "M_{cant} = \\frac{1}{6} p_{ext} H^2 \\quad \\text{(Free top cantilever)}",
+    "latex_sub": "M_{base, propped} = \\frac{1}{15} p_{ext} H^2 \\quad \\text{(Covered top propped by roof slab)}",
+    "latex_raw": "M_cant = 1/6 * p_ext * H^2",
+    "params": [
+      {
+        "sym": "p_{ext}",
+        "name": "Maximum lateral pressure at base",
+        "unit": "kN/m²"
+      },
+      {
+        "sym": "H",
+        "name": "Height of vertical wall",
+        "unit": "m"
+      }
+    ],
+    "notes": "For L/B > 2, long walls act as vertical cantilevers; roof slab restraint drastically reduces base moment from H²/6 to H²/15."
+  },
+  {
+    "id": "rcc_formula_6",
+    "unit": 2,
+    "title": "Spherical Dome Meridional Thrust",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "T_1 = \\frac{w R}{1 + \\cos\\theta}",
+    "latex_sub": "\\sigma_{c1} = \\frac{T_1}{1000 t} \\le \\sigma_{cbc, perm} \\quad \\text{(Always compressive)}",
+    "latex_raw": "T_1 = (w * R) / (1 + cos(theta))",
+    "params": [
+      {
+        "sym": "w",
+        "name": "Total dead + live load per unit dome surface",
+        "unit": "kN/m² (~4.0 kN/m²)"
+      },
+      {
+        "sym": "R",
+        "name": "Radius of spherical dome = (r² + h²) / 2h",
+        "unit": "m"
+      },
+      {
+        "sym": "\\theta",
+        "name": "Semi-central angle at section under consideration",
+        "unit": "degrees"
+      },
+      {
+        "sym": "t",
+        "name": "Dome shell thickness",
+        "unit": "mm (~80-100 mm)"
+      }
+    ],
+    "notes": "Determines the tangential meridional thrust along the shell meridian; always in compression under gravity loads."
+  },
+  {
+    "id": "rcc_formula_7",
+    "unit": 2,
+    "title": "Spherical Dome Circumferential Hoop Force",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "T_2 = w R \\left( \\cos\\theta - \\frac{1}{1 + \\cos\\theta} \\right)",
+    "latex_sub": "\\theta_{zero} = 51^\\circ 49' \\quad (\\cos\\theta = 0.61803)",
+    "latex_raw": "T_2 = w * R * (cos(theta) - 1 / (1 + cos(theta)))",
+    "params": [
+      {
+        "sym": "T_2",
+        "name": "Circumferential hoop force per metre meridian",
+        "unit": "kN/m"
+      },
+      {
+        "sym": "\\theta_{zero}",
+        "name": "Co-latitude angle where hoop stress transitions from compression to tension",
+        "unit": "51° 49'"
+      }
+    ],
+    "notes": "If semi-central angle theta < 51°49', hoop stress is compressive throughout, preventing tension cracking in the roof dome."
+  },
+  {
+    "id": "rcc_formula_8",
+    "unit": 2,
+    "title": "Top & Bottom Ring Beam Hoop Tension",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "T = \\frac{T_1 \\cos\\theta \\cdot D}{2}",
+    "latex_sub": "A_{st, ring} = \\frac{T}{\\sigma_{st}} \\quad \\text{(Continuous closed ring bars)}",
+    "latex_raw": "T = (T_1 * cos(theta) * D) / 2",
+    "params": [
+      {
+        "sym": "T_1 \\cos\\theta",
+        "name": "Horizontal component of dome thrust per metre",
+        "unit": "kN/m"
+      },
+      {
+        "sym": "D",
+        "name": "Diameter of ring beam center line",
+        "unit": "m"
+      },
+      {
+        "sym": "A_{st, ring}",
+        "name": "Circumferential tensile reinforcement",
+        "unit": "mm²"
+      }
+    ],
+    "notes": "Top ring beam resists outward kick of the top dome; bottom ring beam resists outward kick of the bottom dome."
+  },
+  {
+    "id": "rcc_formula_9",
+    "unit": 2,
+    "title": "Conical Dome Meridional Thrust & Inward Horizontal Force",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "T_m = \\frac{W_T}{\\pi D_0 \\sin\\alpha}",
+    "latex_sub": "H_{inward} = \\frac{W_T}{\\pi D_0 \\tan\\alpha} \\quad \\text{(Inward radial thrust on bottom ring girder)}",
+    "latex_raw": "T_m = W_T / (pi * D_0 * sin(alpha))",
+    "params": [
+      {
+        "sym": "W_T",
+        "name": "Cumulative total vertical load above ring girder",
+        "unit": "kN"
+      },
+      {
+        "sym": "D_0",
+        "name": "Diameter of bottom ring girder",
+        "unit": "m (~7.0-7.2 m)"
+      },
+      {
+        "sym": "\\alpha",
+        "name": "Angle of inclination of conical wall with horizontal",
+        "unit": "degrees (~45° to 60°)"
+      }
+    ],
+    "notes": "In an Intze tank, the inward radial thrust of the conical wall counterbalances the outward thrust of the bottom spherical dome."
+  },
+  {
+    "id": "rcc_formula_10",
+    "unit": 2,
+    "title": "Intze Tank Circular Ring Girder Moments & Torsion (8 Columns)",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "M_{sup} = -0.0083 w D_0^2, \\quad M_{span} = +0.00415 w D_0^2",
+    "latex_sub": "T_{max} = 0.00063 w D_0^2 \\quad \\text{at } \\theta = 9.5^\\circ \\text{ from support}",
+    "latex_raw": "M_sup = -0.0083 * w * D_0^2",
+    "params": [
+      {
+        "sym": "w",
+        "name": "Uniformly distributed vertical load per metre run",
+        "unit": "kN/m"
+      },
+      {
+        "sym": "D_0",
+        "name": "Pitch circle diameter of circular girder",
+        "unit": "m"
+      },
+      {
+        "sym": "T_{max}",
+        "name": "Maximum twisting torsional moment",
+        "unit": "kN·m"
+      }
+    ],
+    "notes": "Exact curved beam coefficients for 8 symmetrically supported columns, requiring closed shear stirrups for torsion."
+  },
+  {
+    "id": "rcc_formula_11",
+    "unit": 3,
+    "title": "Janssen's Theory Horizontal Pressure in Deep Silos",
+    "frequency": "4 of 5 Papers (75% High Probability)",
+    "freq_badge": "4x",
+    "latex_main": "p_h = \\frac{\\gamma R}{\\mu'} \\left[ 1 - e^{-\\frac{\\mu' K h}{R}} \\right]",
+    "latex_sub": "R = \\frac{A}{U} = \\frac{D}{4} \\quad (\\text{Circular Silo Hydraulic Radius})",
+    "latex_raw": "p_h = (gamma * R / mu') * [1 - exp(-mu' * K * h / R)]",
+    "params": [
+      {
+        "sym": "\\gamma",
+        "name": "Unit weight of stored granular material",
+        "unit": "kN/m³"
+      },
+      {
+        "sym": "R",
+        "name": "Hydraulic radius of bin = Cross-sectional area / Perimeter",
+        "unit": "m"
+      },
+      {
+        "sym": "\\mu'",
+        "name": "Coefficient of wall friction = tan(phi')",
+        "unit": "unitless"
+      },
+      {
+        "sym": "K",
+        "name": "Pressure ratio = (1 - sin(phi)) / (1 + sin(phi))",
+        "unit": "unitless"
+      },
+      {
+        "sym": "h",
+        "name": "Depth below grain surface",
+        "unit": "m"
+      }
+    ],
+    "notes": "Fundamental governing equation for deep grain and cement silos; lateral pressure approaches an upper asymptote due to wall friction."
+  },
+  {
+    "id": "rcc_formula_12",
+    "unit": 3,
+    "title": "Janssen's Theory Vertical Pressure & Limiting Asymptote",
+    "frequency": "4 of 5 Papers (75% High Probability)",
+    "freq_badge": "4x",
+    "latex_main": "p_v = \\frac{p_h}{K} = \\frac{\\gamma R}{\\mu' K} \\left[ 1 - e^{-\\frac{\\mu' K h}{R}} \\right]",
+    "latex_sub": "p_{h, asymp} = \\frac{\\gamma R}{\\mu'}, \\quad p_{v, asymp} = \\frac{\\gamma R}{\\mu' K} \\quad \\text{as } h \\to \\infty",
+    "latex_raw": "p_v = p_h / K",
+    "params": [
+      {
+        "sym": "p_v",
+        "name": "Vertical pressure carried by grain column at depth h",
+        "unit": "kN/m²"
+      },
+      {
+        "sym": "p_{h, asymp}",
+        "name": "Limiting maximum lateral pressure at infinite depth",
+        "unit": "kN/m²"
+      }
+    ],
+    "notes": "Proves that deep bins do not transfer full gravity weight to the bottom hopper; wall friction supports the balance."
+  },
+  {
+    "id": "rcc_formula_13",
+    "unit": 3,
+    "title": "Airy's Theory Critical Height for Shallow-to-Deep Bin Transition",
+    "frequency": "4 of 5 Papers (75% High Probability)",
+    "freq_badge": "4x",
+    "latex_main": "h_{crit} = b \\left[ \\mu + \\sqrt{\\frac{\\mu(1 + \\mu^2)}{\\mu + \\mu'}} \\right]",
+    "latex_sub": "h \\le h_{crit} \\implies \\text{Bunker (Shallow Bin)}; \\quad h > h_{crit} \\implies \\text{Silo (Deep Bin)}",
+    "latex_raw": "h_crit = b * [mu + sqrt(mu*(1 + mu^2)/(mu + mu'))]",
+    "params": [
+      {
+        "sym": "b",
+        "name": "Width / diameter of the storage container",
+        "unit": "m"
+      },
+      {
+        "sym": "\\mu",
+        "name": "Coefficient of internal friction = tan(phi)",
+        "unit": "unitless"
+      },
+      {
+        "sym": "\\mu'",
+        "name": "Coefficient of wall friction = tan(phi')",
+        "unit": "unitless"
+      }
+    ],
+    "notes": "Defines the exact boundary where Coulomb's plane of rupture shifts from the top free surface to the opposite vertical wall."
+  },
+  {
+    "id": "rcc_formula_14",
+    "unit": 3,
+    "title": "Square Bunker Corner Moments & Direct Wall Tension",
+    "frequency": "4 of 5 Papers (75% High Probability)",
+    "freq_badge": "4x",
+    "latex_main": "M_{corner} = \\frac{p_h a^2}{12}, \\quad M_{mid} = \\frac{p_h a^2}{24}",
+    "latex_sub": "T = p_h \\cdot \\frac{a}{2} \\quad \\text{(Direct ring bursting tension per metre height)}",
+    "latex_raw": "M_corner = p_h * a^2 / 12",
+    "params": [
+      {
+        "sym": "p_h",
+        "name": "Rankine lateral pressure at depth considered = Ka * gamma * h",
+        "unit": "kN/m²"
+      },
+      {
+        "sym": "a",
+        "name": "Side dimension of square bunker",
+        "unit": "m"
+      },
+      {
+        "sym": "T",
+        "name": "Direct tension per metre height",
+        "unit": "kN/m"
+      }
+    ],
+    "notes": "Analyzes bunker walls as closed rectangular continuous frames subjected to uniform internal granular pressure."
+  },
+  {
+    "id": "rcc_formula_15",
+    "unit": 3,
+    "title": "Bunker Sloping Hopper Bottom Direct Tension & Normal Pressure",
+    "frequency": "4 of 5 Papers (75% High Probability)",
+    "freq_badge": "4x",
+    "latex_main": "T_m = \\frac{W_{total}}{4 a \\sin\\theta}",
+    "latex_sub": "p_n = p_v \\cos^2\\theta + p_h \\sin^2\\theta \\quad \\text{(Normal bending pressure on plate)}",
+    "latex_raw": "T_m = W_total / (4 * a * sin(theta))",
+    "params": [
+      {
+        "sym": "W_{total}",
+        "name": "Total weight of material carried by hopper bottom",
+        "unit": "kN"
+      },
+      {
+        "sym": "\\theta",
+        "name": "Slope angle of hopper plate with horizontal",
+        "unit": "degrees (> phi + 15°)"
+      },
+      {
+        "sym": "p_n",
+        "name": "Normal pressure inducing transverse slab bending",
+        "unit": "kN/m²"
+      }
+    ],
+    "notes": "Hopper bottom reinforcement is designed for combined direct meridional tension along the slope and transverse bending."
+  },
+  {
+    "id": "rcc_formula_16",
+    "unit": 4,
+    "title": "Rankine-Grashoff Orthogonal Load Sharing for Grid Floors",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "q_x = q \\cdot \\frac{L_y^4}{L_x^4 + L_y^4}, \\quad q_y = q \\cdot \\frac{L_x^4}{L_x^4 + L_y^4}",
+    "latex_sub": "q_x + q_y = q, \\quad w_{ux} = q_x s_y, \\quad w_{uy} = q_y s_x",
+    "latex_raw": "q_x = q * L_y^4 / (L_x^4 + L_y^4)",
+    "params": [
+      {
+        "sym": "q",
+        "name": "Total uniform characteristic / factored load per unit area",
+        "unit": "kN/m²"
+      },
+      {
+        "sym": "L_x, L_y",
+        "name": "Short span and long span dimensions of grid floor",
+        "unit": "m"
+      },
+      {
+        "sym": "s_x, s_y",
+        "name": "Rib center-to-center spacing in orthogonal directions",
+        "unit": "m (~1.5-2.0 m)"
+      }
+    ],
+    "notes": "Derived from equating center-span elastic deflections of mutually perpendicular simply supported intersecting rib beams."
+  },
+  {
+    "id": "rcc_formula_17",
+    "unit": 4,
+    "title": "Grid Floor Rib Maximum Bending Moment & Shear",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "M_{ux} = \\frac{w_{ux} L_x^2}{8} = \\frac{q_x s_y L_x^2}{8}",
+    "latex_sub": "V_{ux} = \\frac{w_{ux} L_x}{2} = \\frac{q_x s_y L_x}{2}",
+    "latex_raw": "M_ux = w_ux * L_x^2 / 8",
+    "params": [
+      {
+        "sym": "w_{ux}",
+        "name": "Factored load per metre run on critical short rib",
+        "unit": "kN/m"
+      },
+      {
+        "sym": "L_x",
+        "name": "Short span carrying the majority of floor load",
+        "unit": "m"
+      },
+      {
+        "sym": "V_{ux}",
+        "name": "Maximum end shear force at support",
+        "unit": "kN"
+      }
+    ],
+    "notes": "Governs the depth and tensile steel of the short-span central rib beams acting as T-beams with the topping slab as flange."
+  },
+  {
+    "id": "rcc_formula_18",
+    "unit": 5,
+    "title": "Flat Slab Direct Design Total Design Static Moment (IS 456)",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "M_0 = \\frac{W L_n}{8} = \\frac{(w_u L_2 L_n) L_n}{8}",
+    "latex_sub": "L_n = L_1 - D_c \\ge 0.65 L_1 \\quad \\text{(Clear span between column faces / capitals)}",
+    "latex_raw": "M_0 = (W * L_n) / 8",
+    "params": [
+      {
+        "sym": "w_u",
+        "name": "Total factored design load per unit area",
+        "unit": "kN/m²"
+      },
+      {
+        "sym": "L_1, L_2",
+        "name": "Panel lengths in moment direction and transverse direction",
+        "unit": "m"
+      },
+      {
+        "sym": "D_c",
+        "name": "Effective diameter of column capital / column head",
+        "unit": "m (~0.20-0.25 L)"
+      },
+      {
+        "sym": "L_n",
+        "name": "Clear span between column supports",
+        "unit": "m"
+      }
+    ],
+    "notes": "Core static equilibrium moment required by IS 456 Clause 31.4.2.2 for each panel of a flat slab system."
+  },
+  {
+    "id": "rcc_formula_19",
+    "unit": 5,
+    "title": "Flat Slab Interior Panel Column & Middle Strip Distribution",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "M_{cs,-} = 0.49 M_0, \\quad M_{cs,+} = 0.21 M_0",
+    "latex_sub": "M_{ms,-} = 0.16 M_0, \\quad M_{ms,+} = 0.14 M_0 \\quad (\\text{Total Negative } = 0.65 M_0, \\text{ Positive } = 0.35 M_0)",
+    "latex_raw": "M_cs_neg = 0.75 * 0.65 * M_0 = 0.4875 M_0",
+    "params": [
+      {
+        "sym": "M_{cs,-}",
+        "name": "Negative design moment apportioned to Column Strip",
+        "unit": "kN·m (49% of M0)"
+      },
+      {
+        "sym": "M_{cs,+}",
+        "name": "Positive design moment apportioned to Column Strip",
+        "unit": "kN·m (21% of M0)"
+      },
+      {
+        "sym": "M_{ms,-}",
+        "name": "Negative design moment apportioned to Middle Strip",
+        "unit": "kN·m (16% of M0)"
+      },
+      {
+        "sym": "M_{ms,+}",
+        "name": "Positive design moment apportioned to Middle Strip",
+        "unit": "kN·m (14% of M0)"
+      }
+    ],
+    "notes": "Apportions 75% of negative moment and 60% of positive moment to the stiffer column strip containing drop panels."
+  },
+  {
+    "id": "rcc_formula_20",
+    "unit": 5,
+    "title": "Flat Slab Two-Way Punching Shear Stress at Critical Section",
+    "frequency": "5 of 5 Papers (100% Guaranteed)",
+    "freq_badge": "5x",
+    "latex_main": "\\tau_v = \\frac{V_u}{b_0 d} \\le k_s \\tau_c = (0.5 + \\beta_c) \\cdot 0.25 \\sqrt{f_{ck}} \\le 0.25 \\sqrt{f_{ck}}",
+    "latex_sub": "b_0 = \\pi (D_c + d) \\quad \\text{at } d/2 \\text{ from periphery of column head}",
+    "latex_raw": "tau_v = V_u / (b_0 * d) <= 0.25 * sqrt(fck)",
+    "params": [
+      {
+        "sym": "V_u",
+        "name": "Factored punching shear force = wu * (Area - critical area)",
+        "unit": "kN"
+      },
+      {
+        "sym": "b_0",
+        "name": "Perimeter of critical section located at d/2 from capital",
+        "unit": "mm"
+      },
+      {
+        "sym": "d",
+        "name": "Effective depth of slab in drop panel",
+        "unit": "mm"
+      },
+      {
+        "sym": "\\tau_c",
+        "name": "Permissible punching shear stress = 0.25 * sqrt(fck)",
+        "unit": "N/mm² (1.25 for M25)"
+      }
+    ],
+    "notes": "IS 456 Clause 31.6 governs punching failure around columns; failure is prevented by drop thickness or shear studs."
+  }
+]

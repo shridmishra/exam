@@ -87,15 +87,19 @@ Adhere strictly to the project typography hierarchy specification:
 
 ---
 
-## 4. Single Source of Truth & Regeneration Pipeline
+## 4. Single Source of Truth & Next.js Data Pipeline
 
-- The core analytical dashboard is generated programmatically via:
+- The core analytical data pipeline compiles and exports strongly-typed JSON for Next.js via:
   ```bash
-  python3 generate_dashboard.py
+  npm run export:data
   ```
-- **Files generated**:
-  - `index.html` (Primary production dashboard)
-  - `geotech_pyq_analysis.html` (Canonical standalone analysis)
+- **Files generated in `src/data/`**:
+  - `questions.json` (Geotech-2 verified questions)
+  - `canonical.json` (Geotech-2 canonical topic clusters)
+  - `formulas.json` (Geotech-2 formulas)
+  - `rcc_*.json`, `dhs_*.json` (Subject-specific datasets)
+  - `timetable.json` (Timetable schedules)
+  - `subjects.json` (Registered ready subjects)
 - **Question Bank Engine Directives**:
   - **Zero Heading Clutter**: The Question Bank view starts immediately with the space-efficient Control Panel, removing unnecessary top headings and subheadings for maximum vertical workspace.
   - **Minimal Grid-Based Control Panel (Zero Separate Backgrounds & Proper Grid System)**:
@@ -119,7 +123,7 @@ Adhere strictly to the project typography hierarchy specification:
     - Multi-paper repeats require occurrence in distinct examination papers (`clusterYears.length >= 2`). Questions from only a single paper are classified as 1x topics and never masquerade as repeats.
   - **Local Persistence & Completion Engine**: All filters (`year`, `unit`, `type`, `marks`, `repeat`, `status`, `search`), active tab view (`geotech_active_view`), formula filters (`geotech_formula_filters`), and question completion records (`geotech_completed_questions`) are stored in `localStorage` and restored automatically on page load/refresh.
   - **Mark as Complete & Hide Completed**: Questions include an interactive `.complete-btn` that toggles completion status without expanding/collapsing the answer card. The `Status: Incomplete` filter immediately removes/hides completed questions from view, while `Status: Completed` isolates finished questions. Progress metrics (`X / 106 Done`) and "Reset Filters" / "Clear Done" controls provide seamless study session management.
-  - **Question Card Header Layout (Badges Left, Actions Right)**: Every question card anchors the question number (e.g. `Q.1 (b)`) and all metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`) together on the **left side** as `.q-item-left-meta` / `.q-item-badges`. Action controls (`Personal Note` button, `Mark Done` / `Completed` button, and accordion chevron) remain cleanly anchored on the **far right corner** as `.q-item-right-meta` / `.q-item-actions`.
+  - **Question Card Header Layout (Badges Left, Actions Right, Question Number beside Text)**: Every question card anchors all metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`) together on the **left side** as `.q-item-left-meta` / `.q-item-badges`, while the question number (e.g. `Q.3 (a)`) is positioned directly beside the question headline text rather than in the badge row. Action controls (`Personal Note` button, `Mark Done` / `Completed` button, and accordion chevron) remain cleanly anchored on the **far right corner** as `.q-item-right-meta` / `.q-item-actions`.
   - **Clean & Un-Cardified Editorial Solutions (Zero Sub-Card Boxes)**: Individual solution points, assumptions, and steps must NEVER be wrapped in nested card containers (`.sol-item-card`), background fills (`--solution-card-bg`), box shadows, or square badge boxes (`.sol-item-badge`). Instead, solutions format as clean, elegant typographic rows (`.sol-item-row`) with natural numbers (`1.`, `2.`), bold concept titles, comfortable line-height (`1.75`), and dedicated lines for examples (`Example: ...`). Multi-line text wraps cleanly under the text margin via flex alignment, preserving effortless readability and zero wall-of-text fatigue.
   - **Verbatim PYQ Question as Card Headline & Zero Topic Clutter**: Every question card presents the actual verbatim question statement asked in the PYQ paper (`item.question`) cleanly as its primary heading (`.q-item-title`) without bracket `[]` marks and without any intermediate topic overlines (`Topic:` removed from question cards). Metadata chips clearly display Exam Year, Unit, Question Type, Marks (`2M`, `3M`, `7M` as a normal `.badge-subtle` badge with no mono font and no bold), and Repeat Count (`4x`, `3x`, or `2x`). Dedicated Marks filter and search support allow filtering specifically by marks.
   - **Personal Notes & Custom Answers Engine (Markdown Tables & KaTeX Immunity)**:
@@ -152,7 +156,7 @@ Adhere strictly to the project typography hierarchy specification:
       - **Column 3**: `Status` (`All`, `Incomplete`, `Completed`, `Starred`, `Later`) and `Marks` (`All`, `2M`, `3M`, `7M / 6M`).
     - **Reactive Match Counter & Zero-Match Empty State**: Both Question Bank and Checklist display live match counts (`X of Y questions`) and display `.empty-results` with a one-click Reset button when active filter combinations yield 0 matches.
     - **Local Persistence**: Checklist filter preferences (`geotech_checklist_filters`) persist in `localStorage` across page reloads.
-- **Rule**: Whenever modifying layout, tables, styles, or data, ALWAYS make changes in `generate_dashboard.py` (or data sources) and re-run `python3 generate_dashboard.py`. Do NOT make isolated manual edits to `index.html` without reflecting them in the generator.
+- **Rule**: Whenever modifying layout, tables, styles, or components, ALWAYS make changes in the Next.js components (`src/components/`, `src/app/`) or source data (`subjects/`, `src/data/`), and verify the build with `npm run build && npx tsc --noEmit`.
 
 ---
 
@@ -220,10 +224,10 @@ Adhere strictly to the project typography hierarchy specification:
 
 ---
 
-## 10. Calendar Current Date Tracking & Visual Indicators (`timetable.html`)
+## 10. Calendar Current Date Tracking & Visual Indicators
 
 - **Dedicated Blue Box Banner (`.cal-today-box`)**:
-  - Located at the top of the Separated Calendar view (`#calendar-view`).
+  - Located in the Calendar view (`src/components/timetable/timetable-view.tsx`).
   - Styled with semantic design tokens: `var(--pastel-sky-bg)`, `var(--pastel-sky-border)`, `var(--pastel-sky-foreground)`.
   - Displays the current date formatted (e.g. `Current Date: Monday, 16 November 2026`) and an automated countdown badge to the nearest upcoming exam paper (e.g. `18 Nov (Geo-2) • in 2 days`).
 - **Calendar Grid Cell Blue Box (`.cal-cell.today` / `.cal-cell.current-date`)**:
@@ -232,8 +236,8 @@ Adhere strictly to the project typography hierarchy specification:
 - **Header Badges & Key Legend Integration**:
   - Includes `Today` key indicator in the notice bar: `<span class="badge badge-sky">Today</span> Current Date`.
   - November and December month headers display context-sensitive `Today: [Day] [Month]` pills when active.
-- **Real-Time Client Synchronization (`initCurrentDateTracker`)**:
-  - Client-side JavaScript detects `new Date()`, calculates day offsets to remaining schedule papers, marks matching `[data-date]` cells, and preserves the active session reference when testing outside the timetable range.
+- **Real-Time Client Synchronization**:
+  - Client-side React detects `new Date()`, calculates day offsets to remaining schedule papers, marks matching cells, and handles fallbacks gracefully.
 
 ---
 
@@ -246,27 +250,21 @@ Adhere strictly to the project typography hierarchy specification:
     2. `canonical_data.json`: Deduplicated topic clusters and frequency metadata.
     3. `compile_data.py`: Verified questions array containing verbatim paper questions, solutions, marks, and taxonomy.
     4. `master_formulas.json`: Governing equations, LaTeX strings, parameters, and engineering notes.
-    5. `formula_showcase.py`: Subject-specific LaTeX enhancements and formula display post-processing.
-    6. `papers/`: High-resolution question paper scans and raw sources.
+    5. `papers/`: High-resolution question paper scans and raw sources.
   - **Subject Registry (`subjects/registry.json`)**: Central catalog of all registered subjects, build status, and the `active_subject` pointer.
   - **Template Scaffold (`subjects/_template/`)**: Rapid onboarding scaffold for any new subject.
-- **Root Compatibility Proxies**:
-  - Root `compile_data.py` and `formula_showcase.py` proxy directly to `subjects/geotech-2/` so legacy tools and imports continue to function without disruption.
 - **Timetable Policy & Local Storage Isolation**:
-  - The examination timetable (`timetable.html`, `build_timetable.py`, `tools/timetable/build_timetable.py`) is public and git-tracked, while source PDFs and OCR scratch files remain in `.gitignore`.
-  - The default public repository schedule contains only the 3 regular syllabus subjects (Geo-2, RCC, DHS).
-  - User modifications, additions, and deletions persist in client-side localStorage (`civil_exam_timetable_custom_v1`) without collision.
+  - The examination timetable schedule is managed via `src/data/timetable.json` and client-side `localStorage` (`civil_exam_timetable_custom_v1`).
+  - The default public repository schedule contains the 3 regular syllabus subjects (Geo-2, RCC, DHS).
+  - User modifications, additions, and deletions persist in client-side localStorage without collision.
   - Local host environments automatically preserve the user's 7-paper backlog schedule, with quick preset toggles in the Edit Timetable modal.
   - Concluded papers adopt a calm muted green palette (`--pastel-done-bg`, `--pastel-done-border`, `--pastel-done-foreground`, and tag `✓ Done`) across calendar, table, and timeline views. Upcoming countdowns automatically skip completed papers.
-- **Master CLI Generation Engine (`generate_dashboard.py`)**:
-  - Default build: `python3 generate_dashboard.py` (builds active default subject `geotech-2` -> `index.html` & `geotech_pyq_analysis.html`).
-  - Specific subject: `python3 generate_dashboard.py <subject_id>`.
-  - List registered subjects: `python3 generate_dashboard.py --list`.
-  - Batch build all ready subjects: `python3 generate_dashboard.py --all`.
-  - Scaffold new subject: `python3 generate_dashboard.py --new <id> "<name>" "<code>"`.
+- **Next.js App Router Architecture**:
+  - React components reside in `src/components/`.
+  - App Router routes reside in `src/app/`.
+  - Strongly typed data resides in `src/data/` (compiled from Python subjects via `npm run export:data`).
 - **Clean Workspace Rule**:
-  - Tests reside in `tests/`.
-  - Archived/legacy scripts reside in `archive/`.
+  - Build scripts reside in `scripts/`.
   - No loose scratch or test scripts in the root directory.
 
 ---
@@ -310,7 +308,7 @@ Adhere strictly to the project typography hierarchy specification:
 - **Multi-Tier Zero-Data-Loss Persistence Guarantee**:
   1. **Tier 1 (Client Storage)**: Instant local persistence in `localStorage` under `<prefix>_user_notes` and `<prefix>_general_notes`.
   2. **Tier 2 (Disk Background Sync)**: Automatic asynchronous debounced sync to server endpoint `POST /api/progress`, persisted to `user_progress.json` via `core/progress.py`.
-  3. **Tier 3 (Seed Injection)**: When generating dashboards via `python3 generate_dashboard.py`, existing progress notes from `user_progress.json` are embedded directly into `index.html` (`EMBEDDED_NOTES`, `EMBEDDED_GEN_NOTES`) as an unshakeable bootstrap fallback.
+  3. **Tier 3 (Typed Seed Data)**: Statically exported into `src/data/user_progress.json` during build for initial hydration.
   4. **Tier 4 (Export / Import Backup Utility)**: One-click "Export JSON Backup" (`exportNotesJSON`) and "Import Backup" (`triggerImportNotes`) file picker on the Notes page, plus a "Copy All Notes" clipboard utility for offline archiving.
 
 ---
@@ -324,8 +322,8 @@ Adhere strictly to the project typography hierarchy specification:
   - **HTML Entity Sanitization**: Never pass raw HTML entities inside math delimiters. `&lt;` must be `<`, `&gt;` must be `>`, `&amp;` must be `\&`, `&nbsp;` must be space, and `&mdash;` must be `\text{ --- }`.
   - **Percentage Escaping**: Always escape literal percentage signs in LaTeX math mode as `\%` (`100\%`, `80.0\%`) so they are not treated as LaTeX line comments that truncate the equation.
   - **Balanced Radicals & Nested Parentheses**: Ensure square roots with internal parentheses (e.g. Coulomb friction terms `\sqrt{...}`) enclose the full quotient without premature truncation.
-  - **Pre-Process Sanitization Hook**: `renderMathInElement` must maintain an active `preProcess` filter so that any dynamic or client-rendered equations are sanitized before KaTeX parsing occurs.
-- **Verification Rule**: Every time numerical or formula code is modified, run the automated KaTeX validation script to ensure 0 display errors and 0 inline errors across all pages (`index.html` and `geotech_pyq_analysis.html`).
+  - **Pre-Process Sanitization Hook**: `MathRenderer` in `src/components/common/math-renderer.tsx` sanitizes all dynamic and server/client-rendered equations before KaTeX parsing occurs.
+- **Verification Rule**: Every time numerical or formula code is modified, run `npm run build && npx tsc --noEmit` to ensure zero compilation or type errors.
 
 ---
 
@@ -388,21 +386,15 @@ Adhere strictly to the project typography hierarchy specification:
   2. **Standalone Vector (`favicon.svg`)**: Root asset supporting `@media (prefers-color-scheme: light / dark)` theme adaptation and infinite retina scaling.
   3. **Multi-Resolution Windows/Legacy Icon (`favicon.ico`)**: Root asset containing 16×16, 32×32, and 48×48 downsampled bitmaps with Lanczos filtering.
   4. **High-DPI Touch Icon (`apple-touch-icon.png`)**: 180×180 PNG asset for iOS Safari homescreen shortcuts and macOS Safari bookmarks.
-- **Generator Integration**:
-  - Both `generate_dashboard.py` and `tools/timetable/build_timetable.py` embed identical favicon declarations in the `<head>` section of `index.html`, `geotech_pyq_analysis.html`, and `timetable.html`.
+- **Next.js Metadata Integration**:
+  - Declared in `src/app/layout.tsx` linking to icons hosted in `public/` (`favicon.ico`, `favicon.svg`, `apple-touch-icon.png`).
 
 ---
 
-## 16. Unified Hugeicons Icon System Standard (MANDATORY)
+## 16. Unified Icon System Standard (MANDATORY)
 
-- **Official Icon Family**: **Hugeicons** (Stroke-Rounded collection).
-- **CDN & 100% Offline Dual Architecture**:
-  - Loaded via CDN with automatic local vendored fallback:
-    ```html
-    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" onerror="this.onerror=null;this.href='vendor/hugeicons/icons.css'">
-    <link rel="stylesheet" href="vendor/hugeicons/icons.css">
-    ```
-  - Local assets vendored in `vendor/hugeicons/` (`icons.css` and `hgi-stroke-rounded.woff2`) ensure zero latency and full offline operation when accessed via `file://`.
+- **Official Icon Architecture**: Clean, semantic React SVG icons consolidated in `src/components/ui/icons.tsx` based on Hugeicons Stroke-Rounded specifications.
+- **Zero Sparkle Policy**: Sparkles, generative AI stars, and multi-point star icons are strictly prohibited.
 - **Icon Sizing & Typography Proportions**:
   - Base `.icon`: `1.25rem` (20px)
   - `.icon-xs`: `1rem` (16px)

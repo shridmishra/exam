@@ -1,0 +1,57 @@
+[
+  {
+    "id": "geotech-2",
+    "path": "subjects/geotech-2",
+    "name": "Geotechnical Engineering - II",
+    "short_name": "Geo-2",
+    "code": "CE 41007",
+    "status": "ready",
+    "question_count": 106,
+    "canonical_count": 59,
+    "formula_count": 21,
+    "is_default": true
+  },
+  {
+    "id": "rcc",
+    "path": "subjects/rcc",
+    "name": "Design of Advanced RCC Structures",
+    "short_name": "RCC",
+    "code": "CE 41001",
+    "alt_codes": [
+      "CE 4152",
+      "CE41001"
+    ],
+    "status": "ready",
+    "question_count": 56,
+    "canonical_count": 13,
+    "formula_count": 20,
+    "exam_years": [
+      2025,
+      2024,
+      2023,
+      2022,
+      2019
+    ]
+  },
+  {
+    "id": "dhs",
+    "path": "subjects/dhs",
+    "name": "Design of Hydraulic Structures",
+    "short_name": "DHS",
+    "code": "CE 41006",
+    "status": "ready",
+    "alt_codes": [
+      "CE4105",
+      "CE4106"
+    ],
+    "question_count": 57,
+    "canonical_count": 11,
+    "formula_count": 20,
+    "exam_years": [
+      2025,
+      2024,
+      2023,
+      2022
+    ]
+  }
+]

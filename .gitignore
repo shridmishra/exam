@@ -2,14 +2,9 @@
 # Exam Intelligence & PYQ Platform (.gitignore)
 # ==============================================================================
 
-# Timetable Raw PDFs & OCR Scratch Files (Source scripts & timetable.html are tracked)
-*Timetable*.pdf
-*timetable*.pdf
-tools/timetable/*.pdf
-tools/timetable/*.txt
-tools/timetable/*.swift
-ocr_*.txt
-ocr_*.swift
+# Generated HTML & scratch
+*.html
+*.pdf
 local/
 
 # Python runtime & bytecode
@@ -43,3 +38,26 @@ Thumbs.db
 scratch/
 tmp/
 *.tmp
+.env
+.env*.local
+
+# Node & dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js & build outputs
+.next/
+out/
+build/
+dist/
+.turbo/
+*.tsbuildinfo
+
+# Package manager caches & logs
+.npm/
+.pnpm/
+.yarn/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

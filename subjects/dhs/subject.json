@@ -1,0 +1,61 @@
+{
+  "id": "dhs",
+  "name": "Design of Hydraulic Structures",
+  "short_name": "DHS",
+  "code": "CE 41006",
+  "alt_codes": [
+    "CE4105",
+    "CE4106"
+  ],
+  "branch": "Civil Engineering",
+  "semester": "Final Year / 7th Sem",
+  "academic_year": "2026",
+  "description": "Previous Year Questions analysis, repeat trends, formula guides, and solutions for Design of Hydraulic Structures.",
+  "storage_prefix": "dhs",
+  "unit_titles": {
+    "1": "Gravity Dams",
+    "2": "Earthen & Rockfill Dams",
+    "3": "Diversion Headworks & Weirs/Barrages",
+    "4": "Canal Falls, Regulators & Transitions",
+    "5": "Spillways & Energy Dissipators"
+  },
+  "units": [
+    {
+      "num": 1,
+      "title": "Gravity Dams & Stability Analysis",
+      "short_title": "Gravity Dams",
+      "co": "CO1"
+    },
+    {
+      "num": 2,
+      "title": "Earthen & Rockfill Dams & Seepage Analysis",
+      "short_title": "Earthen & Rockfill Dams",
+      "co": "CO2"
+    },
+    {
+      "num": 3,
+      "title": "Diversion Headworks & Weirs/Barrages on Permeable Foundations",
+      "short_title": "Diversion Headworks & Weirs/Barrages",
+      "co": "CO4"
+    },
+    {
+      "num": 4,
+      "title": "Canal Falls, Regulators & Transitions",
+      "short_title": "Canal Falls, Regulators & Transitions",
+      "co": "CO5"
+    },
+    {
+      "num": 5,
+      "title": "Spillways & Energy Dissipators",
+      "short_title": "Spillways & Energy Dissipators",
+      "co": "CO3"
+    }
+  ],
+  "exam_years": [
+    2025,
+    2024,
+    2023,
+    2022
+  ],
+  "hide_year_toggle": null
+}

@@ -1,0 +1,200 @@
+[
+  {
+    "id": "dhs_formula_1",
+    "unit": 1,
+    "title": "Elementary Profile Base Width for Gravity Dam",
+    "frequency": "4 of 4 Papers (100% Guaranteed)",
+    "freq_badge": "4x",
+    "latex_main": "B = \\frac{H}{\\sqrt{S_c - c}}",
+    "latex_sub": "B_{min} = \\frac{H}{\\mu (S_c - c)} \\quad \\text{(Sliding Criterion)}",
+    "latex_raw": "B = H / sqrt(Sc - c)",
+    "params": [
+      {
+        "sym": "H",
+        "name": "Total water height acting upstream",
+        "unit": "m"
+      },
+      {
+        "sym": "S_c",
+        "name": "Specific gravity of dam concrete / masonry",
+        "unit": "unitless (~2.4)"
+      },
+      {
+        "sym": "c",
+        "name": "Uplift pressure reduction factor",
+        "unit": "unitless (0 to 1.0)"
+      },
+      {
+        "sym": "\\mu",
+        "name": "Coefficient of friction between dam base & rock",
+        "unit": "unitless (~0.65-0.75)"
+      }
+    ],
+    "notes": "Determines theoretical minimum base width for no tension at heel and adequate factor of safety against sliding."
+  },
+  {
+    "id": "dhs_formula_2",
+    "unit": 1,
+    "title": "Hydrodynamic Earthquake Force (Zanger's Formula)",
+    "frequency": "3 of 4 Papers (75% High Probability)",
+    "freq_badge": "3x",
+    "latex_main": "P_e = 0.726 \\cdot C_m \\cdot \\alpha_h \\cdot \\gamma_w \\cdot H^2",
+    "latex_sub": "M_e = 0.299 \\cdot C_m \\cdot \\alpha_h \\cdot \\gamma_w \\cdot H^3 \\quad \\text{at base}",
+    "latex_raw": "Pe = 0.726 * Cm * alpha_h * gamma_w * H^2",
+    "params": [
+      {
+        "sym": "C_m",
+        "name": "Maximum value of pressure coefficient",
+        "unit": "unitless (~0.735 for vertical face)"
+      },
+      {
+        "sym": "\\alpha_h",
+        "name": "Horizontal earthquake seismic acceleration coefficient",
+        "unit": "fraction of g"
+      },
+      {
+        "sym": "\\gamma_w",
+        "name": "Unit weight of water",
+        "unit": "kN/m³ (9.81)"
+      },
+      {
+        "sym": "H",
+        "name": "Total depth of reservoir water",
+        "unit": "m"
+      }
+    ],
+    "notes": "Computes hydrodynamic pressure distribution and overturning moment on vertical/inclined upstream face during seismic events."
+  },
+  {
+    "id": "dhs_formula_3",
+    "unit": 2,
+    "title": "Seepage Discharge through Homogeneous Earth Dam",
+    "frequency": "4 of 4 Papers (100% Guaranteed)",
+    "freq_badge": "4x",
+    "latex_main": "q = k \\cdot s = k \\cdot \\left(\\sqrt{d^2 + H^2} - d\\right)",
+    "latex_sub": "s = \\sqrt{d^2 + H^2} - d \\quad \\text{(Focal Distance for Casagrande Base Parabola)}",
+    "latex_raw": "q = k * (sqrt(d^2 + H^2) - d)",
+    "params": [
+      {
+        "sym": "k",
+        "name": "Coefficient of permeability of embankment soil",
+        "unit": "m/s or cm/s"
+      },
+      {
+        "sym": "H",
+        "name": "Head of water retained on upstream side",
+        "unit": "m"
+      },
+      {
+        "sym": "d",
+        "name": "Horizontal distance from upstream toe entry to focus",
+        "unit": "m"
+      },
+      {
+        "sym": "s",
+        "name": "Focal distance parameter of basic phreatic parabola",
+        "unit": "m"
+      }
+    ],
+    "notes": "Governing equation in Casagrande's analytical method for seepage discharge per unit length with horizontal toe filter."
+  },
+  {
+    "id": "dhs_formula_4",
+    "unit": 3,
+    "title": "Lacey's Regime Waterway for Barrages & Weirs",
+    "frequency": "3 of 4 Papers (75% High Probability)",
+    "freq_badge": "3x",
+    "latex_main": "P = 4.75 \\cdot \\sqrt{Q}",
+    "latex_sub": "R = 0.47 \\cdot \\left(\\frac{Q}{f}\\right)^{1/3} \\quad \\text{(Regime Scour Depth)}",
+    "latex_raw": "P = 4.75 * sqrt(Q)",
+    "params": [
+      {
+        "sym": "Q",
+        "name": "Design peak flood discharge",
+        "unit": "m³/s (cumecs)"
+      },
+      {
+        "sym": "P",
+        "name": "Regime wetted perimeter (clear waterway)",
+        "unit": "m"
+      },
+      {
+        "sym": "f",
+        "name": "Lacey silt factor of river bed material",
+        "unit": "unitless (1.76 * sqrt(d_mm))"
+      },
+      {
+        "sym": "R",
+        "name": "Normal scour depth below high flood level",
+        "unit": "m"
+      }
+    ],
+    "notes": "Fundamental formula used to fix waterway and crest levels for diversion barrages and undersluices."
+  },
+  {
+    "id": "dhs_formula_5",
+    "unit": 4,
+    "title": "Discharge Formula for Sarda Type Canal Fall",
+    "frequency": "4 of 4 Papers (100% Guaranteed)",
+    "freq_badge": "4x",
+    "latex_main": "Q = C_d \\cdot \\frac{2}{3} \\cdot \\sqrt{2g} \\cdot L \\cdot H^{3/2}",
+    "latex_sub": "B_{crest} = 0.55 \\cdot \\sqrt{H + d} \\quad \\text{(Top Crest Width)}",
+    "latex_raw": "Q = Cd * (2/3) * sqrt(2g) * L * H^(3/2)",
+    "params": [
+      {
+        "sym": "Q",
+        "name": "Canal full supply discharge",
+        "unit": "m³/s"
+      },
+      {
+        "sym": "L",
+        "name": "Length of crest of the canal fall",
+        "unit": "m"
+      },
+      {
+        "sym": "H",
+        "name": "Total head over the crest including velocity of approach",
+        "unit": "m"
+      },
+      {
+        "sym": "C_d",
+        "name": "Coefficient of discharge for broad crested weir",
+        "unit": "~0.415 for Sarda fall"
+      }
+    ],
+    "notes": "Determines crest length, crest height, and energy dissipation cistern depth for vertical drop Sarda falls."
+  },
+  {
+    "id": "dhs_formula_6",
+    "unit": 5,
+    "title": "Ogee Spillway Downstream Profile (USBR)",
+    "frequency": "4 of 4 Papers (100% Guaranteed)",
+    "freq_badge": "4x",
+    "latex_main": "x^{1.85} = 2 \\cdot H_d^{0.85} \\cdot y",
+    "latex_sub": "Q = C \\cdot L_e \\cdot H_e^{3/2} \\quad \\text{(Ogee Spillway Discharge)}",
+    "latex_raw": "x^1.85 = 2 * Hd^0.85 * y",
+    "params": [
+      {
+        "sym": "x, y",
+        "name": "Coordinates of downstream profile with crest as origin",
+        "unit": "m"
+      },
+      {
+        "sym": "H_d",
+        "name": "Design head excluding velocity of approach",
+        "unit": "m"
+      },
+      {
+        "sym": "C",
+        "name": "Discharge coefficient for standard ogee crest",
+        "unit": "~2.20 in SI units"
+      },
+      {
+        "sym": "L_e",
+        "name": "Effective length of spillway crest taking pier contraction into account",
+        "unit": "m"
+      }
+    ],
+    "notes": "US Army Corps / WES standard equation defining the lower nappe trajectory to prevent cavitation and sub-atmospheric pressures."
+  }
+]

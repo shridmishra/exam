@@ -1,0 +1,238 @@
+[
+  {
+    "id": "rcc_underground_rectangular_tank",
+    "title": "Underground Rectangular Water Tank Design",
+    "topic": "Underground Rectangular Water Tank Design",
+    "unit": 1,
+    "repeat_count_str": "5x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2025_q1_b",
+      "rcc_2024_q1_or2",
+      "rcc_2023_q4",
+      "rcc_2022_q1_b",
+      "rcc_2019_q3"
+    ]
+  },
+  {
+    "id": "rcc_circular_tank_fixed_base",
+    "title": "Circular Water Tank Fixed at Base Design",
+    "topic": "Circular Water Tank Fixed at Base Design",
+    "unit": 1,
+    "repeat_count_str": "4x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2025_q1_c",
+      "rcc_2024_q4_i",
+      "rcc_2023_q2",
+      "rcc_2019_q2"
+    ]
+  },
+  {
+    "id": "rcc_circular_tank_flexible_sliding_base",
+    "title": "Circular Water Tank Flexible & Sliding Base Design",
+    "topic": "Circular Water Tank Flexible & Sliding Base Design",
+    "unit": 1,
+    "repeat_count_str": "3x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2025_q1_d",
+      "rcc_2024_q4_ii",
+      "rcc_2022_q1_a"
+    ]
+  },
+  {
+    "id": "rcc_carpenter_reissner_methods",
+    "title": "Carpenter's vs Reissner's Method for Fixed Base Tanks",
+    "topic": "Carpenter's vs Reissner's Method for Fixed Base Tanks",
+    "unit": 1,
+    "repeat_count_str": "2x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2024_q5_c",
+      "rcc_2023_q5_b"
+    ]
+  },
+  {
+    "id": "rcc_water_tank_classification_codes",
+    "title": "Water Tank Classification, Shapes & IS Codes",
+    "topic": "Water Tank Classification, Shapes & IS Codes",
+    "unit": 1,
+    "repeat_count_str": "1x",
+    "is_repeated": false,
+    "questions": [
+      "rcc_2025_q1_a",
+      "rcc_2025_q2_a",
+      "rcc_2019_q5_b"
+    ]
+  },
+  {
+    "id": "rcc_intze_tank_superstructure",
+    "title": "Intze Overhead Water Tank Superstructure Design",
+    "topic": "Intze Overhead Water Tank Superstructure Design",
+    "unit": 2,
+    "repeat_count_str": "5x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2025_q2_b",
+      "rcc_2024_q1_main",
+      "rcc_2023_q1_main",
+      "rcc_2022_q2",
+      "rcc_2019_q1_main"
+    ]
+  },
+  {
+    "id": "rcc_overhead_tank_staging_girder_dome",
+    "title": "Overhead Tank Staging, Ring Girder & Dome Stresses",
+    "topic": "Overhead Tank Staging, Ring Girder & Dome Stresses",
+    "unit": 2,
+    "repeat_count_str": "1x",
+    "is_repeated": false,
+    "questions": [
+      "rcc_2025_q2_c",
+      "rcc_2022_q3_c",
+      "rcc_2019_q5_d"
+    ]
+  },
+  {
+    "id": "rcc_cylindrical_overhead_tank_hoop",
+    "title": "Cylindrical Overhead Tank Hoop Reinforcement Design",
+    "topic": "Cylindrical Overhead Tank Hoop Reinforcement Design",
+    "unit": 2,
+    "repeat_count_str": "1x",
+    "is_repeated": false,
+    "questions": [
+      "rcc_2025_q2_d"
+    ]
+  },
+  {
+    "id": "rcc_bunker_vs_silos_differences",
+    "title": "Differences Between Bunkers and Silos",
+    "topic": "Differences Between Bunkers and Silos",
+    "unit": 3,
+    "repeat_count_str": "3x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2024_q5_a",
+      "rcc_2023_q5_a",
+      "rcc_2022_q3_a"
+    ]
+  },
+  {
+    "id": "rcc_square_bunker_design",
+    "title": "RCC Square Bunker Design & Hopper Bottom",
+    "topic": "RCC Square Bunker Design & Hopper Bottom",
+    "unit": 3,
+    "repeat_count_str": "4x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2025_q3_b",
+      "rcc_2024_q1_or1_a",
+      "rcc_2023_q1_or1",
+      "rcc_2019_q1_or1"
+    ]
+  },
+  {
+    "id": "rcc_silo_design_janssen",
+    "title": "RCC Silo Design & Janssen's Theory Derivation",
+    "topic": "RCC Silo Design & Janssen's Theory Derivation",
+    "unit": 3,
+    "repeat_count_str": "3x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2025_q3_a",
+      "rcc_2024_q1_or1_b",
+      "rcc_2022_q3_d"
+    ]
+  },
+  {
+    "id": "rcc_silo_bin_theories_airy",
+    "title": "Airy's Bin Height Derivation & Lateral Pressure Theories",
+    "topic": "Airy's Bin Height Derivation & Lateral Pressure Theories",
+    "unit": 3,
+    "repeat_count_str": "1x",
+    "is_repeated": false,
+    "questions": [
+      "rcc_2024_q5_b",
+      "rcc_2022_q3_b",
+      "rcc_2019_q5_a"
+    ]
+  },
+  {
+    "id": "rcc_grid_floor_design",
+    "title": "RC Grid Floor Structural Design Numerical",
+    "topic": "RC Grid Floor Structural Design Numerical",
+    "unit": 4,
+    "repeat_count_str": "5x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2025_q4_a",
+      "rcc_2024_q3",
+      "rcc_2023_q3",
+      "rcc_2022_q4_b",
+      "rcc_2019_q1_or2"
+    ]
+  },
+  {
+    "id": "rcc_grid_analysis_rankine_grashoff",
+    "title": "Rankine-Grashoff & Plate Theory for Grid Structures",
+    "topic": "Rankine-Grashoff & Plate Theory for Grid Structures",
+    "unit": 4,
+    "repeat_count_str": "3x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2025_q4_b",
+      "rcc_2025_q4_c",
+      "rcc_2023_q5_c",
+      "rcc_2022_q4_a"
+    ]
+  },
+  {
+    "id": "rcc_grid_deflection_criteria",
+    "title": "Deflection Criteria for RC Grid Slabs",
+    "topic": "Deflection Criteria for RC Grid Slabs",
+    "unit": 4,
+    "repeat_count_str": "1x",
+    "is_repeated": false,
+    "questions": [
+      "rcc_2019_q5_e"
+    ]
+  },
+  {
+    "id": "rcc_flat_slab_interior_design",
+    "title": "Flat Slab Interior Panel Design (Direct Design Method)",
+    "topic": "Flat Slab Interior Panel Design (Direct Design Method)",
+    "unit": 5,
+    "repeat_count_str": "5x",
+    "is_repeated": true,
+    "questions": [
+      "rcc_2025_q5_a",
+      "rcc_2024_q2",
+      "rcc_2023_q1_or2",
+      "rcc_2022_q5",
+      "rcc_2019_q4"
+    ]
+  },
+  {
+    "id": "rcc_flat_slab_exterior_panel",
+    "title": "Flat Slab Exterior Panel Design",
+    "topic": "Flat Slab Exterior Panel Design",
+    "unit": 5,
+    "repeat_count_str": "1x",
+    "is_repeated": false,
+    "questions": [
+      "rcc_2025_q5_b"
+    ]
+  },
+  {
+    "id": "rcc_flat_slab_shear_critical_planes",
+    "title": "Critical Shear Planes & Strips in Flat Slabs",
+    "topic": "Critical Shear Planes & Strips in Flat Slabs",
+    "unit": 5,
+    "repeat_count_str": "1x",
+    "is_repeated": false,
+    "questions": [
+      "rcc_2019_q5_c"
+    ]
+  }
+]

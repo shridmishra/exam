@@ -1,0 +1,810 @@
+[
+  {
+    "id": "f1-rankine-active",
+    "unit": 1,
+    "title": "Rankine Active Earth Pressure & Tension Crack Depth",
+    "frequency": "100% Guaranteed (3/3 Papers)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "p_a = K_a \\sigma'_v - 2c \\sqrt{K_a}",
+    "latex_sub": "K_a = \\frac{1 - \\sin\\phi}{1 + \\sin\\phi} = \\tan^2\\left(45^\\circ - \\frac{\\phi}{2}\\right) \\qquad z_c = \\frac{2c}{\\gamma \\sqrt{K_a}}",
+    "latex_raw": "p_a = K_a \\sigma'_v - 2c \\sqrt{K_a}, \\quad z_c = \\frac{2c}{\\gamma \\sqrt{K_a}}",
+    "params": [
+      {
+        "sym": "p_a",
+        "name": "Active lateral earth pressure",
+        "unit": "kPa"
+      },
+      {
+        "sym": "K_a",
+        "name": "Rankine active pressure coefficient",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "\\sigma'_v",
+        "name": "Effective vertical overburden stress (\\gamma z)",
+        "unit": "kPa"
+      },
+      {
+        "sym": "c",
+        "name": "Cohesion intercept of soil",
+        "unit": "kPa"
+      },
+      {
+        "sym": "\\phi",
+        "name": "Angle of internal friction",
+        "unit": "degrees"
+      },
+      {
+        "sym": "z_c",
+        "name": "Critical depth of unsupported tension crack",
+        "unit": "m"
+      },
+      {
+        "sym": "\\gamma",
+        "name": "Soil bulk unit weight",
+        "unit": "kN/m³"
+      }
+    ],
+    "notes": "At ground surface (z = 0), p_a = -2c√K_a (tensile zone). Tension crack develops to depth z_c. Total net active thrust before water enters crack is P_a = 0.5 K_a γ (H - z_c)² acting at (H - z_c)/3 from the base. Depth of zero net pressure is 2z_c."
+  },
+  {
+    "id": "f2-rankine-passive",
+    "unit": 1,
+    "title": "Rankine Passive Earth Pressure Coefficient",
+    "frequency": "Core Numerical / Theory",
+    "freq_badge": "badge-subtle",
+    "latex_main": "p_p = K_p \\sigma'_v + 2c \\sqrt{K_p}",
+    "latex_sub": "K_p = \\frac{1 + \\sin\\phi}{1 - \\sin\\phi} = \\tan^2\\left(45^\\circ + \\frac{\\phi}{2}\\right) = \\frac{1}{K_a}",
+    "latex_raw": "p_p = K_p \\sigma'_v + 2c \\sqrt{K_p}, \\quad K_p = \\frac{1 + \\sin\\phi}{1 - \\sin\\phi}",
+    "params": [
+      {
+        "sym": "p_p",
+        "name": "Passive lateral earth resistance",
+        "unit": "kPa"
+      },
+      {
+        "sym": "K_p",
+        "name": "Rankine passive earth coefficient",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "\\sigma'_v",
+        "name": "Effective vertical overburden stress",
+        "unit": "kPa"
+      },
+      {
+        "sym": "c",
+        "name": "Cohesion intercept",
+        "unit": "kPa"
+      }
+    ],
+    "notes": "Passive pressure represents the maximum resisting force when a wall is pushed into backfill. Full mobilization requires 4 to 10 times greater wall displacement than active state."
+  },
+  {
+    "id": "f3-coulomb-thrust",
+    "unit": 1,
+    "title": "Coulomb Earth Thrust on Gravity Retaining Walls",
+    "frequency": "67% (2/3 Papers - 7M Numerical)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "P_a = \\frac{1}{2} \\gamma H^2 K_a \\qquad P_p = \\frac{1}{2} \\gamma H^2 K_p",
+    "latex_sub": "K_a = \\frac{\\cos^2\\phi}{\\cos\\delta \\left[ 1 + \\sqrt{\\frac{\\sin(\\phi+\\delta)\\sin\\phi}{\\cos\\delta}} \\right]^2} \\quad (\\text{for } \\alpha=90^\\circ, \\beta=0^\\circ)",
+    "latex_raw": "P_a = \\frac{1}{2} \\gamma H^2 K_a, \\quad P_p = \\frac{1}{2} \\gamma H^2 K_p",
+    "params": [
+      {
+        "sym": "P_a, P_p",
+        "name": "Total active / passive thrust per lineal metre",
+        "unit": "kN/m"
+      },
+      {
+        "sym": "H",
+        "name": "Total vertical height of retaining wall",
+        "unit": "m"
+      },
+      {
+        "sym": "\\delta",
+        "name": "Angle of wall interface friction (typically 20° or 2/3 φ)",
+        "unit": "degrees"
+      },
+      {
+        "sym": "\\gamma",
+        "name": "Unit weight of backfill soil",
+        "unit": "kN/m³"
+      }
+    ],
+    "notes": "Thrust acts at H/3 from the base, inclined at angle δ to the normal of the wall face (downward for active, upward for passive). For vertical smooth walls (δ=0, α=90°), Coulomb's equation reduces identically to Rankine's formula."
+  },
+  {
+    "id": "f4-at-rest-pressure",
+    "unit": 1,
+    "title": "At-Rest Earth Pressure Coefficient (Elastic & Empirical)",
+    "frequency": "Core Theory Derivation",
+    "freq_badge": "badge-subtle",
+    "latex_main": "K_0 = \\frac{\\mu}{1 - \\mu} \\quad (\\text{Elastic Theory}) \\qquad K_0 = 1 - \\sin\\phi \\quad (\\text{Jaky's Equation})",
+    "latex_sub": "\\sigma_h = K_0 \\cdot \\sigma'_v \\qquad \\text{Condition: } \\varepsilon_x = \\varepsilon_y = 0 \\text{ (Zero Lateral Yield)}",
+    "latex_raw": "K_0 = \\frac{\\mu}{1-\\mu} \\quad (\\text{Elastic}), \\quad K_0 = 1 - \\sin\\phi \\quad (\\text{Jaky})",
+    "params": [
+      {
+        "sym": "K_0",
+        "name": "Coefficient of earth pressure at rest",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "\\mu",
+        "name": "Poisson's ratio of soil (typically 0.25 - 0.35)",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "\\sigma_h",
+        "name": "At-rest horizontal lateral effective stress",
+        "unit": "kPa"
+      },
+      {
+        "sym": "\\phi",
+        "name": "Effective friction angle of normally consolidated soil",
+        "unit": "degrees"
+      }
+    ],
+    "notes": "Derived from Hooke's 3D law by setting lateral strain ε_x = (1/E)[σ_x - μ(σ_y + σ_z)] = 0. Governs rigid unyielding structures like basement walls keyed into bedrock and bridge abutments on fixed piles."
+  },
+  {
+    "id": "f5-rebhann-graphical",
+    "unit": 1,
+    "title": "Rebhann's Graphical Construction for Active Earth Thrust",
+    "frequency": "67% (2/3 Papers - 6-7M Derivation)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "P_a = \\gamma \\cdot \\text{Area}(\\Delta BGH) = \\frac{1}{2}\\gamma \\cdot (GH \\cdot BG \\sin\\psi)",
+    "latex_sub": "\\text{Critical Rupture Criterion: } GH = \\frac{BG}{\\sin\\psi} \\iff \\frac{dP_a}{d\\theta} = 0",
+    "latex_raw": "P_a = \\gamma \\cdot \\text{Area}(\\Delta BGH) = \\frac{1}{2}\\gamma \\cdot (GH \\cdot BG \\sin\\psi)",
+    "params": [
+      {
+        "sym": "P_a",
+        "name": "Total active thrust from sliding wedge",
+        "unit": "kN/m"
+      },
+      {
+        "sym": "\\Delta BGH",
+        "name": "Earth pressure triangle constructed on rupture plane",
+        "unit": "m²"
+      },
+      {
+        "sym": "\\psi",
+        "name": "Inclination angle between ground and rupture plane",
+        "unit": "degrees"
+      }
+    ],
+    "notes": "Poncelet's semicircle theorem geometrically maximizes the trial wedge thrust without solving complex differential calculus. Critical rupture surface AH isolates the failure wedge."
+  },
+  {
+    "id": "f6-mohr-coulomb",
+    "unit": 2,
+    "title": "Mohr-Coulomb Failure Criterion & Principal Stress Relation",
+    "frequency": "100% Guaranteed (3/3 Papers - 7M)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "\\sigma'_1 = \\sigma'_3 \\tan^2\\left(45^\\circ + \\frac{\\phi'}{2}\\right) + 2c'\\tan\\left(45^\\circ + \\frac{\\phi'}{2}\\right)",
+    "latex_sub": "\\sigma'_1 = \\sigma'_3 N_\\phi + 2c'\\sqrt{N_\\phi} \\qquad \\theta_{\\text{cr}} = 45^\\circ + \\frac{\\phi'}{2} \\quad (\\text{Failure Plane Angle})",
+    "latex_raw": "\\sigma'_1 = \\sigma'_3 \\tan^2\\left(45^\\circ + \\frac{\\phi'}{2}\\right) + 2c'\\tan\\left(45^\\circ + \\frac{\\phi'}{2}\\right)",
+    "params": [
+      {
+        "sym": "\\sigma'_1",
+        "name": "Major effective principal stress at failure",
+        "unit": "kPa"
+      },
+      {
+        "sym": "\\sigma'_3",
+        "name": "Minor effective principal stress (cell confining pressure)",
+        "unit": "kPa"
+      },
+      {
+        "sym": "c'",
+        "name": "Effective cohesion intercept",
+        "unit": "kPa"
+      },
+      {
+        "sym": "\\phi'",
+        "name": "Effective angle of internal friction",
+        "unit": "degrees"
+      },
+      {
+        "sym": "N_\\phi",
+        "name": "Flow value parameter tan²(45° + φ'/2)",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "\\theta_{\\text{cr}}",
+        "name": "Critical shear failure angle with major principal plane",
+        "unit": "degrees"
+      }
+    ],
+    "notes": "Fundamental governing equation for triaxial shear tests, unconfined compression tests, and direct shear tests. For purely cohesive soil (φ=0): σ₁ - σ₃ = 2c_u = q_u. For cohesionless sand (c=0): σ'₁/σ'₃ = tan²(45° + φ'/2)."
+  },
+  {
+    "id": "f7-triaxial-area",
+    "unit": 2,
+    "title": "Triaxial Specimen Area Correction (Axial Strain)",
+    "frequency": "Core Numerical Step (Every Triaxial Problem)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "A = \\frac{A_0}{1 - \\varepsilon} \\qquad \\text{where } \\varepsilon = \\frac{\\Delta L}{L_0}",
+    "latex_sub": "\\Delta\\sigma = \\sigma_1 - \\sigma_3 = \\frac{\\text{Failure Deviator Load}}{A} \\qquad A_0 = \\frac{\\pi}{4} D_0^2",
+    "latex_raw": "A = \\frac{A_0}{1 - \\varepsilon}, \\quad \\varepsilon = \\frac{\\Delta L}{L_0}, \\quad \\Delta\\sigma = \\frac{P}{A}",
+    "params": [
+      {
+        "sym": "A",
+        "name": "Corrected cross-sectional area of specimen at failure",
+        "unit": "m²"
+      },
+      {
+        "sym": "A_0",
+        "name": "Initial cross-sectional area before shearing",
+        "unit": "m²"
+      },
+      {
+        "sym": "\\varepsilon",
+        "name": "Axial compressive strain at failure",
+        "unit": "dimensionless / %"
+      },
+      {
+        "sym": "\\Delta L",
+        "name": "Axial deformation / shortening at failure",
+        "unit": "mm"
+      },
+      {
+        "sym": "L_0",
+        "name": "Initial height of cylindrical specimen (typically 76 mm)",
+        "unit": "mm"
+      },
+      {
+        "sym": "\\Delta\\sigma",
+        "name": "Deviator stress at failure",
+        "unit": "kPa"
+      }
+    ],
+    "notes": "Assumes cylindrical specimen deforms as a right cylinder with zero net volume change during undrained shear (or uniform lateral bulging). Forgetting area correction falsely overestimates deviator stress by 10-25%."
+  },
+  {
+    "id": "f8-infinite-slope",
+    "unit": 2,
+    "title": "Infinite Slope Stability with Steady Seepage Parallel to Slope",
+    "frequency": "100% Guaranteed (3/3 Papers - 7M)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "FS = \\frac{c' + \\gamma' z \\cos^2\\beta \\tan\\phi'}{\\gamma_{\\text{sat}} z \\sin\\beta \\cos\\beta}",
+    "latex_sub": "\\text{For granular soil } (c'=0): \\quad FS = \\frac{\\gamma'}{\\gamma_{\\text{sat}}} \\cdot \\frac{\\tan\\phi'}{\\tan\\beta} \\approx 0.5 \\cdot \\frac{\\tan\\phi'}{\\tan\\beta}",
+    "latex_raw": "FS = \\frac{c' + \\gamma' z \\cos^2\\beta \\tan\\phi'}{\\gamma_{\\text{sat}} z \\sin\\beta \\cos\\beta}",
+    "params": [
+      {
+        "sym": "FS",
+        "name": "Factor of safety against shear sliding along slope plane",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "c'",
+        "name": "Effective cohesion along slip surface",
+        "unit": "kPa"
+      },
+      {
+        "sym": "\\phi'",
+        "name": "Effective angle of internal friction",
+        "unit": "degrees"
+      },
+      {
+        "sym": "\\beta",
+        "name": "Slope inclination angle to horizontal",
+        "unit": "degrees"
+      },
+      {
+        "sym": "z",
+        "name": "Depth of planar slip surface parallel to ground",
+        "unit": "m"
+      },
+      {
+        "sym": "\\gamma_{\\text{sat}}",
+        "name": "Saturated soil unit weight",
+        "unit": "kN/m³"
+      },
+      {
+        "sym": "\\gamma'",
+        "name": "Submerged unit weight (γ_sat - γ_w = γ_sat - 9.81)",
+        "unit": "kN/m³"
+      }
+    ],
+    "notes": "Seepage force parallel to the slope cuts effective normal stress by roughly half, dropping the factor of safety of granular slopes by ~50% compared to dry conditions (FS_dry = tanφ'/tanβ)."
+  },
+  {
+    "id": "f9-vane-shear",
+    "unit": 2,
+    "title": "Vane Shear Test: Undrained Cohesion Formula",
+    "frequency": "Core Practical / Theory (2/3 Papers)",
+    "freq_badge": "badge-subtle",
+    "latex_main": "T = c_u \\pi D^2 \\left( \\frac{H}{2} + \\frac{D}{6} \\right) \\implies c_u = \\frac{T}{\\pi D^2 \\left( \\frac{H}{2} + \\frac{D}{6} \\right)}",
+    "latex_sub": "\\text{If top end not submerged: } \\quad T = c_u \\pi D^2 \\left( \\frac{H}{2} + \\frac{D}{12} \\right)",
+    "latex_raw": "c_u = \\frac{T}{\\pi D^2 \\left( \\frac{H}{2} + \\frac{D}{6} \\right)}",
+    "params": [
+      {
+        "sym": "c_u",
+        "name": "Undrained shear strength of soft sensitive clay",
+        "unit": "kPa"
+      },
+      {
+        "sym": "T",
+        "name": "Applied failure torque reading from spring dial",
+        "unit": "N·m"
+      },
+      {
+        "sym": "D",
+        "name": "Diameter / blade width of the four-bladed vane",
+        "unit": "m"
+      },
+      {
+        "sym": "H",
+        "name": "Overall height of vane blades (standard H = 2D)",
+        "unit": "m"
+      }
+    ],
+    "notes": "Used exclusively for in-situ testing of very soft to soft saturated clays where undisturbed sampling is virtually impossible. Standard lab vane: D = 12 mm, H = 24 mm. Field vane: D = 50-100 mm."
+  },
+  {
+    "id": "f10-terzaghi-bearing",
+    "unit": 3,
+    "title": "Terzaghi Ultimate Bearing Capacity Equation",
+    "frequency": "100% Guaranteed (3/3 Papers - 7M Numerical)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "q_{\\text{ult}} = c N_c + \\gamma D_f N_q R_{w1} + \\frac{1}{2} \\gamma B N_\\gamma R_{w2}",
+    "latex_sub": "\\text{Square: } q_{\\text{ult}} = 1.3 c N_c + q N_q R_{w1} + 0.4 \\gamma B N_\\gamma R_{w2} \\qquad \\text{Circular: } 1.3 c N_c + q N_q R_{w1} + 0.3 \\gamma B N_\\gamma R_{w2}",
+    "latex_raw": "q_{\\text{ult}} = c N_c + \\gamma D_f N_q R_{w1} + \\frac{1}{2}\\gamma B N_\\gamma R_{w2}",
+    "params": [
+      {
+        "sym": "q_{\\text{ult}}",
+        "name": "Ultimate bearing capacity of foundation base",
+        "unit": "kPa (kN/m²)"
+      },
+      {
+        "sym": "c",
+        "name": "Soil cohesion intercept",
+        "unit": "kPa"
+      },
+      {
+        "sym": "\\gamma",
+        "name": "Unit weight of soil above / below footing base",
+        "unit": "kN/m³"
+      },
+      {
+        "sym": "D_f",
+        "name": "Depth of foundation footing below ground surface",
+        "unit": "m"
+      },
+      {
+        "sym": "B",
+        "name": "Footing width (or diameter of circular footing)",
+        "unit": "m"
+      },
+      {
+        "sym": "N_c, N_q, N_\\gamma",
+        "name": "Terzaghi bearing capacity factors (functions of φ)",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "R_{w1}, R_{w2}",
+        "name": "Water table correction factors (0.5 to 1.0)",
+        "unit": "dimensionless"
+      }
+    ],
+    "notes": "Safe bearing capacity: q_safe = (q_ult - γ D_f)/FS + γ D_f. For pure cohesive clay (φ=0): N_c = 5.7, N_q = 1.0, N_γ = 0. For general shear failure; for local shear failure, use c' = (2/3)c and tanφ' = (2/3)tanφ."
+  },
+  {
+    "id": "f11-water-table-factors",
+    "unit": 3,
+    "title": "Water Table Correction Factors (Rw1 & Rw2)",
+    "frequency": "100% Guaranteed (3/3 Papers - 7M)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "R_{w1} = 0.5 \\left( 1 + \\frac{z_{w1}}{D_f} \\right) \\qquad R_{w2} = 0.5 \\left( 1 + \\frac{z_{w2}}{B} \\right)",
+    "latex_sub": "\\text{Boundary Limits: } 0.5 \\le R_{w1}, R_{w2} \\le 1.0 \\qquad \\text{At Ground Level: } R_{w1} = R_{w2} = 0.5",
+    "latex_raw": "R_{w1} = 0.5 \\left(1 + \\frac{z_{w1}}{D_f}\\right), \\quad R_{w2} = 0.5 \\left(1 + \\frac{z_{w2}}{B}\\right)",
+    "params": [
+      {
+        "sym": "R_{w1}",
+        "name": "Surcharge water table reduction factor (modifies γ D_f N_q)",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "R_{w2}",
+        "name": "Wedge zone water table reduction factor (modifies 0.5 γ B N_γ)",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "z_{w1}",
+        "name": "Depth of water table below ground surface (0 to D_f)",
+        "unit": "m"
+      },
+      {
+        "sym": "z_{w2}",
+        "name": "Depth of water table below foundation base (0 to B)",
+        "unit": "m"
+      }
+    ],
+    "notes": "When water table rises from deep below (depth > D_f + B) to the ground surface, both R_w1 and R_w2 drop from 1.0 to 0.5, halving both surcharge resistance and shear wedge resistance (~50% capacity loss)."
+  },
+  {
+    "id": "f12-housel-plate",
+    "unit": 3,
+    "title": "Housel's Two-Plate Method for Foundation Bearing Capacity",
+    "frequency": "Core Numerical / Theory (2/3 Papers)",
+    "freq_badge": "badge-subtle",
+    "latex_main": "Q_1 = A_1 m + P_1 n \\qquad Q_2 = A_2 m + P_2 n",
+    "latex_sub": "Q_F = A_F \\cdot m + P_F \\cdot n \\quad (\\text{Prototype Foundation Permissible Load})",
+    "latex_raw": "Q_1 = A_1 m + P_1 n, \\quad Q_2 = A_2 m + P_2 n \\implies Q_F = A_F m + P_F n",
+    "params": [
+      {
+        "sym": "Q_1, Q_2",
+        "name": "Test loads on plate 1 and plate 2 at permissible settlement",
+        "unit": "kN"
+      },
+      {
+        "sym": "A_1, A_2",
+        "name": "Contact surface areas of test plates 1 and 2",
+        "unit": "m²"
+      },
+      {
+        "sym": "P_1, P_2",
+        "name": "Perimeters of test plates 1 and 2",
+        "unit": "m"
+      },
+      {
+        "sym": "m",
+        "name": "Perimeter shear factor (side shear mobilization)",
+        "unit": "kN/m"
+      },
+      {
+        "sym": "n",
+        "name": "Direct bearing factor (base pressure mobilization)",
+        "unit": "kN/m²"
+      },
+      {
+        "sym": "Q_F",
+        "name": "Allowable design load of full-scale prototype footing",
+        "unit": "kN"
+      }
+    ],
+    "notes": "Housel's method bypasses plate size extrapolation errors by testing two plates of different sizes (e.g. 30 cm and 60 cm) at the identical permissible settlement, solving simultaneous equations for m and n."
+  },
+  {
+    "id": "f13-elastic-settlement",
+    "unit": 3,
+    "title": "Immediate (Elastic) Settlement of Shallow Footings",
+    "frequency": "Core Numerical / Theory",
+    "freq_badge": "badge-subtle",
+    "latex_main": "S_i = \\frac{q B (1 - \\mu^2)}{E_s} \\cdot I_f",
+    "latex_sub": "\\text{Rigid Footing: } I_f \\approx 0.82 \\qquad \\text{Center of Flexible Footing: } I_f \\approx 1.12 \\text{ (Square)}",
+    "latex_raw": "S_i = \\frac{q B (1 - \\mu^2)}{E_s} \\cdot I_f",
+    "params": [
+      {
+        "sym": "S_i",
+        "name": "Immediate elastic settlement under foundation load",
+        "unit": "m (or mm)"
+      },
+      {
+        "sym": "q",
+        "name": "Net foundation contact pressure",
+        "unit": "kPa"
+      },
+      {
+        "sym": "B",
+        "name": "Characteristic footing width / diameter",
+        "unit": "m"
+      },
+      {
+        "sym": "\\mu",
+        "name": "Poisson's ratio of foundation soil",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "E_s",
+        "name": "Modulus of elasticity of soil deposit",
+        "unit": "kPa"
+      },
+      {
+        "sym": "I_f",
+        "name": "Influence shape and rigidity factor",
+        "unit": "dimensionless"
+      }
+    ],
+    "notes": "Calculates instantaneous elastic distortion occurring before primary consolidation. Critical for sand deposits and initial settlement in stiff clay layers."
+  },
+  {
+    "id": "f14-single-pile-capacity",
+    "unit": 4,
+    "title": "Single Driven / Bored Pile Capacity in Cohesive Soil",
+    "frequency": "100% Guaranteed (3/3 Papers - 7M)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "Q_u = Q_b + Q_s = 9 c_u A_b + \\alpha \\bar{c}_u A_s",
+    "latex_sub": "A_b = \\frac{\\pi d^2}{4} \\qquad A_s = \\pi d L \\qquad Q_{\\text{safe}} = \\frac{Q_u}{\\text{FS}}",
+    "latex_raw": "Q_u = 9 c_u A_b + \\alpha \\bar{c}_u A_s, \\quad A_b = \\frac{\\pi d^2}{4}, \\quad A_s = \\pi d L",
+    "params": [
+      {
+        "sym": "Q_u",
+        "name": "Ultimate single pile axial compressive capacity",
+        "unit": "kN"
+      },
+      {
+        "sym": "Q_b",
+        "name": "Base end-bearing resistance (N_c = 9 per Skempton)",
+        "unit": "kN"
+      },
+      {
+        "sym": "Q_s",
+        "name": "Shaft skin friction resistance along pile perimeter",
+        "unit": "kN"
+      },
+      {
+        "sym": "c_u",
+        "name": "Undrained cohesion at pile base tip",
+        "unit": "kPa"
+      },
+      {
+        "sym": "\\bar{c}_u",
+        "name": "Average undrained cohesion along pile shaft embedment",
+        "unit": "kPa"
+      },
+      {
+        "sym": "\\alpha",
+        "name": "Adhesion factor between clay and pile material (0.4 - 0.8)",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "d",
+        "name": "Pile diameter",
+        "unit": "m"
+      },
+      {
+        "sym": "L",
+        "name": "Embedded pile length",
+        "unit": "m"
+      }
+    ],
+    "notes": "Adopt factor of safety FS = 2.5 to 3.0. In soft clay, skin friction Q_s typically accounts for 80-90% of total single pile capacity. For piles driven in sand: Q_u = σ'_v N_q A_b + K_s σ'_v tanδ A_s."
+  },
+  {
+    "id": "f15-pile-group-block",
+    "unit": 4,
+    "title": "Pile Group Block Failure Capacity in Soft Clay",
+    "frequency": "100% Guaranteed (Verbatim 2024 Q4d & 2022 Q4e - 7M)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "Q_{\\text{ug}} = 9 c_u B^2 + 4 B L \\bar{c}_u",
+    "latex_sub": "B = (n_1 - 1)s + d \\qquad Q_{\\text{safe, group}} = \\frac{\\min(Q_{\\text{ug}}, \\, n \\cdot Q_u)}{\\text{FS}}",
+    "latex_raw": "Q_{\\text{ug}} = 9 c_u B^2 + 4 B L \\bar{c}_u, \\quad B = (n_1 - 1)s + d",
+    "params": [
+      {
+        "sym": "Q_{\\text{ug}}",
+        "name": "Ultimate block failure capacity of entire pile group mass",
+        "unit": "kN"
+      },
+      {
+        "sym": "B",
+        "name": "Overall width of square pile group block perimeter",
+        "unit": "m"
+      },
+      {
+        "sym": "s",
+        "name": "Center-to-center pile spacing",
+        "unit": "m"
+      },
+      {
+        "sym": "d",
+        "name": "Individual pile diameter",
+        "unit": "m"
+      },
+      {
+        "sym": "n_1",
+        "name": "Number of piles in one row (e.g. 3 for a 3x3 group)",
+        "unit": "count"
+      },
+      {
+        "sym": "n",
+        "name": "Total number of piles in group (n = n_1²)",
+        "unit": "count"
+      },
+      {
+        "sym": "L",
+        "name": "Embedded length of piles",
+        "unit": "m"
+      },
+      {
+        "sym": "c_u",
+        "name": "Undrained cohesion of clay",
+        "unit": "kPa"
+      }
+    ],
+    "notes": "Notice that for block shear, adhesion factor α = 1.0 because failure occurs soil-on-soil along the outer block envelope, not pile-to-soil. Safe group capacity is ALWAYS the smaller of block capacity and individual sum divided by FS."
+  },
+  {
+    "id": "f16-optimum-spacing",
+    "unit": 4,
+    "title": "Optimum Pile Spacing in Cohesive Soil",
+    "frequency": "67% (2/3 Papers - 6-7M Derivation)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "s = d + \\frac{2d}{\\pi \\alpha}",
+    "latex_sub": "\\text{Derivation Condition: } \\text{Block Skin Friction Perimeter} = \\sum \\text{Individual Pile Skin Friction}",
+    "latex_raw": "s = d + \\frac{2d}{\\pi \\alpha}",
+    "params": [
+      {
+        "sym": "s",
+        "name": "Optimum center-to-center pile spacing",
+        "unit": "m"
+      },
+      {
+        "sym": "d",
+        "name": "Diameter of pile",
+        "unit": "m"
+      },
+      {
+        "sym": "\\alpha",
+        "name": "Pile-soil adhesion factor (typically 0.6 - 0.8)",
+        "unit": "dimensionless"
+      }
+    ],
+    "notes": "Equating group perimeter capacity 4BL c_u to n individual friction sum n(πα d L c_u) yields s = d + (2d / πα). For α = 0.7, s ≈ 2.5d to 3.0d, perfectly matching standard Indian Standard spacing guidelines (s ≥ 2.5d to 3d)."
+  },
+  {
+    "id": "f17-converse-labarre",
+    "unit": 4,
+    "title": "Converse-Labarre Pile Group Efficiency Formula",
+    "frequency": "Core Numerical / Theory",
+    "freq_badge": "badge-subtle",
+    "latex_main": "\\eta = 1 - \\frac{\\theta}{90^\\circ} \\left[ \\frac{(m-1)n + (n-1)m}{m \\cdot n} \\right]",
+    "latex_sub": "\\text{where } \\theta = \\arctan\\left(\\frac{d}{s}\\right) \\text{ (in degrees)} \\qquad Q_{\\text{group}} = \\eta \\cdot n \\cdot Q_{\\text{single}}",
+    "latex_raw": "\\eta = 1 - \\frac{\\theta}{90^\\circ} \\left[\\frac{(m-1)n + (n-1)m}{mn}\\right], \\quad \\theta = \\arctan(d/s)",
+    "params": [
+      {
+        "sym": "\\eta",
+        "name": "Group efficiency factor (typically 0.65 - 0.85 for clays)",
+        "unit": "fraction / %"
+      },
+      {
+        "sym": "m, n",
+        "name": "Number of pile rows and columns in rectangular group",
+        "unit": "count"
+      },
+      {
+        "sym": "d",
+        "name": "Diameter of pile",
+        "unit": "m"
+      },
+      {
+        "sym": "s",
+        "name": "Center-to-center pile spacing",
+        "unit": "m"
+      },
+      {
+        "sym": "\\theta",
+        "name": "Overlap interference angle arctan(d/s)",
+        "unit": "degrees"
+      }
+    ],
+    "notes": "Reflects overlapping stress bulbs between adjacent piles. In friction piles driven in dense sand, soil compaction can cause η > 1.0. In clays, overlapping shear zones always reduce capacity (η < 1.0)."
+  },
+  {
+    "id": "f18-spt-overburden",
+    "unit": 5,
+    "title": "SPT Overburden Pressure Correction (CN)",
+    "frequency": "100% Guaranteed (3/3 Papers - 7M Numerical)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "N' = N \\cdot C_N = N \\cdot \\left[ \\frac{350}{\\sigma'_v + 70} \\right] \\quad (\\text{per IS: 2131})",
+    "latex_sub": "\\text{Constraint: } C_N \\le 2.0 \\quad (\\sigma'_v \\le 280\\text{ kPa}) \\qquad \\text{Peck \\& Hanson: } N' = N \\cdot \\sqrt{\\frac{100}{\\sigma'_v}}",
+    "latex_raw": "N' = N \\cdot C_N = N \\cdot \\left[\\frac{350}{\\sigma'_v + 70}\\right] \\quad (C_N \\le 2.0)",
+    "params": [
+      {
+        "sym": "N",
+        "name": "Observed field SPT blow count for final 300 mm drive",
+        "unit": "blows / 300 mm"
+      },
+      {
+        "sym": "N'",
+        "name": "Overburden-corrected SPT blow count",
+        "unit": "blows / 300 mm"
+      },
+      {
+        "sym": "C_N",
+        "name": "Overburden correction factor (capped at 2.0)",
+        "unit": "dimensionless"
+      },
+      {
+        "sym": "\\sigma'_v",
+        "name": "Effective vertical overburden stress at test elevation",
+        "unit": "kPa"
+      }
+    ],
+    "notes": "Low confining stress at shallow depths artificially underestimates density; deep overburden artificially overestimates blow counts. Must always be calculated and applied BEFORE dilatancy correction."
+  },
+  {
+    "id": "f19-spt-dilatancy",
+    "unit": 5,
+    "title": "SPT Dilatancy Correction (Terzaghi & Peck)",
+    "frequency": "100% Guaranteed (3/3 Papers - 7M Numerical)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "N'' = 15 + \\frac{1}{2}(N' - 15) \\qquad (\\text{Applied when } N' > 15 \\text{ below WT})",
+    "latex_sub": "\\text{Condition: Fine saturated sand or silty sand below groundwater table with } N' > 15",
+    "latex_raw": "N'' = 15 + 0.5(N' - 15)",
+    "params": [
+      {
+        "sym": "N''",
+        "name": "Final design SPT blow count after dilatancy correction",
+        "unit": "blows / 300 mm"
+      },
+      {
+        "sym": "N'",
+        "name": "Overburden-corrected blow count from Step 1",
+        "unit": "blows / 300 mm"
+      }
+    ],
+    "notes": "In saturated fine sand/silt, rapid hammer impacts cause dynamic volume expansion (dilatancy), creating transient negative pore water pressures that falsely increase shear resistance and blow counts. The dilatancy correction removes this non-conservative artifact."
+  },
+  {
+    "id": "f20-sampler-area-ratio",
+    "unit": 5,
+    "title": "Soil Sampler Design Criteria (Ar, Ci, Co)",
+    "frequency": "100% Guaranteed (3/3 Papers - 3-7M)",
+    "freq_badge": "badge-repeated",
+    "latex_main": "A_r = \\frac{D_{\\text{ext}}^2 - D_{\\text{int}}^2}{D_{\\text{int}}^2} \\times 100\\%",
+    "latex_sub": "C_i = \\frac{D_s - D_c}{D_c} \\times 100\\% \\quad (1\\%\\text{--}3\\%) \\qquad C_o = \\frac{D_w - D_t}{D_t} \\times 100\\% \\quad (0\\%\\text{--}2\\%)",
+    "latex_raw": "A_r = \\frac{D_{\\text{ext}}^2 - D_{\\text{int}}^2}{D_{\\text{int}}^2} \\times 100\\%, \\quad C_i = \\frac{D_s - D_c}{D_c} \\times 100\\%",
+    "params": [
+      {
+        "sym": "A_r",
+        "name": "Area ratio of sampler cutting edge (disturbed vs undisturbed indicator)",
+        "unit": "%"
+      },
+      {
+        "sym": "C_i",
+        "name": "Inside clearance ratio (prevents tube friction & internal swelling)",
+        "unit": "%"
+      },
+      {
+        "sym": "C_o",
+        "name": "Outside clearance ratio (reduces outside driving resistance)",
+        "unit": "%"
+      },
+      {
+        "sym": "D_{\\text{ext}}",
+        "name": "External diameter of cutting shoe",
+        "unit": "mm"
+      },
+      {
+        "sym": "D_{\\text{int}}",
+        "name": "Internal diameter of cutting edge orifice",
+        "unit": "mm"
+      },
+      {
+        "sym": "D_s",
+        "name": "Internal diameter of main sampler liner tube",
+        "unit": "mm"
+      }
+    ],
+    "notes": "For undisturbed sampling in soft/sensitive clay: A_r must be ≤ 10% to 12% (thin-walled Shelby tube). Thick-walled split-spoon samplers have A_r ≈ 30-45%, producing heavily disturbed samples suitable only for index classification."
+  },
+  {
+    "id": "f21-rock-rqd",
+    "unit": 5,
+    "title": "Rock Quality Designation (RQD) & Core Recovery",
+    "frequency": "Core Practical / Theory (2/3 Papers)",
+    "freq_badge": "badge-subtle",
+    "latex_main": "\\text{RQD} = \\frac{\\sum (\\text{Length of sound core pieces } \\ge 10\\text{ cm})}{\\text{Total core drill run length}} \\times 100\\%",
+    "latex_sub": "\\text{TCR (Total Core Recovery)} = \\frac{\\text{Total recovered core length}}{\\text{Total run length}} \\times 100\\%",
+    "latex_raw": "\\text{RQD} = \\frac{\\sum (L_{\\text{core}} \\ge 10\\text{ cm})}{L_{\\text{total}}} \\times 100\\%",
+    "params": [
+      {
+        "sym": "\\text{RQD}",
+        "name": "Rock Quality Designation index percentage",
+        "unit": "%"
+      },
+      {
+        "sym": "\\text{TCR}",
+        "name": "Total Core Recovery ratio",
+        "unit": "%"
+      },
+      {
+        "sym": "L_{\\text{core}}",
+        "name": "Individual sound cylindrical rock core piece length",
+        "unit": "cm / mm"
+      }
+    ],
+    "notes": "Standard Deere classification: RQD < 25% (Very Poor), 25-50% (Poor), 50-75% (Fair), 75-90% (Good), 90-100% (Excellent). Pieces showing mechanical breaks from drilling must be fitted together as a single intact piece."
+  }
+]

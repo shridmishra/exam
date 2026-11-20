@@ -1,0 +1,100 @@
+"use client";
+
+import React, { useMemo } from "react";
+import katex from "katex";
+import {
+  renderLatexInHtml,
+  renderMarkdownWithMath,
+  renderInlineMarkdownWithMath,
+} from "@/lib/math-utils";
+
+export {
+  renderLatexInHtml,
+  renderMarkdownWithMath,
+  renderInlineMarkdownWithMath,
+};
+
+interface MathRendererProps {
+  content: string;
+  isDisplay?: boolean;
+  className?: string;
+}
+
+export function MathRenderer({
+  content,
+  isDisplay = false,
+  className,
+}: MathRendererProps) {
+  const rendered = useMemo(() => {
+    if (!content) return "";
+    let clean = content.trim();
+    clean = clean.replace(/\\_/g, "_");
+    clean = clean
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&");
+
+    try {
+      return katex.renderToString(clean, {
+        displayMode: isDisplay,
+        throwOnError: false,
+      });
+    } catch (e) {
+      console.warn("KaTeX render error:", e);
+      return clean;
+    }
+  }, [content, isDisplay]);
+
+  if (isDisplay) {
+    return (
+      <div
+        className={`sol-math-block ${className || ""}`}
+        dangerouslySetInnerHTML={{ __html: rendered }}
+      />
+    );
+  }
+
+  return (
+    <span
+      className={className}
+      dangerouslySetInnerHTML={{ __html: rendered }}
+    />
+  );
+}
+
+export interface RichMathTextProps {
+  text: string;
+  className?: string;
+  inline?: boolean;
+  as?: "div" | "span";
+}
+
+/**
+ * Parses mixed text, Markdown formatting, inline math ($...$), and block math ($$...$$).
+ * When `inline` is true, renders as `<span>` and avoids block `<p>` wrappers,
+ * preventing hydration errors when used inside `<p>` or inline containers.
+ */
+export function RichMathText({
+  text,
+  className,
+  inline = false,
+  as,
+}: RichMathTextProps) {
+  const html = useMemo(() => {
+    if (!text) return "";
+    return inline
+      ? renderInlineMarkdownWithMath(text)
+      : renderMarkdownWithMath(text);
+  }, [text, inline]);
+
+  if (!html) return null;
+
+  const Tag = as || (inline ? "span" : "div");
+
+  return (
+    <Tag
+      className={className}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+}
