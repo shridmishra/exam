@@ -60,10 +60,10 @@ export function FormulasView({ formulas, unitTitles }: FormulasViewProps) {
       <div className="flex flex-col gap-3 rounded-2xl bg-card p-3 sm:p-4 shadow-xs sm:flex-row sm:items-center sm:justify-between">
         {/* Left: Unit Pills Segmented Control */}
         <div className="flex min-w-0 items-center gap-2">
-          <span className="w-9 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <span className="w-10 shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
             Unit
           </span>
-          <div className="no-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto rounded-xl bg-secondary/50 p-1 overscroll-x-contain">
+          <div className="no-scrollbar inline-flex min-w-0 items-center gap-0.5 overflow-x-auto rounded-lg bg-secondary/70 dark:bg-secondary/50 p-0.5 ring-1 ring-border/25 overscroll-x-contain">
             {["all", "1", "2", "3", "4", "5"].map((u) => (
               <Button
                 key={u}
@@ -72,10 +72,10 @@ export function FormulasView({ formulas, unitTitles }: FormulasViewProps) {
                 size="sm"
                 onClick={() => setSelectedUnit(u)}
                 className={cn(
-                  "h-7 shrink-0 whitespace-nowrap rounded-lg px-2.5 text-xs font-medium select-none transition-all",
+                  "h-7 shrink-0 whitespace-nowrap rounded-md px-2.5 text-xs font-medium select-none transition-all",
                   selectedUnit === u
-                    ? "bg-card font-semibold text-foreground shadow-xs"
-                    : "text-muted-foreground hover:bg-card/40 hover:text-foreground"
+                    ? "bg-card text-foreground dark:bg-filter-active dark:text-filter-active-foreground font-semibold shadow-2xs ring-1 ring-border/20"
+                    : "bg-transparent text-muted-foreground hover:bg-card/40 dark:hover:bg-card/50 hover:text-foreground"
                 )}
               >
                 {u === "all" ? "All" : `Unit ${u}`}

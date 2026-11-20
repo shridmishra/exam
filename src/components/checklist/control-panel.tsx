@@ -168,10 +168,10 @@ export function ControlPanel({
         <div className="flex flex-col gap-3">
           {/* Dimension 1: Year */}
           <div className="flex min-w-0 items-center gap-2">
-            <span className="w-14 min-w-14 shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
+            <span className="w-[62px] min-w-[62px] shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
               Year
             </span>
-            <div className="no-scrollbar flex min-w-0 items-center gap-0.5 sm:gap-1 overflow-x-auto py-0.5 overscroll-x-contain">
+            <div className={pillTrackClassName}>
               {yearOptions.map((y) => (
                 <FilterButton
                   key={y}
@@ -186,10 +186,10 @@ export function ControlPanel({
 
           {/* Dimension 2: Unit */}
           <div className="flex min-w-0 items-center gap-2">
-            <span className="w-14 min-w-14 shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
+            <span className="w-[62px] min-w-[62px] shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
               Unit
             </span>
-            <div className="no-scrollbar flex min-w-0 items-center gap-0.5 sm:gap-1 overflow-x-auto py-0.5 overscroll-x-contain">
+            <div className={pillTrackClassName}>
               {["all", "1", "2", "3", "4", "5"].map((u) => (
                 <FilterButton
                   key={u}
@@ -207,10 +207,10 @@ export function ControlPanel({
         <div className="flex flex-col gap-3">
           {/* Dimension 3: Repeated */}
           <div className="flex min-w-0 items-center gap-2">
-            <span className="w-14 min-w-14 shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
+            <span className="w-[62px] min-w-[62px] shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
               Repeated
             </span>
-            <div className="no-scrollbar flex min-w-0 items-center gap-0.5 sm:gap-1 overflow-x-auto py-0.5 overscroll-x-contain">
+            <div className={pillTrackClassName}>
               <FilterButton
                 active={filters.repeated === "all"}
                 onClick={() => setFilters((prev) => ({ ...prev, repeated: "all" }))}
@@ -255,10 +255,10 @@ export function ControlPanel({
 
           {/* Dimension 4: Type */}
           <div className="flex min-w-0 items-center gap-2">
-            <span className="w-14 min-w-14 shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
+            <span className="w-[62px] min-w-[62px] shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
               Type
             </span>
-            <div className="no-scrollbar flex min-w-0 items-center gap-0.5 sm:gap-1 overflow-x-auto py-0.5 overscroll-x-contain">
+            <div className={pillTrackClassName}>
               {[
                 { id: "all", label: "All" },
                 { id: "Theory", label: "Theory" },
@@ -281,10 +281,10 @@ export function ControlPanel({
         <div className="flex flex-col gap-3 md:col-span-2 xl:col-span-1">
           {/* Dimension 5: Status */}
           <div className="flex min-w-0 items-center gap-2">
-            <span className="w-14 min-w-14 shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
+            <span className="w-[62px] min-w-[62px] shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
               Status
             </span>
-            <div className="no-scrollbar flex min-w-0 items-center gap-0.5 sm:gap-1 overflow-x-auto py-0.5 overscroll-x-contain">
+            <div className={pillTrackClassName}>
               {[
                 { id: "all", label: "All" },
                 { id: "incomplete", label: "Incomplete" },
@@ -305,10 +305,10 @@ export function ControlPanel({
 
           {/* Dimension 6: Marks */}
           <div className="flex min-w-0 items-center gap-2">
-            <span className="w-14 min-w-14 shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
+            <span className="w-[62px] min-w-[62px] shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
               Marks
             </span>
-            <div className="no-scrollbar flex min-w-0 items-center gap-0.5 sm:gap-1 overflow-x-auto py-0.5 overscroll-x-contain">
+            <div className={pillTrackClassName}>
               {[
                 { id: "all", label: "All" },
                 { id: "2", label: "2M" },
