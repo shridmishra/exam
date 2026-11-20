@@ -253,6 +253,85 @@ export function extractMathSafe(math: string): { cleanMath: string; trailingBadg
 }
 
 /**
+ * Ensures all tables in solutions are made fully responsive:
+ * 1. Guarantees they are wrapped inside `<div class="sol-table-wrap overflow-x-auto my-3">`.
+ * 2. Injects a calculated `min-width` based on column count so tables with 3-7 columns
+ *    never squish character-by-character on mobile screens.
+ */
+export function makeTablesResponsive(html: string): string {
+  if (!html || !html.includes("<table")) return html;
+
+  let s = html;
+
+  // 1. Ensure any table tag has an appropriate min-width calculated from its column count
+  s = s.replace(/<table([\s\S]*?)<\/table>/gi, (tableFull) => {
+    const tableTagMatch = tableFull.match(/<table([^>]*)>/i);
+    if (!tableTagMatch) return tableFull;
+
+    const attrs = tableTagMatch[1];
+
+    // Determine column count from the first row
+    const firstRowMatch = tableFull.match(/<tr[\s\S]*?<\/tr>/i);
+    let colCount = 3;
+    if (firstRowMatch) {
+      const thMatches = firstRowMatch[0].match(/<th\b/gi);
+      const tdMatches = firstRowMatch[0].match(/<td\b/gi);
+      colCount = Math.max(1, thMatches ? thMatches.length : (tdMatches ? tdMatches.length : 3));
+    }
+
+    const minWidth = colCount <= 2 ? 300 : Math.max(540, colCount * 140);
+
+    let updatedTable = tableFull;
+    if (/style=[\"']/i.test(attrs)) {
+      if (!/min-width/i.test(attrs)) {
+        const newAttrs = attrs.replace(/(style=[\"'])([^\"']*)([\"'])/i, `$1$2; min-width: ${minWidth}px;$3`);
+        updatedTable = updatedTable.replace(tableTagMatch[0], `<table${newAttrs}>`);
+      }
+    } else {
+      updatedTable = updatedTable.replace(tableTagMatch[0], `<table style="min-width: ${minWidth}px;"${attrs}>`);
+    }
+
+    return updatedTable;
+  });
+
+  // 2. Normalize existing wrappers to include both `sol-table-wrap` and `overflow-x-auto`
+  s = s.replace(
+    /(<div[^>]*class=[\"'][^\"']*(?:overflow-x-auto|sol-table-wrap)[^\"']*[\"'][^>]*>\s*)(<table[\s\S]*?<\/table>)(\s*<\/div>)/gi,
+    (m, divOpen, tbl, divClose) => {
+      let updatedOpen = divOpen;
+      if (!/sol-table-wrap/i.test(updatedOpen)) {
+        updatedOpen = updatedOpen.replace(/class=[\"']([^\"']*)[\"']/i, 'class="$1 sol-table-wrap"');
+      }
+      if (!/overflow-x-auto/i.test(updatedOpen)) {
+        updatedOpen = updatedOpen.replace(/class=[\"']([^\"']*)[\"']/i, 'class="$1 overflow-x-auto"');
+      }
+      return `${updatedOpen}${tbl}${divClose}`;
+    }
+  );
+
+  // 3. Wrap any remaining unwrapped tables
+  const stashedWrapped: string[] = [];
+  s = s.replace(
+    /<div[^>]*class=[\"'][^\"']*(?:overflow-x-auto|sol-table-wrap)[^\"']*[\"'][^>]*>[\s\S]*?<\/table>\s*<\/div>/gi,
+    (m) => {
+      const token = `@@STASHED_WRAPPED_TABLE_${stashedWrapped.length}@@`;
+      stashedWrapped.push(m);
+      return token;
+    }
+  );
+
+  s = s.replace(/<table[\s\S]*?<\/table>/gi, (m) => {
+    return `<div class="sol-table-wrap overflow-x-auto my-3">${m}</div>`;
+  });
+
+  s = s.replace(/@@STASHED_WRAPPED_TABLE_(\d+)@@/g, (_, idx) => {
+    return stashedWrapped[parseInt(idx, 10)] || "";
+  });
+
+  return s;
+}
+
+/**
  * Enhances solution HTML with subtle, minimal muted green styling
  * for final answers, concluding results, and safety/design verifications.
  */
@@ -372,6 +451,11 @@ export function enhanceSolutionHtml(html: string): string {
       return `${updatedTag}${innerAndClosing}`;
     }
   );
+
+  // 3. Ensure all solution tables are made fully responsive with min-widths and overflow containers
+  if (s.includes("<table")) {
+    s = makeTablesResponsive(s);
+  }
 
   return s;
 }
@@ -642,8 +726,9 @@ export function renderMarkdownWithMath(raw: string): string {
             `<tr>${r.map((c) => `<td>${formatInline(c)}</td>`).join("")}</tr>`
         )
         .join("");
+      const minTableWidth = headers.length <= 2 ? 300 : Math.max(540, headers.length * 140);
       out.push(
-        `<div class="overflow-x-auto my-3"><table class="sol-table" style="table-layout: fixed; width: 100%;"><thead><tr>${thHtml}</tr></thead><tbody>${trHtml}</tbody></table></div>`
+        `<div class="sol-table-wrap overflow-x-auto my-3"><table class="sol-table" style="table-layout: fixed; width: 100%; min-width: ${minTableWidth}px;"><thead><tr>${thHtml}</tr></thead><tbody>${trHtml}</tbody></table></div>`
       );
       continue;
     }

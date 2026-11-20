@@ -19,7 +19,7 @@ export const SolutionViewer = React.memo(function SolutionViewer({ html }: Solut
 
   return (
     <div
-      className="solution-viewer text-sm sm:text-[14.5px] leading-relaxed text-foreground max-w-none space-y-3"
+      className="solution-viewer text-sm sm:text-[14.5px] leading-relaxed text-foreground w-full min-w-0 max-w-full space-y-3"
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
     />
   );

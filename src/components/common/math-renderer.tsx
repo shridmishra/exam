@@ -85,7 +85,7 @@ export const RichMathText = React.memo(function RichMathText({
 
   return (
     <Tag
-      className={`rich-math-text ${className || ""}`.trim()}
+      className={`rich-math-text w-full min-w-0 max-w-full ${className || ""}`.trim()}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
