@@ -5,11 +5,11 @@ import {
   StarIcon,
   Clock01Icon,
   PencilEdit01Icon,
-  Tick02Icon,
   ChevronDownIcon,
 } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { SolutionViewer } from "./solution-viewer";
 import { RichMathText } from "@/components/common/math-renderer";
 import { StructuredQuestion } from "@/components/common/structured-question";
@@ -134,7 +134,11 @@ export function QuestionCard({
               <Badge
                 variant={getRepeatBadgeVariant(question.repeat_multiplier)}
                 className="text-[11px] sm:text-xs px-1.5 sm:px-2 py-0.5 font-bold"
-                title={question.rep_frequency ? `Repeated across: ${question.rep_frequency}` : `${question.repeat_multiplier} Repeated`}
+                title={
+                  question.rep_frequency
+                    ? `Repeated across: ${question.rep_frequency.replace(/\s*\([^)]*\)/g, "").trim()}`
+                    : `${question.repeat_multiplier} Repeated`
+                }
               >
                 {question.repeat_multiplier}
               </Badge>
@@ -201,22 +205,16 @@ export function QuestionCard({
               <PencilEdit01Icon className="h-3.5 w-3.5" />
             </Button>
 
-            {/* Mark Done */}
-            <Button
-              type="button"
-              variant={isCompleted ? "secondary" : "ghost"}
-              size="sm"
-              onClick={onToggleComplete}
-              className={`h-7 px-1.5 sm:px-2 text-xs gap-1 transition-all ${
-                isCompleted
-                  ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              title={isCompleted ? "Mark Incomplete" : "Mark as Completed"}
-            >
-              <Tick02Icon className="h-3 w-3" />
-              <span>{isCompleted ? "Done" : "Done"}</span>
-            </Button>
+            {/* Mark Completed Checkbox */}
+            <div className="flex h-7 w-7 items-center justify-center">
+              <Checkbox
+                checked={isCompleted}
+                onCheckedChange={onToggleComplete}
+                variant="success"
+                title={isCompleted ? "Mark Incomplete" : "Mark as Completed"}
+                aria-label={isCompleted ? "Mark Incomplete" : "Mark as Completed"}
+              />
+            </div>
 
             {/* Accordion Chevron */}
             <div

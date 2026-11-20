@@ -63,7 +63,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Differentiate between underground tanks, ground tanks, and overhead tanks based on loading and '
                 'structural behavior.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Primary Structural & Loading Distinctions (IS 3370):</strong><br>\n'
@@ -185,7 +185,7 @@ questions = [ { 'bl': 'BL2',
                 'board of 0.3 m using any design method. Draw R/F details also. Use M30 grade of concrete and Fe 500 '
                 'steel.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Design Data & Geometric Proportions:</strong><br>\n'
@@ -302,7 +302,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Outline the design steps for a circular cylindrical tank resting on ground with rigid/fixed base '
                 'conditions.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Step-by-Step Design Protocol (IS 3370 Part IV):</strong><br>\n'
@@ -410,7 +410,7 @@ questions = [ { 'bl': 'BL2',
                 'limit state method. Limit crack width to 0.1 mm. Draw R/F details also. Use M30 concrete and Fe500 '
                 'steel.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Tank Dimensions & Hydraulic Parameters:</strong><br>\n'
@@ -500,7 +500,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.2 (a)',
     'question': 'Enumerate two advantages why circular tanks are preferred to rectangular tanks.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Predominant Engineering Advantages:</strong><br>\n'
@@ -609,7 +609,7 @@ questions = [ { 'bl': 'BL2',
                 'ring girder at the junction of conical and bottom spherical dome is 7 m. Design only bottom ring '
                 'beam. Use M 25 concrete and Fe415 steel. Draw R/F details also.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Geometric Dimensions & Dome Angles:</strong><br>\n'
@@ -716,7 +716,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.2 (c) [OR]',
     'question': 'Enlist the components of the staging system of an overhead tank.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Essential Structural Components of Elevated Staging:</strong><br>\n'
@@ -805,7 +805,7 @@ questions = [ { 'bl': 'BL2',
                 'The tank is open at top and supported on staging. Compute maximum hoop tension. Also sketch Wall '
                 'section showing hoop bars, vertical bars, cover, and spacing.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Given Data:</strong><br>\n'
@@ -936,7 +936,7 @@ questions = [ { 'bl': 'BL2',
                 "kN/m^3, Angle of wall friction = 0.75 phi while filling & = 0.60 phi while emptying. Use Janssen's "
                 'theory for pressure calculations., Refer Table 1',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Silo Geometric & Material Parameters:</strong><br>\n'
@@ -1079,7 +1079,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design the hopper bottom of the square bunker shown in Fig. 1, to store coal of density 8 kN/m^3 and '
                 'angle of repose phi = 25 deg.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Geometric Proportions & Loading (From Fig. 1):</strong><br>\n'
@@ -1228,7 +1228,7 @@ questions = [ { 'bl': 'BL2',
                 'in the both directions is 2.0 m. Design the rib carrying maximum bending moment? Take LL= 4.2 kN/m^2. '
                 'Draw R/F details also.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Load Partition (Rankine-Grashoff Method):</strong><br>\n'
@@ -1331,7 +1331,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.4 (b)',
     'question': 'Discuss in brief about Rankine-Grashoff method of analysis and design of Grid Structures.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Governing Assumptions & Formulation:</strong><br>\n'
@@ -1396,7 +1396,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'List out the mathematical expressions for calculation of moments, shear, and torsion using method of '
                 'Rigorous Analysis.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Plate-Theory Governing Equations for Orthotropic Grids:</strong><br>\n'
@@ -1526,7 +1526,7 @@ questions = [ { 'bl': 'BL2',
                 'Design interior panel. Take LL= 4 kN/m^2. Assume appropriate dimensions for the drop panel and column '
                 'head and incorporate them in the design. Draw R/F details also.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Geometric Dimensions & Preliminary Proportions (IS 456 Clause 31):</strong><br>\n'
@@ -1691,7 +1691,7 @@ questions = [ { 'bl': 'BL2',
                 '700 mm and column head diameter = 1000 mm. Live load = 7.5 kN/m^2. Assume M20 concrete and Fe500 '
                 'steel. Sketch the reinforcement details for the column strip and middle strip.',
     'rep_count': '2x',
-    'rep_frequency': '2 of 5 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 5 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Panel Parameters & Load Formulation:</strong><br>\n'
@@ -1847,7 +1847,7 @@ questions = [ { 'bl': 'BL2',
                 'dome is 2 m and diameter of ring girder at the junction of conical and bottom spherical dome is 7 m. '
                 'Sketch the reinforcement details.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Material Specifications:</strong><br>\n'
@@ -1999,7 +1999,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design a RCC square bunker to store 1000 kN of cement surcharged at 20°. The density of cement is '
                 '14.6 kN/m³ and its coefficient of internal friction is 0.321. Sketch the reinforcement detail.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Storage Capacity & Bunker Dimensions:</strong><br>\n'
@@ -2121,7 +2121,7 @@ questions = [ { 'bl': 'BL2',
     'question': "Using Janssen's theory, derive that the horizontal stress intensity for the bin is given by:\n"
                 "p_h = \\frac{w r}{\\mu'} \\left[ 1 - e^{-\\frac{\\mu' K h}{r}} \\right]",
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Differential Slice Equilibrium Formulation:</strong><br>\n'
@@ -2265,7 +2265,7 @@ questions = [ { 'bl': 'BL2',
                 'The dry density of soil is 17 kN/m³ and angle of internal friction is 30°. Water level is going up to '
                 'ground. Use M25 grade of concrete and Fe415 steel. Sketch the reinforcement details.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Design Conditions & Critical Loading States:</strong><br>\n'
@@ -2429,7 +2429,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design the interior panel of flat slab 7 m * 7 m in size, for the super imposed load of 5 kN/m². '
                 'Provide two-way reinforcements. Use M25 concrete and Fe500 steel. Sketch the reinforcement details.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Preliminary Proportions (IS 456 Direct Design Method):</strong><br>\n'
@@ -2580,7 +2580,7 @@ questions = [ { 'bl': 'BL2',
                 'perpendicular direction being 2 m c/c. Live is load 1.8 kN/m². Adopt M20 grade of concrete and Fe500 '
                 'steel by using approximate method (Rankine Grasshoff theory). Sketch the reinforcement details.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Geometric Dimensions & Design Loads:</strong><br>\n'
@@ -2703,7 +2703,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design a RC circular tank open at top and fixed at base resting on ground for a capacity of 400 kL '
                 'resting on the ground by any method. Use M25 concrete and Fe415 steel.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Dimension Parameter:</strong><br>\n'
@@ -2799,7 +2799,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design of RC circular water tank resting on the ground and flexible at base for a capacity of 350 kL. '
                 'Use M25 concrete and Fe500 steel.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Sizing:</strong><br>\n'
@@ -2878,7 +2878,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.5 (a)',
     'question': 'Differentiate between bunker and silos.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Definitive Contrast Between Bunkers and Silos (IS 4995):</strong><br>\n'
@@ -2963,7 +2963,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.5 (b)',
     'question': 'Discuss the Design procedure of silo.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Silo Design Protocol (IS 4995 Parts I & II):</strong><br>\n'
@@ -3047,7 +3047,7 @@ questions = [ { 'bl': 'BL2',
     'question': "Differentiate between carpenter's and Reissner's method of designing circular tanks with fixed at "
                 'base.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': "<strong>1. Analytical Contrast: Carpenter's vs Reissner's Method:</strong><br>\n"
@@ -3157,7 +3157,7 @@ questions = [ { 'bl': 'BL2',
                 'conical dome is 2.5 m and diameter of ring girder at the junction of conical and bottom spherical '
                 'dome is 7 m.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Proportions:</strong><br>\n'
@@ -3289,7 +3289,7 @@ questions = [ { 'bl': 'BL2',
                 'wheat is 8.5 kN/m³ and its coefficient of friction is 0.466. Bearing capacity of soil is 160 kN/m² '
                 'and basic wind pressure is 1.5 kN/m².',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Storage Sizing:</strong><br>\n'
@@ -3436,7 +3436,7 @@ questions = [ { 'bl': 'BL2',
                 'size, for the super imposed load of 6 kN/m². Provide two way reinforcements. Use M20 concrete and '
                 'Fe415 steel. Sketch the reinforcement details.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Preliminary Proportions:</strong><br>\n'
@@ -3567,7 +3567,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design a circular tank for capacity of 450 kL resting on the ground. The walls are fixed at base and '
                 'free at top. Use M25 concrete and Fe415 steel.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Ratio Formulation:</strong><br>\n'
@@ -3685,7 +3685,7 @@ questions = [ { 'bl': 'BL2',
                 'perpendicular direction being 1.8 m c/c. Live is load 1.5 kN/m². Adopt M20 grade of concrete and Fe '
                 '415 steel by using approximate method (Rankine Grasshoff theory).',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Load Allocation:</strong><br>\n'
@@ -3802,7 +3802,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design wall of underground rectangular water tank of dimensions 6.4 m*3 m*3.2 m with free board of '
                 '0.3 m. Use M25 grade of concrete and Fe415 steel.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Structural Framing:</strong><br>\n'
@@ -3893,7 +3893,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.5 (a)',
     'question': 'Differentiate between bunker and silos.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Core Engineering & Theoretical Distinctions:</strong><br>\n'
@@ -3972,7 +3972,7 @@ questions = [ { 'bl': 'BL2',
     'question': "Write the procedure for Carpenter's and Reissner's method for design of circular tanks fixed at base. "
                 'Comment which is better and why.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Analytical Procedures:</strong><br>\n'
@@ -4061,7 +4061,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Compare Rankine-Grashoff method and plate theory method for design of grid slab and comment which is '
                 'better and why.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Comprehensive Comparison:</strong><br>\n'
@@ -4153,7 +4153,7 @@ questions = [ { 'bl': 'BL2',
                 'The materials are of M30 grade of concrete and HYSD reinforcement of grade Fe500. Sketch the details '
                 'of reinforcement.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Proportions:</strong><br>\n'
@@ -4266,7 +4266,7 @@ questions = [ { 'bl': 'BL2',
                 'having dimensions 10 m * 4m * 3m. The tank is covered at the top. The construction materials are M-25 '
                 'grade of concrete and HYSD grade of steel. Sketch the details of reinforcement.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Structural Framing:</strong><br>\n'
@@ -4425,7 +4425,7 @@ questions = [ { 'bl': 'BL2',
                 'tank is supported on symmetrically placed 8 columns. Use M-30 grade of concrete & Fe 415 grade of '
                 'steel. Sketch the details of reinforcement.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Material Properties:</strong><br>\n'
@@ -4530,7 +4530,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.3 (a)',
     'question': 'Differentiate between Bunker & Silos?',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Concise Technical Differences:</strong><br>\n'
@@ -4607,7 +4607,7 @@ questions = [ { 'bl': 'BL2',
     'question': "Using Airy's theory, Show that the height upto which bin behaves as shallow one is given by:\n"
                 "h = b \\left[ \\mu + \\sqrt{\\frac{\\mu(1 + \\mu^2)}{\\mu + \\mu'}} \\right]",
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Geometric Condition of Rupture Plane Intersection:</strong><br>\n'
@@ -4716,7 +4716,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.3 (c) [OR]',
     'question': 'Design the Bottom Circular girder of an Intze tank given in Q2(a)',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Loading & Forces on Circular Girder (From Q.2 Data):</strong><br>\n'
@@ -4841,7 +4841,7 @@ questions = [ { 'bl': 'BL2',
     'question': "Design the side walls and conical bottom of a Silo using Janssen's theory to store 2000 kN of wheat. "
                 'Use M-20 grade of concrete & Fe 415 grade of steel. Sketch the details of reinforcement.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Properties:</strong><br>\n'
@@ -4960,7 +4960,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.4 (a)',
     'question': 'Derive the expression for Moments & Shear of Grid Slab using Rankine Grashoff theory?',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Deflection Compatibility Condition:</strong><br>\n'
@@ -5081,7 +5081,7 @@ questions = [ { 'bl': 'BL2',
                 'materials used are M-20 grade of concrete & HYSD grade of steel. Design suitable reinforcements in '
                 'the grid beams and slab. Sketch the details of reinforcements?',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Load Allocation:</strong><br>\n'
@@ -5227,7 +5227,7 @@ questions = [ { 'bl': 'BL2',
                 'condition is mild. The diameter of supporting column is 450 mm. Floor to Floor height of columns is '
                 '3.35 m. Sketch the details of reinforcement.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Proportions:</strong><br>\n'
@@ -5359,7 +5359,7 @@ questions = [ { 'bl': 'BL2',
                 'The rise of upper and lower domes is 2 m and 1.6 m respectively. The vertical height of conical dome '
                 'is 2 m and diameter of ring beam at junction of conical dome and bottom spherical dome is 7m.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Proportions:</strong><br>\n'
@@ -5471,7 +5471,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design R.C. bunker to store 900 kN of wheat. The clear height of staging is 5.0 m .SBC of soil is 200 '
                 'kN/m². Design all components. Draw neat sketches showing reinforcement.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Stored Material:</strong><br>\n'
@@ -5586,7 +5586,7 @@ questions = [ { 'bl': 'BL2',
                 'moments and shears using (a) Approximate method, and (b) Rigorous Analysis. Also Design suitable '
                 'reinforcements at critical sections.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Total Load:</strong><br>\n'
@@ -5683,7 +5683,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design a Circular R.C. water tank open at top and fixed at base resting on the ground for a capacity '
                 'of 460 kL by any method. Use M25 concrete and Fe 415 steel.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Sizing:</strong><br>\n'
@@ -5764,7 +5764,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Design only walls of an underground rectangular R.C. water tank open at top and fixed at base resting '
                 'on the ground with plan dimensions 5.5 m X 3.5 m and height 3 m .Use M25 concrete and Fe 415 steel.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Analysis:</strong><br>\n'
@@ -5857,7 +5857,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Determine the moments along the long span for the interior panel of flat slab 5.5 m X 6.5 m in size, '
                 'for a superimposed load of 8 kN/m².',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Dimensions & Loading (Long Span Direction):</strong><br>\n'
@@ -5939,7 +5939,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'List the theories along with expressions to determine the intensity of lateral pressure on the sides '
                 'of Bunkers and Silos.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 5 Papers (75% High Probability)',
+    'rep_frequency': '4 of 5 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Primary Governing Theories:</strong><br>\n'
@@ -6000,7 +6000,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.5 (b)',
     'question': 'List the various IS codes used for water retaining R.C. structures and Bunkers and Silos.',
     'rep_count': '2x',
-    'rep_frequency': '2 of 5 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 5 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Indian Standard Codes of Practice:</strong><br>\n'
@@ -6067,7 +6067,7 @@ questions = [ { 'bl': 'BL2',
     'question': 'Show the various strips and critical planes for shear in flat slab when the drops and capitals are '
                 'provided.',
     'rep_count': '2x',
-    'rep_frequency': '2 of 5 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 5 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Strip Divisions & Shear Plane Locations (IS 456 Cl. 31.2 & 31.6):</strong><br>\n'
@@ -6128,7 +6128,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.5 (d)',
     'question': 'Write the nature of stresses and their expressions in spherical dome due to dead load.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Membrane Stresses in Spherical Domes:</strong><br>\n'
@@ -6193,7 +6193,7 @@ questions = [ { 'bl': 'BL2',
     'qno': 'Q.5 (e)',
     'question': 'Explain the criteria to check the maximum deflection of grid slab.',
     'rep_count': '5x',
-    'rep_frequency': '5 of 5 Papers (100% Guaranteed)',
+    'rep_frequency': '5 of 5 Papers',
     'repeat_multiplier': '5x',
     'repeated': True,
     'solution': '<strong>1. Deflection Limits & Calculation Criteria (IS 456 Cl. 23.2 & 31.2):</strong><br>\n'

@@ -88,7 +88,7 @@ questions = [ { 'bl': 'BL3',
                 '- Length of Horizontal Toe Filter: $20\\text{ m}$\n'
                 '- Coefficient of Permeability: $k = 6 \\times 10^{-4}\\text{ cm/s}$',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Given Dam & Geometric Parameters:</strong><br>\n'
@@ -212,7 +212,7 @@ questions = [ { 'bl': 'BL3',
                 '- Atterberg Limits: Liquid Limit $w_L = 35\\%$, Plastic Limit $w_p = 18\\%$\n'
                 '- Gradation Parameters: Uniformity Coefficient $C_u = 5$, Curvature Coefficient $C_c = 1.7$',
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': '<strong>1. Grain Size Breakdown & Soil Classification:</strong><br>\n'
@@ -337,7 +337,7 @@ questions = [ { 'bl': 'BL3',
                 '3. Hydraulic Failures (overtopping, wave erosion, gullying).\n'
                 '4. Preventive design criteria and safety measures against each failure mechanism.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Three Principal Modes of Earth Dam Failures:</strong><br>\n'
@@ -489,7 +489,7 @@ questions = [ { 'bl': 'BL3',
                 '- Canal Pond Level = $403.50\\text{ m}$\n'
                 "- Lacey's Silt Factor: $f = 1.0$",
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Levels & Regime Waterway:</strong><br>\n'
@@ -642,7 +642,7 @@ questions = [ { 'bl': 'BL3',
                 '- Permissible Afflux = $1.00\\text{ m}$\n'
                 "- Lacey's Silt Factor: $f = 1.0$",
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Parameters & Waterway:</strong><br>\n'
@@ -792,7 +792,7 @@ questions = [ { 'bl': 'BL3',
                 '- Bed Level: Upstream = $287.30\\text{ m}$, Downstream = $286.00\\text{ m}$\n'
                 "- Bligh's Creep Coefficient: $C = 10$",
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Crest Design:</strong><br>\n'
@@ -922,7 +922,7 @@ questions = [ { 'bl': 'BL3',
                 '3. Energy dissipation arrangement using data of Q.3 (a) for canal discharge $Q = 20\\text{ '
                 'm}^3/\\text{s}$.',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Parameters & Crest Design:</strong><br>\n'
@@ -1056,7 +1056,7 @@ questions = [ { 'bl': 'BL3',
                 '- Normal Channel Bed Width ($B_1$) = $16\\text{ m}$\n'
                 '- Flumed Channel Bed Width ($B_2$) = $8\\text{ m}$',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Given Geometric Parameters:</strong><br>\n'
@@ -1194,7 +1194,7 @@ questions = [ { 'bl': 'BL3',
                 '   - Roller buckets (Solid and slotted)\n'
                 '   - Trajectory / Ski-jump flip buckets',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Definition & Engineering Significance:</strong><br>\n'
@@ -1342,7 +1342,7 @@ questions = [ { 'bl': 'BL3',
                 '- Downstream Spillway Glacis Slope: $0.8\\text{H} : 1\\text{V}$\n'
                 '- Pier Thickness = $3.00\\text{ m}$ (Type-III pier as per IS: 6934-1973)',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Effective Crest Length Calculation:</strong><br>\n'
@@ -1459,7 +1459,7 @@ questions = [ { 'bl': 'BL3',
                 '   - Baby Siphon / Auxiliary Siphon\n'
                 '   - Air Vent Pipe / Joggle arrangement / Priming Chute',
     'rep_count': '2x',
-    'rep_frequency': '2 of 4 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 4 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Concepts of Priming & Depriming:</strong><br>\n'
@@ -1578,7 +1578,7 @@ questions = [ { 'bl': 'BL3',
                 '- Upstream Face Slope: $0.1\\text{H} : 1\\text{V}$\n'
                 '- Horizontal Seismic Coefficient: $\\alpha_h = 0.12$',
     'rep_count': '2x',
-    'rep_frequency': '2 of 4 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 4 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': "<strong>1. Governing Formula (Zanger's Theory / IS: 1893):</strong><br>\n"
@@ -1712,7 +1712,7 @@ questions = [ { 'bl': 'BL3',
                 '   - No sliding criterion ($B \\ge \\frac{H}{\\mu (S_c - c)}$)\n'
                 '3. Derive expressions for Principal and Shear stresses developed at the base.',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Concept of Elementary Profile:</strong><br>\n'
@@ -1842,7 +1842,7 @@ questions = [ { 'bl': 'BL3',
                 '- Specific Gravity of Masonry: $S_c = 2.40$\n'
                 '- Safe Compressive Stress of Masonry: $\\sigma_{allow} = 1250\\text{ kN/m}^2$',
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': '<strong>1. Height and Freeboard Calculations:</strong><br>\n'
@@ -1963,7 +1963,7 @@ questions = [ { 'bl': 'BL3',
                 '- Length of arc = $14.5\\text{ cm}$ (Scale $1\\text{ cm} = 5\\text{ m}$)\n'
                 "- Soil parameters: $c' = 20\\text{ kN/m}^2$, $\\phi' = 25^\\circ$, $\\gamma = 19\\text{ kN/m}^3$",
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': '<strong>1. Derivation of Flow Net Seepage Formula:</strong><br>\n'
@@ -2065,7 +2065,7 @@ questions = [ { 'bl': 'BL3',
                 "1. Terzaghi's protective filter design criteria ($D_{15}/D_{85}$ piping and permeability ratios).\n"
                 '2. Grading requirements for transition filters and downstream toe drainage.',
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': '<strong>1. Purpose of Protective Filters:</strong><br>\n'
@@ -2162,7 +2162,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Structural stability (steady seepage, sudden drawdown, construction condition).\n'
                 '3. Hydraulic safety (sufficient freeboard against wave run-up, spillway capacity).',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Criteria for Safe Design of Earth Dams (IS: 8887 / USBR):</strong><br>\n'
@@ -2305,7 +2305,7 @@ questions = [ { 'bl': 'BL3',
                 '- Canal Pond Level = $148.50\\text{ m}$\n'
                 "- Lacey's Silt Factor: $f = 1.0$ | Bligh's Creep Coefficient: $C = 12$",
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Levels & Crest Parameters:</strong><br>\n'
@@ -2450,7 +2450,7 @@ questions = [ { 'bl': 'BL3',
                 '1. Energy equation formulation across successive sections before and after the jump.\n'
                 '2. Step-by-step analytical or graphical procedure for plotting location of hydraulic jump.',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Theoretical Basis:</strong><br>\n'
@@ -2572,7 +2572,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Launching apron sizing, launch slope ($2\\text{H} : 1\\text{V}$), scour depth ($1.5 R$ to $2.0 '
                 'R$), and stone thickness.',
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': '<strong>1. Inverted Filter Design Criteria:</strong><br>\n'
@@ -2708,7 +2708,7 @@ questions = [ { 'bl': 'BL3',
                 '- Bed Level: Upstream = $216.50\\text{ m}$, Downstream = $215.20\\text{ m}$\n'
                 "- Bligh's Creep Coefficient: $C = 8$",
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Crest Design:</strong><br>\n'
@@ -2833,7 +2833,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Cistern dimensions and energy dissipation blocks using data of Q.3 (a) with discharge $Q = '
                 '25\\text{ m}^3/\\text{s}$.',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Crest Design for $Q = 40\\text{ m}^3/\\text{s}$:</strong><br>\n'
@@ -2954,7 +2954,7 @@ questions = [ { 'bl': 'BL3',
                 '1. Surface contraction and expansion principles (energy conservation).\n'
                 '2. Calculation of water surface profile, bed elevation changes, and wall curvature equations.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': "<strong>1. Core Concept of Hind's Method:</strong><br>\n"
@@ -3084,7 +3084,7 @@ questions = [ { 'bl': 'BL3',
                 '1. Hydraulic behavior, jet trajectory, and tailwater depth independence.\n'
                 '2. Scour hole formation, aeration requirements, and recommended site geological conditions.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Contrast between Ski-Jump & Flip / Roller Buckets:</strong><br>\n'
@@ -3226,7 +3226,7 @@ questions = [ { 'bl': 'BL3',
                 '- Design Head: $H_d = 12.00\\text{ m}$\n'
                 '- Pier Thickness = $3.00\\text{ m}$ (Type-III pier as per IS: 6934-1973)',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Design Head ($H_d$) Determination:</strong><br>\n'
@@ -3343,7 +3343,7 @@ questions = [ { 'bl': 'BL3',
                 '1. Upstream elliptical / circular profile coordinates meeting the crest.\n'
                 '2. Vertical upstream face transition and offset dimensions.',
     'rep_count': '2x',
-    'rep_frequency': '2 of 4 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 4 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Standard Upstream Profile Parameters (USBR / IS: 6934-1973):</strong><br>\n'
@@ -3594,7 +3594,7 @@ questions = [ { 'bl': 'BL3',
                 '- Base Width = $7.50\\text{ m} + 10.00\\text{ m} + 38.50\\text{ m} + 10.00\\text{ m} = 66.00\\text{ '
                 'm}$',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Given Cross-Section & Material Parameters (Figure-1):</strong><br>\n'
@@ -3837,7 +3837,7 @@ questions = [ { 'bl': 'BL3',
                 '   - No-sliding condition ($B \\ge \\frac{H}{\\mu (S_c - c)}$)\n'
                 '3. Derive formulas for Normal, Principal, and Shear stresses at the heel and toe.',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Concept of Elementary Profile:</strong><br>\n'
@@ -3954,7 +3954,7 @@ questions = [ { 'bl': 'BL3',
                 '- Upstream Face Slope = $0.1\\text{H} : 1\\text{V}$\n'
                 '- Horizontal Seismic Coefficient: $\\alpha_h = 0.10$',
     'rep_count': '2x',
-    'rep_frequency': '2 of 4 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 4 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Parameters and Coefficient $C_m$:</strong><br>\n'
@@ -4067,7 +4067,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Wide core and defensive transition filter zones to prevent crack piping.\n'
                 '3. Slope stability analysis under pseudostatic seismic forces and liquefaction evaluation.',
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': '<strong>1. Primary Seismic Hazards to Earth Dams:</strong><br>\n'
@@ -4192,7 +4192,7 @@ questions = [ { 'bl': 'BL3',
                 '- Length of Horizontal Filter = $25\\text{ m}$\n'
                 '- Permeability in X and Z directions: $k_x = k_z = 5 \\times 10^{-4}\\text{ m/s}$',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Geometric Parameters:</strong><br>\n'
@@ -4318,7 +4318,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Upstream impervious clay blanket (length sizing and seepage reduction).\n'
                 '3. Relief wells, drainage trenches, and downstream weighted filter berms.',
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': '<strong>1. Primary Foundation Seepage Control Measures:</strong><br>\n'
@@ -4451,7 +4451,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Apply mutual interference, floor thickness, and slope corrections.\n'
                 '3. Check exit gradient against safe limit $G_e \\le 1/7$ and determine floor thicknesses.',
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': "<strong>1. Khosla's Theory Principles for Key Points:</strong><br>\n"
@@ -4596,7 +4596,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Plot jump profiles on the sloping glacis and determine required cistern length and floor '
                 'thickness.',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Parameters:</strong><br>\n'
@@ -4761,7 +4761,7 @@ questions = [ { 'bl': 'BL3',
                 '- Upstream Bed Width ($B_1$) = $20.00\\text{ m}$ | Flumed Bed Width ($B_2$) = $10.00\\text{ m}$\n'
                 '- Upstream Depth ($y_1$) = $2.00\\text{ m}$ | Upstream Velocity ($v_1$) = $1.00\\text{ m/s}$',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Given Hydraulic Parameters at Entry and Exit:</strong><br>\n'
@@ -4919,7 +4919,7 @@ questions = [ { 'bl': 'BL3',
                 '1. Criteria for selecting the location of canal falls along a channel alignment.\n'
                 '2. Design the Crest and Cistern for an unflumed straight glacis non-metered fall.',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Selection of Fall Location in a Canal:</strong><br>\n'
@@ -5031,7 +5031,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Draw a neat longitudinal section of a Sarda Type Fall labeling all components:\n'
                 '   - Crest wall, impervious floor, cistern, cutoffs, and energy dissipation blocks.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Selection of Fall Location in a Canal:</strong><br>\n'
@@ -5159,7 +5159,7 @@ questions = [ { 'bl': 'BL3',
                 '- Design Discharge Intensity: $q = 20\\text{ m}^3/\\text{s/m}$\n'
                 '- Spillway Crest Head: $H_d = 8.00\\text{ m}$ | Drop from crest to river bed = $30.00\\text{ m}$',
     'rep_count': '2x',
-    'rep_frequency': '2 of 4 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 4 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Parameters:</strong><br>\n'
@@ -5289,7 +5289,7 @@ questions = [ { 'bl': 'BL3',
                 '- Design Head: $H_d = 12.00\\text{ m}$\n'
                 '- Pier Thickness = $3.00\\text{ m}$ (Type-III pier as per IS: 6934-1973)',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Parameters & Effective Crest Length:</strong><br>\n'
@@ -5381,7 +5381,7 @@ questions = [ { 'bl': 'BL3',
                 '1. Upper nappe trajectory profile coordinates over an ogee crest.\n'
                 '2. Design height and freeboard for downstream side training walls.',
     'rep_count': '2x',
-    'rep_frequency': '2 of 4 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 4 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Upper Nappe Profile Formulation (USBR / WES):</strong><br>\n'
@@ -5556,7 +5556,7 @@ questions = [ { 'bl': 'BL3',
                 '   - Factor of Safety against Sliding ($FOS_S$)\n'
                 '   - Shear Friction Factor ($SFF$)',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Net Force Summary & Factors of Safety Verification (Figure-1: $H = 52\\text{ m}, B = '
@@ -5827,7 +5827,7 @@ questions = [ { 'bl': 'BL3',
                 '- Horizontal acceleration coefficient: $\\alpha_h = 0.10$\n'
                 '- Vertical acceleration coefficient: $\\alpha_v = 0.08$',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Additional Dynamic & Extreme Uplift Forces on Figure-1 Profile:</strong><br>\n'
@@ -6110,7 +6110,7 @@ questions = [ { 'bl': 'BL3',
                 '- Unit weight of water: $\\gamma_w = 10\\text{ kN/m}^3$\n'
                 '- Neglect uplift, earthquake, wave, and silt pressures.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Geometric Decomposition (Per 1 m Length of Dam):</strong><br>\n'
@@ -6297,7 +6297,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Derive the expressions for determining base width ($B$) based on the stress criterion (no tension '
                 'at heel).',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Concept of Elementary Profile:</strong><br>\n'
@@ -6385,7 +6385,7 @@ questions = [ { 'bl': 'BL3',
                 '1. Formulate energy and momentum equations for pre-jump and post-jump flow.\n'
                 '2. Plot tailwater rating curve and jump rating curve to find intersection location.',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Stepwise Procedure for Plotting Hydraulic Jump Location on Sloping Glacis:</strong><br>\n'
@@ -6473,7 +6473,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Seepage failures (piping, sloughing, foundation boil).\n'
                 '3. Structural failures (slope failure, foundation shear failure, earthquake damage).',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Failures:</strong><br>\n'
@@ -6587,7 +6587,7 @@ questions = [ { 'bl': 'BL3',
                 '- Length of Horizontal Toe Filter: $30\\text{ m}$\n'
                 '- Soil Permeability: $k = 6 \\times 10^{-4}\\text{ cm/s}$',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Geometric Parameters:</strong><br>\n'
@@ -6720,7 +6720,7 @@ questions = [ { 'bl': 'BL3',
                 '- Number of Spans = $6$ | Clear Span Width = $10.00\\text{ m}$ each\n'
                 '- Pier Thickness = $2.50\\text{ m}$ each | Downstream Slope: $0.7\\text{H} : 1\\text{V}$',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Design Head ($H_d$) Determination:</strong><br>\n'
@@ -6835,7 +6835,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Derive the expression for Discharge ($Q$) passing through the siphon unit in terms of throat '
                 'dimensions.',
     'rep_count': '2x',
-    'rep_frequency': '2 of 4 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 4 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Functioning of a Saddle Siphon Spillway:</strong><br>\n'
@@ -6942,7 +6942,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Sub-classes (USBR Stilling Basins I-IV vs. solid/slotted roller buckets and ski-jump buckets).\n'
                 '3. Recommended site, tailwater, and rock foundation conditions for each type.',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Contrast between Hydraulic Jump & Bucket Type Dissipaters:</strong><br>\n'
@@ -7082,7 +7082,7 @@ questions = [ { 'bl': 'BL3',
                 '- Downstream Total Energy Level (TEL) = $302.20\\text{ m}$\n'
                 '- Tail Water Depth: $y_2 = 1.1 D_2$',
     'rep_count': '2x',
-    'rep_frequency': '2 of 4 Papers (50% Medium Probability)',
+    'rep_frequency': '2 of 4 Papers',
     'repeat_multiplier': '2x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Parameters:</strong><br>\n'
@@ -7212,7 +7212,7 @@ questions = [ { 'bl': 'BL3',
                 '- End Contraction Coefficients: Piers $K_p = 0.02$, Abutments $K_a = 0.10$\n'
                 '- Coefficient of Discharge: $C_d = 1.70$ (Neglect velocity of approach)',
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': '<strong>1. Geometric & Flow Parameters:</strong><br>\n'
@@ -7333,7 +7333,7 @@ questions = [ { 'bl': 'BL3',
                 '- Permissible Afflux = $1.00\\text{ m}$ | Pond Level = $303.00\\text{ m}$\n'
                 "- Lacey's Silt Factor: $f = 1.0$",
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Parameters & Waterways:</strong><br>\n'
@@ -7481,7 +7481,7 @@ questions = [ { 'bl': 'BL3',
                 "- Lacey's Silt Factor: $f = 1.0$\n"
                 '- Weir Wall Dimensions: Top Width = $3.00\\text{ m}$, Bottom Width = $8.00\\text{ m}$',
     'rep_count': '3x',
-    'rep_frequency': '3 of 4 Papers (75% High Probability)',
+    'rep_frequency': '3 of 4 Papers',
     'repeat_multiplier': '3x',
     'repeated': True,
     'solution': '<strong>1. Hydraulic Parameters & Waterway:</strong><br>\n'
@@ -7609,7 +7609,7 @@ questions = [ { 'bl': 'BL3',
                 '2. Necessity, hydraulic functions, and operational differences between Cross Regulators and Head '
                 'Regulators.',
     'rep_count': '1x',
-    'rep_frequency': '1 of 4 Papers (Single-Paper Topic)',
+    'rep_frequency': '1 of 4 Papers',
     'repeat_multiplier': '1x',
     'repeated': False,
     'solution': '<strong>1. Concept of Canal Regulation Works:</strong><br>\n'
@@ -7741,7 +7741,7 @@ questions = [ { 'bl': 'BL3',
                 '- Flumed Bed Width ($B_2$) = $10.00\\text{ m}$\n'
                 '- Length of Flume ($L$) = $15.00\\text{ m}$',
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': "<strong>1. Derivation of Mitra's Hyperbolic Transition Formula:</strong><br>\n"
@@ -7908,7 +7908,7 @@ questions = [ { 'bl': 'BL3',
                 '- Bed Level: Upstream = $216.50\\text{ m}$, Downstream = $215.00\\text{ m}$\n'
                 "- Bligh's Creep Coefficient: $C = 8$",
     'rep_count': '4x',
-    'rep_frequency': '4 of 4 Papers (100% Guaranteed)',
+    'rep_frequency': '4 of 4 Papers',
     'repeat_multiplier': '4x',
     'repeated': True,
     'solution': '<strong>1. Selection of Type of Canal Fall:</strong><br>\n'

@@ -16,6 +16,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { RichMathText } from "@/components/common/math-renderer";
+import { toast } from "@/components/ui/sonner";
 import { Question } from "@/types";
 import { STORAGE_KEYS } from "@/lib/constants";
 
@@ -31,30 +32,34 @@ export function NotesArchiveView({
   questions,
   onOpenQuestion,
 }: NotesArchiveViewProps) {
-  const [notes, setNotes] = useState<Record<string, string>>(() => {
-    if (typeof window === "undefined") return {};
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY_NOTES);
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
-  });
-
-  const [scratchpad, setScratchpad] = useState<string>(() => {
-    if (typeof window === "undefined") return "";
-    try {
-      return localStorage.getItem(STORAGE_KEY_SCRATCHPAD) || "";
-    } catch {
-      return "";
-    }
-  });
+  const hasHydratedRef = React.useRef(false);
+  const [notes, setNotes] = useState<Record<string, string>>({});
+  const [scratchpad, setScratchpad] = useState<string>("");
 
   const [copied, setCopied] = useState(false);
   const [scratchpadPreview, setScratchpadPreview] = useState(false);
 
+  // Load from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedNotes = localStorage.getItem(STORAGE_KEY_NOTES);
+      if (savedNotes) {
+        setNotes(JSON.parse(savedNotes));
+      }
+      const savedScratchpad = localStorage.getItem(STORAGE_KEY_SCRATCHPAD);
+      if (savedScratchpad) {
+        setScratchpad(savedScratchpad);
+      }
+    } catch (e) {
+      console.warn("Error loading notes from localStorage:", e);
+    } finally {
+      hasHydratedRef.current = true;
+    }
+  }, []);
+
   // Save scratchpad
   useEffect(() => {
+    if (!hasHydratedRef.current) return;
     try {
       localStorage.setItem(STORAGE_KEY_SCRATCHPAD, scratchpad);
     } catch (e) {
@@ -77,6 +82,10 @@ export function NotesArchiveView({
     }));
 
   const handleDeleteNote = (qid: string) => {
+    const deletedContent = notes[qid];
+    const q = questionMap.get(qid);
+    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+
     setNotes((prev) => {
       const next = { ...prev };
       delete next[qid];
@@ -86,6 +95,24 @@ export function NotesArchiveView({
         console.warn("Error deleting note:", e);
       }
       return next;
+    });
+
+    toast.success(`Note for ${qLabel} deleted`, {
+      action: {
+        label: "Undo",
+        onClick: () => {
+          setNotes((prev) => {
+            const next = { ...prev, [qid]: deletedContent };
+            try {
+              localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(next));
+            } catch (e) {
+              console.warn("Error restoring note:", e);
+            }
+            return next;
+          });
+          toast.success(`Restored note for ${qLabel}`);
+        },
+      },
     });
   };
 
@@ -101,9 +128,12 @@ export function NotesArchiveView({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `geotech_notes_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `study_notes_backup_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
+    toast.success("Backup downloaded successfully", {
+      description: `${Object.keys(notes).length} notes exported`,
+    });
   };
 
   const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,9 +152,13 @@ export function NotesArchiveView({
           setScratchpad(data.scratchpad);
           localStorage.setItem(STORAGE_KEY_SCRATCHPAD, data.scratchpad);
         }
-        alert("Notes and scratchpad restored successfully!");
+        toast.success("Notes and scratchpad restored", {
+          description: "Your study archive has been updated",
+        });
       } catch (err) {
-        alert("Failed to parse backup JSON file.");
+        toast.error("Failed to parse backup JSON file", {
+          description: "Please check the file format and try again",
+        });
       }
     };
     reader.readAsText(file);
@@ -132,7 +166,7 @@ export function NotesArchiveView({
   };
 
   const handleCopyAll = () => {
-    const lines: string[] = ["# Geotechnical Engineering - II Personal Study Notes\n"];
+    const lines: string[] = ["# Personal Study Notes\n"];
 
     if (scratchpad.trim()) {
       lines.push("## General Subject Notes / Scratchpad\n", scratchpad, "\n---\n");
@@ -150,6 +184,9 @@ export function NotesArchiveView({
     navigator.clipboard.writeText(lines.join("\n"));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+    toast.success("Copied to clipboard", {
+      description: `${savedNotesList.length} notes and scratchpad copied`,
+    });
   };
 
   return (

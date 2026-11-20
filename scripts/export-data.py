@@ -247,18 +247,6 @@ def export_geotech():
         json.dump(timetable_data, f, indent=2, ensure_ascii=False)
     print("✓ Exported timetable presets to src/data/timetable.json")
 
-    # 7. User study progress snapshot
-    progress_file = out_dir / "user_progress.json"
-    if not progress_file.exists():
-        root_progress = repo_root / "user_progress.json"
-        if root_progress.exists():
-            with open(root_progress, "r", encoding="utf-8") as f:
-                pdata = json.load(f)
-            with open(progress_file, "w", encoding="utf-8") as f:
-                json.dump(pdata, f, indent=2, ensure_ascii=False)
-    if progress_file.exists():
-        print("✓ Verified user progress at src/data/user_progress.json")
-
 def export_dhs():
     ctx = load_subject("dhs")
     raw_qs = ctx.raw_questions

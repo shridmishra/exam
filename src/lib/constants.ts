@@ -4,7 +4,7 @@ export const STORAGE_KEYS = {
   LATER: "geotech_later_questions",
   NOTES: "geotech_custom_notes",
   FILTERS: "geotech_checklist_filters",
-  TIMETABLE: "civil_exam_timetable_custom_v1",
+  TIMETABLE: "civil_exam_timetable_v2",
   THEME: "geotech_theme",
   ACTIVE_VIEW: "geotech_active_view",
   ACTIVE_SUBJECT: "exam_active_subject",

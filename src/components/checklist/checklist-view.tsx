@@ -8,9 +8,9 @@ import { QuestionCard } from "./question-card";
 import { PersonalNotesEditor } from "./personal-notes-editor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { Question, ChecklistFilters, TopicCluster } from "@/types";
 import { EXAM_YEARS } from "@/lib/constants";
-import rawProgress from "@/data/user_progress.json";
 
 interface ChecklistViewProps {
   questions: Question[];
@@ -33,18 +33,10 @@ export function ChecklistView({
   const STORAGE_KEY_NOTES = `${storagePrefix}_custom_notes`;
   const STORAGE_KEY_FILTERS = `${storagePrefix}_checklist_filters`;
 
-  // 1. Storage-synced states (initialized consistently for SSR & client mount to prevent hydration mismatch)
-  const [completed, setCompleted] = useState<Set<string>>(() => {
-    const subjectKey = storagePrefix === "dhs" ? "dhs" : "geotech-2";
-    const fallback = (rawProgress as any)?.subjects?.[subjectKey]?.completed_questions;
-    if (Array.isArray(fallback) && fallback.length > 0) {
-      return new Set(fallback);
-    }
-    return new Set();
-  });
-
-  const [starred, setStarred] = useState<Set<string>>(new Set());
-  const [later, setLater] = useState<Set<string>>(new Set());
+  // 1. Storage-synced states (clean slate for SSR & fresh users; loaded purely from user's own browser localStorage)
+  const [completed, setCompleted] = useState<Set<string>>(() => new Set());
+  const [starred, setStarred] = useState<Set<string>>(() => new Set());
+  const [later, setLater] = useState<Set<string>>(() => new Set());
   const [notes, setNotes] = useState<Record<string, string>>({});
 
   const [filters, setFilters] = useState<ChecklistFilters>({
@@ -62,21 +54,69 @@ export function ChecklistView({
   // Sync state from localStorage after mount
   useEffect(() => {
     try {
+      const validIds = new Set(questions.map((q) => q.id));
+
       const savedCompleted = localStorage.getItem(STORAGE_KEY_COMPLETED);
       if (savedCompleted) {
-        setCompleted(new Set(JSON.parse(savedCompleted)));
+        try {
+          const parsed = JSON.parse(savedCompleted);
+          if (Array.isArray(parsed)) {
+            // Strictly sanitize against current subject question IDs
+            const sanitized = parsed.filter((id: string) => validIds.has(id));
+            setCompleted(new Set(sanitized));
+            // Self-healing: if localStorage was contaminated with foreign IDs, clean it up immediately
+            if (sanitized.length !== parsed.length) {
+              localStorage.setItem(
+                STORAGE_KEY_COMPLETED,
+                JSON.stringify(sanitized)
+              );
+            }
+          }
+        } catch (e) {
+          console.warn("Error parsing completed questions:", e);
+        }
       }
       const savedStarred = localStorage.getItem(STORAGE_KEY_STARRED);
-      if (savedStarred) setStarred(new Set(JSON.parse(savedStarred)));
+      if (savedStarred) {
+        try {
+          const parsed = JSON.parse(savedStarred);
+          if (Array.isArray(parsed)) {
+            setStarred(new Set(parsed.filter((id: string) => validIds.has(id))));
+          }
+        } catch (e) {
+          console.warn("Error parsing starred questions:", e);
+        }
+      }
 
       const savedLater = localStorage.getItem(STORAGE_KEY_LATER);
-      if (savedLater) setLater(new Set(JSON.parse(savedLater)));
+      if (savedLater) {
+        try {
+          const parsed = JSON.parse(savedLater);
+          if (Array.isArray(parsed)) {
+            setLater(new Set(parsed.filter((id: string) => validIds.has(id))));
+          }
+        } catch (e) {
+          console.warn("Error parsing later questions:", e);
+        }
+      }
 
       const savedNotes = localStorage.getItem(STORAGE_KEY_NOTES);
-      if (savedNotes) setNotes(JSON.parse(savedNotes));
+      if (savedNotes) {
+        try {
+          setNotes(JSON.parse(savedNotes));
+        } catch (e) {
+          console.warn("Error parsing notes:", e);
+        }
+      }
 
       const savedFilters = localStorage.getItem(STORAGE_KEY_FILTERS);
-      if (savedFilters) setFilters(JSON.parse(savedFilters));
+      if (savedFilters) {
+        try {
+          setFilters(JSON.parse(savedFilters));
+        } catch (e) {
+          console.warn("Error parsing filters:", e);
+        }
+      }
     } catch (e) {
       console.warn("Error loading checklist state from localStorage:", e);
     } finally {
@@ -84,6 +124,7 @@ export function ChecklistView({
     }
   }, [
     storagePrefix,
+    questions,
     STORAGE_KEY_COMPLETED,
     STORAGE_KEY_STARRED,
     STORAGE_KEY_LATER,
@@ -111,59 +152,124 @@ export function ChecklistView({
   const [openCards, setOpenCards] = useState<Set<string>>(new Set());
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
 
+  // Question map for quick lookup and toast metadata
+  const questionMap = useMemo(() => {
+    const map = new Map<string, Question>();
+    questions.forEach((q) => map.set(q.id, q));
+    return map;
+  }, [questions]);
+
   // Toggle handlers
   const toggleComplete = (id: string) => {
+    const q = questionMap.get(id);
+    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+
     setCompleted((prev) => {
       const next = new Set(prev);
+      const isNowCompleted = !next.has(id);
       if (next.has(id)) next.delete(id);
       else next.add(id);
+
       try {
         localStorage.setItem(STORAGE_KEY_COMPLETED, JSON.stringify([...next]));
       } catch (e) {
         console.warn("Error saving completed:", e);
       }
+
+      if (isNowCompleted) {
+        toast.success(`Completed ${qLabel}`, {
+          description: q ? `${q.year} • Unit ${q.unit} (${q.marks}M)` : "Marked as completed",
+          action: {
+            label: "Undo",
+            onClick: () => toggleComplete(id),
+          },
+        });
+      } else {
+        toast.info(`Marked ${qLabel} as incomplete`);
+      }
+
       return next;
     });
   };
 
   const toggleStar = (id: string) => {
+    const q = questionMap.get(id);
+    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+
     setStarred((prev) => {
       const next = new Set(prev);
+      const isNowStarred = !next.has(id);
       if (next.has(id)) next.delete(id);
       else next.add(id);
+
       try {
         localStorage.setItem(STORAGE_KEY_STARRED, JSON.stringify([...next]));
       } catch (e) {
         console.warn("Error saving starred:", e);
       }
+
+      if (isNowStarred) {
+        toast.success(`Starred ${qLabel}`, {
+          description: "Added to priority revision list",
+        });
+      } else {
+        toast.info(`Unstarred ${qLabel}`);
+      }
+
       return next;
     });
   };
 
   const toggleLater = (id: string) => {
+    const q = questionMap.get(id);
+    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+
     setLater((prev) => {
       const next = new Set(prev);
+      const isNowLater = !next.has(id);
       if (next.has(id)) next.delete(id);
       else next.add(id);
+
       try {
         localStorage.setItem(STORAGE_KEY_LATER, JSON.stringify([...next]));
       } catch (e) {
         console.warn("Error saving later:", e);
       }
+
+      if (isNowLater) {
+        toast.success(`Saved ${qLabel} for later`, {
+          description: "Filter by Status > Later to review",
+        });
+      } else {
+        toast.info(`Removed ${qLabel} from later`);
+      }
+
       return next;
     });
   };
 
   const handleSaveNote = (questionId: string, noteText: string) => {
+    const q = questionMap.get(questionId);
+    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+
     setNotes((prev) => {
       const next = { ...prev };
-      if (!noteText.trim()) delete next[questionId];
-      else next[questionId] = noteText;
+      if (!noteText.trim()) {
+        delete next[questionId];
+        toast.info(`Personal note removed for ${qLabel}`);
+      } else {
+        next[questionId] = noteText;
+        toast.success(`Personal note saved for ${qLabel}`, {
+          description: "Your custom notes are saved locally",
+        });
+      }
+
       try {
         localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(next));
       } catch (e) {
         console.warn("Error saving notes:", e);
       }
+
       return next;
     });
   };
@@ -177,6 +283,24 @@ export function ChecklistView({
     });
   };
 
+  const handleResetProgress = () => {
+    if (
+      window.confirm(
+        "Reset all completed questions for this subject? This clears your progress in this browser."
+      )
+    ) {
+      setCompleted(new Set());
+      try {
+        localStorage.removeItem(STORAGE_KEY_COMPLETED);
+      } catch (e) {
+        console.warn("Error clearing completed questions:", e);
+      }
+      toast.success("Progress reset successfully", {
+        description: "All completed marks cleared for this subject",
+      });
+    }
+  };
+
   // Dynamic Year List based on questions present in subject
   const years = useMemo(() => {
     const setY = new Set<string>();
@@ -186,6 +310,12 @@ export function ChecklistView({
     if (setY.size === 0) return ["2025", "2024", "2023", "2022"];
     return Array.from(setY).sort((a, b) => Number(b) - Number(a));
   }, [questions]);
+
+  // Total completed questions belonging strictly to this subject
+  const completedCount = useMemo(
+    () => questions.filter((q) => completed.has(q.id)).length,
+    [questions, completed]
+  );
 
   const yearCounts = useMemo(() => {
     const counts: Record<string, { done: number; total: number }> = {};
@@ -251,8 +381,10 @@ export function ChecklistView({
   const handleToggleExpandAll = () => {
     if (allVisibleExpanded) {
       setOpenCards(new Set());
+      toast.info("Collapsed all questions");
     } else {
       setOpenCards(new Set(filteredQuestions.map((q) => q.id)));
+      toast.info(`Expanded ${filteredQuestions.length} questions`);
     }
   };
 
@@ -266,6 +398,7 @@ export function ChecklistView({
       status: "all",
       search: "",
     });
+    toast.info("Filters reset to default");
   };
 
   // Check if "Most Repeated" mode is active
@@ -283,9 +416,7 @@ export function ChecklistView({
 
     // Group filtered questions by tier -> unit -> cluster
     const tiers: {
-      tierName: string;
       tierMultiplier: string;
-      probability: string;
       badgeVariant: "repeat5x" | "repeat4x" | "repeat3x" | "repeat2x";
       units: {
         unitNum: number;
@@ -301,26 +432,18 @@ export function ChecklistView({
     const tierConfigs = [
       {
         mult: "5x",
-        name: "Tier 1: 5x Repeated",
-        prob: "100% Guaranteed Concepts",
         variant: "repeat5x" as const,
       },
       {
         mult: "4x",
-        name: "Tier 1: 4x Repeated",
-        prob: "100% Guaranteed Concepts",
         variant: "repeat4x" as const,
       },
       {
         mult: "3x",
-        name: "Tier 2: 3x Repeated",
-        prob: "75% High Probability Concepts",
         variant: "repeat3x" as const,
       },
       {
         mult: "2x",
-        name: "Tier 3: 2x Repeated",
-        prob: "50% Medium Probability Concepts",
         variant: "repeat2x" as const,
       },
     ];
@@ -375,9 +498,7 @@ export function ChecklistView({
         });
 
       tiers.push({
-        tierName: cfg.name,
         tierMultiplier: cfg.mult,
-        probability: cfg.prob,
         badgeVariant: cfg.variant,
         units: unitList,
       });
@@ -433,15 +554,27 @@ export function ChecklistView({
     <div className="space-y-6">
       {/* Header Row: Title, Progress Ring, Year Pills */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+        <div className="flex items-center gap-2.5">
           <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
             Checklist
           </h1>
+          {completedCount > 0 && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleResetProgress}
+              className="h-6 px-2 text-[11px] text-muted-foreground hover:text-destructive"
+              title="Reset completed questions for this subject in your browser"
+            >
+              Reset Done
+            </Button>
+          )}
         </div>
 
         <div className="flex items-center gap-2.5 max-w-full overflow-x-auto no-scrollbar pb-1 overscroll-x-contain">
           <ProgressRing
-            completed={completed.size}
+            completed={completedCount}
             total={questions.length}
             onClick={() =>
               setFilters((prev) => ({
@@ -502,16 +635,21 @@ export function ChecklistView({
       {isRepeatedMode && repeatedTierSections && (
         <div className="space-y-10">
           {repeatedTierSections.map((tier) => (
-            <div key={tier.tierName} className="space-y-6">
+            <div key={tier.tierMultiplier} className="space-y-6">
               {/* Tier Header */}
-              <div className="flex items-center gap-3 pb-2">
+              <div className="flex items-center gap-2 pb-2 border-b border-border/40">
                 <Badge variant={tier.badgeVariant} className="text-xs font-bold px-2.5 py-0.5">
                   {tier.tierMultiplier}
                 </Badge>
-                <div>
-                  <h2 className="text-sm sm:text-base font-semibold text-foreground">{tier.tierName}</h2>
-                  <p className="text-xs text-muted-foreground">{tier.probability}</p>
-                </div>
+                <span className="text-xs text-muted-foreground">
+                  {tier.units.reduce(
+                    (acc, u) =>
+                      acc +
+                      u.topics.reduce((tAcc, t) => tAcc + t.questions.length, 0),
+                    0
+                  )}{" "}
+                  questions
+                </span>
               </div>
 
               {/* Units within Tier */}

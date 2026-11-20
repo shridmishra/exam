@@ -5,12 +5,14 @@ import {
   Search01Icon,
   Cancel01Icon,
   ArrowReloadHorizontalIcon,
+  Copy01Icon,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { MathRenderer } from "@/components/common/math-renderer";
+import { toast } from "@/components/ui/sonner";
 import { MasterFormula } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +47,17 @@ export function FormulasView({ formulas, unitTitles }: FormulasViewProps) {
   const handleReset = () => {
     setSelectedUnit("all");
     setSearchQuery("");
+    toast.info("Formula filters reset");
+  };
+
+  const handleCopyFormula = (formula: MasterFormula) => {
+    const textToCopy = `${formula.title}\n${formula.latex_main}${
+      formula.latex_sub ? `\n${formula.latex_sub}` : ""
+    }`;
+    navigator.clipboard.writeText(textToCopy);
+    toast.success("Formula copied to clipboard", {
+      description: formula.title,
+    });
   };
 
   return (
@@ -159,13 +172,26 @@ export function FormulasView({ formulas, unitTitles }: FormulasViewProps) {
                 </Badge>
                 {formula.frequency && (
                   <Badge variant="repeat3x" className="text-xs font-semibold">
-                    {formula.frequency}
+                    {formula.frequency.replace(/\s*\([^)]*\)/g, "").trim()}
                   </Badge>
                 )}
               </div>
-              <CardTitle className="text-sm sm:text-base font-semibold text-foreground leading-snug">
-                {formula.title}
-              </CardTitle>
+              <div className="flex items-start justify-between gap-2">
+                <CardTitle className="text-sm sm:text-base font-semibold text-foreground leading-snug">
+                  {formula.title}
+                </CardTitle>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleCopyFormula(formula)}
+                  className="h-7 w-7 shrink-0 text-muted-foreground/60 hover:text-foreground"
+                  title="Copy formula LaTeX to clipboard"
+                  aria-label="Copy formula"
+                >
+                  <Copy01Icon className="h-3.5 w-3.5" />
+                </Button>
+              </div>
             </CardHeader>
 
             <CardContent className="p-3.5 sm:p-5 pt-1 sm:pt-2 space-y-3">

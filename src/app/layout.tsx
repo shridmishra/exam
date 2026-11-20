@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { BackToTop } from "@/components/common/back-to-top";
+import { Toaster } from "@/components/ui/sonner";
 import { STORAGE_KEYS } from "@/lib/constants";
 import "./globals.css";
 
@@ -40,6 +41,7 @@ export default function RootLayout({
         >
           {children}
           <BackToTop />
+          <Toaster position="bottom-right" richColors closeButton />
         </ThemeProvider>
       </body>
     </html>

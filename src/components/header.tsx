@@ -106,68 +106,83 @@ export function Header({
   const availableSubjects = subjects.filter((s) => s.status !== "planned");
 
   return (
-    <header
-      onFocusCapture={() => setIsVisible(true)}
-      className={cn(
-        "sticky top-0 z-40 w-full bg-card/90 backdrop-blur-md supports-[backdrop-filter]:bg-card/80 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform",
-        isVisible
-          ? "translate-y-0 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
-          : "-translate-y-full pointer-events-none shadow-none"
+    <>
+      {/* Dimmed backdrop when subject switcher dropdown is open to cleanly separate it from page content */}
+      {dropdownOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-background/50 backdrop-blur-[2px] transition-opacity duration-200 pointer-events-none"
+          aria-hidden="true"
+        />
       )}
-    >
-      <div className="container relative flex h-14 sm:h-16 items-center justify-between gap-2 sm:gap-4">
-        {/* Subject Switcher Dropdown */}
-        <div className="flex items-center min-w-0 max-w-[calc(100%-48px)] md:max-w-xs lg:max-w-sm z-10">
-          {availableSubjects.length > 0 && onSelectSubject ? (
-            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="group flex h-auto max-w-full items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 text-left font-bold tracking-tight text-foreground transition-all bg-secondary hover:bg-secondary/80 data-[state=open]:bg-secondary/80 focus-visible:ring-1 focus-visible:ring-ring rounded-lg"
-                  title="Switch subject"
-                  aria-label="Switch subject"
-                >
-                  <span className="text-xs sm:text-sm md:text-[15px] font-semibold tracking-tight truncate max-w-[210px] sm:max-w-xs">
-                    {displayName}
-                  </span>
-                  <ChevronDownIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180 group-hover:text-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-[300px] sm:w-[320px] p-1.5 shadow-lg">
-                <div className="space-y-0.5">
-                  {availableSubjects.map((sub) => {
-                    const isSelected = sub.id === (selectedSubjectId || currentSubject?.id);
-                    return (
-                      <DropdownMenuItem
-                        key={sub.id}
-                        onSelect={() => onSelectSubject(sub.id)}
-                        onClick={() => onSelectSubject(sub.id)}
-                        className={cn(
-                          "flex items-center justify-between gap-3 rounded-md px-3 py-2.5 cursor-pointer transition-colors",
-                          isSelected && "bg-secondary font-medium"
-                        )}
-                      >
-                        <div className="flex flex-col min-w-0 flex-1">
-                          <span className="truncate text-sm font-medium text-foreground">
-                            {sub.name}
-                          </span>
-                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
-                            <span className="text-[11px] px-1.5 py-0.5 rounded bg-muted/60">{sub.code}</span>
-                            <span className="px-1.5 py-0.5 rounded bg-muted/60">{sub.short_name}</span>
-                            {sub.question_count ? (
-                              <span className="px-1.5 py-0.5 rounded bg-muted/60">{sub.question_count} Qs</span>
-                            ) : null}
+
+      <header
+        onFocusCapture={() => setIsVisible(true)}
+        className={cn(
+          "sticky top-0 z-40 w-full bg-card/90 backdrop-blur-md supports-[backdrop-filter]:bg-card/80 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform",
+          isVisible
+            ? "translate-y-0 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
+            : "-translate-y-full pointer-events-none shadow-none"
+        )}
+      >
+        <div className="container relative flex h-14 sm:h-16 items-center justify-between gap-2 sm:gap-4">
+          {/* Subject Switcher Dropdown */}
+          <div className="flex items-center min-w-0 max-w-[calc(100%-48px)] md:max-w-xs lg:max-w-sm z-10">
+            {availableSubjects.length > 0 && onSelectSubject ? (
+              <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="group flex h-auto max-w-full items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 text-left font-bold tracking-tight text-foreground transition-all bg-secondary hover:bg-secondary/80 data-[state=open]:bg-secondary/80 focus-visible:ring-1 focus-visible:ring-ring rounded-lg"
+                    title="Switch subject"
+                    aria-label="Switch subject"
+                  >
+                    <span className="text-xs sm:text-sm md:text-[15px] font-semibold tracking-tight truncate max-w-[210px] sm:max-w-xs">
+                      {displayName}
+                    </span>
+                    <ChevronDownIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180 group-hover:text-foreground" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" sideOffset={8} className="w-[300px] sm:w-[340px] p-2">
+                  <div className="px-2.5 py-1.5 pb-2 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 border-b border-border/40 mb-1 flex items-center justify-between">
+                    <span>Switch Subject</span>
+                    <span className="text-[10px] font-normal lowercase tracking-normal text-muted-foreground/60">{availableSubjects.length} available</span>
+                  </div>
+                  <div className="space-y-1">
+                    {availableSubjects.map((sub) => {
+                      const isSelected = sub.id === (selectedSubjectId || currentSubject?.id);
+                      return (
+                        <DropdownMenuItem
+                          key={sub.id}
+                          onSelect={() => onSelectSubject(sub.id)}
+                          onClick={() => onSelectSubject(sub.id)}
+                          className={cn(
+                            "flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 cursor-pointer transition-colors",
+                            isSelected
+                              ? "bg-secondary font-medium text-foreground"
+                              : "hover:bg-secondary/70 focus:bg-secondary/70 text-foreground"
+                          )}
+                        >
+                          <div className="flex flex-col min-w-0 flex-1">
+                            <span className="truncate text-sm font-medium text-foreground">
+                              {sub.name}
+                            </span>
+                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                              <span className="text-[11px] px-1.5 py-0.5 rounded bg-muted/60">{sub.code}</span>
+                              <span className="px-1.5 py-0.5 rounded bg-muted/60">{sub.short_name}</span>
+                              {sub.question_count ? (
+                                <span className="px-1.5 py-0.5 rounded bg-muted/60">{sub.question_count} Qs</span>
+                              ) : null}
+                            </div>
                           </div>
-                        </div>
-                        {isSelected && (
-                          <Tick02Icon className="h-4 w-4 shrink-0 text-primary" />
-                        )}
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                          {isSelected && (
+                            <Tick02Icon className="h-4 w-4 shrink-0 text-primary" />
+                          )}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
           ) : (
             <div
               className="cursor-pointer font-bold tracking-tight text-foreground transition-opacity hover:opacity-80 truncate"
@@ -234,5 +249,6 @@ export function Header({
         </div>
       </div>
     </header>
+    </>
   );
 }

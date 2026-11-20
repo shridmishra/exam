@@ -9,6 +9,7 @@ import {
   InformationCircleIcon,
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -19,6 +20,7 @@ import {
 import { ExamItem } from "@/types";
 import { STORAGE_KEYS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { toast } from "@/components/ui/sonner";
 
 interface TimetablePresets {
   default: ExamItem[];
@@ -29,7 +31,7 @@ interface TimetableProps {
   presets: TimetablePresets;
 }
 
-const STORAGE_KEY_TIMETABLE = "civil_exam_timetable_custom_v1";
+const STORAGE_KEY_TIMETABLE = STORAGE_KEYS.TIMETABLE;
 
 export function isExamCompleted(item: ExamItem): boolean {
   if (!item || !item.isoDate) return Boolean(item && item.completed);
@@ -113,25 +115,39 @@ function recalculateGaps(items: ExamItem[]): ExamItem[] {
 }
 
 export function TimetableView({ presets }: TimetableProps) {
-  const [schedule, setSchedule] = useState<ExamItem[]>(() => {
-    let initial = presets.backlog || presets.default;
-    if (typeof window !== "undefined") {
-      try {
-        const saved =
-          localStorage.getItem(STORAGE_KEY_TIMETABLE) ||
-          localStorage.getItem(STORAGE_KEYS.TIMETABLE);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            initial = parsed;
-          }
+  const hasHydratedRef = React.useRef(false);
+
+  // Initialize schedule strictly with presets.default (3 regular papers, green)
+  const [schedule, setSchedule] = useState<ExamItem[]>(() =>
+    recalculateGaps(presets.default)
+  );
+
+  // Hydrate custom timetable from user's local storage if present
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_TIMETABLE);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setSchedule(recalculateGaps(parsed));
         }
-      } catch {
-        initial = presets.backlog || presets.default;
       }
+    } catch (e) {
+      console.warn("Error reading timetable from localStorage:", e);
+    } finally {
+      hasHydratedRef.current = true;
     }
-    return recalculateGaps(initial);
-  });
+  }, []);
+
+  // Save changes directly to user's local storage after hydration
+  useEffect(() => {
+    if (!hasHydratedRef.current) return;
+    try {
+      localStorage.setItem(STORAGE_KEY_TIMETABLE, JSON.stringify(schedule));
+    } catch (e) {
+      console.warn("Error saving timetable:", e);
+    }
+  }, [schedule]);
 
   // Active filter tab: all, regular, old, done
   const [activeFilter, setActiveFilter] = useState<
@@ -156,18 +172,9 @@ export function TimetableView({ presets }: TimetableProps) {
     code: "",
     shortTag: "",
     isoDate: "",
-    category: "Regular" as "Regular" | "Old Syllabus",
+    category: "Regular" as "Regular" | "Old Syllabus" | "Custom",
+    customTag: "",
   });
-
-  // Save to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY_TIMETABLE, JSON.stringify(schedule));
-      localStorage.setItem(STORAGE_KEYS.TIMETABLE, JSON.stringify(schedule));
-    } catch (e) {
-      console.warn("Error saving timetable:", e);
-    }
-  }, [schedule]);
 
   // Live status pill calculation
   const liveStatus = useMemo(() => {
@@ -261,6 +268,9 @@ export function TimetableView({ presets }: TimetableProps) {
     if (type === "default") {
       if (window.confirm("Reset timetable to the 3 standard regular papers?")) {
         setSchedule(recalculateGaps(presets.default));
+        toast.success("Loaded 3 regular exam papers", {
+          description: "Timetable reset to standard syllabus",
+        });
       }
     } else if (type === "backlog") {
       if (
@@ -269,10 +279,14 @@ export function TimetableView({ presets }: TimetableProps) {
         )
       ) {
         setSchedule(recalculateGaps(presets.backlog));
+        toast.success("Loaded full 7-paper timetable", {
+          description: "Includes regular and backlog subjects",
+        });
       }
     } else if (type === "clear") {
       if (window.confirm("Clear all subjects from your timetable?")) {
         setSchedule([]);
+        toast.info("Cleared all exam papers from timetable");
       }
     }
   };
@@ -282,6 +296,17 @@ export function TimetableView({ presets }: TimetableProps) {
     const name = item ? item.shortTag || item.subject : "this paper";
     if (window.confirm(`Remove "${name}" from your examination timetable?`)) {
       setSchedule((prev) => recalculateGaps(prev.filter((s) => s.id !== id)));
+      if (item) {
+        toast.success(`Removed "${name}" from timetable`, {
+          action: {
+            label: "Undo",
+            onClick: () => {
+              setSchedule((prev) => recalculateGaps([...prev, item]));
+              toast.success(`Restored "${name}" to timetable`);
+            },
+          },
+        });
+      }
     }
   };
 
@@ -293,18 +318,23 @@ export function TimetableView({ presets }: TimetableProps) {
       shortTag: "",
       isoDate: initialDate || "",
       category: "Regular",
+      customTag: "",
     });
     setIsModalOpen(true);
   };
 
   const openEditModal = (item: ExamItem) => {
     setEditingItem(item);
+    const isRegular = item.tag === "Regular" && !item.isOld;
+    const isBacklog = item.isOld || item.tag === "Old Syllabus" || item.tag === "Backlog";
+    const isCustom = !isRegular && !isBacklog;
     setFormData({
       subject: item.subject,
       code: item.code,
-      shortTag: item.shortTag,
+      shortTag: item.shortTag || "",
       isoDate: item.isoDate,
-      category: item.isOld ? "Old Syllabus" : "Regular",
+      category: isRegular ? "Regular" : isBacklog ? "Old Syllabus" : "Custom",
+      customTag: isCustom ? item.tag : "",
     });
     setIsModalOpen(true);
   };
@@ -313,9 +343,18 @@ export function TimetableView({ presets }: TimetableProps) {
     e.preventDefault();
     if (!formData.subject.trim() || !formData.isoDate) return;
 
-    const isOld = formData.category === "Old Syllabus";
-    const tag = isOld ? "Old Syllabus" : "Regular";
-    const code = formData.code.trim() || "CE-EXAM";
+    let tag = "Regular";
+    let isOld = false;
+
+    if (formData.category === "Old Syllabus") {
+      tag = "Backlog";
+      isOld = true;
+    } else if (formData.category === "Custom") {
+      tag = formData.customTag.trim() || "Custom";
+      isOld = false;
+    }
+
+    const code = formData.code.trim() || "EXAM";
     const shortTag = formData.shortTag.trim() || code;
 
     if (editingItem) {
@@ -336,6 +375,9 @@ export function TimetableView({ presets }: TimetableProps) {
           )
         )
       );
+      toast.success(`Updated "${formData.subject.trim()}"`, {
+        description: `${formData.isoDate} • ${shortTag}`,
+      });
     } else {
       const newItem: ExamItem = {
         id: Date.now(),
@@ -352,6 +394,9 @@ export function TimetableView({ presets }: TimetableProps) {
         completed: false,
       };
       setSchedule((prev) => recalculateGaps([...prev, newItem]));
+      toast.success(`Added "${formData.subject.trim()}"`, {
+        description: `${formData.isoDate} • ${shortTag}`,
+      });
     }
 
     setIsModalOpen(false);
@@ -553,18 +598,19 @@ export function TimetableView({ presets }: TimetableProps) {
                     </span>
                     <div className="flex items-center gap-1.5">
                       {isCurrentMonth && (
-                        <span className="badge badge-sky text-[11px]">
+                        <Badge
+                          variant="sky"
+                          className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
+                        >
                           Today: {now.getDate()} {monthShorts[month]}
-                        </span>
+                        </Badge>
                       )}
-                      <span
-                        className={cn(
-                          "badge text-[11px]",
-                          examCount > 0 ? "badge-sky" : "badge-subtle"
-                        )}
+                      <Badge
+                        variant="subtle"
+                        className="rounded-full px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground"
                       >
                         {examCount} {examCount === 1 ? "Paper" : "Papers"}
-                      </span>
+                      </Badge>
                     </div>
                   </div>
 
@@ -608,7 +654,7 @@ export function TimetableView({ presets }: TimetableProps) {
 
                           if (exam) {
                             if (exam.completed) cellClasses += " exam-done";
-                            else if (exam.isOld) cellClasses += " exam-old";
+                            else if (exam.isOld || exam.tag === "Backlog" || exam.tag === "Old Syllabus") cellClasses += " exam-old";
                             else cellClasses += " exam-reg";
                           }
 
@@ -732,14 +778,18 @@ export function TimetableView({ presets }: TimetableProps) {
                       </strong>
                     </td>
                     <td>
-                      <span
-                        className={cn(
-                          "badge",
-                          item.isOld ? "badge-peach" : "badge-sage"
-                        )}
+                      <Badge
+                        variant={
+                          item.isOld || item.tag === "Backlog" || item.tag === "Old Syllabus"
+                            ? "peach"
+                            : item.tag === "Regular"
+                            ? "sage"
+                            : "subtle"
+                        }
+                        className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
                       >
                         {item.tag}
-                      </span>
+                      </Badge>
                     </td>
                     <td>
                       <span
@@ -867,16 +917,25 @@ export function TimetableView({ presets }: TimetableProps) {
                     }}
                   >
                     <span className="code-tag">{item.code}</span>
-                    <span
-                      className={cn(
-                        "badge",
-                        item.isOld ? "badge-peach" : "badge-sage"
-                      )}
+                    <Badge
+                      variant={
+                        item.isOld || item.tag === "Backlog" || item.tag === "Old Syllabus"
+                          ? "peach"
+                          : item.tag === "Regular"
+                          ? "sage"
+                          : "subtle"
+                      }
+                      className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
                     >
                       {item.tag}
-                    </span>
+                    </Badge>
                     {item.completed && (
-                      <span className="badge badge-done">✓ Concluded</span>
+                      <Badge
+                        variant="done"
+                        className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                      >
+                        ✓ Concluded
+                      </Badge>
                     )}
                   </div>
                   <div
@@ -984,12 +1043,11 @@ export function TimetableView({ presets }: TimetableProps) {
 
                 <div>
                   <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground block mb-1">
-                    Calendar Tag *
+                    Subject Tag / Subtag *
                   </label>
                   <Input
                     required
-                    maxLength={8}
-                    placeholder="e.g. Geo-2 (max 8 chars)"
+                    placeholder="e.g. Geo-2, RCC, DHS, SA-2, Elective..."
                     value={formData.shortTag}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -1021,7 +1079,7 @@ export function TimetableView({ presets }: TimetableProps) {
 
                 <div>
                   <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground block mb-1">
-                    Category
+                    Category / Tag
                   </label>
                   <div className="flex items-center gap-1.5 h-9">
                     <Button
@@ -1033,7 +1091,7 @@ export function TimetableView({ presets }: TimetableProps) {
                       }
                       className="flex-1 text-xs h-full"
                     >
-                      Regular
+                      Regular (Green)
                     </Button>
                     <Button
                       type="button"
@@ -1051,10 +1109,47 @@ export function TimetableView({ presets }: TimetableProps) {
                       }
                       className="flex-1 text-xs h-full"
                     >
-                      Backlog
+                      Backlog (Peach)
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={
+                        formData.category === "Custom"
+                          ? "default"
+                          : "secondary"
+                      }
+                      size="sm"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          category: "Custom",
+                        }))
+                      }
+                      className="flex-1 text-xs h-full"
+                    >
+                      Custom Tag
                     </Button>
                   </div>
                 </div>
+
+                {formData.category === "Custom" && (
+                  <div className="sm:col-span-2">
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground block mb-1">
+                      Custom Tag Name
+                    </label>
+                    <Input
+                      placeholder="e.g. Elective, Viva, Minor, Lab..."
+                      value={formData.customTag}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          customTag: e.target.value,
+                        }))
+                      }
+                      className="h-9 text-sm bg-card border-none"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-between pt-1">
@@ -1077,6 +1172,7 @@ export function TimetableView({ presets }: TimetableProps) {
                           shortTag: "",
                           isoDate: "",
                           category: "Regular",
+                          customTag: "",
                         });
                       }}
                       className="text-xs"
@@ -1145,14 +1241,18 @@ export function TimetableView({ presets }: TimetableProps) {
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="font-semibold">{item.code}</span>
                     <span className="truncate">{item.subject}</span>
-                    <span
-                      className={cn(
-                        "badge text-[10px]",
-                        item.isOld ? "badge-peach" : "badge-sage"
-                      )}
+                    <Badge
+                      variant={
+                        item.isOld || item.tag === "Backlog" || item.tag === "Old Syllabus"
+                          ? "peach"
+                          : item.tag === "Regular"
+                          ? "sage"
+                          : "subtle"
+                      }
+                      className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
                     >
-                      {item.shortTag}
-                    </span>
+                      {item.shortTag || item.tag}
+                    </Badge>
                   </div>
 
                   <div className="flex items-center gap-1 shrink-0">

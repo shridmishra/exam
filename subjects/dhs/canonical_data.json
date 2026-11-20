@@ -38,7 +38,7 @@
       "2022"
     ],
     "total_marks": 24,
-    "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+    "rep_frequency": "4 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.1 (a) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Earthen Dam Phreatic Line (Casagrande's Method) & Seepage under Earthen & Rockfill Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for earthen dam phreatic line (casagrande's method) & seepage as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "The details for a Homogenous Earthen Dam with a Horizontal Filter are given below: (i) Top Width: 6 m, (ii) Free Board: 2 m, (iii) U/s Slope: 4 H to 1 V, (iv) D/s Slope: 3 H to 1 V, (v) Height of Dam: 20 m, (vi) Length of filter at Toe: 20 m. Determine the Phreatic Line using Cassagrande's Method. If the Coefficient of Permeability of the Dam Material is 6 x 10^-4 cm/sec, Find the seepage flow per unit length of the Dam."
@@ -64,7 +64,7 @@
       "2025"
     ],
     "total_marks": 7,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.1 (b) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Borrow Soil Classification & Suitability for Earth Dam under Earthen & Rockfill Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for borrow soil classification & suitability for earth dam as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Following soil properties have been obtained in the laboratory after testing a soil from Borrow areas to be used in Earth dam: (i) Gravel: 57%, Sand: 40%, Silt: 2%, Clay: 1%, (ii) W_L = 35%, W_p = 18%, (iii) C_u = 5, C_c = 1.7. Classify the soil and comment on its suitability for use in Earthen Dam Construction."
@@ -108,7 +108,7 @@
       "2022"
     ],
     "total_marks": 18,
-    "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+    "rep_frequency": "4 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.1 (c) [OR] (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Earth Dam Failures & Safety Measures under Earthen & Rockfill Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for earth dam failures & safety measures as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Discuss various Failures in an Earth Dam. How safety of dam is ensured against them."
@@ -143,7 +143,7 @@
       "2022"
     ],
     "total_marks": 24,
-    "rep_frequency": "3 of 4 Papers (75% High Probability)",
+    "rep_frequency": "3 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.2 (a) (14M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Barrage Waterways & Crest Levels Design under Diversion Headworks & Weirs/Barrages.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for barrage waterways & crest levels design as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Fix the crest levels and waterways for Barrage as well as under sluice portion at the location of a Diversion Headwork constructed on a river having high flood discharge of 10000 Cumecs from the following data: (i) Average Bed level of the River: 400 m, (ii) HFL before construction of Barrage: 405.5 m, (iii) Permissible Afflux: 1.0 m, (iv) Pond level: 403.5 m, (v) Lacey's silt factor: 1.0. Also, Draw a neat sketch and mention your result on the same."
@@ -187,7 +187,7 @@
       "2022"
     ],
     "total_marks": 42,
-    "rep_frequency": "3 of 4 Papers (75% High Probability)",
+    "rep_frequency": "3 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.2 (b) [OR] (14M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Vertical Drop Weir Design via Bligh's Creep Theory under Diversion Headworks & Weirs/Barrages.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for vertical drop weir design via bligh's creep theory as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "The following Data are given for a vertical drop weir: (i) Max flood discharge: 2800 cumecs, (ii) HFL before obstruction: 305.0 m, (iii) River bed level at downstream: 293.0 m, (iv) F.S.L. of canal: 299.0 m, (v) Permissible Afflux: 1.0 m, (vi) Lacey's silt factor: 1.0. Design Crest level, Pond level and Level of bottom of U/S and D/S cutoff piles of the structure. Also, Draw a neat sketch and mention your result on the same."
@@ -240,7 +240,7 @@
       "2022"
     ],
     "total_marks": 35,
-    "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+    "rep_frequency": "4 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.3 (a) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Sarda Type Canal Fall Design under Canal Falls, Regulators & Transitions.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for sarda type canal fall design as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "The data pertaining to a SARDA Type Fall having 10 Cumec discharge and 1.3m drop at the location of fall is as under: (i) Full supply Level: U/S = 288.9 m, D/S = 287.6 m; (ii) Full Supply Depth: U/S = 1.6 m, D/S = 1.6 m; (iii) Bed Width: U/S = 23 m, D/S = 23 m; (iv) Bed Level: U/S = 287.3 m, D/S = 286.0 m. Design the Crest, Cistern and length of impervious floor. Bligh's Creep Coefficient (C) = 10."
@@ -284,7 +284,7 @@
       "2023"
     ],
     "total_marks": 21,
-    "rep_frequency": "3 of 4 Papers (75% High Probability)",
+    "rep_frequency": "3 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.3 (b) [OR] (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Straight Glacis Non-Metered Canal Fall Design under Canal Falls, Regulators & Transitions.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for straight glacis non-metered canal fall design as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Design the Crest and Cistern for an unflumed non metered straight glacis type fall using data of Q 3 (a) for canal having discharge of 20 Cumecs."
@@ -337,7 +337,7 @@
       "2022"
     ],
     "total_marks": 31,
-    "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+    "rep_frequency": "4 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.3 (c) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Canal Fluming & Transitions: Mitra's & Chaturvedi's Methods under Canal Falls, Regulators & Transitions.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for canal fluming & transitions: mitra's & chaturvedi's methods as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Design the Transition. Using following data which pertains to Fluming of a Canal at the site of a Cross Drainage Work: (i) Length of Flume: 18 m, (ii) Normal Width of Channel: 16 m, (iii) Flumed Width of Channel: 8 m."
@@ -381,7 +381,7 @@
       "2022"
     ],
     "total_marks": 21,
-    "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+    "rep_frequency": "4 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.4 (a) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Energy Dissipating Devices Classification under Spillways & Energy Dissipators.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for energy dissipating devices classification as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "What is an Energy Dissipating device? Explain its significance. Give classification of Energy Dissipater."
@@ -434,7 +434,7 @@
       "2022"
     ],
     "total_marks": 28,
-    "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+    "rep_frequency": "4 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.4 (b) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Ogee Spillway Downstream Profile Design under Spillways & Energy Dissipators.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for ogee spillway downstream profile design as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Design d/s profiles of an Ogee spillway from the following data: (a) Design Discharge: 10000 Cumecs, (b) Design Head: 17 m, (c) Number of spans: 5, (d) Clear length of each span: 14 m, (e) D/s slope of spillway glacis: 0.8 H : 1 V, (f) Pier thickness: 3 m. Type-III pier as per IS: 6934-1973 has been recommended."
@@ -469,7 +469,7 @@
       "2022"
     ],
     "total_marks": 14,
-    "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+    "rep_frequency": "2 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.4 (c) [OR] (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Siphon Spillway Operating Principle & Discharge Derivation under Spillways & Energy Dissipators.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for siphon spillway operating principle & discharge derivation as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "What is Priming & Depriming in a Syphon Spillway? Discuss two Early Priming Devices with the help of neat sketches."
@@ -504,7 +504,7 @@
       "2024"
     ],
     "total_marks": 14,
-    "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+    "rep_frequency": "2 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.5 (a) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Hydrodynamic Earthquake Pressure on Gravity Dam under Gravity Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for hydrodynamic earthquake pressure on gravity dam as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Find (i) The Hydrodynamic Earthquake Pressure (ii) Force due to it, and (iii) Moment at a joint situated at 40m below maximum water surface. Given: (i) Height of Dam: 80 m, (ii) Free Board: 2 m, (iii) U/S face slope: 0.1 H : 1 V, (iv) Seismic coeff. (\u03b1_h): 0.12."
@@ -548,7 +548,7 @@
       "2022"
     ],
     "total_marks": 18,
-    "rep_frequency": "3 of 4 Papers (75% High Probability)",
+    "rep_frequency": "3 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.5 (b) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Elementary Profile of Gravity Dam Derivation under Gravity Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for elementary profile of gravity dam derivation as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "What is Elementary Profile of a Gravity Dam? Derive the expressions for its Base Width and Stresses in it."
@@ -574,7 +574,7 @@
       "2025"
     ],
     "total_marks": 7,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.5 (c) [OR] (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Practical Profile Design of Gravity Dam under Gravity Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for practical profile design of gravity dam as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Design the Practical Profile of a Gravity Dam of Stone Masonry, from the following data: (i) R.L. of Base of Dam: 1440 m, (ii) R.L. of Full Reservoir Level: 1470.5 m, (iii) Height of Wave: 1.1 m, (iv) Specific Gravity of the Masonry: 2.4, (v) Safe Compressive Stress for the Masonry: 1250 KN/m\u00b2."
@@ -600,7 +600,7 @@
       "2024"
     ],
     "total_marks": 7,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.1 (a) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Flow Net Seepage & Discharge in Earth Dam under Earthen & Rockfill Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for flow net seepage & discharge in earth dam as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "For a Homogenous Earth Dam 45 m high with 3 m Free Board, a Flow Net was constructed and following results were obtained: (i) No. of Potential Drops: 25, (ii) No. of Flow Channels: 4. The Dam has a horizontal filter of 30.0 m length at its downstream end. Calculate the Discharge per meter Length of the Dam, if the Coefficient of Permeability of the Dam is 2.8 x 10^-4 cm/sec. Derive the formula used."
@@ -626,7 +626,7 @@
       "2024"
     ],
     "total_marks": 7,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.1 (b) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Earth Dam Protective Filter Criteria under Earthen & Rockfill Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for earth dam protective filter criteria as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Write a note on filter criteria for earth dam."
@@ -670,7 +670,7 @@
       "2022"
     ],
     "total_marks": 25,
-    "rep_frequency": "3 of 4 Papers (75% High Probability)",
+    "rep_frequency": "3 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.2 (b)(i) [OR] (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Hydraulic Jump on Sloping Glacis Water Surface Profile under Diversion Headworks & Weirs/Barrages.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for hydraulic jump on sloping glacis water surface profile as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Give stepwise procedure for determination of water surface profile before and after jump during flow over sloping Glacis."
@@ -696,7 +696,7 @@
       "2024"
     ],
     "total_marks": 7,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.2 (b)(ii) [OR] (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Inverted Filter & Launching Apron Design Criteria under Diversion Headworks & Weirs/Barrages.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for inverted filter & launching apron design criteria as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Discuss the design criteria for Inverted filter and D/S Launching Apron to be provided in a Hydraulic Structure founded on pervious formation."
@@ -731,7 +731,7 @@
       "2023"
     ],
     "total_marks": 14,
-    "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+    "rep_frequency": "2 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.4 (c) [OR] (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Ogee Spillway Upstream Profile Design under Spillways & Energy Dissipators.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for ogee spillway upstream profile design as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Design upstream Profile of Ogee spillway (using data of Q 4 (b))."
@@ -783,7 +783,7 @@
       "2022"
     ],
     "total_marks": 52,
-    "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+    "rep_frequency": "4 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.5 (a) (14M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Gravity Dam Stability Analysis (FOS Overturning, Sliding, SFF) under Gravity Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for gravity dam stability analysis (fos overturning, sliding, sff) as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Perform the suitable calculations Under Reservoir full and Normal-uplift condition for the Gravity dam shown in figure-1 and calculate Factor-of safety against Overturning, Sliding and Shear Friction Factor. (Figure-1: Dam top El. 152.00 m, MWL 150.00 m, base El. 100.00 m, TWL 110.00 m, top width 10.0 m, base width 7.50 m + 10.0 m + 38.50 m + 10.0 m = 66.0 m)."
@@ -809,7 +809,7 @@
       "2023"
     ],
     "total_marks": 7,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.1 (a) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Earth Dam Design in Earthquake Regions under Earthen & Rockfill Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for earth dam design in earthquake regions as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Explain design consideration of Earth dam in Earthquake regions."
@@ -835,7 +835,7 @@
       "2023"
     ],
     "total_marks": 7,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.1 (c) [OR] (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Foundation Seepage Control Measures in Earth Dams under Earthen & Rockfill Dams.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for foundation seepage control measures in earth dams as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Explain various measures for control of seepage through foundation in Earth dam with the help of neat sketch."
@@ -861,7 +861,7 @@
       "2023"
     ],
     "total_marks": 14,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.2 (a) (14M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Khosla's Theory Seepage Analysis & Exit Gradient Check under Diversion Headworks & Weirs/Barrages.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for khosla's theory seepage analysis & exit gradient check as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "A Barrage as shown in figure given below is constructed on a pervious soil having safe exit gradient G_e = 1/7. Using Khosla's theory of independent variables work out the seepage pressure at key points of intermediate sheet pile and sheet pile at exit (Apply all corrections). Also check overall length of floor and thickness of floor at the position of intermediate sheet pile. Pond Level = 261.0 m."
@@ -896,7 +896,7 @@
       "2022"
     ],
     "total_marks": 14,
-    "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+    "rep_frequency": "2 of 4 Papers",
     "is_repeated": true,
     "master_solution": "<strong>Engineering Solution for Q.4 (a) (7M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Stilling Basin Hydraulic Design under Spillways & Energy Dissipators.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for stilling basin hydraulic design as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "Design (i) Basin length and depth (ii) size of basin block, of a suitable stilling basin for an ogee spillway with the following data: (i) Design discharge = 13875 m\u00b3/s, (ii) Tail water level at design discharge = 180.30 m, (iii) Crest length of spillway = 183 m, (iv) Tail water depth = 13.80 m, (v) Post jump depth = 18.79 m."
@@ -922,7 +922,7 @@
       "2022"
     ],
     "total_marks": 4,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.4 (a)(i) (4M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Barrage & Weir Gate Discharge Calculation under Diversion Headworks & Weirs/Barrages.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for barrage & weir gate discharge calculation as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "A weir has 52 number of vertical gates, span of each gate = 10 m, Full reservoir level (u/s) = 110 m, coefficient of end contraction for piers = 0.02, coefficient of end contraction for abutments = 0.10, coefficient of discharge = 1.70. Compute the maximum flood discharge which can safely pass over the weir without exceeding the F.R.L. Neglect velocity of approach."
@@ -948,7 +948,7 @@
       "2022"
     ],
     "total_marks": 4,
-    "rep_frequency": "1 of 4 Papers (Single-Paper Topic)",
+    "rep_frequency": "1 of 4 Papers",
     "is_repeated": false,
     "master_solution": "<strong>Engineering Solution for Q.5 (a) (4M):</strong><br>\n1. <strong>Governing Concept & Criteria:</strong> Pertains to Canal Regulation Works: Head & Cross Regulators under Canal Falls, Regulators & Transitions.<br>\n2. <strong>Key Design Principles:</strong> Adheres to Indian Standard (IS) codes for hydraulic structures and dam safety specifications.<br>\n3. <strong>Analytical Steps:</strong> Given parameters must be verified against allowable stability and seepage safety criteria.<br>\n<div class=\"sol-example\"><span class=\"example-tag\">Eg</span> Standard design practice for canal regulation works: head & cross regulators as applied in SGSITS / RGPV hydraulic engineering examinations.</div>",
     "canonical_question": "What is meant by canal regulation works? Discuss necessity and functions of cross regulators and head regulators in a canal project."

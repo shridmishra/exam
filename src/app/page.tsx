@@ -7,6 +7,7 @@ import { FormulasView } from "@/components/formulas/formulas-view";
 import { TimetableView } from "@/components/timetable/timetable-view";
 import { NotesArchiveView } from "@/components/notes/notes-archive-view";
 import { MobileNav } from "@/components/common/mobile-nav";
+import { toast } from "@/components/ui/sonner";
 
 import rawQuestions from "@/data/questions.json";
 import rawClusters from "@/data/canonical.json";
@@ -126,8 +127,12 @@ export default function Home() {
   const storagePrefix = currentSubject.storage_prefix || selectedSubjectId;
 
   const handleSelectSubject = (subjectId: string) => {
-    if (SUBJECTS_DATA[subjectId]) {
+    if (SUBJECTS_DATA[subjectId] && subjectId !== selectedSubjectId) {
       setSelectedSubjectId(subjectId);
+      const sub = SUBJECTS_DATA[subjectId].subject;
+      toast.success(`Switched to ${sub.name}`, {
+        description: `${sub.code} syllabus & questions loaded`,
+      });
     }
   };
 

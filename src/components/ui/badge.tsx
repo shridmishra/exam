@@ -25,6 +25,10 @@ const badgeVariants = cva(
         repeat4x: "bg-[var(--badge-repeat-4x-bg)] text-[var(--badge-repeat-4x-fg)]",
         repeat3x: "bg-[var(--badge-repeat-3x-bg)] text-[var(--badge-repeat-3x-fg)]",
         repeat2x: "bg-[var(--badge-repeat-2x-bg)] text-[var(--badge-repeat-2x-fg)]",
+        sky: "bg-[var(--pastel-sky-bg)] text-[var(--pastel-sky-foreground)]",
+        sage: "bg-[var(--pastel-sage-bg)] text-[var(--pastel-sage-foreground)]",
+        peach: "bg-[var(--pastel-peach-bg)] text-[var(--pastel-peach-foreground)]",
+        done: "bg-[var(--pastel-done-bg)] text-[var(--pastel-done-foreground)]",
       },
     },
     defaultVariants: {

@@ -1,15 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: process.env.NEXT_DIST_DIR || ".next",
+  serverExternalPackages: ["katex"],
   devIndicators: false,
-  webpack: (config, { dev }) => {
-    if (dev) {
-      config.cache = {
-        type: "memory",
-      };
-    }
-    return config;
-  },
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
 };
 
 export default nextConfig;

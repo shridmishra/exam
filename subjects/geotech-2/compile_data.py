@@ -18,7 +18,7 @@ questions = [
         "pi": '1.4.1',
         "topic": "Earth Pressure Types (At-Rest, Active, Passive) & Theories",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""What are different Types of Earth Pressure and what are different theories of Earth Pressures?""",
         "solution": r"""<strong>1. Types of Earth Pressure:</strong><br>
 1. <strong>Active Earth Pressure:</strong> Lateral pressure exerted by soil when the retaining wall moves away from the backfill, allowing shear resistance to mobilize towards the wall.<br>
@@ -44,7 +44,7 @@ questions = [
         "pi": '2.1.2',
         "topic": "Retaining Wall Supporting Inclined Non-Cohesive Backfill (Rankine Theory at 10 deg)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""A smooth vertical wall, 6 m high supports an inclined non cohesive backfill (&phi; = 32&deg;; &gamma; = 21 kN/m&sup3;) at an angle 10&deg; with horizontal. Compute the total active & passive pressure at the bottom of wall.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Wall height H = 6 m, &phi; = 32&deg;, &gamma; = 21 kN/m&sup3;, surcharge slope &beta; = 10&deg;, smooth vertical wall.<br>
@@ -73,7 +73,7 @@ Wall height H = 6 m, &phi; = 32&deg;, &gamma; = 21 kN/m&sup3;, surcharge slope &
         "pi": '2.1.2',
         "topic": "Coulomb Retaining Wall Active & Passive Earth Pressure Numericals (12m / 7.5m / 15m with Wall Friction)",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""A rough vertical wall of 7.5 m height supports a horizontal backfill. If the angle of internal friction and angle of wall friction are respectively 33&deg; and 12&deg;, compute the passive earth pressure at the bottom of wall. Assume density of 18.5 kN/m&sup3;.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Height H = 7.5 m, &phi; = 33&deg;, &delta; = 12&deg;, &gamma; = 18.5 kN/m&sup3;, vertical wall (&alpha; = 90&deg;), horizontal backfill (&beta; = 0&deg;).<br>
@@ -105,7 +105,7 @@ Acts at an angle &delta; = 12&deg; upwards to the normal."""
         "pi": '2.1.2',
         "topic": "Active Earth Pressure Distribution with Water Table & Submerged Cohesive Soil (4.5m Retaining Wall)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""A retaining wall of 4.5 m height carries a horizontal backfill with c = 35 kN/m&sup2;, &phi; = 10&deg;; &gamma; = 17.2 kN/m&sup3;. The water table is located at 1.50 m below the ground. Sketch the distribution of active earth pressure. Assume the value of angle of internal friction is 14&deg;; and cohesion c = 50 kN/m&sup2; in the submerged condition.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Total height H = 4.5 m. Water table at depth H<sub>1</sub> = 1.5 m below ground. Submerged stratum H<sub>2</sub> = 3.0 m.<br>
@@ -142,7 +142,7 @@ Tensile stresses exist throughout the soil depth due to high cohesion (c = 35 to
         "pi": '2.3.1',
         "topic": "Coulomb Sliding Wedge Theory: Maximum Active Earth Pressure Derivation",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Derive the condition of maximum active earth pressure from sliding wedge.""",
         "solution": r"""<strong>Derivation of Condition for Maximum Active Earth Pressure (Sliding Wedge Method):</strong><br>
 1. <strong>Equilibrium of Trial Wedge (ABC):</strong><br>
@@ -178,7 +178,7 @@ Where Coulomb's active coefficient is:<br>
         "pi": '2.3.1',
         "topic": "Rebhann's Graphical Construction for Active Earth Thrust & Proof",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Explain the Rebhann's graphical construction for active earth pressure and prove that it satisfy the condition of maximum earth pressure""",
         "solution": r"""<strong>Rebhann's Graphical Construction for Active Earth Thrust:</strong><br>
 Based on Poncelet's modification of Coulomb's wedge theory for determining maximum active thrust graphically.<br>
@@ -216,7 +216,7 @@ Based on Poncelet's modification of Coulomb's wedge theory for determining maxim
         "pi": '1.3.1',
         "topic": "Bearing Capacity Definitions & Terminology Suffixes (Gross, Net, Safe, Allowable)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""What do you mean by bearing capacity? What are the different suffixes to be used before bearing capacity?""",
         "solution": r"""<strong>1. Bearing Capacity of Soil:</strong><br>
 The maximum load-carrying resistance per unit area that the underlying soil or rock mass can support without undergoing shear failure or excessive foundation settlement.<br>
@@ -242,7 +242,7 @@ The maximum load-carrying resistance per unit area that the underlying soil or r
         "pi": '2.1.3',
         "topic": "Modes of Shear Failure (General, Local, Punching) & Load-Settlement Curves",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Describe the three modes of shear failure in soil. Draw load-settlement curves for each mode and explain which type of soil exhibits each failure pattern.""",
         "solution": r"""<strong>Three Modes of Shear Failure in Soil (Vesic):</strong><br>
 1. <strong>General Shear Failure:</strong><br>
@@ -274,7 +274,7 @@ The maximum load-carrying resistance per unit area that the underlying soil or r
         "pi": '2.1.3',
         "topic": "Ground Water Table Effect on Ultimate & Safe Bearing Capacity (Theory & 50% Drop)",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Explain the effect of water table on bearing capacity of soils.""",
         "solution": r"""<strong>Effect of Water Table on Bearing Capacity:</strong><br>
 Submergence halves the effective unit weight of soil (&gamma;' &approx; 0.5 &gamma;<sub>bulk</sub>), thereby reducing effective overburden stress and shear resistance.<br>
@@ -306,7 +306,7 @@ Rise of water table to ground level causes an overall <strong>50% reduction</str
         "pi": '2.1.3',
         "topic": "Square Footing Net Safe Bearing Capacity in Pure Cohesive Clay (qu = 150 kPa, 2.5m Footing)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Compute the net safe bearing capacity of a square footing of size 2.5 m, provided at 2.0 m depth in a purely cohesive soil with Unconfined Shear Strength of 150 kN/m&sup2; and density being 18 kN/m&sup3;. Use factor of safety as 2.5.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Footing size B = 2.5 m, depth D<sub>f</sub> = 2.0 m, &gamma; = 18 kN/m&sup3;, unconfined compressive strength q<sub>u</sub> = 150 kN/m&sup2;, FOS = 2.5, purely cohesive soil (&phi; = 0).<br>
@@ -334,7 +334,7 @@ For square footing, shape factor s<sub>c</sub> = 1.3:<br>
         "pi": '2.3.1',
         "topic": "Terzaghi Bearing Capacity Numerical with Water Table (Square & Strip Footings)",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""A square footing of 3.5 m is resting at 3 m below the ground level. The shear parameters of soil are respectively 40 kN/m&sup2; and 12&deg;. The density of soil is 20 kN/m&sup3;. The water table lies at 2 m below the base of footing. Calculate the net safe bearing capacity. Assume factor of safety of 3.0.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Square footing B = 3.5 m, D<sub>f</sub> = 3.0 m, c = 40 kN/m&sup2;, &phi; = 12&deg;, &gamma; = 20 kN/m&sup3;, WT depth below base z<sub>w2</sub> = 2.0 m, FOS = 3.0.<br>
@@ -368,7 +368,7 @@ Water table is below footing base, so R<sub>w1</sub> = 1.0 (surcharge is dry).<b
         "pi": '2.3.1',
         "topic": "Rectangular Footing with Biaxial Eccentricity Numerical (3m x 2m, P = 1500 kN, eL = 0.3m, eB = 0.2m)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""A rectangular footing 3 m x 2 m carries a load of 1500 kN with eccentricity of 0.3 m along the length and 0.2 m along the width. The footing is located at 1.5 m depth in soil with c = 20 kN/m&sup2;, &phi; = 25&deg;, &gamma; = 19 kN/m&sup3;. Calculate the maximum pressure at the base and check for safety.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 L = 3.0 m, B = 2.0 m, Q = 1500 kN, e<sub>L</sub> = 0.3 m, e<sub>B</sub> = 0.2 m, D<sub>f</sub> = 1.5 m, c = 20 kN/m&sup2;, &phi; = 25&deg;, &gamma; = 19 kN/m&sup3;.<br>
@@ -404,7 +404,7 @@ Average effective pressure: <code>q'_{avg} = \frac{Q}{B' L'} = \frac{1500}{1.6 \
         "pi": '1.3.1',
         "topic": "Coulomb's Law of Shear Strength & Failure Envelope (tau = c + sigma tan phi)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Discuss Coulomb's law of shear strength of soil""",
         "solution": r"""<strong>Coulomb's Law of Shear Strength of Soil:</strong><br>
 States that the shear strength (&tau;<sub>f</sub>) along any failure plane within a soil mass is governed by internal cohesion and frictional resistance directly proportional to the normal stress.<br>
@@ -432,7 +432,7 @@ States that the shear strength (&tau;<sub>f</sub>) along any failure plane withi
         "pi": '2.1.3',
         "topic": "Shear and Normal Stresses on Failure Plane Numerical (tau = 4 kPa, sigma = 10 kPa)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""The shear stress and normal stress at a failure plane in a cohesionless soil mass were found to be 4 kPa and 10 kPa respectively. Determine the resultant stress on failure plane and inclination of failure plane. Also compute the shear parameters.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Shear stress on failure plane &tau; = 4 kPa, normal stress &sigma; = 10 kPa, cohesionless soil (c = 0).<br>
@@ -460,7 +460,7 @@ Angle of obliquity on the failure plane is &psi; = &phi; = 21.80&deg;."""
         "pi": '2.1.3',
         "topic": "Triaxial Test Specimen Shear Parameters & Deviator Stress Numerical (38mm Specimen, 100/200 kPa)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""The deviator force to shear the soil specimen of 38 mm diameter and 76 mm height under a confining pressure of 100 kN/m&sup2; is 251 N while it shears under a deviator force of 327 N at a confining pressure of 200 kN/m&sup2;. The deformation at the time of failure is respectively 2.0 mm and 5.2 mm. Determine the shear parameters. Determine the deviator stress under confining pressure of 250 kPa.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 d<sub>0</sub> = 38 mm = 0.038 m, L<sub>0</sub> = 76 mm = 0.076 m.<br>
@@ -498,7 +498,7 @@ Cohesion intercept: <code>315.45 = 100(1.5324) + 2 c \sqrt{1.5324} \implies 2 c 
         "pi": '2.1.3',
         "topic": "Triaxial Test Drainage Conditions (UU, CU, CD) & Test Selection Criteria",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""Explain various kinds of triaxial tests. Which test is best suited for the cohesive soil deposit having a permeable layer immediately below the foundation level?""",
         "solution": r"""<strong>1. Three Kinds of Triaxial Shear Tests:</strong><br>
 1. <strong>Unconsolidated Undrained (UU / Quick Test):</strong> Zero drainage allowed during both cell pressure application and shear stage. Measures undrained shear strength (c<sub>u</sub>, &phi;<sub>u</sub> = 0 for saturated soil). Appropriate for short-term end-of-construction stability.<br>
@@ -521,7 +521,7 @@ Cohesion intercept: <code>315.45 = 100(1.5324) + 2 c \sqrt{1.5324} \implies 2 c 
         "pi": '2.3.1',
         "topic": "Mohr-Coulomb Principal Stress Relationship Derivation (sigma1 vs sigma3)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Derive a relationship between effective shear parameters and principal stresses.""",
         "solution": r"""<strong>Derivation of Relationship Between Effective Shear Parameters (c', &phi;') and Principal Stresses (&sigma;'<sub>1</sub>, &sigma;'<sub>3</sub>):</strong><br>
 1. <strong>Geometry of Mohr Circle at Failure:</strong><br>
@@ -558,7 +558,7 @@ Dividing through by <code>\frac{1 - \sin\phi'}{2}</code>:<br>
         "pi": '2.3.1',
         "topic": "CU Triaxial Test Total and Effective Shear Parameters with Pore Water Pressure (Multi-Stage Observations)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""The following data refers to a triaxial compression tests performed on a soil sample. Determine the total and effective shear parameters of soil.<br>Observation 1: &sigma;<sub>3</sub> = 80 kPa, &sigma;<sub>d</sub> = 175 kPa, u = 45 kPa<br>Observation 2: &sigma;<sub>3</sub> = 150 kPa, &sigma;<sub>d</sub> = 240 kPa, u = 50 kPa<br>Observation 3: &sigma;<sub>3</sub> = 210 kPa, &sigma;<sub>d</sub> = 300 kPa, u = 60 kPa""",
         "solution": r"""<strong>Stress Computations Table:</strong><br>
 • <strong>Obs 1:</strong> &sigma;<sub>3</sub> = 80 kPa, &sigma;<sub>1</sub> = 80 + 175 = 255 kPa; &sigma;'<sub>3</sub> = 80 - 45 = 35 kPa, &sigma;'<sub>1</sub> = 255 - 45 = 210 kPa.<br>
@@ -593,7 +593,7 @@ Using effective stresses for observations 1 and 3:<br>
         "pi": '1.3.1',
         "topic": "Types of Shallow Foundations & Strap Footing Sketch",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""What are different types of shallow foundations? Draw neat sketch of strap footing.""",
         "solution": r"""<strong>1. Types of Shallow Foundations (D<sub>f</sub> &le; B):</strong><br>
 1. <strong>Isolated / Spread Footing:</strong> Individual pad supporting a single column.<br>
@@ -619,7 +619,7 @@ Using effective stresses for observations 1 and 3:<br>
         "pi": '2.1.3',
         "topic": "Requirements of Satisfactory Foundations & Design Criteria (Shear Failure & Settlement)",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Enumerate the requirements of satisfactory foundations.""",
         "solution": r"""<strong>Four Fundamental Requirements of a Satisfactory Foundation:</strong><br>
 1. <strong>Shear Failure / Bearing Capacity Criterion:</strong><br>
@@ -644,7 +644,7 @@ Must resist lateral sliding, overturning moments, and hydrostatic uplift; founda
         "pi": '4.1.1',
         "topic": "Site-Specific Foundation Selection for Subsoil Profiles (Compressible Clay vs Expansive Soil)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Two buildings are to be constructed at two different sites. First site shows the low compressive cohesive soil profile up to 10 m depth followed by good quality rock up to 15 m depth below the ground while the second site is having expansive soil up to 5 m depth followed by good rock up to 10 m below the ground. G+4 story building is to be constructed at the first site while at the second site G+15 story building is to be constructed. Suggest the type of foundation at two different sites for the structures to be constructed.""",
         "solution": r"""<strong>1. Foundation Selection for Site 1 (G+4 Building on Soft Clay):</strong><br>
 • <strong>Subsoil Profile:</strong> Low compressive strength cohesive soil (soft clay) up to 10 m depth, underlain by good quality rock extending to 15 m.<br>
@@ -670,7 +670,7 @@ Must resist lateral sliding, overturning moments, and hydrostatic uplift; founda
         "pi": '2.1.3',
         "topic": "Immediate Elastic Settlement of Footing Numerical (Square Footing, E = 50,000 kPa, mu = 0.3)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Using the soil properties (&gamma; = 17.5 kN/m&sup3;, c = 20 kN/m&sup2;, &phi; = 20&deg;), and assuming the square footing (3.415 m x 3.415 m) located at a depth of 1.5 m carries a total load of 2000 kN. Calculate the immediate settlement of the footing using the elastic theory. Assume the soil is homogeneous and isotropic with a Poisson's ratio of 0.3 and Young's modulus of 50,000 kN/m&sup2;. (assume influence factor 0.88 for square footing)""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 B = L = 3.415 m, D<sub>f</sub> = 1.5 m, Q = 2000 kN, &mu; = 0.3, E<sub>s</sub> = 50,000 kN/m&sup2;, I<sub>f</sub> = 0.88.<br>
@@ -698,7 +698,7 @@ Immediate elastic settlement of a flexible footing:<br>
         "pi": '2.3.1',
         "topic": "Design of Square Pile Group in Soft Clay for 500 kN Column Load (qu = 50 kPa, 400mm Dia, 6m Length)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Design a square pile group to carry 500 kN load in clay with an unconfined compressive strength of 50 kN/m&sup2;. Assume pile diameter of 400 mm and 6.0 m length. Adhesion factor may be taken as 0.6.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Working load Q<sub>w</sub> = 500 kN, q<sub>u</sub> = 50 kN/m&sup2;, d = 0.4 m, L = 6.0 m, adhesion factor &alpha; = 0.6, FOS = 2.5.<br>
@@ -737,7 +737,7 @@ Group safe capacity is governed by individual action: 9 &times; 56.55 = <strong>
         "pi": '2.3.1',
         "topic": "Strip Footing Width Design in c-phi Soil for 1000 kN/m Column Load",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Design a strip footing resting at 2.0 m below the ground and to carrying a load of 1000 kN/m, the shear parameters c = 50 kN/m&sup2; and angle of internal friction is 22&deg; while the density of soil is 20 kN/m&sup3;. The factor of safety to be used is 2.5.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 D<sub>f</sub> = 2.0 m, line load P = 1000 kN/m, c = 50 kN/m&sup2;, &phi; = 22&deg;, &gamma; = 20 kN/m&sup3;, FOS = 2.5.<br>
@@ -775,7 +775,7 @@ Provide strip footing of width <strong>B &approx; 9.0 m</strong> (or increase de
         "pi": '1.3.1',
         "topic": "Soil Samples: Disturbed vs Undisturbed Samples & Methods of Sampling",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Discuss different types of soil samples. How will you obtain undisturbed samples?""",
         "solution": r"""<strong>1. Three Types of Soil Samples:</strong><br>
 1. <strong>Non-Representative Disturbed Samples:</strong> Soil structure, moisture, and grain size distribution are all altered; mixture of soils from multiple strata (e.g. wash boring slurry, auger cuttings). Used only for preliminary identification.<br>
@@ -801,7 +801,7 @@ Provide strip footing of width <strong>B &approx; 9.0 m</strong> (or increase de
         "pi": '1.3.1',
         "topic": "Methods of Subsoil Exploration (Boring, Sounding, Trial Pits, Geophysical)",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""What do you understand by geotechnical exploration? What are the different methods of subsoil explorations?""",
         "solution": r"""<strong>1. Geotechnical Exploration:</strong><br>
 The systematic process of acquiring subsurface geological and soil engineering data across a project site to determine soil stratigraphy, ground water table elevation, engineering properties (shear strength, compressibility, permeability), and depth to bedrock for safe, economical foundation design.<br>
@@ -826,7 +826,7 @@ The systematic process of acquiring subsurface geological and soil engineering d
         "pi": '4.1.1',
         "topic": "Rock Mass Rating (RMR) & Core Recovery (TCR / RQD) Numerical",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Discuss Rock Mass Rating. How is it useful in finding the bearing capacity of rocks? The drilling carried out in a borehole from 6.00 m to 7.50 m below the ground level shows the 10 rock pieces of size 6, 8, 9, 10, 15, 18, 22 and 32 (all in centimeters). Determine the rock core recovery and rock quality designation. Comment on the quality of rock.""",
         "solution": r"""<strong>1. Rock Mass Rating (RMR - Bieniawski):</strong><br>
 A geomechanical classification system that evaluates rock mass quality on a scale of 0 to 100 based on 6 core parameters: Uniaxial compressive strength of intact rock, Rock Quality Designation (RQD), Spacing of discontinuities, Condition of discontinuities (roughness, separation, infilling, weathering), Groundwater conditions, and Joint orientation adjustment. RMR provides empirical correlations for allowable rock bearing capacity, tunnel support, and deformation modulus.<br>
@@ -862,7 +862,7 @@ Since RQD = <strong>64.67%</strong>, the rock stratum between 6.00 m and 7.50 m 
         "pi": '4.1.1',
         "topic": "Standard Penetration Test (SPT): Procedure, Overburden & Dilatancy Corrections",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""Explain the Standard Penetration Test. What are the different corrections to be applied to observed SPT value?<br>Following the observations of Standard Penetration Tests conducted at a site on sandy soil. Find the corrected N values.<br>Depth: 1.50 m, Observed SPT: 12, Density: 15.5 kN/m&sup3;<br>Depth: 3.00 m, Observed SPT: 18, Density: 17.2 kN/m&sup3;<br>Depth: 4.50 m, Observed SPT: 26, Density: 19.0 kN/m&sup3;<br>Depth: 6.00 m, Observed SPT: 32, Density: 20.5 kN/m&sup3;""",
         "solution": r"""<strong>1. Standard Penetration Test (SPT - IS: 2131):</strong><br>
 A standard split-spoon sampler (OD 50.8 mm, ID 35 mm) is driven into the bottom of a borehole using a 63.5 kg hammer falling freely from 750 mm height. The sampler is driven 450 mm in three 150 mm increments. The first 150 mm is seating drive (ignored). The sum of blows for the last 300 mm is the <strong>observed N-value</strong>.<br>
@@ -944,7 +944,7 @@ Depth 6.0m: N'' = 15 + 0.5(63 - 15) = <strong>39</strong>."""
         "pi": '1.4.1',
         "topic": "Earth Pressure Types (At-Rest, Active, Passive) & Theories",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""List out the three types of earth pressure by giving examples.""",
         "solution": r"""<strong>Three Types of Earth Pressure with Examples:</strong><br>
 1. <strong>Active Earth Pressure:</strong> Pressure exerted by soil when the retaining wall moves away from the backfill.<br>
@@ -967,7 +967,7 @@ Depth 6.0m: N'' = 15 + 0.5(63 - 15) = <strong>39</strong>."""
         "pi": '1.4.1',
         "topic": "Earth Pressure Theories & Assumptions (Rankine vs Coulomb Wedge Theory)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""List out the assumptions of Coulomb's theory.""",
         "solution": r"""<strong>Assumptions of Coulomb's Earth Pressure Theory:</strong><br>
 1. Soil is homogeneous and isotropic.<br>
@@ -1020,7 +1020,7 @@ Point of application acts at H/3 above the base."""
         "pi": '2.1.2',
         "topic": "Coulomb Retaining Wall Active & Passive Earth Pressure Numericals (12m / 7.5m / 15m with Wall Friction)",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""A gravity retaining wall retains 12 m of a backfill. &gamma; = 18 kN/m&sup3;, &phi; = 30&deg; with a uniform horizontal backfill. Assuming the wall interface to be vertical, determine the magnitude of active and passive earth pressure. Assume the angle of wall friction to be 20&deg;. Determine the point of action also.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Height H = 12 m, &gamma; = 18 kN/m&sup3;, &phi; = 30&deg;, &delta; = 20&deg;, vertical wall face (&alpha; = 90&deg;), horizontal backfill (&beta; = 0&deg;).<br>
@@ -1100,7 +1100,7 @@ Using Coulomb's passive coefficient with reversed friction signs: <code>K<sub>p<
         "pi": '1.4.1',
         "topic": "Modes of Shear Failure (General, Local, Punching) & Load-Settlement Curves",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""What are different types of shear failure? Draw the sketches.""",
         "solution": r"""<strong>Three Types of Shear Failure in Soil:</strong><br>
 1. <strong>General Shear Failure:</strong> Occurs in dense sand and stiff clay. Continuous failure surface extends from footing edge to ground surface with distinct soil bulging and sudden tilting.<br>
@@ -1213,7 +1213,7 @@ Using Coulomb's passive coefficient with reversed friction signs: <code>K<sub>p<
         "pi": '1.4.1',
         "topic": "Triaxial Test Drainage Conditions (UU, CU, CD) & Test Selection Criteria",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""Explain the classification of shear tests based on drainage condition.""",
         "solution": r"""<strong>Classification of Shear Tests by Drainage Condition:</strong><br>
 <span class="is-code-chip">IS: 2720</span><br>
@@ -1287,7 +1287,7 @@ Slip plane inclination &theta; = 45&deg; + &phi;/2 = <strong>59.14&deg;</strong>
         "pi": '1.4.1',
         "topic": "Requirements of Satisfactory Foundations & Design Criteria (Shear Failure & Settlement)",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""List out the major criteria to be satisfied in the design of the foundation.""",
         "solution": r"""<strong>Major Design Criteria for Foundations:</strong><br>
 1. <strong>Shear Failure Criterion:</strong> Foundation must have an adequate factor of safety (FOS &ge; 2.5 to 3.0) against shear failure of supporting soil under maximum applied loads.<br>
@@ -1383,7 +1383,7 @@ A = 2 &times; 2 = 4.0 m&sup2;, P = 4 &times; 2 = 8.0 m.<br>
         "pi": '2.1.2',
         "topic": "Terzaghi Bearing Capacity Numerical with Water Table (Square & Strip Footings)",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""A strip footing of 2.2 m width is to be founded at a depth of 1.2 m below GL. The soil profile shows the highest possible location of the water table at the site is estimated to be at 0.8 m below GL. The soil profile shows the presence of 0.5 m thick layer of fill material (&gamma; = 14.8 kN/m&sup3;), which is underlain by a deep sand stratum having the following average properties: &phi; = 25&deg;, e = 0.99, G = 2.72, water content above water table = 5%. Determine the safe bearing capacity of the footing with respect to a factor of safety of 2.5.""",
         "solution": r"""<strong>1. Sand Unit Weights:</strong><br>
 Moist sand above WT (w = 5% = 0.05):<br>
@@ -1636,7 +1636,7 @@ For &phi; = 25&deg;: N<sub>q</sub> = 10.66, N<sub>&gamma;</sub> = 10.88, c = 0.<
         "pi": '2.1.2',
         "topic": "9-Pile Group Safe Load Capacity in Soft Clay Numerical (30cm Dia, 9m Length, qu = 90 kPa)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""A square group of 9 piles was driven into soft clay extending to a large depth. The diameter and length of the piles were 30 cm and 9 m respectively. If the unconfined compression strength of the clay is 90 kN/m², and the pile spacing is 90 cm centre to centre, determine the capacity of the pile group? Assume a factor of safety of 2.5 and adhesion factor of 0.75.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Group configuration = 3 &times; 3 = 9 piles, d = 0.30 m, L = 9.0 m, spacing s = 0.90 m, q<sub>u</sub> = 90 kN/m&sup2; &rArr; c = q<sub>u</sub>/2 = 45 kN/m&sup2;, &alpha; = 0.75, FS = 2.5.<br>
@@ -1697,7 +1697,7 @@ Therefore, optimum spacing is <strong>s &approx; 2.2 d</strong>."""
         "pi": '1.4.1',
         "topic": "Objectives & Purpose of Geotechnical Soil Exploration / Investigation",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""List out the objectives of soil exploration.""",
         "solution": r"""<strong>Objectives of Soil Exploration:</strong><br>
 1. To determine the depth, thickness, and extent of each soil and rock stratum across the site.<br>
@@ -1851,7 +1851,7 @@ Therefore, optimum spacing is <strong>s &approx; 2.2 d</strong>."""
         "pi": '1.4.1',
         "topic": "Soil Sampler Criteria: Area Ratio (Ar), Clearance Ratios (Ci, Co) & Recovery Ratio",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Explain inside clearance, outside clearance and area ratio.""",
         "solution": r"""<strong>Soil Sampler Criteria (IS: 1892):</strong><br>
 Let D<sub>1</sub> = inside tip dia, D<sub>2</sub> = outside tip dia, D<sub>3</sub> = inside tube dia, D<sub>4</sub> = outside tube dia.<br>
@@ -1900,7 +1900,7 @@ Let D<sub>1</sub> = inside tip dia, D<sub>2</sub> = outside tip dia, D<sub>3</su
         "pi": '1.4.1',
         "topic": "Standard Penetration Test (SPT): Procedure, Overburden & Dilatancy Corrections",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""Describe a standard penetration test. What are the corrections applied?""",
         "solution": r"""<strong>Standard Penetration Test (SPT) &amp; Required Corrections:</strong><br>
 <span class="is-code-chip">IS: 2131</span><br>
@@ -2018,7 +2018,7 @@ Let D<sub>1</sub> = inside tip dia, D<sub>2</sub> = outside tip dia, D<sub>3</su
         "pi": '1.3',
         "topic": "Earth Pressure Types (At-Rest, Active, Passive) & Theories",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""What are different Types of Earth Pressure and what are different theories of Earth Pressures?""",
         "solution": r"""<strong>1. Three Types of Lateral Earth Pressure (Based on Wall Movement):</strong><br>
 a) <strong>Active Earth Pressure (P<sub>a</sub>):</strong> Lateral pressure exerted by soil when the retaining wall moves <strong>away</strong> from the backfill.<br>
@@ -2044,7 +2044,7 @@ b) <strong>Coulomb's Wedge Theory (1776):</strong> Considers equilibrium of a pl
         "pi": '2.1',
         "topic": "Retaining Wall Supporting Inclined Non-Cohesive Backfill (Rankine Theory at 10 deg)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""A smooth vertical wall, 6 m high supports an inclined non-cohesive backfill (&phi; = 32&deg;; &gamma; = 21 kN/m&sup3;) at an angle 10&deg; with horizontal. Compute the total active & passive pressure at the bottom of wall.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 H = 6 m, &gamma; = 21 kN/m&sup3;, &phi; = 32&deg;, backfill inclination &beta; = 10&deg;, smooth vertical wall.<br>
@@ -2070,7 +2070,7 @@ Passive intensity <code>p<sub>p</sub> = K<sub>p</sub> &middot; &gamma; &middot; 
         "pi": '2.1',
         "topic": "Coulomb Retaining Wall Active & Passive Earth Pressure Numericals (12m / 7.5m / 15m with Wall Friction)",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""A rough vertical wall of 7.5 m height supports a horizontal backfill. If the angle of internal friction and angle of wall friction are respectively 33&deg; and 12&deg;, compute the passive earth pressure at the bottom of wall. Assume density of 18.5 kN/m&sup3;.""",
         "solution": r"""<strong>Given:</strong> H = 7.5 m, &phi; = 33&deg;, &delta; = 12&deg;, &gamma; = 18.5 kN/m&sup3;, vertical back (&alpha; = 90&deg;), horizontal backfill (&beta; = 0&deg;).<br>
 <strong>Coulomb Passive Coefficient K<sub>p</sub>:</strong><br>
@@ -2096,7 +2096,7 @@ Passive intensity <code>p<sub>p</sub> = K<sub>p</sub> &middot; &gamma; &middot; 
         "pi": '2.1',
         "topic": "Active Earth Pressure Distribution with Water Table & Submerged Cohesive Soil (4.5m Retaining Wall)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""A retaining wall of 4.5 m height carries a horizontal backfill with c = 35 kN/m², &phi; = 10&deg;; &gamma; = 17.2 kN/m&sup3;. The water table is located at 1.50 m below the ground. Sketch the distribution of active earth pressure. Assume the value of angle of internal friction is 14&deg;; and cohesion c = 50 kN/m² in the submerged condition.""",
         "solution": r"""<strong>Stratification:</strong><br>
 &bull; <strong>Zone 1 (0 to 1.5 m, above WT):</strong> c = 35 kPa, &phi; = 10&deg;, &gamma; = 17.2 kN/m&sup3;.<br>
@@ -2123,7 +2123,7 @@ Hydrostatic pore water pressure: <code>u = &gamma;<sub>w</sub> &times; 3.0 = 9.8
         "pi": '2.3.1',
         "topic": "Coulomb Sliding Wedge Theory: Maximum Active Earth Pressure Derivation",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Derive the condition of maximum active earth pressure from sliding wedge.""",
         "solution": r"""<strong>Condition of Maximum Active Earth Pressure (Sliding Wedge Method):</strong><br>
 1. <strong>Forces Acting on Trial Soil Wedge:</strong><br>
@@ -2151,7 +2151,7 @@ Where θ is the inclination of the trial failure plane.<br>
         "pi": '2.3.1',
         "topic": "Rebhann's Graphical Construction for Active Earth Thrust & Proof",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Explain the Rebhann's graphical construction for active earth pressure and prove that it satisfy the condition of maximum earth pressure.""",
         "solution": r"""<strong>Rebhann's Graphical Construction for Active Earth Thrust:</strong><br>
 1. <strong>Principle:</strong> A graphical method based on Poncelet's solution to find the critical failure plane and total Coulomb active thrust (P<sub>a</sub>) directly without trial-and-error.<br>
@@ -2251,7 +2251,7 @@ Acting at H/3 above the base inclined at angle δ to the wall normal."""
         "pi": '1.3',
         "topic": "Bearing Capacity Definitions & Terminology Suffixes (Gross, Net, Safe, Allowable)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""What do you mean by bearing capacity? What are the different suffixes to be used before bearing capacity?""",
         "solution": r"""<strong>Bearing Capacity Definitions and Common Suffixes:</strong><br>
 <strong>Bearing Capacity:</strong> The load carrying capacity of soil per unit area without undergoing shear failure or excessive settlement.<br>
@@ -2273,7 +2273,7 @@ Acting at H/3 above the base inclined at angle δ to the wall normal."""
         "pi": '2.1',
         "topic": "Modes of Shear Failure (General, Local, Punching) & Load-Settlement Curves",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Describe the three modes of shear failure in soil. Draw load-settlement curves for each mode and explain which type of soil exhibits each failure pattern.""",
         "solution": r"""<strong>Three Modes of Shear Failure &amp; Load-Settlement Behavior:</strong><br>
 1. <strong>General Shear Failure:</strong> Dense sand (D<sub>r</sub> &gt; 70%) and stiff clay. Rupture surface extends to ground with surface heave. Curve has a <strong>sharp peak failure load (q<sub>u</sub>)</strong> followed by sudden drop.<br>
@@ -2443,7 +2443,7 @@ Acting at H/3 above the base inclined at angle δ to the wall normal."""
         "pi": '2.1',
         "topic": "Ground Water Table Effect on Ultimate & Safe Bearing Capacity (Theory & 50% Drop)",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Explain the effect of water table on bearing capacity of soils.""",
         "solution": r"""<strong>Effect of Water Table on Bearing Capacity (IS: 6403):</strong><br>
 General equation with correction factors:<br>
@@ -2466,7 +2466,7 @@ General equation with correction factors:<br>
         "pi": '2.1',
         "topic": "Square Footing Net Safe Bearing Capacity in Pure Cohesive Clay (qu = 150 kPa, 2.5m Footing)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Compute the net safe bearing capacity of a square footing of size 2.5 m provided at 2.0 m depth in a purely cohesive soil with Unconfined Shear Strength of 150 kN/m² and density being 18 kN/m&sup3;. Use factor of safety as 2.5.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Square footing B = 2.5 m, D<sub>f</sub> = 2.0 m, &gamma; = 18 kN/m&sup3;, FS = 2.5.<br>
@@ -2494,7 +2494,7 @@ For a square footing, ultimate bearing capacity:<br>
         "pi": '2.3.1',
         "topic": "Terzaghi Bearing Capacity Numerical with Water Table (Square & Strip Footings)",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""A square footing of 3.5 m is resting at 3 m below the ground level. The shear parameters of soil are respectively 40 kN/m² and 12&deg;. The density of soil is 20 kN/m&sup3;. The water table lies at 2 m below the base of footing. Calculate the net safe bearing capacity. Assume factor of safety of 3.0.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 B = 3.5 m, D<sub>f</sub> = 3.0 m, c = 40 kN/m&sup2;, &phi; = 12&deg;, &gamma; = 20 kN/m&sup3;, FS = 3.0.<br>
@@ -2529,7 +2529,7 @@ Since d<sub>w</sub> = 2.0 m < B = 3.5 m: <code>R<sub>w2</sub> = 0.5 [1 + (d<sub>
         "pi": '2.3.1',
         "topic": "Rectangular Footing with Biaxial Eccentricity Numerical (3m x 2m, P = 1500 kN, eL = 0.3m, eB = 0.2m)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""A rectangular footing 3 m × 2 m carries a load of 1500 kN with eccentricity of 0.3 m along the length and 0.2 m along the width. The footing is located at 1.5 m depth in soil with c = 20 kN/m², &phi; = 25&deg;, &gamma; = 19 kN/m&sup3;. Calculate the maximum pressure at the base and check for safety.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 L = 3.0 m, B = 2.0 m, Q = 1500 kN, e<sub>L</sub> = 0.3 m, e<sub>B</sub> = 0.2 m, D<sub>f</sub> = 1.5 m, c = 20 kPa, &phi; = 25&deg;, &gamma; = 19 kN/m&sup3;.<br>
@@ -2558,7 +2558,7 @@ Compute shape and depth factors; safe load Q<sub>safe</sub> = q<sub>safe</sub> &
         "pi": '1.3.1',
         "topic": "Coulomb's Law of Shear Strength & Failure Envelope (tau = c + sigma tan phi)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Discuss Coulomb's law of shear strength of soil.""",
         "solution": r"""<strong>Coulomb's Law of Shear Strength of Soil:</strong><br>
 1. <strong>Total Stress Equation (Coulomb, 1776):</strong> Shear strength (&tau;) consists of cohesive resistance and frictional resistance:<br>
@@ -2584,7 +2584,7 @@ where c' = effective cohesion, &sigma;' = effective normal stress, u = pore wate
         "pi": '2.1.3',
         "topic": "Shear and Normal Stresses on Failure Plane Numerical (tau = 4 kPa, sigma = 10 kPa)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""The shear stress and normal stress at a failure plane in a cohesionless soil mass were found to be 4 kPa and 10 kPa respectively. Determine the resultant stress on failure plane and inclination of failure plane. Also compute the shear parameters.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Cohesionless soil &rArr; c = 0. Normal stress &sigma; = 10 kPa, Shear stress &tau; = 4 kPa.<br>
@@ -2609,7 +2609,7 @@ Since c = 0: <code>&tau; = &sigma; tan &phi; &rArr; tan &phi; = &tau; / &sigma; 
         "pi": '2.1.3',
         "topic": "Triaxial Test Specimen Shear Parameters & Deviator Stress Numerical (38mm Specimen, 100/200 kPa)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""The deviator force to shear the soil specimen of 38 mm diameter and 76 mm height under a confining pressure of 100 kN/m² is 251 N while it shears under a deviator force of 327 N at a confining pressure of 200 kN/m². The deformation at the time of failure is respectively 2.0 mm and 5.2 mm. Determine the shear parameters. Determine the deviator stress under a confining pressure of 250 kPa.""",
         "solution": r"""<strong>Initial Dimensions:</strong><br>
 d = 38 mm &rArr; A<sub>0</sub> = (&pi;/4)(0.038)&sup2; = 1.134 &times; 10⁻&sup3; m&sup2;, L<sub>0</sub> = 76 mm.<br>
@@ -2645,7 +2645,7 @@ Deviator stress: <code>&sigma;<sub>d</sub> = &sigma;₁ - &sigma;₃ = 545.15 - 
         "pi": '2.1.3',
         "topic": "Triaxial Test Drainage Conditions (UU, CU, CD) & Test Selection Criteria",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""Explain various kinds of triaxial tests. Which test is best suited for the cohesive soil deposit having a permeable layer immediately below the foundation level?""",
         "solution": r"""<strong>Kinds of Triaxial Tests &amp; Suitability for Saturated Clay:</strong><br>
 <span class="is-code-chip">IS: 2720</span><br>
@@ -2669,7 +2669,7 @@ Deviator stress: <code>&sigma;<sub>d</sub> = &sigma;₁ - &sigma;₃ = 545.15 - 
         "pi": '2.3.1',
         "topic": "Mohr-Coulomb Principal Stress Relationship Derivation (sigma1 vs sigma3)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Derive a relationship between effective shear parameters and principal stresses.""",
         "solution": r"""<strong>Relationship Between Effective Shear Parameters &amp; Principal Stresses:</strong><br>
 1. <strong>Mohr Circle Geometry at Failure:</strong><br>
@@ -2695,7 +2695,7 @@ Deviator stress: <code>&sigma;<sub>d</sub> = &sigma;₁ - &sigma;₃ = 545.15 - 
         "pi": '2.3.1',
         "topic": "CU Triaxial Test Total and Effective Shear Parameters with Pore Water Pressure (Multi-Stage Observations)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""The following data refers to triaxial compression tests performed on a soil sample. Determine the total and effective shear parameters of soil.
 Observation 1: Cell Pressure = 80 kPa, Max Deviator Stress = 175 kPa, Pore Pressure at failure = 45 kPa.
 Observation 2: Cell Pressure = 150 kPa, Max Deviator Stress = 240 kPa, Pore Pressure at failure = 50 kPa.
@@ -2726,7 +2726,7 @@ Substitute into Test 1: <code>255 = 80(1.928) + 2 c(1.3887) &rArr; 100.7 = 2.777
         "pi": '1.3.1',
         "topic": "Types of Shallow Foundations & Strap Footing Sketch",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""What are different types of shallow foundations? Draw neat sketch of strap footing.""",
         "solution": r"""<strong>Types of Shallow Foundations and Strap Footing:</strong><br>
 1. <strong>Types of Shallow Foundations:</strong><br>
@@ -2823,7 +2823,7 @@ Substitute into Test 1: <code>255 = 80(1.928) + 2 c(1.3887) &rArr; 100.7 = 2.777
         "pi": '2.1.3',
         "topic": "Requirements of Satisfactory Foundations & Design Criteria (Shear Failure & Settlement)",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Enumerate the requirements of satisfactory foundations.""",
         "solution": r"""<strong>Requirements of Satisfactory Foundations (IS: 1904):</strong><br>
 1. <strong>Adequate Depth:</strong> Founded below topsoil, scour level, and seasonal moisture swelling/shrinkage zone.<br>
@@ -2844,7 +2844,7 @@ Substitute into Test 1: <code>255 = 80(1.928) + 2 c(1.3887) &rArr; 100.7 = 2.777
         "pi": '4.1.1',
         "topic": "Site-Specific Foundation Selection for Subsoil Profiles (Compressible Clay vs Expansive Soil)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Two buildings are to be constructed at two different sites. First site shows the low compressive cohesive soil profile up to 10 m depth followed by good quality rock up to 15 m depth below the ground while the second site is having expansive soil up to 5 m depth followed by good rock up to 10 m below the ground. G+4 story building is to be constructed at the first site while at the second site G+15 story building is to be constructed. Suggest the type of foundation at two different sites for the structures to be constructed.""",
         "solution": r"""<strong>Foundation Recommendations for Two Site Conditions:</strong><br>
 1. <strong>Site 1: Loose Sand with High Ground Water Table:</strong><br>
@@ -2867,7 +2867,7 @@ Substitute into Test 1: <code>255 = 80(1.928) + 2 c(1.3887) &rArr; 100.7 = 2.777
         "pi": '2.1.3',
         "topic": "Immediate Elastic Settlement of Footing Numerical (Square Footing, E = 50,000 kPa, mu = 0.3)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Using the soil properties (&gamma; = 17.5 kN/m&sup3;, c = 20 kN/m², &phi; = 20&deg;), and assuming the square footing (3.415 m × 3.415 m) located at a depth of 1.5 m carries a total load of 2000 kN. Calculate the immediate settlement of the footing using the elastic theory. Assume the soil is homogeneous and isotropic with a Poisson's ratio of 0.3 and Young's modulus of 50,000 kN/m². (assume influence factor 0.88 for square footing)""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Square footing B = 3.415 m, Area A = 3.415&sup2; = 11.662 m&sup2;, Load Q = 2000 kN, D<sub>f</sub> = 1.5 m.<br>
@@ -2894,7 +2894,7 @@ The immediate elastic settlement is <strong>9.38 mm</strong> (well within the pe
         "pi": '4.1',
         "topic": "Design of Square Pile Group in Soft Clay for 500 kN Column Load (qu = 50 kPa, 400mm Dia, 6m Length)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Design a square pile group to carry 500 kN load in clay with an unconfined compressive strength of 50 kN/m². Assume pile diameter of 400 mm and 6.0 m length. Adhesion factor may be taken as 0.6.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Design load Q = 500 kN, q<sub>u</sub> = 50 kPa &rArr; c = q<sub>u</sub>/2 = 25 kPa, d = 0.4 m, L = 6.0 m, &alpha; = 0.6. Adopt FS = 2.5.<br>
@@ -2926,7 +2926,7 @@ Safe block capacity = 3444.0 / 2.5 = <strong>1377.6 kN >> 500 kN</strong> (Extre
         "pi": '4.1',
         "topic": "Strip Footing Width Design in c-phi Soil for 1000 kN/m Column Load",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Design a strip footing resting at 2.0 m below the ground and to carrying a load of 1000 kN/m, the shear parameters c = 50 kN/m² and angle of internal friction is 22&deg; while the density is of soil is 20 kN/m&sup3;. The factor of safety to be used is 2.5.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 Load per meter run Q' = 1000 kN/m, D<sub>f</sub> = 2.0 m, c = 50 kPa, &phi; = 22&deg;, &gamma; = 20 kN/m&sup3;, FS = 2.5.<br>
@@ -2958,7 +2958,7 @@ Provide a strip footing of width <strong>B = 2.15 m to 2.20 m</strong>."""
         "pi": '1.4',
         "topic": "Soil Samples: Disturbed vs Undisturbed Samples & Methods of Sampling",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Discuss different types of soil samples. How will you obtain undisturbed samples?""",
         "solution": r"""<strong>Types of Soil Samples &amp; Obtaining Undisturbed Samples:</strong><br>
 <span class="is-code-chip">IS: 1892</span><br>
@@ -2982,7 +2982,7 @@ Provide a strip footing of width <strong>B = 2.15 m to 2.20 m</strong>."""
         "pi": '4.1',
         "topic": "Methods of Subsoil Exploration (Boring, Sounding, Trial Pits, Geophysical)",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""What do you understand by geotechnical exploration? What are the different methods of subsoil explorations?""",
         "solution": r"""<strong>Geotechnical Exploration — Meaning &amp; Methods:</strong><br>
 <span class="is-code-chip">IS: 1892</span><br>
@@ -3008,7 +3008,7 @@ Provide a strip footing of width <strong>B = 2.15 m to 2.20 m</strong>."""
         "pi": '4.1',
         "topic": "Rock Mass Rating (RMR) & Core Recovery (TCR / RQD) Numerical",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Discuss Rock Mass Rating. How is it useful in finding the bearing capacity of rocks? The drilling carried out in a borehole from 6.00 m to 7.50 m below the ground level shows the 10 rock pieces of size 6, 8, 9, 10, 15, 18, 22 and 32 (all in centimeters). Determine the rock core recovery and rock quality designation. Comment on the quality of rock.""",
         "solution": r"""<strong>1. Rock Mass Rating (RMR - Bieniawski):</strong><br>
 A geomechanical classification based on 6 parameters: Uniaxial compressive strength of intact rock, RQD, Discontinuity spacing, Condition of discontinuities, Groundwater conditions, and Joint orientation adjustment. RMR provides safe rock bearing capacity and rock deformation modulus.<br>
@@ -3039,7 +3039,7 @@ Since RQD = 64.67%, the rock stratum is classified as <strong>FAIR QUALITY ROCK<
         "pi": '4.1',
         "topic": "Standard Penetration Test (SPT): Procedure, Overburden & Dilatancy Corrections",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""Explain the Standard Penetration Test. What are the different corrections to be applied to observed SPT value? Following the observations of Standard Penetration Tests conducted at a site on sandy soil. Find the corrected N values.
 Depth: 1.50 m, Observed SPT: 12, Density: 15.5 kN/m³
 Depth: 3.00 m, Observed SPT: 18, Density: 17.2 kN/m³
@@ -3132,7 +3132,7 @@ Increase in active earth pressure intensity at the bottom = <strong>15.0 kN/m&su
         "pi": '1.4.1',
         "topic": "Earth Pressure Theories & Assumptions (Rankine vs Coulomb Wedge Theory)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Explain the various assumptions made in Rankine's earth pressure theory.""",
         "solution": r"""<strong>Assumptions Made in Rankine's Earth Pressure Theory:</strong><br>
 1. Soil is homogeneous, isotropic, dry, and cohesionless (c = 0).<br>
@@ -3155,7 +3155,7 @@ Increase in active earth pressure intensity at the bottom = <strong>15.0 kN/m&su
         "pi": '2.1.2',
         "topic": "Coulomb Retaining Wall Active & Passive Earth Pressure Numericals (12m / 7.5m / 15m with Wall Friction)",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""A gravity retaining wall retains 15 m of a backfill &gamma; = 20 kN/m&sup3; and &phi; = 30&deg; with a uniform horizontal backfill. Assuming the wall interface to be vertical, determine the magnitude of active and passive earth pressure and the point of action of total pressure. Assume the angle of wall friction to be 20&deg;.""",
         "solution": r"""<strong>Given:</strong> H = 15 m, &gamma; = 20 kN/m&sup3;, &phi; = 30&deg;, &delta; = 20&deg;, vertical back (&alpha; = 90&deg;), horizontal fill (&beta; = 0&deg;).<br>
 <strong>1. Active Condition (Coulomb Theory):</strong><br>
@@ -3180,7 +3180,7 @@ Total passive thrust: <code>P<sub>p</sub> = 0.5 &middot; K<sub>p</sub> &middot; 
         "pi": '2.1.2',
         "topic": "Rebhann's Graphical Construction for Active Earth Thrust & Proof",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Illustrate Rebhann's graphical construction method to evaluate the earth pressure on a retaining wall.""",
         "solution": r"""<strong>Rebhann's Graphical Construction &amp; Advantages:</strong><br>
 1. <strong>Objective:</strong> Graphically determines Coulomb active thrust (P<sub>a</sub>) and identifies the critical failure plane for retaining walls with wall friction (δ) and surcharge (β).<br>
@@ -3305,7 +3305,7 @@ Total passive thrust: <code>P<sub>p</sub> = 0.5 &middot; K<sub>p</sub> &middot; 
         "pi": '1.4.1',
         "topic": "Triaxial Test Drainage Conditions (UU, CU, CD) & Test Selection Criteria",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""Describe unconsolidated undrained test and a drained test.""",
         "solution": r"""<strong>Unconsolidated Undrained (UU) and Consolidated Drained (CD) Tests:</strong><br>
 1. <strong>Unconsolidated Undrained (UU) Test:</strong> Drainage is kept closed during both the cell pressure stage and shearing stage. It is a rapid test (takes 5 to 10 minutes) with no dissipation of excess pore water pressure, measuring undrained shear strength (c<sub>u</sub>).<br>
@@ -3467,7 +3467,7 @@ Available Factor of Safety: <code>FS = &sigma;' tan &phi; / &tau; = (40.72 &time
         "pi": '1.4.1',
         "topic": "Ground Water Table Effect on Ultimate & Safe Bearing Capacity (Theory & 50% Drop)",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Illustrate the effect of ground water table on the safe bearing capacity.""",
         "solution": r"""<strong>Ground Water Table Effect on Safe Bearing Capacity:</strong><br>
 <span class="is-code-chip">IS: 6403</span><br>
@@ -3489,7 +3489,7 @@ Available Factor of Safety: <code>FS = &sigma;' tan &phi; / &tau; = (40.72 &time
         "pi": '2.1.2',
         "topic": "Terzaghi Bearing Capacity Numerical with Water Table (Square & Strip Footings)",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""Calculate the safe bearing capacity of a square footing 1.5 m × 1.5 m, located at a depth of 1 m below the ground level in a soil of average density 20 kN/m&sup3;. &phi; = 20&deg;, N<sub>c</sub> = 17.7, N<sub>q</sub> = 7.4, and N<sub>&gamma;</sub> = 5.0. Assume a suitable factor of safety and that the water table is very deep. Also compute the reduction in safe bearing capacity of the footing if the water table rises to the ground level.""",
         "solution": r"""<strong>Given:</strong> Square footing B = 1.5 m, D<sub>f</sub> = 1.0 m, &gamma; = 20 kN/m&sup3;, &phi; = 20&deg;, N<sub>c</sub> = 17.7, N<sub>q</sub> = 7.4, N<sub>&gamma;</sub> = 5.0. Soil is cohesionless (c = 0). Adopt FS = 3.0.<br>
 <strong>Case A: Water table very deep (R<sub>w1</sub> = 1.0, R<sub>w2</sub> = 1.0):</strong><br>
@@ -3652,7 +3652,7 @@ Total skin friction: <code>Q<sub>s</sub> = 99.1 + 330.5 = <strong>429.6 kN</stro
         "pi": '2.1.2',
         "topic": "9-Pile Group Safe Load Capacity in Soft Clay Numerical (30cm Dia, 9m Length, qu = 90 kPa)",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""A square group of 9 piles was driven into soft clay extending to a large depth. The diameter and length of the piles were 30 cm and 9 m respectively. If the unconfined compression strength of the clay is 90 kN/m², and the pile spacing is 90 cm centre to centre. Calculate the capacity of the pile group? Assume a factor of safety of 2.5 and adhesion factor of 0.75.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
 3 &times; 3 array (n = 9), d = 0.3 m, L = 9 m, s = 0.9 m, q<sub>u</sub> = 90 kPa &rArr; c = 45 kPa, &alpha; = 0.75, FS = 2.5.<br>
@@ -3707,7 +3707,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>."""
         "pi": '1.4.1',
         "topic": "Objectives & Purpose of Geotechnical Soil Exploration / Investigation",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Describe the purpose of soil investigation.""",
         "solution": r"""<strong>Purpose of Soil Investigation:</strong><br>
 1. <strong>Foundation Selection:</strong> To determine the most suitable, safe, and economical type and depth of foundation for the proposed structure.<br>
@@ -3730,7 +3730,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>."""
         "pi": '2.1.2',
         "topic": "Soil Sampler Criteria: Area Ratio (Ar), Clearance Ratios (Ci, Co) & Recovery Ratio",
         "repeated": True,
-        "rep_frequency": "2 of 4 Papers (50% Medium Probability)",
+        "rep_frequency": "2 of 4 Papers",
         "question": r"""Calculate the area ratio of a thin walled tube sampler having an external diameter of 6 cm and a wall thickness of 2.25 mm. Do you recommend the sampler for obtaining undisturbed soil samples? Why?""",
         "solution": r"""<strong>Given:</strong> External diameter D<sub>2</sub> = 6.0 cm = 60.0 mm, Wall thickness t = 2.25 mm.<br>
 <strong>1. Internal Diameter (D<sub>1</sub>):</strong><br>
@@ -3755,7 +3755,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>."""
         "pi": '2.1.2',
         "topic": "Standard Penetration Test (SPT): Procedure, Overburden & Dilatancy Corrections",
         "repeated": True,
-        "rep_frequency": "4 of 4 Papers (100% Guaranteed)",
+        "rep_frequency": "4 of 4 Papers",
         "question": r"""Illustrate the standard penetration test used in soil exploration. List the information that can be obtained by the test when made in (a) clay (b) sand. Comment on the correction factors to be used for calculating N.""",
         "solution": r"""<strong>Standard Penetration Test (SPT) &amp; Information Obtained:</strong><br>
 <span class="is-code-chip">IS: 2131</span><br>
@@ -3876,7 +3876,7 @@ Safe capacity = 2834.2 / 2.5 = <strong>1133.68 kN</strong>."""
         "pi": '2.1.2',
         "topic": "Methods of Subsoil Exploration (Boring, Sounding, Trial Pits, Geophysical)",
         "repeated": True,
-        "rep_frequency": "3 of 4 Papers (75% High Probability)",
+        "rep_frequency": "3 of 4 Papers",
         "question": r"""Classify the various methods of soil exploration and mention the circumstances under which each is best situated.""",
         "solution": r"""<strong>Classification of Soil Exploration Methods &amp; Circumstances:</strong><br>
 <span class="is-code-chip">IS: 1892</span><br>

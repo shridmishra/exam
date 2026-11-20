@@ -15,7 +15,11 @@ export function ProgressRing({
   onClick,
   isActiveFilter = false,
 }: ProgressRingProps) {
-  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const safeCompleted = Math.min(total, Math.max(0, completed));
+  const percentage =
+    total > 0
+      ? Math.min(100, Math.max(0, Math.round((safeCompleted / total) * 100)))
+      : 0;
   const radius = 17.5;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -31,7 +35,7 @@ export function ProgressRing({
           onClick?.();
         }
       }}
-      title={`Overall Completion: ${completed}/${total} (${percentage}%) • Click to toggle incomplete questions`}
+      title={`Overall Completion: ${safeCompleted}/${total} (${percentage}%) • Click to toggle incomplete questions`}
       className={`relative flex h-[42px] w-[42px] cursor-pointer items-center justify-center rounded-full transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring ${
         isActiveFilter ? "ring-2 ring-primary" : ""
       }`}
