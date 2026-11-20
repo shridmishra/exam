@@ -25,6 +25,41 @@ interface ControlPanelProps {
   availableYears?: string[];
 }
 
+interface FilterButtonProps {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+  title?: string;
+  className?: string;
+}
+
+function FilterButton({
+  active,
+  onClick,
+  children,
+  title,
+  className,
+}: FilterButtonProps) {
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      onClick={onClick}
+      title={title}
+      className={cn(
+        "h-7 px-2 text-xs font-medium rounded-lg transition-all select-none shrink-0 whitespace-nowrap",
+        active
+          ? "bg-filter-active text-filter-active-foreground font-semibold shadow-2xs ring-1 ring-border/40"
+          : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/60",
+        className
+      )}
+    >
+      {children}
+    </Button>
+  );
+}
+
 export function ControlPanel({
   filters,
   setFilters,
@@ -47,37 +82,6 @@ export function ControlPanel({
     filters.marks !== "all" ||
     filters.status !== "all" ||
     filters.search !== "";
-
-  const FilterButton = ({
-    active,
-    onClick,
-    children,
-    title,
-    className,
-  }: {
-    active: boolean;
-    onClick: () => void;
-    children: React.ReactNode;
-    title?: string;
-    className?: string;
-  }) => (
-    <Button
-      type="button"
-      variant="ghost"
-      size="sm"
-      onClick={onClick}
-      title={title}
-      className={cn(
-        "h-7 px-2 text-xs font-medium rounded-lg transition-all select-none shrink-0 whitespace-nowrap",
-        active
-          ? "bg-filter-active text-filter-active-foreground font-semibold shadow-2xs ring-1 ring-border/40"
-          : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/60",
-        className
-      )}
-    >
-      {children}
-    </Button>
-  );
 
   return (
     <div className="rounded-2xl bg-card p-3.5 sm:p-5 shadow-xs transition-all">
