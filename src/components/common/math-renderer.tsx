@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useMemo } from "react";
-import katex from "katex";
 import {
   renderLatexInHtml,
   renderMarkdownWithMath,
   renderInlineMarkdownWithMath,
+  safeRenderKatex,
 } from "@/lib/math-utils";
 
 export {
@@ -34,15 +34,7 @@ export function MathRenderer({
       .replace(/&gt;/g, ">")
       .replace(/&amp;/g, "&");
 
-    try {
-      return katex.renderToString(clean, {
-        displayMode: isDisplay,
-        throwOnError: false,
-      });
-    } catch (e) {
-      console.warn("KaTeX render error:", e);
-      return clean;
-    }
+    return safeRenderKatex(clean, isDisplay);
   }, [content, isDisplay]);
 
   if (isDisplay) {
@@ -74,7 +66,7 @@ export interface RichMathTextProps {
  * When `inline` is true, renders as `<span>` and avoids block `<p>` wrappers,
  * preventing hydration errors when used inside `<p>` or inline containers.
  */
-export function RichMathText({
+export const RichMathText = React.memo(function RichMathText({
   text,
   className,
   inline = false,
@@ -97,4 +89,4 @@ export function RichMathText({
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
-}
+});

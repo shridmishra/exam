@@ -9,30 +9,32 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
 type SvgChild = [string, Record<string, string>];
 
 function createHugeicon(elements: readonly SvgChild[], name: string) {
-  const Component = React.forwardRef<SVGSVGElement, IconProps>(
-    ({ size = 18, className, ...props }, ref) => (
-      <svg
-        ref={ref}
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        width={size}
-        height={size}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={cn("shrink-0", className)}
-        {...props}
-      >
-        {elements.map(([tag, attrs], i) => {
-          const { key: _ignoredKey, ...restAttrs } = attrs as any;
-          if (tag === "circle") {
-            return <circle key={i} {...restAttrs} />;
-          }
-          return <path key={i} {...restAttrs} />;
-        })}
-      </svg>
+  const Component = React.memo(
+    React.forwardRef<SVGSVGElement, IconProps>(
+      ({ size = 18, className, ...props }, ref) => (
+        <svg
+          ref={ref}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width={size}
+          height={size}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={cn("shrink-0", className)}
+          {...props}
+        >
+          {elements.map(([tag, attrs], i) => {
+            const { key: _ignoredKey, ...restAttrs } = attrs as any;
+            if (tag === "circle") {
+              return <circle key={i} {...restAttrs} />;
+            }
+            return <path key={i} {...restAttrs} />;
+          })}
+        </svg>
+      )
     )
   );
   Component.displayName = name;

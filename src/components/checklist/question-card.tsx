@@ -10,6 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 import { SolutionViewer } from "./solution-viewer";
 import { RichMathText } from "@/components/common/math-renderer";
 import { StructuredQuestion } from "@/components/common/structured-question";
@@ -29,59 +30,60 @@ interface QuestionCardProps {
   onOpenNotesEditor: () => void;
 }
 
-export function QuestionCard({
-  question,
-  isOpen,
-  onToggleOpen,
-  isCompleted,
-  onToggleComplete,
-  isStarred,
-  onToggleStar,
-  isLater,
-  onToggleLater,
-  personalNote,
-  onOpenNotesEditor,
-}: QuestionCardProps) {
-  const getYearBadgeVariant = (year: string) => {
-    switch (year) {
-      case "2025":
-        return "year2025";
-      case "2024":
-        return "year2024";
-      case "2023":
-        return "year2023";
-      case "2022":
-        return "year2022";
-      case "2019":
-        return "year2019";
-      default:
-        return "secondary";
-    }
-  };
+export const QuestionCard = React.memo(
+  function QuestionCard({
+    question,
+    isOpen,
+    onToggleOpen,
+    isCompleted,
+    onToggleComplete,
+    isStarred,
+    onToggleStar,
+    isLater,
+    onToggleLater,
+    personalNote,
+    onOpenNotesEditor,
+  }: QuestionCardProps) {
+    const getYearBadgeVariant = (year: string) => {
+      switch (year) {
+        case "2025":
+          return "year2025";
+        case "2024":
+          return "year2024";
+        case "2023":
+          return "year2023";
+        case "2022":
+          return "year2022";
+        case "2019":
+          return "year2019";
+        default:
+          return "secondary";
+      }
+    };
 
-  const getRepeatBadgeVariant = (rep: string) => {
-    switch (rep) {
-      case "5x":
-        return "repeat5x";
-      case "4x":
-        return "repeat4x";
-      case "3x":
-        return "repeat3x";
-      case "2x":
-        return "repeat2x";
-      default:
-        return "subtle";
-    }
-  };
+    const getRepeatBadgeVariant = (rep: string) => {
+      switch (rep) {
+        case "5x":
+          return "repeat5x";
+        case "4x":
+          return "repeat4x";
+        case "3x":
+          return "repeat3x";
+        case "2x":
+          return "repeat2x";
+        default:
+          return "subtle";
+      }
+    };
 
-  return (
-    <div
-      className={`group rounded-xl transition-all duration-200 ${
-        isOpen
-          ? "bg-transparent shadow-none"
-          : "bg-card shadow-xs hover:shadow-sm"
-      }`}
-    >
+    return (
+      <div
+        className={`group rounded-xl transition-all duration-200 ${
+          isOpen
+            ? "bg-transparent shadow-none"
+            : "bg-card shadow-xs hover:shadow-sm card-content-visibility"
+        }`}
+      >
       {/* Header Row */}
       <div
         className="flex cursor-pointer flex-col gap-2 p-3 sm:p-4 select-none"
@@ -98,6 +100,20 @@ export function QuestionCard({
         <div className="flex items-start justify-between gap-1.5 sm:gap-3">
           {/* Left Metadata Cluster */}
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1 sm:gap-1.5">
+            {/* Mark Completed Checkbox */}
+            <div
+              className="flex items-center shrink-0 mr-0.5 sm:mr-1"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Checkbox
+                checked={isCompleted}
+                onCheckedChange={onToggleComplete}
+                variant="success"
+                title={isCompleted ? "Mark Incomplete" : "Mark as Completed"}
+                aria-label={isCompleted ? "Mark Incomplete" : "Mark as Completed"}
+              />
+            </div>
+
             <Badge
               variant={getYearBadgeVariant(question.year)}
               className="text-[11px] sm:text-xs px-1.5 sm:px-2 py-0.5"
@@ -147,73 +163,67 @@ export function QuestionCard({
 
           {/* Right Action Controls */}
           <div
-            className="flex shrink-0 items-center gap-0.5 sm:gap-1 mt-0.5"
+            className="flex shrink-0 items-center gap-1.5 sm:gap-2 mt-0.5"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Star */}
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={onToggleStar}
-              className={`h-7 w-7 transition-colors ${
-                isStarred
-                  ? "text-amber-500 hover:text-amber-600"
-                  : "text-muted-foreground/60 hover:text-foreground"
-              }`}
-              title={isStarred ? "Remove Star" : "Star Question"}
-              aria-label="Star question"
+            {/* Quick Actions Island (Star, Later, Note) */}
+            <div
+              className="action-island"
+              role="group"
+              aria-label="Question quick actions"
             >
-              <StarIcon
-                className={`h-3.5 w-3.5 ${
-                  isStarred ? "fill-amber-500" : ""
-                }`}
-              />
-            </Button>
+              {/* Star */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={onToggleStar}
+                className={cn(
+                  "action-island-btn",
+                  isStarred && "is-active-star"
+                )}
+                title={isStarred ? "Remove Star" : "Star Question"}
+                aria-label="Star question"
+              >
+                <StarIcon
+                  className={cn(
+                    "h-3.5 w-3.5",
+                    isStarred && "fill-current"
+                  )}
+                />
+              </Button>
 
-            {/* Later */}
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={onToggleLater}
-              className={`h-7 w-7 transition-colors ${
-                isLater
-                  ? "text-blue-500 hover:text-blue-600"
-                  : "text-muted-foreground/60 hover:text-foreground"
-              }`}
-              title={isLater ? "Remove from Later" : "Save for Later"}
-              aria-label="Save for later"
-            >
-              <Clock01Icon className="h-3.5 w-3.5" />
-            </Button>
+              {/* Later */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={onToggleLater}
+                className={cn(
+                  "action-island-btn",
+                  isLater && "is-active-later"
+                )}
+                title={isLater ? "Remove from Later" : "Save for Later"}
+                aria-label="Save for later"
+              >
+                <Clock01Icon className="h-3.5 w-3.5" />
+              </Button>
 
-            {/* Note Editor */}
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={onOpenNotesEditor}
-              className={`h-7 w-7 transition-colors ${
-                personalNote
-                  ? "text-primary hover:text-primary/80"
-                  : "text-muted-foreground/60 hover:text-foreground"
-              }`}
-              title={personalNote ? "Edit Personal Note (Saved)" : "Add Personal Note"}
-              aria-label="Personal note"
-            >
-              <PencilEdit01Icon className="h-3.5 w-3.5" />
-            </Button>
-
-            {/* Mark Completed Checkbox */}
-            <div className="flex h-7 w-7 items-center justify-center">
-              <Checkbox
-                checked={isCompleted}
-                onCheckedChange={onToggleComplete}
-                variant="success"
-                title={isCompleted ? "Mark Incomplete" : "Mark as Completed"}
-                aria-label={isCompleted ? "Mark Incomplete" : "Mark as Completed"}
-              />
+              {/* Note Editor */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={onOpenNotesEditor}
+                className={cn(
+                  "action-island-btn",
+                  personalNote && "is-active-note"
+                )}
+                title={personalNote ? "Edit Personal Note (Saved)" : "Add Personal Note"}
+                aria-label="Personal note"
+              >
+                <PencilEdit01Icon className="h-3.5 w-3.5" />
+              </Button>
             </div>
 
             {/* Accordion Chevron */}
@@ -271,4 +281,14 @@ export function QuestionCard({
       )}
     </div>
   );
-}
+},
+(prev, next) => {
+  return (
+    prev.isOpen === next.isOpen &&
+    prev.isCompleted === next.isCompleted &&
+    prev.isStarred === next.isStarred &&
+    prev.isLater === next.isLater &&
+    prev.personalNote === next.personalNote &&
+    prev.question === next.question
+  );
+});

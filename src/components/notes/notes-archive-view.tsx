@@ -84,7 +84,7 @@ export function NotesArchiveView({
   const handleDeleteNote = (qid: string) => {
     const deletedContent = notes[qid];
     const q = questionMap.get(qid);
-    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+    const qLabel = q?.q_no ? (q.q_no.startsWith("Q.") ? q.q_no : `Q.${q.q_no}`) : "Question";
 
     setNotes((prev) => {
       const next = { ...prev };
@@ -194,7 +194,7 @@ export function NotesArchiveView({
       {/* Title & Actions */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+          <h1 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
             Personal Study Archive
           </h1>
         </div>
@@ -294,7 +294,7 @@ export function NotesArchiveView({
 
       {/* Saved Notes for PYQ Questions */}
       <div className="space-y-4">
-        <h2 className="text-sm sm:text-base font-semibold text-foreground">
+        <h2 className="font-heading text-sm sm:text-base font-semibold text-foreground">
           Question Notes ({savedNotesList.length})
         </h2>
 

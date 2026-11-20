@@ -7,7 +7,7 @@ interface SolutionViewerProps {
   html: string;
 }
 
-export function SolutionViewer({ html }: SolutionViewerProps) {
+export const SolutionViewer = React.memo(function SolutionViewer({ html }: SolutionViewerProps) {
   // Synchronously transform LaTeX within the solution HTML into KaTeX HTML.
   // Rendering during useMemo guarantees:
   // 1. Zero flash of raw unrendered LaTeX strings
@@ -23,4 +23,4 @@ export function SolutionViewer({ html }: SolutionViewerProps) {
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
     />
   );
-}
+});

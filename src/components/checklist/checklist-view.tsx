@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useDeferredValue } from "react";
 import { ProgressRing } from "./progress-ring";
 import { YearPills } from "./year-pills";
 import { ControlPanel } from "./control-panel";
@@ -14,7 +14,7 @@ import { EXAM_YEARS } from "@/lib/constants";
 
 interface ChecklistViewProps {
   questions: Question[];
-  clusters: TopicCluster[];
+  clusters?: TopicCluster[];
   unitTitles: Record<string, string>;
   storagePrefix?: string;
   onNotesCountChange?: (count: number) => void;
@@ -50,6 +50,32 @@ export function ChecklistView({
   });
 
   const hasHydratedRef = useRef(false);
+
+  // Dynamic cluster loading: only loaded on-demand when repeated mode is active
+  const [loadedClusters, setLoadedClusters] = useState<TopicCluster[]>(clusters || []);
+
+  useEffect(() => {
+    if (clusters && clusters.length > 0) {
+      setLoadedClusters(clusters);
+      return;
+    }
+
+    if (filters.repeated !== "all" && loadedClusters.length === 0) {
+      if (storagePrefix === "dhs") {
+        import("@/data/dhs_canonical.json").then((m) =>
+          setLoadedClusters(m.default as TopicCluster[])
+        );
+      } else if (storagePrefix === "rcc") {
+        import("@/data/rcc_canonical.json").then((m) =>
+          setLoadedClusters((m.default as unknown) as TopicCluster[])
+        );
+      } else {
+        import("@/data/canonical.json").then((m) =>
+          setLoadedClusters(m.default as TopicCluster[])
+        );
+      }
+    }
+  }, [filters.repeated, clusters, loadedClusters.length, storagePrefix]);
 
   // Sync state from localStorage after mount
   useEffect(() => {
@@ -138,14 +164,18 @@ export function ChecklistView({
     onNotesCountChange?.(count);
   }, [notes, onNotesCountChange]);
 
-  // Save filters to localStorage only after hydration has completed
+  // Save filters to localStorage only after hydration has completed (debounced to avoid main-thread blocking on rapid typing)
   useEffect(() => {
     if (!hasHydratedRef.current) return;
-    try {
-      localStorage.setItem(STORAGE_KEY_FILTERS, JSON.stringify(filters));
-    } catch (e) {
-      console.warn("Error saving filters:", e);
-    }
+    const timer = setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY_FILTERS, JSON.stringify(filters));
+      } catch (e) {
+        console.warn("Error saving filters:", e);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [filters, STORAGE_KEY_FILTERS]);
 
   // Accordion state
@@ -159,10 +189,15 @@ export function ChecklistView({
     return map;
   }, [questions]);
 
+  const getQNumberLabel = (q?: { q_no?: string }) => {
+    if (!q?.q_no) return "Question";
+    return q.q_no.startsWith("Q.") ? q.q_no : `Q.${q.q_no}`;
+  };
+
   // Toggle handlers
   const toggleComplete = (id: string) => {
     const q = questionMap.get(id);
-    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+    const qLabel = getQNumberLabel(q);
 
     setCompleted((prev) => {
       const next = new Set(prev);
@@ -194,7 +229,7 @@ export function ChecklistView({
 
   const toggleStar = (id: string) => {
     const q = questionMap.get(id);
-    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+    const qLabel = getQNumberLabel(q);
 
     setStarred((prev) => {
       const next = new Set(prev);
@@ -222,7 +257,7 @@ export function ChecklistView({
 
   const toggleLater = (id: string) => {
     const q = questionMap.get(id);
-    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+    const qLabel = getQNumberLabel(q);
 
     setLater((prev) => {
       const next = new Set(prev);
@@ -250,7 +285,7 @@ export function ChecklistView({
 
   const handleSaveNote = (questionId: string, noteText: string) => {
     const q = questionMap.get(questionId);
-    const qLabel = q?.q_no ? `Q.${q.q_no}` : "Question";
+    const qLabel = getQNumberLabel(q);
 
     setNotes((prev) => {
       const next = { ...prev };
@@ -327,8 +362,25 @@ export function ChecklistView({
     return counts;
   }, [years, questions, completed]);
 
+  // Deferred search value to ensure responsive 60fps/120fps input typing
+  const deferredSearch = useDeferredValue(filters.search);
+
+  // Pre-computed lowercase searchable index for sub-millisecond filtering without string allocations
+  const searchableTextMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const q of questions) {
+      map.set(
+        q.id,
+        `${q.q_no} ${q.question} ${q.topic} ${q.unit_name} ${q.solution || q.formatted_solution || ""}`.toLowerCase()
+      );
+    }
+    return map;
+  }, [questions]);
+
   // Filtered questions
   const filteredQuestions = useMemo(() => {
+    const searchQuery = deferredSearch ? deferredSearch.toLowerCase().trim() : "";
+
     return questions.filter((q) => {
       // 1. Year filter
       if (filters.year !== "all" && q.year !== filters.year) return false;
@@ -362,17 +414,15 @@ export function ChecklistView({
       if (filters.status === "starred" && !starred.has(q.id)) return false;
       if (filters.status === "later" && !later.has(q.id)) return false;
 
-      // 7. Search filter
-      if (filters.search) {
-        const query = filters.search.toLowerCase();
-        const text =
-          `${q.q_no} ${q.question} ${q.topic} ${q.unit_name} ${q.solution}`.toLowerCase();
-        if (!text.includes(query)) return false;
+      // 7. Search filter (using fast index lookup)
+      if (searchQuery) {
+        const text = searchableTextMap.get(q.id) || "";
+        if (!text.includes(searchQuery)) return false;
       }
 
       return true;
     });
-  }, [questions, filters, completed, starred, later]);
+  }, [questions, filters, deferredSearch, completed, starred, later, searchableTextMap]);
 
   const allVisibleExpanded =
     filteredQuestions.length > 0 &&
@@ -410,7 +460,7 @@ export function ChecklistView({
 
     // Cluster map
     const clusterMap = new Map<string, TopicCluster>();
-    for (const c of clusters) {
+    for (const c of loadedClusters) {
       clusterMap.set(c.id, c);
     }
 
@@ -505,7 +555,7 @@ export function ChecklistView({
     }
 
     return tiers;
-  }, [isRepeatedMode, filteredQuestions, clusters, unitTitles, filters.repeated]);
+  }, [isRepeatedMode, filteredQuestions, loadedClusters, unitTitles, filters.repeated]);
 
   // Chronological Year -> Unit organization for normal mode
   const chronologicalSections = useMemo(() => {
@@ -555,7 +605,7 @@ export function ChecklistView({
       {/* Header Row: Title, Progress Ring, Year Pills */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2.5">
-          <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+          <h1 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
             Checklist
           </h1>
           {completedCount > 0 && (
@@ -664,7 +714,7 @@ export function ChecklistView({
                   {/* Topics within Unit */}
                   {u.topics.map((t, idx) => (
                     <div key={idx} className="space-y-3 pt-2">
-                      <div className="flex items-center gap-2 text-sm font-semibold text-foreground/90">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-foreground/90 font-heading">
                         <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                         <span>{t.title}</span>
                       </div>
@@ -710,7 +760,7 @@ export function ChecklistView({
                   >
                     {sec.year}
                   </Badge>
-                  <h2 className="text-base sm:text-lg font-semibold tracking-tight text-foreground">
+                  <h2 className="font-heading text-base sm:text-lg font-semibold tracking-tight text-foreground">
                     Examination Paper
                   </h2>
                   <Badge variant="subtle" className="text-xs tabular-nums text-muted-foreground font-medium">
@@ -756,14 +806,16 @@ export function ChecklistView({
         </div>
       )}
 
-      {/* Personal Notes Editor Modal */}
-      <PersonalNotesEditor
-        question={editingQuestion}
-        isOpen={!!editingQuestion}
-        onClose={() => setEditingQuestion(null)}
-        onSave={handleSaveNote}
-        initialNote={editingQuestion ? notes[editingQuestion.id] : ""}
-      />
+      {/* Personal Notes Editor Modal (Mounted only when active) */}
+      {editingQuestion && (
+        <PersonalNotesEditor
+          question={editingQuestion}
+          isOpen={true}
+          onClose={() => setEditingQuestion(null)}
+          onSave={handleSaveNote}
+          initialNote={notes[editingQuestion.id] || ""}
+        />
+      )}
     </div>
   );
 }

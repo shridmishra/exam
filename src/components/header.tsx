@@ -132,21 +132,17 @@ export function Header({
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="group flex h-auto max-w-full items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 text-left font-bold tracking-tight text-foreground transition-all bg-secondary hover:bg-secondary/80 data-[state=open]:bg-secondary/80 focus-visible:ring-1 focus-visible:ring-ring rounded-lg"
+                    className="group flex h-auto max-w-full items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 text-left font-bold tracking-tight text-foreground transition-all bg-secondary hover:bg-secondary/80 data-[state=open]:bg-secondary/80 rounded-lg outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 border-0"
                     title="Switch subject"
                     aria-label="Switch subject"
                   >
-                    <span className="text-xs sm:text-sm md:text-[15px] font-semibold tracking-tight truncate max-w-[210px] sm:max-w-xs">
+                    <span className="font-heading text-xs sm:text-sm md:text-[15px] font-semibold tracking-tight truncate max-w-[210px] sm:max-w-xs">
                       {displayName}
                     </span>
                     <ChevronDownIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180 group-hover:text-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" sideOffset={8} className="w-[300px] sm:w-[340px] p-2">
-                  <div className="px-2.5 py-1.5 pb-2 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 border-b border-border/40 mb-1 flex items-center justify-between">
-                    <span>Switch Subject</span>
-                    <span className="text-[10px] font-normal lowercase tracking-normal text-muted-foreground/60">{availableSubjects.length} available</span>
-                  </div>
+                <DropdownMenuContent align="start" sideOffset={8} className="w-[300px] sm:w-[340px] p-2 border-0">
                   <div className="space-y-1">
                     {availableSubjects.map((sub) => {
                       const isSelected = sub.id === (selectedSubjectId || currentSubject?.id);
@@ -163,10 +159,10 @@ export function Header({
                           )}
                         >
                           <div className="flex flex-col min-w-0 flex-1">
-                            <span className="truncate text-sm font-medium text-foreground">
+                            <span className="font-heading truncate text-sm font-medium text-foreground">
                               {sub.name}
                             </span>
-                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5 font-heading">
                               <span className="text-[11px] px-1.5 py-0.5 rounded bg-muted/60">{sub.code}</span>
                               <span className="px-1.5 py-0.5 rounded bg-muted/60">{sub.short_name}</span>
                               {sub.question_count ? (
@@ -189,7 +185,7 @@ export function Header({
               onClick={() => setActiveTab("checklist")}
               title="Back to Checklist"
             >
-              <span className="text-xs sm:text-sm md:text-[15px] font-semibold tracking-tight truncate">{displayName}</span>
+              <span className="font-heading text-xs sm:text-sm md:text-[15px] font-semibold tracking-tight truncate">{displayName}</span>
             </div>
           )}
         </div>
@@ -203,33 +199,33 @@ export function Header({
             variant={activeTab === "checklist" ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("checklist")}
-            className="flex items-center gap-1.5 text-xs sm:text-[14.5px] font-medium"
+            className="flex items-center gap-1.5 font-heading text-xs sm:text-[14.5px] font-medium outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 border-0"
             title="Checklist"
           >
             <Task01Icon className="h-4 w-4" />
-            <span className="hidden sm:inline">Checklist</span>
+            <span className="font-heading hidden sm:inline">Checklist</span>
           </Button>
 
           <Button
             variant={activeTab === "formulas" ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("formulas")}
-            className="flex items-center gap-1.5 text-xs sm:text-[14.5px] font-medium"
+            className="flex items-center gap-1.5 font-heading text-xs sm:text-[14.5px] font-medium outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 border-0"
             title="Formulas"
           >
             <FunctionOfXIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">Formulas</span>
+            <span className="font-heading hidden sm:inline">Formulas</span>
           </Button>
 
           <Button
             variant={activeTab === "timetable" ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("timetable")}
-            className="flex items-center gap-1.5 text-xs sm:text-[14.5px] font-medium"
+            className="flex items-center gap-1.5 font-heading text-xs sm:text-[14.5px] font-medium outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 border-0"
             title="Timetable"
           >
             <Calendar03Icon className="h-4 w-4" />
-            <span className="hidden sm:inline">Timetable</span>
+            <span className="font-heading hidden sm:inline">Timetable</span>
           </Button>
         </nav>
 
@@ -241,7 +237,7 @@ export function Header({
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             title="Toggle light/dark theme"
             aria-label="Toggle theme"
-            className="h-9 w-9 text-muted-foreground hover:text-foreground"
+            className="h-9 w-9 text-muted-foreground hover:text-foreground outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 border-0"
           >
             <Sun03Icon className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon02Icon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />

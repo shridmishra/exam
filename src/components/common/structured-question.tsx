@@ -219,7 +219,7 @@ function parseQuestionBlocks(rawText: string): ParsedBlock[] {
   return blocks;
 }
 
-export function StructuredQuestion({
+export const StructuredQuestion = React.memo(function StructuredQuestion({
   content,
   isCompleted = false,
   className = "",
@@ -338,4 +338,4 @@ export function StructuredQuestion({
       })}
     </div>
   );
-}
+});

@@ -1,6 +1,54 @@
 import katex from "katex";
 
 /**
+ * High-performance bounded in-memory LRU/Map caches.
+ * Eliminates redundant AST lexing, parsing, and regex tokenization
+ * for identical mathematical expressions and markdown fragments.
+ */
+function createBoundedCache<T>(limit: number = 1000) {
+  const cache = new Map<string, T>();
+  return {
+    get: (key: string): T | undefined => cache.get(key),
+    set: (key: string, value: T): void => {
+      if (cache.size >= limit) {
+        const oldestKey = cache.keys().next().value;
+        if (oldestKey !== undefined) cache.delete(oldestKey);
+      }
+      cache.set(key, value);
+    },
+    has: (key: string): boolean => cache.has(key),
+  };
+}
+
+const katexCache = createBoundedCache<string>(2000);
+const inlineMarkdownCache = createBoundedCache<string>(1000);
+const markdownMathCache = createBoundedCache<string>(1000);
+const latexHtmlCache = createBoundedCache<string>(500);
+
+/**
+ * Fast cached KaTeX rendering wrapper
+ */
+export function safeRenderKatex(cleanLatex: string, isDisplay: boolean): string {
+  const cacheKey = (isDisplay ? "D:" : "I:") + cleanLatex;
+  const cached = katexCache.get(cacheKey);
+  if (cached !== undefined) return cached;
+
+  try {
+    const rendered = katex.renderToString(cleanLatex, {
+      displayMode: isDisplay,
+      throwOnError: false,
+    });
+    katexCache.set(cacheKey, rendered);
+    return rendered;
+  } catch (e) {
+    console.warn("KaTeX render error:", e);
+    const fallback = isDisplay ? `$$${cleanLatex}$$` : `$${cleanLatex}$`;
+    katexCache.set(cacheKey, fallback);
+    return fallback;
+  }
+}
+
+/**
  * Sanitizes math content before passing to KaTeX.
  * Handles escaped characters, HTML entities, and degree symbols.
  */
@@ -45,6 +93,9 @@ function cleanLatexString(raw: string): string {
 export function renderLatexInHtml(html: string): string {
   if (!html) return "";
 
+  const cachedHtml = latexHtmlCache.get(html);
+  if (cachedHtml !== undefined) return cachedHtml;
+
   const preserved: string[] = [];
 
   // Protect any already-rendered KaTeX math or blocks so inner MathML is never re-parsed
@@ -68,42 +119,25 @@ export function renderLatexInHtml(html: string): string {
       clean.length > 20 ||
       clean.includes("\\frac") ||
       clean.includes("\\sqrt");
-    try {
-      const rendered = katex.renderToString(clean, {
-        displayMode: isDisplay,
-        throwOnError: false,
-      });
-      const token = `@@PRESERVED_MATH_${preserved.length}@@`;
-      preserved.push(
-        isDisplay
-          ? `<div class="sol-math-block">${rendered}</div>`
-          : `<span class="sol-math-inline">${rendered}</span>`
-      );
-      return token;
-    } catch {
-      return orig;
-    }
+    const rendered = safeRenderKatex(clean, isDisplay);
+    const token = `@@PRESERVED_MATH_${preserved.length}@@`;
+    preserved.push(
+      isDisplay
+        ? `<div class="sol-math-block">${rendered}</div>`
+        : `<span class="sol-math-inline">${rendered}</span>`
+    );
+    return token;
   });
 
   // 1. Extract and render display math blocks ($$...$$ and \[...\])
   s = s.replace(
     /(?:\$\$|\\{1,2}\[)([\s\S]*?)(?:\$\$|\\{1,2}\])/g,
     (_, math) => {
-      try {
-        const clean = cleanLatexString(math);
-        const rendered = katex.renderToString(clean, {
-          displayMode: true,
-          throwOnError: false,
-        });
-        const token = `@@PRESERVED_MATH_${preserved.length}@@`;
-        preserved.push(`<div class="sol-math-block">${rendered}</div>`);
-        return token;
-      } catch (e) {
-        console.warn("KaTeX display math error:", e);
-        const token = `@@PRESERVED_MATH_${preserved.length}@@`;
-        preserved.push(`<div class="sol-math-block">$$${math}$$</div>`);
-        return token;
-      }
+      const clean = cleanLatexString(math);
+      const rendered = safeRenderKatex(clean, true);
+      const token = `@@PRESERVED_MATH_${preserved.length}@@`;
+      preserved.push(`<div class="sol-math-block">${rendered}</div>`);
+      return token;
     }
   );
 
@@ -119,16 +153,8 @@ export function renderLatexInHtml(html: string): string {
     parts[i] = parts[i].replace(
       /(?:(?<!\$)\$|\\{1,2}\()([^\$\n]+?)(?:\$|\\{1,2}\))/g,
       (_, math) => {
-        try {
-          const clean = cleanLatexString(math);
-          return katex.renderToString(clean, {
-            displayMode: false,
-            throwOnError: false,
-          });
-        } catch (e) {
-          console.warn("KaTeX inline math error:", e);
-          return `$${math}$`;
-        }
+        const clean = cleanLatexString(math);
+        return safeRenderKatex(clean, false);
       }
     );
 
@@ -136,15 +162,8 @@ export function renderLatexInHtml(html: string): string {
     parts[i] = parts[i].replace(
       /(?<![\$\\])\\(alpha|beta|gamma|delta|epsilon|varepsilon|theta|mu|pi|sigma|tau|phi|omega|Delta)(?:_[a-zA-Z0-9{}]+)?(?![a-zA-Z\$])/g,
       (match) => {
-        try {
-          const clean = cleanLatexString(match);
-          return katex.renderToString(clean, {
-            displayMode: false,
-            throwOnError: false,
-          });
-        } catch {
-          return match;
-        }
+        const clean = cleanLatexString(match);
+        return safeRenderKatex(clean, false);
       }
     );
   }
@@ -156,6 +175,7 @@ export function renderLatexInHtml(html: string): string {
     return preserved[parseInt(idx, 10)] || "";
   });
 
+  latexHtmlCache.set(html, s);
   return s;
 }
 
@@ -256,6 +276,9 @@ function autoWrapLatexInMarkdown(text: string): string {
 export function renderMarkdownWithMath(raw: string): string {
   if (!raw) return "";
 
+  const cached = markdownMathCache.get(raw);
+  if (cached !== undefined) return cached;
+
   // 1. Auto-wrap bare LaTeX equations and expressions
   let s = autoWrapLatexInMarkdown(raw);
 
@@ -275,15 +298,7 @@ export function renderMarkdownWithMath(raw: string): string {
       else if (inner.endsWith("\\]")) inner = inner.slice(0, -2);
     }
     const clean = cleanLatexString(inner);
-    let rendered = "";
-    try {
-      rendered = katex.renderToString(clean, {
-        displayMode: true,
-        throwOnError: false,
-      });
-    } catch {
-      rendered = `$$${clean}$$`;
-    }
+    const rendered = safeRenderKatex(clean, true);
     const token = `@@MATH_BLOCK_${mathBlocks.length}@@`;
     mathBlocks.push(`<div class="sol-math-block">${rendered}</div>`);
     return `\n\n${token}\n\n`;
@@ -296,15 +311,7 @@ export function renderMarkdownWithMath(raw: string): string {
     (_, p1, p2) => {
       const c = p1 !== undefined ? p1 : p2;
       const clean = cleanLatexString(c);
-      let rendered = "";
-      try {
-        rendered = katex.renderToString(clean, {
-          displayMode: false,
-          throwOnError: false,
-        });
-      } catch {
-        rendered = `$${clean}$`;
-      }
+      const rendered = safeRenderKatex(clean, false);
       const token = `@@INLINE_MATH_${inlineMath.length}@@`;
       inlineMath.push(rendered);
       return token;
@@ -452,6 +459,7 @@ export function renderMarkdownWithMath(raw: string): string {
     return mathBlocks[parseInt(idx, 10)] || "";
   });
 
+  markdownMathCache.set(raw, finalHtml);
   return finalHtml;
 }
 
@@ -462,6 +470,9 @@ export function renderMarkdownWithMath(raw: string): string {
  */
 export function renderInlineMarkdownWithMath(raw: string): string {
   if (!raw) return "";
+
+  const cached = inlineMarkdownCache.get(raw);
+  if (cached !== undefined) return cached;
 
   // 0. Sanitize isolated single-symbol display math like $$\phi$$ or $$\gamma$$ into inline math
   let s = raw.replace(
@@ -480,33 +491,15 @@ export function renderInlineMarkdownWithMath(raw: string): string {
       const isShortInline =
         !clean.includes("\n") && clean.length <= 15 && !clean.includes("=");
       if (isShortInline) {
-        try {
-          return katex.renderToString(clean, {
-            displayMode: false,
-            throwOnError: false,
-          });
-        } catch {
-          return `$${clean}$`;
-        }
+        return safeRenderKatex(clean, false);
       }
 
-      try {
-        const rendered = katex.renderToString(clean, {
-          displayMode: true,
-          throwOnError: false,
-        });
-        const token = `@@DISPLAY_MATH_${displayBlocks.length}@@`;
-        displayBlocks.push(
-          `<span class="sol-math-block block my-2 text-center">${rendered}</span>`
-        );
-        return token;
-      } catch {
-        const token = `@@DISPLAY_MATH_${displayBlocks.length}@@`;
-        displayBlocks.push(
-          `<span class="sol-math-block block my-2 text-center">$$${math}$$</span>`
-        );
-        return token;
-      }
+      const rendered = safeRenderKatex(clean, true);
+      const token = `@@DISPLAY_MATH_${displayBlocks.length}@@`;
+      displayBlocks.push(
+        `<span class="sol-math-block block my-2 text-center">${rendered}</span>`
+      );
+      return token;
     }
   );
 
@@ -517,15 +510,7 @@ export function renderInlineMarkdownWithMath(raw: string): string {
     (_, p1, p2) => {
       const c = p1 !== undefined ? p1 : p2;
       const clean = cleanLatexString(c);
-      let rendered = "";
-      try {
-        rendered = katex.renderToString(clean, {
-          displayMode: false,
-          throwOnError: false,
-        });
-      } catch {
-        rendered = `$${clean}$`;
-      }
+      const rendered = safeRenderKatex(clean, false);
       const token = `@@INLINE_MATH_${inlineBlocks.length}@@`;
       inlineBlocks.push(rendered);
       return token;
@@ -551,5 +536,6 @@ export function renderInlineMarkdownWithMath(raw: string): string {
     return displayBlocks[parseInt(idx, 10)] || "";
   });
 
+  inlineMarkdownCache.set(raw, s);
   return s;
 }

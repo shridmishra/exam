@@ -57,13 +57,13 @@ const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         className={cn(
-          "peer relative flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-[4px] border transition-all duration-150",
+          "peer relative flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-[5px] border border-solid transition-all duration-150 cursor-pointer select-none",
           "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
           "disabled:cursor-not-allowed disabled:opacity-50",
           "before:absolute before:-inset-1 before:content-['']",
           checked
             ? cn(variantCheckedStyles, "shadow-2xs")
-            : "border-muted-foreground/40 bg-background/50 hover:border-foreground/80 hover:bg-secondary/40",
+            : "bg-[var(--checkbox-bg)] border-[var(--checkbox-border)] hover:bg-[var(--checkbox-hover-bg)] hover:border-[var(--checkbox-hover-border)]",
           className
         )}
         {...props}

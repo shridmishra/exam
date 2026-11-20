@@ -207,8 +207,7 @@ def export_geotech():
             "repeat_multiplier": rep_str if y_count > 1 else "1x",
             "cluster_id": cid,
             "question": q.get("question"),
-            "solution": q.get("solution"),
-            "formatted_solution": formatted_html
+            "solution": formatted_html or q.get("solution", "")
         })
 
     # 1. Questions JSON
@@ -281,8 +280,7 @@ def export_dhs():
             "repeat_multiplier": rep_str if y_count > 1 else "1x",
             "cluster_id": cid,
             "question": q.get("question"),
-            "solution": q.get("solution"),
-            "formatted_solution": formatted_html
+            "solution": formatted_html or q.get("solution", "")
         })
 
     # 1. Questions JSON
@@ -346,8 +344,7 @@ def export_rcc():
             "repeat_multiplier": q.get("rep_count") or (rep_str if y_count > 1 else "1x"),
             "cluster_id": cid,
             "question": q.get("question"),
-            "solution": q.get("solution"),
-            "formatted_solution": formatted_html
+            "solution": formatted_html or q.get("solution", "")
         })
 
     # 1. Questions JSON

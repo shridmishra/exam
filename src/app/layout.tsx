@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider";
 import { BackToTop } from "@/components/common/back-to-top";
 import { Toaster } from "@/components/ui/sonner";
@@ -9,6 +10,53 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const aeonik = localFont({
+  src: [
+    {
+      path: "./_fonts/AeonikTRIAL-Light.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./_fonts/AeonikTRIAL-LightItalic.otf",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "./_fonts/AeonikTRIAL-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./_fonts/AeonikTRIAL-RegularItalic.otf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "./_fonts/AeonikTRIAL-Regular.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./_fonts/AeonikTRIAL-Bold.otf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./_fonts/AeonikTRIAL-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./_fonts/AeonikTRIAL-BoldItalic.otf",
+      weight: "700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-aeonik",
   display: "swap",
 });
 
@@ -31,8 +79,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={inter.variable}>
-      <body className={`${inter.variable} min-h-screen bg-background font-sans antialiased text-foreground`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${aeonik.variable}`}
+    >
+      <body
+        className={`${inter.variable} ${aeonik.variable} min-h-screen bg-background font-sans antialiased text-foreground`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -41,7 +95,7 @@ export default function RootLayout({
         >
           {children}
           <BackToTop />
-          <Toaster position="bottom-right" richColors closeButton />
+          <Toaster position="top-right" richColors visibleToasts={1} closeButton />
         </ThemeProvider>
       </body>
     </html>

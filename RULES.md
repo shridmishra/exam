@@ -86,9 +86,10 @@
 ---
 
 ### [RULE 6] Question Presentation, Header Layout & Un-Cardified Solutions
-- **Question Card Header Layout (Badges Left, Actions Right)**:
-  - Every question card positions the question number (e.g. `Q.1 (b)`) and all metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`) together on the **left side** (`.q-item-left-meta` / `.q-item-badges`).
-  - Action controls (`Personal Note` button, `Mark Done` / `Completed` button, and accordion toggle chevron) remain cleanly anchored on the **far right corner** (`.q-item-right-meta` / `.q-item-actions`).
+- **Question Card Header Layout (Checkbox & Badges Left, Actions Right)**:
+  - Every question card positions the completion checkmark box at the leading left position immediately before the `Year` badge and metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`) on the **left side** (`.q-item-left-meta` / `.q-item-badges`).
+  - Action controls (`Star` button, `Save for Later` button, `Personal Note` button, and accordion toggle chevron) remain cleanly anchored on the **far right corner** (`.q-item-right-meta` / `.q-item-actions`).
+  - The checkmark box maintains a clean, light surface (`--checkbox-bg`) and crisp visible border (`--checkbox-border`), avoiding dark or recessed fills in both light and dark modes.
 - **Clean & Un-Cardified Editorial Solutions (Zero Sub-Card Boxes)**:
   - Individual solution points, assumptions, and steps must NEVER be wrapped in nested card containers (`.sol-item-card`), background fills (`--solution-card-bg`), box shadows, or square badge boxes (`.sol-item-badge`).
   - Solutions format as clean, elegant typographic rows (`.sol-item-row`) with natural numbers (`1.`, `2.`), bold concept titles, comfortable line-height (`1.75`), and dedicated lines for examples (`Example: ...`).

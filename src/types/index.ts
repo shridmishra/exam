@@ -16,7 +16,7 @@ export interface Question {
   cluster_id: string | null;
   question: string;
   solution: string;
-  formatted_solution: string;
+  formatted_solution?: string;
 }
 
 export interface TopicCluster {

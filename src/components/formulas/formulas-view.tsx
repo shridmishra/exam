@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useDeferredValue } from "react";
 import {
   Search01Icon,
   Cancel01Icon,
@@ -15,17 +15,125 @@ import { MathRenderer } from "@/components/common/math-renderer";
 import { toast } from "@/components/ui/sonner";
 import { MasterFormula } from "@/types";
 import { cn } from "@/lib/utils";
+import rawDefaultFormulas from "@/data/formulas.json";
 
 interface FormulasViewProps {
-  formulas: MasterFormula[];
+  formulas?: MasterFormula[];
   unitTitles: Record<string, string>;
 }
 
-export function FormulasView({ formulas, unitTitles }: FormulasViewProps) {
+interface FormulaCardProps {
+  formula: MasterFormula;
+  unitTitle: string;
+  onCopy: (formula: MasterFormula) => void;
+}
+
+const FormulaCard = React.memo(function FormulaCard({
+  formula,
+  unitTitle,
+  onCopy,
+}: FormulaCardProps) {
+  return (
+    <Card className="shadow-xs card-content-visibility">
+      <CardHeader className="p-3.5 sm:p-5 pb-2">
+        <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 mb-1.5">
+          <Badge variant="subtle" className="text-xs">
+            Unit {formula.unit} &bull; {unitTitle}
+          </Badge>
+          {formula.frequency && (
+            <Badge variant="repeat3x" className="text-xs font-semibold">
+              {formula.frequency.replace(/\s*\([^)]*\)/g, "").trim()}
+            </Badge>
+          )}
+        </div>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="text-sm sm:text-base font-semibold text-foreground leading-snug">
+            {formula.title}
+          </CardTitle>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => onCopy(formula)}
+            className="h-7 w-7 shrink-0 text-muted-foreground/60 hover:text-foreground"
+            title="Copy formula LaTeX to clipboard"
+            aria-label="Copy formula"
+          >
+            <Copy01Icon className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+      </CardHeader>
+
+      <CardContent className="p-3.5 sm:p-5 pt-1 sm:pt-2 space-y-3">
+        {/* Formula Equations Display (Merged with normal card BG, Unified UI) */}
+        <div className="space-y-2 py-1 text-center">
+          <div className="overflow-x-auto no-scrollbar py-1 text-foreground overscroll-x-contain">
+            <MathRenderer
+              content={formula.latex_main}
+              isDisplay={true}
+              className="!bg-transparent !p-0 !m-0 text-foreground"
+            />
+          </div>
+
+          {formula.latex_sub && (
+            <div className="overflow-x-auto no-scrollbar py-1 text-foreground overscroll-x-contain">
+              <MathRenderer
+                content={formula.latex_sub}
+                isDisplay={true}
+                className="!bg-transparent !p-0 !m-0 text-foreground"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Parameters Breakdown */}
+        {formula.params && formula.params.length > 0 && (
+          <div className="mt-3 space-y-1.5 pt-2">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground block">
+              Parameters &amp; Units:
+            </span>
+            <div className="grid grid-cols-1 divide-y divide-border/20 text-xs sm:text-[13px]">
+              {formula.params.map((p, idx) => (
+                <div key={idx} className="flex items-start gap-2.5 py-1.5">
+                  <span className="w-9 sm:w-11 shrink-0 font-semibold text-foreground text-left">
+                    <MathRenderer content={p.sym} isDisplay={false} />
+                  </span>
+                  <span className="flex-1 text-left text-muted-foreground leading-relaxed break-words">
+                    {p.name}
+                  </span>
+                  {p.unit && (
+                    <span className="shrink-0 self-start text-[11px] sm:text-xs text-muted-foreground/90 bg-secondary px-2 py-0.5 rounded-md font-mono tabular-nums">
+                      {p.unit}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Engineering Notes */}
+        {formula.notes && (
+          <div className="rounded-xl bg-secondary/40 p-3 text-xs sm:text-[13px] text-muted-foreground leading-relaxed">
+            <strong className="text-foreground font-semibold">Notes: </strong>
+            {formula.notes}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+});
+
+export function FormulasView({
+  formulas = (rawDefaultFormulas as MasterFormula[]),
+  unitTitles,
+}: FormulasViewProps) {
   const [selectedUnit, setSelectedUnit] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const deferredSearch = useDeferredValue(searchQuery);
 
   const filteredFormulas = useMemo(() => {
+    const q = deferredSearch ? deferredSearch.toLowerCase().trim() : "";
     return formulas.filter((f) => {
       // Unit filter
       if (selectedUnit !== "all" && String(f.unit) !== selectedUnit) {
@@ -33,16 +141,15 @@ export function FormulasView({ formulas, unitTitles }: FormulasViewProps) {
       }
 
       // Search filter
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
+      if (q) {
         const text =
           `${f.title} ${f.notes} ${f.latex_raw} ${f.params.map((p) => `${p.sym} ${p.name}`).join(" ")}`.toLowerCase();
-        if (!text.includes(query)) return false;
+        if (!text.includes(q)) return false;
       }
 
       return true;
     });
-  }, [formulas, selectedUnit, searchQuery]);
+  }, [formulas, selectedUnit, deferredSearch]);
 
   const handleReset = () => {
     setSelectedUnit("all");
@@ -64,7 +171,7 @@ export function FormulasView({ formulas, unitTitles }: FormulasViewProps) {
     <div className="space-y-6">
       {/* Title */}
       <div>
-        <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+        <h1 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
           Master Formulas
         </h1>
       </div>
@@ -164,96 +271,12 @@ export function FormulasView({ formulas, unitTitles }: FormulasViewProps) {
       {/* Cards Grid */}
       <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
         {filteredFormulas.map((formula) => (
-          <Card key={formula.id} className="shadow-xs">
-            <CardHeader className="p-3.5 sm:p-5 pb-2">
-              <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 mb-1.5">
-                <Badge variant="subtle" className="text-xs">
-                  Unit {formula.unit} &bull; {unitTitles[String(formula.unit)] || `Unit ${formula.unit}`}
-                </Badge>
-                {formula.frequency && (
-                  <Badge variant="repeat3x" className="text-xs font-semibold">
-                    {formula.frequency.replace(/\s*\([^)]*\)/g, "").trim()}
-                  </Badge>
-                )}
-              </div>
-              <div className="flex items-start justify-between gap-2">
-                <CardTitle className="text-sm sm:text-base font-semibold text-foreground leading-snug">
-                  {formula.title}
-                </CardTitle>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleCopyFormula(formula)}
-                  className="h-7 w-7 shrink-0 text-muted-foreground/60 hover:text-foreground"
-                  title="Copy formula LaTeX to clipboard"
-                  aria-label="Copy formula"
-                >
-                  <Copy01Icon className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            </CardHeader>
-
-            <CardContent className="p-3.5 sm:p-5 pt-1 sm:pt-2 space-y-3">
-              {/* Formula Equations Display (Merged with normal card BG, Unified UI) */}
-              <div className="space-y-2 py-1 text-center">
-                <div className="overflow-x-auto no-scrollbar py-1 text-foreground overscroll-x-contain">
-                  <MathRenderer
-                    content={formula.latex_main}
-                    isDisplay={true}
-                    className="!bg-transparent !p-0 !m-0 text-foreground"
-                  />
-                </div>
-
-                {formula.latex_sub && (
-                  <div className="overflow-x-auto no-scrollbar py-1 text-foreground overscroll-x-contain">
-                    <MathRenderer
-                      content={formula.latex_sub}
-                      isDisplay={true}
-                      className="!bg-transparent !p-0 !m-0 text-foreground"
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Parameters Breakdown */}
-              {formula.params && formula.params.length > 0 && (
-                <div className="mt-3 space-y-1.5 pt-2">
-                  <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground block">
-                    Parameters &amp; Units:
-                  </span>
-                  <div className="grid grid-cols-1 divide-y divide-border/20 text-xs sm:text-[13px]">
-                    {formula.params.map((p, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-start gap-2.5 py-1.5"
-                      >
-                        <span className="w-9 sm:w-11 shrink-0 font-semibold text-foreground text-left">
-                          <MathRenderer content={p.sym} isDisplay={false} />
-                        </span>
-                        <span className="flex-1 text-left text-muted-foreground leading-relaxed break-words">
-                          {p.name}
-                        </span>
-                        {p.unit && (
-                          <span className="shrink-0 self-start text-[11px] sm:text-xs text-muted-foreground/90 bg-secondary px-2 py-0.5 rounded-md font-mono tabular-nums">
-                            {p.unit}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Engineering Notes */}
-              {formula.notes && (
-                <div className="rounded-xl bg-secondary/40 p-3 text-xs sm:text-[13px] text-muted-foreground leading-relaxed">
-                  <strong className="text-foreground font-semibold">Notes: </strong>
-                  {formula.notes}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <FormulaCard
+            key={formula.id}
+            formula={formula}
+            unitTitle={unitTitles[String(formula.unit)] || `Unit ${formula.unit}`}
+            onCopy={handleCopyFormula}
+          />
         ))}
       </div>
     </div>

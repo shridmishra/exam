@@ -21,6 +21,7 @@ import { ExamItem } from "@/types";
 import { STORAGE_KEYS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/sonner";
+import rawTimetable from "@/data/timetable.json";
 
 interface TimetablePresets {
   default: ExamItem[];
@@ -28,8 +29,10 @@ interface TimetablePresets {
 }
 
 interface TimetableProps {
-  presets: TimetablePresets;
+  presets?: TimetablePresets;
 }
+
+const defaultPresets = rawTimetable as TimetablePresets;
 
 const STORAGE_KEY_TIMETABLE = STORAGE_KEYS.TIMETABLE;
 
@@ -114,7 +117,7 @@ function recalculateGaps(items: ExamItem[]): ExamItem[] {
   });
 }
 
-export function TimetableView({ presets }: TimetableProps) {
+export function TimetableView({ presets = defaultPresets }: TimetableProps) {
   const hasHydratedRef = React.useRef(false);
 
   // Initialize schedule strictly with presets.default (3 regular papers, green)

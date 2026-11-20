@@ -23,7 +23,9 @@ const config: Config = {
   		fontFamily: {
   			sans: ['var(--font-sans)', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
   			mono: ['var(--font-mono)', 'var(--font-sans)', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
-  			'aeonik-medium': ['var(--font-sans)', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+  			heading: ['var(--font-aeonik)', 'Aeonik', 'var(--font-sans)', 'sans-serif'],
+  			aeonik: ['var(--font-aeonik)', 'Aeonik', 'var(--font-sans)', 'sans-serif'],
+  			'aeonik-medium': ['var(--font-aeonik)', 'Aeonik', 'var(--font-sans)', 'sans-serif'],
   		},
   		fontSize: {
   			h1: [
@@ -145,6 +147,12 @@ const config: Config = {
   			'filter-active': {
   				DEFAULT: 'hsl(var(--filter-active-bg))',
   				foreground: 'hsl(var(--filter-active-fg))'
+  			},
+  			checkbox: {
+  				bg: 'var(--checkbox-bg)',
+  				border: 'var(--checkbox-border)',
+  				hover: 'var(--checkbox-hover-bg)',
+  				'hover-border': 'var(--checkbox-hover-border)'
   			},
   			year: {
   				'2022': {
