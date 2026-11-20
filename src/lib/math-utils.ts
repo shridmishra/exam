@@ -316,6 +316,25 @@ export function enhanceSolutionHtml(html: string): string {
   // Restore protected code blocks
   s = s.replace(/@@PROTECTED_CODE_(\d+)@@/g, (_, idx) => codeBlocks[parseInt(idx, 10)] || "");
 
+  // 1b. Convert inline pseudo-bullets (<br>&bull; or <br>•) inside <li> into structured <ul class="sol-sublist">
+  s = s.replace(
+    /<li(\s+[^>]*)?>([\s\S]*?)<\/li>/gi,
+    (orig, attrs = "", content) => {
+      if (content.includes("<ul") || content.includes("<ol")) return orig;
+      if (!/<br\s*\/?>\s*(?:&bull;|•)/i.test(content)) return orig;
+
+      const parts = content.split(/<br\s*\/?>\s*(?:&bull;|•)\s*/i);
+      const header = parts[0].trim();
+      const subItems = parts.slice(1).map((p: string) => p.trim()).filter(Boolean);
+      if (subItems.length === 0) return orig;
+
+      const sublist = `<ul class="sol-sublist">${subItems
+        .map((item: string) => `<li>${item}</li>`)
+        .join("")}</ul>`;
+      return `<li${attrs}>${header}${sublist}</li>`;
+    }
+  );
+
   // 2. Mark list items `<li>` and rows `.sol-item-row` that contain a final answer or safety badge
   s = s.replace(
     /<li(\s+[^>]*)?>([\s\S]*?)<\/li>/gi,
