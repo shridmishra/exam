@@ -20,7 +20,7 @@ interface MathRendererProps {
   className?: string;
 }
 
-export function MathRenderer({
+export const MathRenderer = React.memo(function MathRenderer({
   content,
   isDisplay = false,
   className,
@@ -52,7 +52,7 @@ export function MathRenderer({
       dangerouslySetInnerHTML={{ __html: rendered }}
     />
   );
-}
+});
 
 export interface RichMathTextProps {
   text: string;

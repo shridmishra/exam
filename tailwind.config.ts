@@ -3,7 +3,6 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   darkMode: ["class"],
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
@@ -21,11 +20,14 @@ const config: Config = {
   	},
   	extend: {
   		fontFamily: {
-  			sans: ['var(--font-sans)', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
-  			mono: ['var(--font-mono)', 'var(--font-sans)', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
-  			heading: ['var(--font-aeonik)', 'Aeonik', 'var(--font-sans)', 'sans-serif'],
-  			aeonik: ['var(--font-aeonik)', 'Aeonik', 'var(--font-sans)', 'sans-serif'],
-  			'aeonik-medium': ['var(--font-aeonik)', 'Aeonik', 'var(--font-sans)', 'sans-serif'],
+  			sans: ['var(--font-reading)', 'var(--font-inter)', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+  			reading: ['var(--font-reading)', 'var(--font-inter)', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+  			mono: ['var(--font-mono)', 'monospace'],
+  			heading: ['var(--font-google-sans)', '"Google Sans"', 'sans-serif'],
+  			'google-sans': ['var(--font-google-sans)', '"Google Sans"', 'sans-serif'],
+  			'google-sans-medium': ['var(--font-google-sans)', '"Google Sans"', 'sans-serif'],
+  			aeonik: ['var(--font-google-sans)', '"Google Sans"', 'sans-serif'],
+  			'aeonik-medium': ['var(--font-google-sans)', '"Google Sans"', 'sans-serif'],
   		},
   		fontSize: {
   			h1: [

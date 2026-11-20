@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useRef, useDeferredValue } from "react";
+import React, { useState, useEffect, useMemo, useRef, useDeferredValue, useCallback } from "react";
 import { ProgressRing } from "./progress-ring";
 import { YearPills } from "./year-pills";
 import { ControlPanel } from "./control-panel";
@@ -16,6 +16,7 @@ interface ChecklistViewProps {
   questions: Question[];
   clusters?: TopicCluster[];
   unitTitles: Record<string, string>;
+  subjectName?: string;
   storagePrefix?: string;
   onNotesCountChange?: (count: number) => void;
 }
@@ -24,6 +25,7 @@ export function ChecklistView({
   questions,
   clusters,
   unitTitles,
+  subjectName,
   storagePrefix = "geotech",
   onNotesCountChange,
 }: ChecklistViewProps) {
@@ -194,8 +196,8 @@ export function ChecklistView({
     return q.q_no.startsWith("Q.") ? q.q_no : `Q.${q.q_no}`;
   };
 
-  // Toggle handlers
-  const toggleComplete = (id: string) => {
+  // Toggle handlers wrapped in useCallback to avoid recreating closures on re-render
+  const toggleComplete = useCallback((id: string) => {
     const q = questionMap.get(id);
     const qLabel = getQNumberLabel(q);
 
@@ -225,9 +227,9 @@ export function ChecklistView({
 
       return next;
     });
-  };
+  }, [questionMap, STORAGE_KEY_COMPLETED]);
 
-  const toggleStar = (id: string) => {
+  const toggleStar = useCallback((id: string) => {
     const q = questionMap.get(id);
     const qLabel = getQNumberLabel(q);
 
@@ -253,9 +255,9 @@ export function ChecklistView({
 
       return next;
     });
-  };
+  }, [questionMap, STORAGE_KEY_STARRED]);
 
-  const toggleLater = (id: string) => {
+  const toggleLater = useCallback((id: string) => {
     const q = questionMap.get(id);
     const qLabel = getQNumberLabel(q);
 
@@ -281,9 +283,9 @@ export function ChecklistView({
 
       return next;
     });
-  };
+  }, [questionMap, STORAGE_KEY_LATER]);
 
-  const handleSaveNote = (questionId: string, noteText: string) => {
+  const handleSaveNote = useCallback((questionId: string, noteText: string) => {
     const q = questionMap.get(questionId);
     const qLabel = getQNumberLabel(q);
 
@@ -307,16 +309,16 @@ export function ChecklistView({
 
       return next;
     });
-  };
+  }, [questionMap, STORAGE_KEY_NOTES]);
 
-  const toggleCard = (id: string) => {
+  const toggleCard = useCallback((id: string) => {
     setOpenCards((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
-  };
+  }, []);
 
   const handleResetProgress = () => {
     if (
@@ -355,9 +357,17 @@ export function ChecklistView({
   const yearCounts = useMemo(() => {
     const counts: Record<string, { done: number; total: number }> = {};
     for (const y of years) {
-      const yearQuestions = questions.filter((q) => String(q.year) === y);
-      const doneCount = yearQuestions.filter((q) => completed.has(q.id)).length;
-      counts[y] = { done: doneCount, total: yearQuestions.length };
+      counts[y] = { done: 0, total: 0 };
+    }
+    for (const q of questions) {
+      const y = String(q.year);
+      if (!counts[y]) {
+        counts[y] = { done: 0, total: 0 };
+      }
+      counts[y].total++;
+      if (completed.has(q.id)) {
+        counts[y].done++;
+      }
     }
     return counts;
   }, [years, questions, completed]);
@@ -428,7 +438,7 @@ export function ChecklistView({
     filteredQuestions.length > 0 &&
     filteredQuestions.every((q) => openCards.has(q.id));
 
-  const handleToggleExpandAll = () => {
+  const handleToggleExpandAll = useCallback(() => {
     if (allVisibleExpanded) {
       setOpenCards(new Set());
       toast.info("Collapsed all questions");
@@ -436,9 +446,9 @@ export function ChecklistView({
       setOpenCards(new Set(filteredQuestions.map((q) => q.id)));
       toast.info(`Expanded ${filteredQuestions.length} questions`);
     }
-  };
+  }, [allVisibleExpanded, filteredQuestions]);
 
-  const handleResetFilters = () => {
+  const handleResetFilters = useCallback(() => {
     setFilters({
       year: "all",
       unit: "all",
@@ -449,7 +459,7 @@ export function ChecklistView({
       search: "",
     });
     toast.info("Filters reset to default");
-  };
+  }, []);
 
   // Check if "Most Repeated" mode is active
   const isRepeatedMode = filters.repeated !== "all";
@@ -557,9 +567,21 @@ export function ChecklistView({
     return tiers;
   }, [isRepeatedMode, filteredQuestions, loadedClusters, unitTitles, filters.repeated]);
 
-  // Chronological Year -> Unit organization for normal mode
+  // Chronological Year -> Unit organization for normal mode (single-pass O(N) grouping)
   const chronologicalSections = useMemo(() => {
     if (isRepeatedMode) return null;
+
+    const activeYears = filters.year === "all" ? years : [filters.year];
+    const allowedYears = new Set(activeYears);
+
+    // Single-pass O(N) grouping: year -> unit -> questions
+    const grouped: Record<string, Record<number, Question[]>> = {};
+    for (const q of filteredQuestions) {
+      if (!allowedYears.has(q.year)) continue;
+      if (!grouped[q.year]) grouped[q.year] = {};
+      if (!grouped[q.year][q.unit]) grouped[q.year][q.unit] = [];
+      grouped[q.year][q.unit].push(q);
+    }
 
     const sections: {
       year: string;
@@ -570,17 +592,9 @@ export function ChecklistView({
       }[];
     }[] = [];
 
-    const activeYears = filters.year === "all" ? years : [filters.year];
-
     for (const y of activeYears) {
-      const yearQuestions = filteredQuestions.filter((q) => q.year === y);
-      if (yearQuestions.length === 0) continue;
-
-      const unitGroups: Record<number, Question[]> = {};
-      for (const q of yearQuestions) {
-        if (!unitGroups[q.unit]) unitGroups[q.unit] = [];
-        unitGroups[q.unit].push(q);
-      }
+      const unitGroups = grouped[y];
+      if (!unitGroups) continue;
 
       const unitList = Object.keys(unitGroups)
         .map(Number)
@@ -607,6 +621,12 @@ export function ChecklistView({
         <div className="flex items-center gap-2.5">
           <h1 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
             Checklist
+            {subjectName && (
+              <span className="sr-only">
+                {" "}
+                — {subjectName} Previous Year Questions &amp; Analysis
+              </span>
+            )}
           </h1>
           {completedCount > 0 && (
             <Button

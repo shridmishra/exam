@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
 import {
   Clock01Icon,
   PencilEdit02Icon,
@@ -21,6 +22,7 @@ import { ExamItem } from "@/types";
 import { STORAGE_KEYS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/sonner";
+import { tabSpringTransition, filterSpringTransition } from "@/lib/motion";
 import rawTimetable from "@/data/timetable.json";
 
 interface TimetablePresets {
@@ -461,51 +463,63 @@ export function TimetableView({ presets = defaultPresets }: TimetableProps) {
 
       {/* Super Minimal Controls & Directly Colored Filter Badges */}
       <div className="controls-bar-minimal">
-        <div className="filter-tabs-minimal">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => setActiveFilter("all")}
-            className={cn("tab-pill tab-pill-all", activeFilter === "all" && "active")}
-          >
-            All <span className="pill-count">{totalCount}</span>
-          </Button>
-
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => setActiveFilter("regular")}
-            className={cn(
-              "tab-pill tab-pill-regular",
-              activeFilter === "regular" && "active"
-            )}
-          >
-            Regular <span className="pill-count">{regCount}</span>
-          </Button>
-
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => setActiveFilter("old")}
-            className={cn(
-              "tab-pill tab-pill-old",
-              activeFilter === "old" && "active"
-            )}
-          >
-            Backlog <span className="pill-count">{oldCount}</span>
-          </Button>
-
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => setActiveFilter("done")}
-            className={cn(
-              "tab-pill tab-pill-done",
-              activeFilter === "done" && "active"
-            )}
-          >
-            Done <span className="pill-count">{doneCount}</span>
-          </Button>
+        <div className="filter-tabs-minimal relative">
+          {[
+            {
+              id: "all" as const,
+              label: "All",
+              count: totalCount,
+              className: "tab-pill tab-pill-all",
+              activePillClass: "bg-foreground text-background",
+            },
+            {
+              id: "regular" as const,
+              label: "Regular",
+              count: regCount,
+              className: "tab-pill tab-pill-regular",
+              activePillClass: "bg-[#205c36] dark:bg-[#059669] text-white",
+            },
+            {
+              id: "old" as const,
+              label: "Backlog",
+              count: oldCount,
+              className: "tab-pill tab-pill-old",
+              activePillClass: "bg-[#9a4318] dark:bg-[#ea580c] text-white",
+            },
+            {
+              id: "done" as const,
+              label: "Done",
+              count: doneCount,
+              className: "tab-pill tab-pill-done",
+              activePillClass: "bg-[#64748b] dark:bg-[#52525b] text-white",
+            },
+          ].map((tab) => {
+            const isActive = activeFilter === tab.id;
+            return (
+              <Button
+                key={tab.id}
+                type="button"
+                variant="ghost"
+                onClick={() => setActiveFilter(tab.id)}
+                className={cn(
+                  tab.className,
+                  "relative select-none",
+                  isActive && "active"
+                )}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="timetable-filter-pill"
+                    className={cn("absolute inset-0 rounded-full shadow-2xs", tab.activePillClass)}
+                    transition={filterSpringTransition}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-1.5">
+                  {tab.label} <span className="pill-count">{tab.count}</span>
+                </span>
+              </Button>
+            );
+          })}
         </div>
 
         <div className="controls-right-minimal">
@@ -520,34 +534,36 @@ export function TimetableView({ presets = defaultPresets }: TimetableProps) {
             <span>Edit</span>
           </Button>
 
-          <div className="view-switchers-minimal">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setActiveView("calendar")}
-              className={cn("view-pill", activeView === "calendar" && "active")}
-              title="Monthly calendars"
-            >
-              Calendar
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setActiveView("table")}
-              className={cn("view-pill", activeView === "table" && "active")}
-              title="Table view"
-            >
-              Table
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setActiveView("timeline")}
-              className={cn("view-pill", activeView === "timeline" && "active")}
-              title="Timeline view"
-            >
-              Timeline
-            </Button>
+          <div className="view-switchers-minimal relative">
+            {[
+              { id: "calendar" as const, label: "Calendar", title: "Monthly calendars" },
+              { id: "table" as const, label: "Table", title: "Table view" },
+              { id: "timeline" as const, label: "Timeline", title: "Timeline view" },
+            ].map((view) => {
+              const isActive = activeView === view.id;
+              return (
+                <Button
+                  key={view.id}
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setActiveView(view.id)}
+                  className={cn(
+                    "relative view-pill select-none transition-colors",
+                    isActive ? "text-foreground font-semibold" : "text-muted-foreground hover:text-foreground"
+                  )}
+                  title={view.title}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="timetable-view-pill"
+                      className="absolute inset-0 rounded-full bg-card dark:bg-[#27272a] shadow-xs"
+                      transition={tabSpringTransition}
+                    />
+                  )}
+                  <span className="relative z-10">{view.label}</span>
+                </Button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -770,6 +786,7 @@ export function TimetableView({ presets = defaultPresets }: TimetableProps) {
                     </td>
                     <td>
                       <strong
+                        className="font-heading"
                         style={{
                           color: item.completed
                             ? "hsl(var(--muted-foreground))"
@@ -885,6 +902,7 @@ export function TimetableView({ presets = defaultPresets }: TimetableProps) {
               >
                 <div style={{ minWidth: "110px" }}>
                   <div
+                    className="font-heading"
                     style={{
                       fontSize: "16px",
                       fontWeight: 700,
@@ -942,6 +960,7 @@ export function TimetableView({ presets = defaultPresets }: TimetableProps) {
                     )}
                   </div>
                   <div
+                    className="font-heading"
                     style={{
                       fontSize: "14px",
                       fontWeight: 600,

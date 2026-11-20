@@ -1,65 +1,73 @@
 @import "katex/dist/katex.min.css";
+@import "@fontsource/google-sans/400.css";
+@import "@fontsource/google-sans/400-italic.css";
+@import "@fontsource/google-sans/500.css";
+@import "@fontsource/google-sans/500-italic.css";
+@import "@fontsource/google-sans/600.css";
+@import "@fontsource/google-sans/600-italic.css";
+@import "@fontsource/google-sans/700.css";
+@import "@fontsource/google-sans/700-italic.css";
 
-/* Aeonik Font Faces */
+/* Google Sans Font Faces (Local Assets) */
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/AeonikTRIAL-Light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/AeonikTRIAL-LightItalic.otf') format('opentype');
-  font-weight: 300;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/AeonikTRIAL-Regular.otf') format('opentype');
+  font-family: 'Google Sans';
+  src: url('/fonts/GoogleSans-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/AeonikTRIAL-RegularItalic.otf') format('opentype');
+  font-family: 'Google Sans';
+  src: url('/fonts/GoogleSans-Italic.woff2') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/AeonikTRIAL-Regular.otf') format('opentype');
+  font-family: 'Google Sans';
+  src: url('/fonts/GoogleSans-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/AeonikTRIAL-Bold.otf') format('opentype');
+  font-family: 'Google Sans';
+  src: url('/fonts/GoogleSans-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  src: url('/fonts/GoogleSans-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/AeonikTRIAL-Bold.otf') format('opentype');
+  font-family: 'Google Sans';
+  src: url('/fonts/GoogleSans-SemiBoldItalic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  src: url('/fonts/GoogleSans-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/AeonikTRIAL-BoldItalic.otf') format('opentype');
+  font-family: 'Google Sans';
+  src: url('/fonts/GoogleSans-BoldItalic.woff2') format('woff2');
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -72,14 +80,16 @@
 @layer base {
   :root {
     /* Font Families & Fallbacks */
-    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-family-sans: var(--font-sans);
-    --font-aeonik: "Aeonik", var(--font-sans), sans-serif;
-    --font-family-aeonik: var(--font-aeonik);
-    --font-heading: var(--font-aeonik);
+    --font-heading: var(--font-google-sans), "Google Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-family-heading: var(--font-heading);
-    --font-mono: var(--font-sans);
-    --font-family-mono: var(--font-sans);
+    --font-reading: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-sans: var(--font-reading);
+    --font-family-sans: var(--font-sans);
+    --font-google-sans-family: var(--font-heading);
+    --font-aeonik: var(--font-heading);
+    --font-family-aeonik: var(--font-aeonik);
+    --font-mono: var(--font-reading);
+    --font-family-mono: var(--font-mono);
 
     /* Strict Typography Tokens (AGENTS.md & User Global Rules) */
     --font-size-h1: 56px;
@@ -191,6 +201,10 @@
     --badge-repeat-2x-bg: #fffbeb;
     --badge-repeat-2x-fg: #b45309;
 
+    /* Heart love badge */
+    --badge-love-bg: #fee2e2;
+    --badge-love-fg: #e11d48;
+
     /* Progress ring */
     --ring-grad-start: #3b82f6;
     --ring-grad-end: #10b981;
@@ -212,6 +226,19 @@
     --pastel-done-foreground: #64748b;
     --pastel-done-muted: #f4f3ef;
     --pastel-done-count-bg: rgba(100, 116, 139, 0.14);
+
+    /* Final Answer & Verification Tokens (Muted Minimal Sage Green - Light Mode) */
+    --ans-muted-bg: rgba(30, 94, 58, 0.05);
+    --ans-muted-border: rgba(30, 94, 58, 0.22);
+    --ans-muted-fg: #1e5e3a;
+    --ans-pill-bg: #eaf4ed;
+    --ans-pill-fg: #1e5e3a;
+    --ans-pill-border: rgba(30, 94, 58, 0.24);
+    --ans-tag-bg: #eaf4ed;
+    --ans-tag-fg: #1e5e3a;
+    --ans-tag-border: rgba(30, 94, 58, 0.22);
+    --ans-highlight-bg: rgba(30, 94, 58, 0.07);
+    --ans-highlight-fg: #14532d;
   }
 
   .dark {
@@ -298,6 +325,10 @@
     --badge-repeat-2x-bg: rgba(180, 83, 9, 0.3);
     --badge-repeat-2x-fg: #fde68a;
 
+    /* Heart love badge */
+    --badge-love-bg: rgba(225, 29, 72, 0.2);
+    --badge-love-fg: #fb7185;
+
     /* Progress ring */
     --ring-grad-start: #60a5fa;
     --ring-grad-end: #34d399;
@@ -319,6 +350,19 @@
     --pastel-done-foreground: #a1a1aa;
     --pastel-done-muted: rgba(161, 161, 170, 0.06);
     --pastel-done-count-bg: rgba(161, 161, 170, 0.20);
+
+    /* Final Answer & Verification Tokens (Muted Minimal Sage Green - Dark Mode) */
+    --ans-muted-bg: rgba(16, 185, 129, 0.07);
+    --ans-muted-border: rgba(52, 211, 153, 0.24);
+    --ans-muted-fg: #86efac;
+    --ans-pill-bg: rgba(30, 94, 58, 0.32);
+    --ans-pill-fg: #86efac;
+    --ans-pill-border: rgba(52, 211, 153, 0.24);
+    --ans-tag-bg: rgba(30, 94, 58, 0.32);
+    --ans-tag-fg: #86efac;
+    --ans-tag-border: rgba(52, 211, 153, 0.25);
+    --ans-highlight-bg: rgba(16, 185, 129, 0.12);
+    --ans-highlight-fg: #a7f3d0;
   }
 }
 
@@ -357,7 +401,11 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* All Headings use Font Aeonik */
+  button, input, select, textarea {
+    font-family: inherit;
+  }
+
+  /* All Headings use Font Google Sans */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
   }
@@ -365,6 +413,15 @@
 
 .font-heading {
   font-family: var(--font-heading);
+}
+
+.font-google-sans {
+  font-family: var(--font-heading);
+}
+
+.font-google-sans-medium {
+  font-family: var(--font-heading);
+  font-weight: 500;
 }
 
 .font-aeonik {
@@ -791,6 +848,7 @@
   border-radius: 9999px;
   font-size: 0.8125rem;
   font-weight: 500;
+  font-family: var(--font-heading);
   color: hsl(var(--foreground));
 }
 
@@ -829,6 +887,7 @@
 .tab-pill {
   position: relative;
   border: none !important;
+  font-family: var(--font-heading);
   font-size: 0.875rem;
   font-weight: 600;
   padding: 6px 13px;
@@ -846,11 +905,16 @@
 }
 
 .pill-count {
+  font-family: var(--font-heading);
   font-size: 11px;
   padding: 1px 6px;
   border-radius: 9999px;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
+}
+
+.tab-pill.active {
+  background-color: transparent !important;
 }
 
 /* 1. All Filter (Neutral) */
@@ -977,6 +1041,7 @@
 
 .view-pill {
   border: none;
+  font-family: var(--font-heading);
   color: hsl(var(--muted-foreground));
   font-size: 0.8125rem;
   font-weight: 500;
@@ -992,15 +1057,15 @@
 }
 
 .view-pill.active {
-  background: hsl(var(--card)) !important;
+  background: transparent !important;
   color: hsl(var(--foreground)) !important;
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: none !important;
 }
 
 .dark .view-pill.active {
-  background: #27272a !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* ----------------------------------------------------
@@ -1188,6 +1253,30 @@
   color: hsl(var(--muted-foreground));
 }
 
+.heart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background-color: var(--badge-love-bg);
+  color: var(--badge-love-fg);
+  vertical-align: middle;
+  margin: 0 4px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.heart-badge:hover {
+  transform: scale(1.18);
+}
+
+.heart-badge svg {
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+}
+
 /* ----------------------------------------------------
    TABLE VIEW (ZERO BORDERS • PURE BG SEPARATION)
    ---------------------------------------------------- */
@@ -1207,6 +1296,7 @@
 }
 
 .table-wrap th {
+  font-family: var(--font-heading);
   background: hsl(var(--secondary));
   color: hsl(var(--muted-foreground));
   font-size: 11px;
@@ -1249,7 +1339,7 @@
 }
 
 .code-tag {
-  font-family: inherit;
+  font-family: var(--font-heading);
   font-size: 0.8125rem;
   background: hsl(var(--secondary));
   padding: 2px 6px;
@@ -1261,6 +1351,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  font-family: var(--font-heading);
   font-size: 11.5px;
   font-weight: 600;
   padding: 3px 9px;

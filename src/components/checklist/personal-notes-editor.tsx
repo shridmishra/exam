@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,7 @@ import {
   ViewIcon,
   PencilEdit01Icon,
 } from "@/components/ui/icons";
+import { tabSpringTransition } from "@/lib/motion";
 
 interface PersonalNotesEditorProps {
   question: Question | null;
@@ -28,7 +30,7 @@ interface PersonalNotesEditorProps {
   initialNote?: string;
 }
 
-export function PersonalNotesEditor({
+export const PersonalNotesEditor = React.memo(function PersonalNotesEditor({
   question,
   isOpen,
   onClose,
@@ -73,14 +75,38 @@ export function PersonalNotesEditor({
           onValueChange={(val) => setActiveTab(val as "edit" | "preview")}
           className="mt-2"
         >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="edit" className="gap-1.5 text-xs">
-              <PencilEdit01Icon className="h-3.5 w-3.5" />
-              <span>Edit Markdown &amp; LaTeX</span>
+          <TabsList className="grid w-full grid-cols-2 relative p-1">
+            <TabsTrigger
+              value="edit"
+              className="relative gap-1.5 text-xs data-[state=active]:bg-transparent data-[state=active]:shadow-none select-none"
+            >
+              {activeTab === "edit" && (
+                <motion.div
+                  layoutId="notes-editor-tab-pill"
+                  className="absolute inset-0 rounded-md bg-background shadow-xs ring-1 ring-border/20"
+                  transition={tabSpringTransition}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-1.5">
+                <PencilEdit01Icon className="h-3.5 w-3.5" />
+                <span>Edit Markdown &amp; LaTeX</span>
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="preview" className="gap-1.5 text-xs">
-              <ViewIcon className="h-3.5 w-3.5" />
-              <span>Preview</span>
+            <TabsTrigger
+              value="preview"
+              className="relative gap-1.5 text-xs data-[state=active]:bg-transparent data-[state=active]:shadow-none select-none"
+            >
+              {activeTab === "preview" && (
+                <motion.div
+                  layoutId="notes-editor-tab-pill"
+                  className="absolute inset-0 rounded-md bg-background shadow-xs ring-1 ring-border/20"
+                  transition={tabSpringTransition}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-1.5">
+                <ViewIcon className="h-3.5 w-3.5" />
+                <span>Preview</span>
+              </span>
             </TabsTrigger>
           </TabsList>
 
@@ -145,4 +171,4 @@ export function PersonalNotesEditor({
       </DialogContent>
     </Dialog>
   );
-}
+});

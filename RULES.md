@@ -23,6 +23,11 @@
   - Differences: Direct numbered contrast points highlighting failure plane, drainage control, stress distribution, and applicability.
   - Short Numericals: Given parameters, governing formula, step-by-step substitution, and final result with units.
 - **Use semantic micro-chips**: `<span class="formula-chip-sm">` for formulas/symbols and `<span class="note-highlight">` for notable highlights.
+- **Muted Minimal Green Final Answer & Safety Verification System (MANDATORY)**:
+  - Final answers, design recommendations, and safety verification results must be rendered with minimal, muted green accents, never monotone raw text.
+  - Verification statements (`(Safe against Bligh creep)`, `[Safe & watertight]`, `(Safe)`, `(OK)`, etc.) render as `<span class="sol-badge-safe"><span class="sol-badge-check">✓</span> Safe against...</span>` pills.
+  - Final answer prefixes (`Final Answer:`, `Ans:`, `Design Summary:`) render as `<span class="sol-ans-tag"><span class="sol-ans-tag-dot"></span>Ans</span>`.
+  - Concluding rows and list items receive `.sol-item-final` for a subtle, minimal muted green wash and 2px left border accent.
 
 ---
 
@@ -43,6 +48,10 @@
   - **NEVER** apply `border: none !important;` to universal selectors (`*`, `*::before`, `*::after`). Doing so strips fraction division bars and mathematical lines.
   - Target form control resets specifically (`button, input, select, textarea { border: none; outline: none; }`).
   - Explicitly enforce `.katex .mfrac .frac-line { border-bottom-style: solid !important; border-bottom-width: max(1.2px, 0.05em) !important; border-bottom-color: currentColor !important; min-height: 1.2px !important; }` to guarantee crisp, distinct fraction dividing lines across all screen resolutions and dark/light themes.
+- **Formula Robustness & Zero Red KaTeX Errors (Anti-Regression Standard)**:
+  - Math strings must never leak raw HTML entities (`&beta;`, `&phi;`, `&gamma;`, `&radic;`, `&sup2;`) or HTML tags (`<sub>`, `<sup>`) into KaTeX.
+  - Literal `%` must be escaped (`\%`) and bare `&` outside matrices must be escaped (`\&`).
+  - Automated formula test suite (`npm run test:formulas` / `npm test`) scans all 4,600+ mathematical formulas across the repository on every build to guarantee zero KaTeX parse errors.
 - Unified canvas palette shared across Examination Timetable and PYQ Analysis Platform (`index.html` & `geotech_pyq_analysis.html`):
   - **Single Page Dashboard Integration**: Examination Timetable is fully integrated as a first-class page view inside `index.html` (`#view-timetable`, `switchPageView('timetable')`, `#timetable`), providing 0ms tab transitions without page reloads.
   - **Light Mode**: `--background: #fbfaf8` (warm linen/paper ivory), `--card: #ffffff`, `--secondary: #f3f1ec`, `--muted: #f3f1ec`, `--foreground: #1e293b`.
@@ -88,7 +97,8 @@
 ### [RULE 6] Question Presentation, Header Layout & Un-Cardified Solutions
 - **Question Card Header Layout (Checkbox & Badges Left, Actions Right)**:
   - Every question card positions the completion checkmark box at the leading left position immediately before the `Year` badge and metadata badges (`Year`, `Unit`, `Type`, `Marks`, `Repeat`) on the **left side** (`.q-item-left-meta` / `.q-item-badges`).
-  - Action controls (`Star` button, `Save for Later` button, `Personal Note` button, and accordion toggle chevron) remain cleanly anchored on the **far right corner** (`.q-item-right-meta` / `.q-item-actions`).
+  - Action controls (`Star` button, `Save for Later` button, `Personal Note` button) remain cleanly anchored on the **far right corner** as a self-contained action island (`.action-island`).
+  - **Subtle Answer Affordance at Bottom of Question**: The isolated accordion chevron is removed from the top-right header, replaced by a subtle "View Answer" / "Hide Answer" affordance with a mini-chevron positioned directly below the question statement, clearly communicating interactivity without visual clutter.
   - The checkmark box maintains a clean, light surface (`--checkbox-bg`) and crisp visible border (`--checkbox-border`), avoiding dark or recessed fills in both light and dark modes.
 - **Clean & Un-Cardified Editorial Solutions (Zero Sub-Card Boxes)**:
   - Individual solution points, assumptions, and steps must NEVER be wrapped in nested card containers (`.sol-item-card`), background fills (`--solution-card-bg`), box shadows, or square badge boxes (`.sol-item-badge`).
@@ -139,6 +149,11 @@
 - Near top of page (`scrollY <= 64px`), the header is guaranteed visible and protected against trackpad rubber-band bounce.
 - Switching views via `switchPageView()` or clicking back-to-top immediately resets and surfaces the navbar.
 - The header brand displays the clean title without redundant course code or colored brand badges.
+- **Subject Switcher Dropdown & Background Separation (MANDATORY)**:
+  - Dropdown options must feature visible separators (`DropdownMenuSeparator` with `h-px bg-border/40`) between every subject and an uppercase "Switch Subject" category header.
+  - Active/selected item must exhibit clear tonal background separation (`bg-secondary` in light mode, `dark:bg-filter-active` in dark mode) and a checkmark indicator.
+  - Hover and keyboard focus states (`data-[highlighted]`) must visibly contrast (`hover:bg-secondary/70 dark:hover:bg-filter-active/50`).
+  - Dropdown container enforces responsive bounds (`w-[calc(100vw-2rem)] sm:w-[340px] max-w-[340px]`) and standard dismiss behavior upon item selection or backdrop click.
 
 ---
 

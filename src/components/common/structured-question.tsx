@@ -219,18 +219,29 @@ function parseQuestionBlocks(rawText: string): ParsedBlock[] {
   return blocks;
 }
 
+const questionBlocksCache = new Map<string, ParsedBlock[]>();
+
+function getParsedQuestionBlocks(content: string): ParsedBlock[] {
+  if (!content) return [];
+  const cached = questionBlocksCache.get(content);
+  if (cached) return cached;
+  const blocks = parseQuestionBlocks(content);
+  questionBlocksCache.set(content, blocks);
+  return blocks;
+}
+
 export const StructuredQuestion = React.memo(function StructuredQuestion({
   content,
   isCompleted = false,
   className = "",
   qNo,
 }: StructuredQuestionProps) {
-  const blocks = useMemo(() => parseQuestionBlocks(content), [content]);
+  const blocks = useMemo(() => getParsedQuestionBlocks(content), [content]);
   const hasLeadBlock = blocks.length > 0 && blocks[0].type === "lead";
 
   return (
     <div
-      className={`space-y-2 text-foreground ${
+      className={`structured-question space-y-2 text-foreground font-sans ${
         isCompleted ? "opacity-75" : ""
       } ${className}`}
     >

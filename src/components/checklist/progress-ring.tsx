@@ -9,7 +9,7 @@ interface ProgressRingProps {
   isActiveFilter?: boolean;
 }
 
-export function ProgressRing({
+export const ProgressRing = React.memo(function ProgressRing({
   completed,
   total,
   onClick,
@@ -81,11 +81,11 @@ export function ProgressRing({
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center font-bold tabular-nums">
-        <span className="text-xs leading-none text-foreground">
+        <span className="font-heading text-xs leading-none text-foreground">
           {percentage}
           <span className="text-[10px] font-normal text-muted-foreground">%</span>
         </span>
       </div>
     </div>
   );
-}
+});

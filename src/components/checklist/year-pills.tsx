@@ -1,8 +1,11 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { filterSpringTransition } from "@/lib/motion";
 
 interface YearPillsProps {
   years: string[];
@@ -11,7 +14,7 @@ interface YearPillsProps {
   onSelectYear: (year: string) => void;
 }
 
-export function YearPills({
+export const YearPills = React.memo(function YearPills({
   years,
   counts,
   activeYear,
@@ -35,7 +38,7 @@ export function YearPills({
   };
 
   return (
-    <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap shrink-0">
+    <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap shrink-0 relative">
       {years.map((year) => {
         const stats = counts[year] || { done: 0, total: 0 };
         const isActive = activeYear === year;
@@ -46,22 +49,32 @@ export function YearPills({
             type="button"
             variant="ghost"
             onClick={() => onSelectYear(year)}
-            className={`h-auto flex items-center gap-1 sm:gap-1.5 rounded-full px-2 sm:px-2.5 py-1 text-xs shrink-0 whitespace-nowrap transition-all hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring ${
+            className={cn(
+              "relative h-auto flex items-center gap-1 sm:gap-1.5 rounded-full px-2 sm:px-2.5 py-1 text-xs shrink-0 whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-ring select-none",
               isActive
-                ? "bg-secondary font-semibold text-foreground shadow-2xs"
+                ? "font-semibold text-foreground bg-transparent"
                 : "bg-transparent text-muted-foreground hover:bg-secondary/60"
-            }`}
+            )}
             title={`View ${year} examination paper`}
           >
-            <Badge variant={getBadgeVariant(year)} className="text-[11px] sm:text-xs px-1.5 sm:px-2 py-0.5">
-              {year}
-            </Badge>
-            <span className="tabular-nums text-xs sm:text-[13px] text-foreground/80">
-              {stats.done}/{stats.total}
+            {isActive && (
+              <motion.div
+                layoutId="checklist-year-pills-active"
+                className="absolute inset-0 rounded-full bg-secondary shadow-2xs ring-1 ring-border/20"
+                transition={filterSpringTransition}
+              />
+            )}
+            <span className="relative z-10 flex items-center gap-1 sm:gap-1.5">
+              <Badge variant={getBadgeVariant(year)} className="font-heading text-[11px] sm:text-xs px-1.5 sm:px-2 py-0.5">
+                {year}
+              </Badge>
+              <span className="font-heading tabular-nums text-xs sm:text-[13px] text-foreground/80">
+                {stats.done}/{stats.total}
+              </span>
             </span>
           </Button>
         );
       })}
     </div>
   );
-}
+});

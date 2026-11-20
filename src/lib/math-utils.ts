@@ -50,36 +50,311 @@ export function safeRenderKatex(cleanLatex: string, isDisplay: boolean): string 
 
 /**
  * Sanitizes math content before passing to KaTeX.
- * Handles escaped characters, HTML entities, and degree symbols.
+ * Handles escaped characters, HTML entities, Greek letters, square roots, and degree symbols.
  */
-function cleanLatexString(raw: string): string {
+export function cleanLatexString(raw: string): string {
   if (!raw) return "";
   let clean = raw.trim();
-  // Unescape underscores from JSON or markdown
+
+  // 1. Convert HTML line breaks to LaTeX line breaks inside math
+  clean = clean.replace(/<br\s*\/?>/gi, " \\\\ ");
+
+  // 2. Unescape underscores from JSON or markdown
   clean = clean.replace(/\\_/g, "_");
-  // Normalize HTML entities that might have been escaped
+
+  // 3. HTML formatting tags inside math (convert to LaTeX formatting)
+  clean = clean.replace(/<sub\b[^>]*>(.*?)<\/sub>/gi, "_{$1}");
+  clean = clean.replace(/<sup\b[^>]*>(.*?)<\/sup>/gi, "^{$1}");
+  clean = clean.replace(/<strong\b[^>]*>(.*?)<\/strong>/gi, "\\mathbf{$1}");
+  clean = clean.replace(/<b\b[^>]*>(.*?)<\/b>/gi, "\\mathbf{$1}");
+  clean = clean.replace(/<em\b[^>]*>(.*?)<\/em>/gi, "\\mathrm{$1}");
+  clean = clean.replace(/<i\b[^>]*>(.*?)<\/i>/gi, "\\mathrm{$1}");
+  clean = clean.replace(/<span\b[^>]*>(.*?)<\/span>/gi, "$1");
+  clean = clean.replace(/<\/?[a-zA-Z][^>]*>/g, ""); // strip any remaining HTML tags
+
+  // 4. HTML Greek entities (lowercase)
+  clean = clean
+    .replace(/&alpha;/gi, "\\alpha ")
+    .replace(/&beta;/gi, "\\beta ")
+    .replace(/&gamma;/gi, "\\gamma ")
+    .replace(/&delta;/gi, "\\delta ")
+    .replace(/&epsilon;/gi, "\\epsilon ")
+    .replace(/&varepsilon;/gi, "\\varepsilon ")
+    .replace(/&zeta;/gi, "\\zeta ")
+    .replace(/&eta;/gi, "\\eta ")
+    .replace(/&theta;/gi, "\\theta ")
+    .replace(/&vartheta;/gi, "\\vartheta ")
+    .replace(/&iota;/gi, "\\iota ")
+    .replace(/&kappa;/gi, "\\kappa ")
+    .replace(/&lambda;/gi, "\\lambda ")
+    .replace(/&mu;/gi, "\\mu ")
+    .replace(/&nu;/gi, "\\nu ")
+    .replace(/&xi;/gi, "\\xi ")
+    .replace(/&pi;/gi, "\\pi ")
+    .replace(/&varpi;/gi, "\\varpi ")
+    .replace(/&rho;/gi, "\\rho ")
+    .replace(/&varrho;/gi, "\\varrho ")
+    .replace(/&sigma;/gi, "\\sigma ")
+    .replace(/&varsigma;/gi, "\\varsigma ")
+    .replace(/&tau;/gi, "\\tau ")
+    .replace(/&upsilon;/gi, "\\upsilon ")
+    .replace(/&phi;/gi, "\\phi ")
+    .replace(/&varphi;/gi, "\\varphi ")
+    .replace(/&chi;/gi, "\\chi ")
+    .replace(/&psi;/gi, "\\psi ")
+    .replace(/&omega;/gi, "\\omega ");
+
+  // 5. HTML Greek entities (uppercase)
+  clean = clean
+    .replace(/&Gamma;/g, "\\Gamma ")
+    .replace(/&Delta;/g, "\\Delta ")
+    .replace(/&Theta;/g, "\\Theta ")
+    .replace(/&Lambda;/g, "\\Lambda ")
+    .replace(/&Xi;/g, "\\Xi ")
+    .replace(/&Pi;/g, "\\Pi ")
+    .replace(/&Sigma;/g, "\\Sigma ")
+    .replace(/&Upsilon;/g, "\\Upsilon ")
+    .replace(/&Phi;/g, "\\Phi ")
+    .replace(/&Psi;/g, "\\Psi ")
+    .replace(/&Omega;/g, "\\Omega ");
+
+  // 6. Mathematical square roots & powers
+  clean = clean.replace(/&radic;\s*\(([^)]+)\)/g, "\\sqrt{$1}");
+  clean = clean.replace(/&radic;\s*\{([^}]+)\}/g, "\\sqrt{$1}");
+  clean = clean.replace(/&radic;\s*([a-zA-Z0-9]+)/g, "\\sqrt{$1}");
+  clean = clean.replace(/&radic;/g, "\\sqrt ");
+  clean = clean.replace(/\\sqrt\s*\(([^)]+)\)/g, "\\sqrt{$1}");
+
+  // Superscripts & exponents
+  clean = clean
+    .replace(/&sup0;/g, "^0")
+    .replace(/&sup1;/g, "^1")
+    .replace(/&sup2;/g, "^2")
+    .replace(/&sup3;/g, "^3")
+    .replace(/&sup4;/g, "^4")
+    .replace(/&sup5;/g, "^5")
+    .replace(/&sup6;/g, "^6")
+    .replace(/&sup7;/g, "^7")
+    .replace(/&sup8;/g, "^8")
+    .replace(/&sup9;/g, "^9")
+    .replace(/&deg;/g, "^{\\circ}")
+    .replace(/\^\\*circ\b/g, "^{\\circ}");
+
+  // Fractions
+  clean = clean
+    .replace(/&frac12;/g, "\\frac{1}{2}")
+    .replace(/&frac14;/g, "\\frac{1}{4}")
+    .replace(/&frac34;/g, "\\frac{3}{4}");
+
+  // Strip raw checkmark inside math mode (badge checkmarks are rendered outside math mode in HTML)
+  clean = clean.replace(/✓/g, "");
+
+  // Normalize bullet and degree symbols
+  clean = clean.replace(/[•·]/g, "\\cdot ");
+  clean = clean.replace(/°/g, "^{\\circ}");
+
+  // Operators & comparison symbols
+  clean = clean
+    .replace(/&plusmn;|&pm;/g, "\\pm ")
+    .replace(/&mp;/g, "\\mp ")
+    .replace(/&times;/g, "\\times ")
+    .replace(/&divide;/g, "\\div ")
+    .replace(/&middot;|&sdot;/g, "\\cdot ")
+    .replace(/&asymp;|&approx;/g, "\\approx ")
+    .replace(/&equiv;/g, "\\equiv ")
+    .replace(/&ne;|&neq;/g, "\\ne ")
+    .replace(/&le;/g, "\\le ")
+    .replace(/&ge;/g, "\\ge ")
+    .replace(/&infin;/g, "\\infty ")
+    .replace(/&prop;/g, "\\propto ")
+    .replace(/&part;|&partial;/g, "\\partial ")
+    .replace(/&nabla;/g, "\\nabla ")
+    .replace(/&sim;/g, "\\sim ")
+    .replace(/&cong;/g, "\\cong ")
+    .replace(/&perp;/g, "\\perp ")
+    .replace(/&sub;/g, "\\subset ")
+    .replace(/&supe;/g, "\\subseteq ")
+    .replace(/&isin;/g, "\\in ")
+    .replace(/&notin;/g, "\\notin ")
+    .replace(/&cup;/g, "\\cup ")
+    .replace(/&cap;/g, "\\cap ")
+    .replace(/&bull;/g, "\\bullet ")
+    .replace(/&hellip;/g, "\\dots ")
+    .replace(/&prime;/g, "'")
+    .replace(/&Prime;/g, "''")
+    .replace(/&minus;/g, "-");
+
+  // Arrows & logic
+  clean = clean
+    .replace(/&implies;|&rArr;/g, "\\implies ")
+    .replace(/&rarr;/g, "\\to ")
+    .replace(/&larr;/g, "\\leftarrow ")
+    .replace(/&harr;/g, "\\leftrightarrow ")
+    .replace(/&iff;|&hArr;/g, "\\iff ")
+    .replace(/&lArr;/g, "\\Leftarrow ");
+
+  // Normal text entities
   clean = clean
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
     .replace(/&nbsp;/g, " ")
     .replace(/&mdash;/g, " --- ")
-    .replace(/&ndash;/g, " -- ")
-    .replace(/&radic;/g, "\\sqrt ")
-    .replace(/&times;/g, "\\times ")
-    .replace(/&middot;/g, "\\cdot ")
-    .replace(/&implies;/g, "\\implies ")
-    .replace(/&rarr;/g, "\\to ")
-    .replace(/&Delta;/g, "\\Delta ")
-    .replace(/&deg;/g, "^{\\circ}")
-    .replace(/&sup2;/g, "^2")
-    .replace(/&sup3;/g, "^3");
+    .replace(/&ndash;/g, " -- ");
 
-  clean = clean.replace(/<strong>(.*?)<\/strong>/g, "\\mathbf{$1}");
-  // Fix escaped circ like ^\\circ or ^\circ into ^{\circ}
-  clean = clean.replace(/\^\\*circ\b/g, "^{\\circ}");
+  // Percent sign: unescaped % acts as a comment in LaTeX, so escape to \%
+  clean = clean.replace(/(?<!\\)%/g, "\\%");
+
+  // Handle any remaining stray &amp; or &
+  // In LaTeX math mode, bare '&' is an error unless it's in an aligned/matrix environment.
+  if (!/\\begin\{(?:matrix|pmatrix|bmatrix|aligned|align|array|cases)\}/.test(clean)) {
+    clean = clean.replace(/&amp;/g, "\\&").replace(/&(?![a-zA-Z#0-9]+;)/g, "\\&");
+  } else {
+    clean = clean.replace(/&amp;/g, "&");
+  }
 
   return clean;
+}
+
+/**
+ * Detects and extracts trailing safety/verification phrases from LaTeX math expressions
+ * (e.g. `\quad (\text{Safe})`, `\quad \text{[Safe & watertight]}`, `\quad (\mathbf{Safe})`).
+ * Converts them into clean, accessible HTML badges outside of KaTeX math mode.
+ */
+export function extractMathSafe(math: string): { cleanMath: string; trailingBadge: string } {
+  let clean = math.trim();
+  let trailingBadge = "";
+
+  // 1. If HTML badge was already injected, extract it directly
+  const htmlBadgeMatch = clean.match(
+    /(?:\\quad|\s)*(?:\\text\{)?\s*(<span class="sol-badge-safe">[\s\S]*?<\/span>)\s*\}?\s*$/
+  );
+  if (htmlBadgeMatch) {
+    clean = clean.slice(0, htmlBadgeMatch.index).trim();
+    trailingBadge = htmlBadgeMatch[1];
+    return { cleanMath: clean, trailingBadge };
+  }
+
+  // 2. Plain text / LaTeX parenthetical safety markers
+  const mathSafeMatch = clean.match(
+    /(?:\\quad|\s)+\s*(?:\\text\{|\\mathbf\{)?\s*(\((?:\\text\{|\\mathbf\{)?\s*(?:(?![^)]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)[^)]*?)\)|\[(?:\\text\{|\\mathbf\{)?\s*(?:(?![^\]]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)[^\]]*?)\])\s*\}?\s*$/
+  );
+
+  if (mathSafeMatch) {
+    clean = clean.slice(0, mathSafeMatch.index).trim();
+    let badgeText = mathSafeMatch[1]
+      .replace(/^[\(\[]|[\)\]]$/g, "")
+      .replace(/\\text\{|\\mathbf\{|\}/g, "")
+      .replace(/\\ /g, " ")
+      .trim();
+    if (badgeText.startsWith("safe")) badgeText = "Safe" + badgeText.slice(4);
+    trailingBadge = `<span class="sol-badge-safe"><span class="sol-badge-check">✓</span> ${badgeText}</span>`;
+  }
+  return { cleanMath: clean, trailingBadge };
+}
+
+/**
+ * Enhances solution HTML with subtle, minimal muted green styling
+ * for final answers, concluding results, and safety/design verifications.
+ */
+export function enhanceSolutionHtml(html: string): string {
+  if (!html) return "";
+
+  let s = html;
+
+  // Protect <code> and <pre> blocks so safety badges are NEVER injected inside code/LaTeX
+  const codeBlocks: string[] = [];
+  s = s.replace(/<(code|pre)\b[^>]*>[\s\S]*?<\/\1>/gi, (m) => {
+    const token = `@@PROTECTED_CODE_${codeBlocks.length}@@`;
+    codeBlocks.push(m);
+    return token;
+  });
+
+  // 1. Transform plain text / parenthesized safety and verification statements
+  // e.g. "(Safe against Bligh creep)", "[Safe & watertight]", "(Safe)", "(OK)", "(Extremely Safe)"
+  // into chic, minimal muted green status badges: <span class="sol-badge-safe"><span class="sol-badge-check">✓</span> ...</span>
+  const safeParenRegex =
+    /(?:[ \t]*)(\((?![^)]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)(?:[^)]*?)\)|\[(?![^\]]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)(?:[^\]]*?)\])(?:\.|\b)?/g;
+
+  // Apply to text outside HTML tags
+  const tagSplitRegex = /(<\/?[a-zA-Z][^>]*>)/g;
+  const parts = s.split(tagSplitRegex);
+
+  for (let i = 0; i < parts.length; i++) {
+    if (parts[i].startsWith("<") && parts[i].endsWith(">")) {
+      continue;
+    }
+
+    parts[i] = parts[i].replace(safeParenRegex, (_, inner) => {
+      let text = inner.replace(/^[\(\[]|[\)\]]$/g, "").trim();
+      if (text.startsWith("safe")) {
+        text = "Safe" + text.slice(4);
+      }
+      return ` <span class="sol-badge-safe"><span class="sol-badge-check">✓</span> ${text}</span>`;
+    });
+
+    // Checkmarked safety phrases e.g. "✓ Safe", "✓ Highly Safe" outside existing spans
+    parts[i] = parts[i].replace(
+      /(?<!<span[^>]*>)(?:✓|&check;)\s*(Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)(?:[^<\n]*)/g,
+      (match) => {
+        let text = match.replace(/^(?:✓|&check;)\s*/, "").trim();
+        if (text.startsWith("safe")) text = "Safe" + text.slice(4);
+        return `<span class="sol-badge-safe"><span class="sol-badge-check">✓</span> ${text}</span>`;
+      }
+    );
+
+    parts[i] = parts[i].replace(
+      /\b(Final Answer|Final Result|Ans|Answer)\s*:\s*/gi,
+      (_, label) => {
+        const cleanLabel = /ans\b|answer/i.test(label) ? "Ans" : "Final Answer";
+        return `<span class="sol-ans-tag"><span class="sol-ans-tag-dot"></span>${cleanLabel}</span> `;
+      }
+    );
+  }
+
+  s = parts.join("");
+
+  // Restore protected code blocks
+  s = s.replace(/@@PROTECTED_CODE_(\d+)@@/g, (_, idx) => codeBlocks[parseInt(idx, 10)] || "");
+
+  // 2. Mark list items `<li>` and rows `.sol-item-row` that contain a final answer or safety badge
+  s = s.replace(
+    /<li(\s+[^>]*)?>([\s\S]*?)<\/li>/gi,
+    (orig, attrs = "", content) => {
+      const isFinal =
+        content.includes('class="sol-badge-safe"') ||
+        content.includes('class="sol-ans-tag"') ||
+        content.includes('class="sol-math-badge-row"') ||
+        /\b(?:Final Answer|Ans:)\b/i.test(content);
+
+      if (!isFinal) return orig;
+
+      if (/class="/i.test(attrs)) {
+        if (/sol-item-final/i.test(attrs)) return orig;
+        attrs = attrs.replace(/class="([^"]*)"/i, 'class="$1 sol-item-final"');
+      } else {
+        attrs = ` class="sol-item-final"${attrs}`;
+      }
+      return `<li${attrs}>${content}</li>`;
+    }
+  );
+
+  s = s.replace(
+    /<div class="sol-item-row(\s+[^>]*)?"([\s\S]*?)<\/div>\s*<\/div>/gi,
+    (orig, extraClasses = "", content) => {
+      const isFinal =
+        content.includes('class="sol-badge-safe"') ||
+        content.includes('class="sol-ans-tag"') ||
+        content.includes('class="sol-math-badge-row"') ||
+        /\b(?:Net Safe Bearing Capacity|Final Answer|Ans:)\b/i.test(content);
+
+      if (!isFinal) return orig;
+      if (extraClasses && extraClasses.includes("sol-item-final")) return orig;
+
+      return `<div class="sol-item-row sol-item-final${extraClasses || ""}"${content}</div></div>`;
+    }
+  );
+
+  return s;
 }
 
 /**
@@ -96,10 +371,13 @@ export function renderLatexInHtml(html: string): string {
   const cachedHtml = latexHtmlCache.get(html);
   if (cachedHtml !== undefined) return cachedHtml;
 
+  // Pre-process solution HTML with safety badges, final answer tags, and list item styling
+  let s = enhanceSolutionHtml(html);
+
   const preserved: string[] = [];
 
   // Protect any already-rendered KaTeX math or blocks so inner MathML is never re-parsed
-  let s = html.replace(/<span class="katex"[\s\S]*?<\/span>\s*<\/span>/g, (m) => {
+  s = s.replace(/<span class="katex"[\s\S]*?<\/span>\s*<\/span>/g, (m) => {
     const token = `@@PRESERVED_MATH_${preserved.length}@@`;
     preserved.push(m);
     return token;
@@ -114,17 +392,18 @@ export function renderLatexInHtml(html: string): string {
       return orig;
     }
     const clean = cleanLatexString(codeContent);
+    const { cleanMath, trailingBadge } = extractMathSafe(clean);
     const isDisplay =
-      clean.includes("=") ||
-      clean.length > 20 ||
-      clean.includes("\\frac") ||
-      clean.includes("\\sqrt");
-    const rendered = safeRenderKatex(clean, isDisplay);
+      cleanMath.includes("=") ||
+      cleanMath.length > 20 ||
+      cleanMath.includes("\\frac") ||
+      cleanMath.includes("\\sqrt");
+    const rendered = safeRenderKatex(cleanMath, isDisplay);
     const token = `@@PRESERVED_MATH_${preserved.length}@@`;
     preserved.push(
       isDisplay
-        ? `<div class="sol-math-block">${rendered}</div>`
-        : `<span class="sol-math-inline">${rendered}</span>`
+        ? `<div class="sol-math-block">${rendered}${trailingBadge ? `<div class="sol-math-badge-row">${trailingBadge}</div>` : ""}</div>`
+        : `<span class="sol-math-inline">${rendered}${trailingBadge ? ` ${trailingBadge}` : ""}</span>`
     );
     return token;
   });
@@ -134,9 +413,12 @@ export function renderLatexInHtml(html: string): string {
     /(?:\$\$|\\{1,2}\[)([\s\S]*?)(?:\$\$|\\{1,2}\])/g,
     (_, math) => {
       const clean = cleanLatexString(math);
-      const rendered = safeRenderKatex(clean, true);
+      const { cleanMath, trailingBadge } = extractMathSafe(clean);
+      const rendered = safeRenderKatex(cleanMath, true);
       const token = `@@PRESERVED_MATH_${preserved.length}@@`;
-      preserved.push(`<div class="sol-math-block">${rendered}</div>`);
+      preserved.push(
+        `<div class="sol-math-block">${rendered}${trailingBadge ? `<div class="sol-math-badge-row">${trailingBadge}</div>` : ""}</div>`
+      );
       return token;
     }
   );
@@ -151,10 +433,14 @@ export function renderLatexInHtml(html: string): string {
 
     // Inside text between tags, parse inline math $...$ and \(...\)
     parts[i] = parts[i].replace(
-      /(?:(?<!\$)\$|\\{1,2}\()([^\$\n]+?)(?:\$|\\{1,2}\))/g,
+      /(?:(?<!\$)\$|\\{1,2}\()((?:[^\$\n]|\n(?!\n))+?)(?:(?<!\\)\$|\\{1,2}\))/g,
       (_, math) => {
         const clean = cleanLatexString(math);
-        return safeRenderKatex(clean, false);
+        const { cleanMath, trailingBadge } = extractMathSafe(clean);
+        const rendered = safeRenderKatex(cleanMath, false);
+        const token = `@@PRESERVED_MATH_${preserved.length}@@`;
+        preserved.push(rendered + (trailingBadge ? ` ${trailingBadge}` : ""));
+        return token;
       }
     );
 
@@ -163,12 +449,19 @@ export function renderLatexInHtml(html: string): string {
       /(?<![\$\\])\\(alpha|beta|gamma|delta|epsilon|varepsilon|theta|mu|pi|sigma|tau|phi|omega|Delta)(?:_[a-zA-Z0-9{}]+)?(?![a-zA-Z\$])/g,
       (match) => {
         const clean = cleanLatexString(match);
-        return safeRenderKatex(clean, false);
+        const rendered = safeRenderKatex(clean, false);
+        const token = `@@PRESERVED_MATH_${preserved.length}@@`;
+        preserved.push(rendered);
+        return token;
       }
     );
   }
 
   s = parts.join("");
+
+  // Enhance solution HTML (safety badges, final answer styling) BEFORE restoring preserved math
+  // so that KaTeX-rendered MathML and inner spans are NEVER touched by text regexes
+  s = enhanceSolutionHtml(s);
 
   // 3. Restore all preserved math and KaTeX blocks
   s = s.replace(/@@PRESERVED_MATH_(\d+)@@/g, (_, idx) => {
@@ -177,95 +470,6 @@ export function renderLatexInHtml(html: string): string {
 
   latexHtmlCache.set(html, s);
   return s;
-}
-
-/**
- * Automatically recognizes and wraps bare LaTeX equations, formulas,
- * and parenthesized mathematical expressions in Markdown text.
- */
-function autoWrapLatexInMarkdown(text: string): string {
-  if (!text) return "";
-  const mathCmdRegex =
-    /\\(?:frac|sqrt|times|cdot|implies|to|rightarrow|leftarrow|partial|Delta|alpha|beta|gamma|delta|epsilon|varepsilon|theta|mu|pi|sigma|tau|phi|omega|circ|approx|pm|le|ge|ne|neq|sum|prod|int|sin|cos|tan)(?![a-zA-Z])/;
-
-  const mathUnitsAndFuncs =
-    /^(?:sin|cos|tan|cot|sec|csc|log|ln|exp|max|min|kPa|MPa|GPa|kN|kN\/m|kN\/m\^2|kN\/m²|kN\/m\^3|kN\/m³|N|N\/m\^2|N\/m²|m|mm|cm|kg|sec|rad|deg)$/i;
-
-  function hasProseWords(str: string): boolean {
-    const withoutCmds = str.replace(/\\[a-zA-Z]+/g, " ");
-    const words = withoutCmds.match(/\b[A-Za-z]{3,}\b/g) || [];
-    return words.some((w) => !mathUnitsAndFuncs.test(w));
-  }
-
-  const lines = text.split("\n");
-  const processed = lines.map((line) => {
-    let l = line;
-    const trimmed = l.trim();
-    if (!trimmed) return l;
-
-    if (
-      !mathCmdRegex.test(trimmed) &&
-      !/\\(?:[a-zA-Z]+)/.test(trimmed) &&
-      !/^[a-zA-Z]_[0-9a-zA-Z]/.test(trimmed)
-    ) {
-      return l;
-    }
-
-    // Pattern 1: Standalone equation line (no label)
-    if (
-      !trimmed.includes(": ") &&
-      (trimmed.includes("=") || trimmed.includes("\\implies") || trimmed.startsWith("\\")) &&
-      !hasProseWords(trimmed)
-    ) {
-      let expr = trimmed;
-      let trailing = "";
-      if (expr.endsWith(".")) {
-        expr = expr.slice(0, -1).trim();
-        trailing = ".";
-      }
-      return `$${expr}$${trailing}`;
-    }
-
-    // Pattern 2: Labeled pure equation, e.g. "Initial area: A_0 = \frac..." or "3. Mohr-Coulomb: \sigma_1 = ..."
-    const labelMatch = trimmed.match(/^((?:(?:\d+\.|[a-zA-Z]\))\s*)?[^:]+:\s*)(.+)$/);
-    if (labelMatch) {
-      const prefix = labelMatch[1];
-      const rest = labelMatch[2].trim();
-
-      if (!hasProseWords(rest) && (mathCmdRegex.test(rest) || rest.includes("="))) {
-        let expr = rest;
-        let trailing = "";
-        if (expr.endsWith(".")) {
-          expr = expr.slice(0, -1).trim();
-          trailing = ".";
-        }
-        return `${prefix}$${expr}$${trailing}`;
-      }
-    }
-
-    // Pattern 3: Mixed text with multiple inline formulas
-    // 3a. Parentheses containing LaTeX: (\sigma_3 = 100 kPa)
-    l = l.replace(/\(([^\)]*\\[a-zA-Z]+[^\)]*)\)/g, (m, inner) => `($${inner.trim()}$)`);
-
-    // 3b. Formulas with = or math operators: \Delta L_1 = 2.0 mm or \epsilon_1 = \frac{2.0}{76} = 0.0263
-    l = l.replace(
-      /(?<!\$)((\\[a-zA-Z]+(?:\s*[a-zA-Z0-9_{}]+)?(?:\^\{?[^}]*\}?)?)\s*=\s*.*?(?=(?:\s*\\to\b|[,;]|\.(?:\s|$)|$)))/g,
-      (m) => `$${m.trim()}$`
-    );
-
-    // 3c. Standalone arrows: \to, \implies
-    l = l.replace(/(?<!\$)\\(to|implies|rightarrow)(?!\$)/g, (m, cmd) => `$\\${cmd}$`);
-
-    // 3d. Any remaining bare \commands
-    l = l.replace(
-      /(?<![\$\\])\\(alpha|beta|gamma|delta|epsilon|varepsilon|theta|mu|pi|sigma|tau|phi|omega|Delta)(?:_[a-zA-Z0-9{}]+)?(?![a-zA-Z\$])/g,
-      (match) => `$${match}$`
-    );
-
-    return l;
-  });
-
-  return processed.join("\n");
 }
 
 /**
@@ -279,46 +483,62 @@ export function renderMarkdownWithMath(raw: string): string {
   const cached = markdownMathCache.get(raw);
   if (cached !== undefined) return cached;
 
-  // 1. Auto-wrap bare LaTeX equations and expressions
-  let s = autoWrapLatexInMarkdown(raw);
+  let s = raw;
+  const tokens: string[] = [];
+  const codeBlocks: string[] = [];
 
-  // 1a. Extract block display math first so internal newlines and pipes are protected
-  const mathBlocks: string[] = [];
+  function addToken(html: string): string {
+    const t = `@@KATEX_TOKEN_${tokens.length}@@`;
+    tokens.push(html);
+    return t;
+  }
 
-  const displayMathRegex =
-    /(\$\$[\s\S]*?\$\$|\\{1,2}[[](?:[\s\S]*?)\\{1,2}[\]])/g;
-  s = s.replace(displayMathRegex, (match) => {
-    let inner = match.trim();
-    if (inner.startsWith("$$") && inner.endsWith("$$")) {
-      inner = inner.slice(2, -2);
-    } else {
-      if (inner.startsWith("\\\\[")) inner = inner.slice(3);
-      else if (inner.startsWith("\\[")) inner = inner.slice(2);
-      if (inner.endsWith("\\\\]")) inner = inner.slice(0, -3);
-      else if (inner.endsWith("\\]")) inner = inner.slice(0, -2);
-    }
-    const clean = cleanLatexString(inner);
-    const rendered = safeRenderKatex(clean, true);
-    const token = `@@MATH_BLOCK_${mathBlocks.length}@@`;
-    mathBlocks.push(`<div class="sol-math-block">${rendered}</div>`);
-    return `\n\n${token}\n\n`;
+  // 0. Protect fenced code blocks (```...```) and inline code (`...`)
+  s = s.replace(/```[\s\S]*?```/g, (m) => {
+    const t = `@@PROTECTED_CODE_${codeBlocks.length}@@`;
+    codeBlocks.push(m);
+    return t;
+  });
+  s = s.replace(/`[^`\n]+`/g, (m) => {
+    const t = `@@PROTECTED_CODE_${codeBlocks.length}@@`;
+    codeBlocks.push(m);
+    return t;
   });
 
-  // 2. Extract inline math
-  const inlineMath: string[] = [];
+  // 1. Extract Display Math ($$...$$ and \[...\]) FIRST
+  s = s.replace(/(?:\$\$|\\{1,2}\[)([\s\S]*?)(?:\$\$|\\{1,2}\])/g, (_, math) => {
+    const clean = cleanLatexString(math);
+    const { cleanMath, trailingBadge } = extractMathSafe(clean);
+    const rendered = safeRenderKatex(cleanMath, true);
+    return addToken(
+      `<div class="sol-math-block">${rendered}${
+        trailingBadge ? `<div class="sol-math-badge-row">${trailingBadge}</div>` : ""
+      }</div>`
+    );
+  });
+
+  // 2. Extract Inline Math ($...$ and \(...\))
   s = s.replace(
-    /(?:\\{1,2}[(]([\s\S]*?)\\{1,2}[)]|(?<!\$)\$([^\$\n]+)\$(?!\$))/g,
-    (_, p1, p2) => {
-      const c = p1 !== undefined ? p1 : p2;
-      const clean = cleanLatexString(c);
-      const rendered = safeRenderKatex(clean, false);
-      const token = `@@INLINE_MATH_${inlineMath.length}@@`;
-      inlineMath.push(rendered);
-      return token;
+    /(?:(?<!\$)\$|\\{1,2}\()((?:[^\$\n]|\n(?!\n))+?)(?:(?<!\\)\$|\\{1,2}\))/g,
+    (_, math) => {
+      const clean = cleanLatexString(math);
+      const { cleanMath, trailingBadge } = extractMathSafe(clean);
+      const rendered = safeRenderKatex(cleanMath, false);
+      return addToken(rendered + (trailingBadge ? ` ${trailingBadge}` : ""));
     }
   );
 
-  // 3. Process lines (headings, tables, lists, paragraphs)
+  // 3. Extract remaining bare LaTeX symbols (Greek letters, etc.)
+  s = s.replace(
+    /(?<![\$\\])\\(alpha|beta|gamma|delta|epsilon|varepsilon|theta|mu|pi|sigma|tau|phi|omega|Delta)(?:_[a-zA-Z0-9{}]+)?(?![a-zA-Z\$])/g,
+    (match) => {
+      const clean = cleanLatexString(match);
+      const rendered = safeRenderKatex(clean, false);
+      return addToken(rendered);
+    }
+  );
+
+  // 4. Process lines (Markdown tables, lists, headings, paragraphs)
   const lines = s.replace(/\r/g, "").split("\n");
   const out: string[] = [];
 
@@ -341,11 +561,7 @@ export function renderMarkdownWithMath(raw: string): string {
     let t = text;
     t = t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     t = t.replace(/__(.*?)__/g, "<strong>$1</strong>");
-    t = t.replace(/(^|[^\*])\*([^\*]+)\*([^\*]|$)/g, "$1<em>$2</em>$3");
-    t = t.replace(
-      /`([^`]+)`/g,
-      '<code class="text-xs bg-secondary px-1 py-0.5 rounded">$1</code>'
-    );
+    t = t.replace(/(^|[^\*])\*([^\*]+)\*([^\*]|$)/g, '$1<span class="sol-item-label">$2</span>$3');
     return t;
   }
 
@@ -359,8 +575,8 @@ export function renderMarkdownWithMath(raw: string): string {
       continue;
     }
 
-    // Check for math block token
-    if (trimmed.startsWith("@@MATH_BLOCK_") && trimmed.endsWith("@@")) {
+    // Pass through standalone display math tokens directly without wrapping in <p>
+    if (/^@@KATEX_TOKEN_\d+@@$/.test(trimmed)) {
       out.push(trimmed);
       i++;
       continue;
@@ -414,12 +630,12 @@ export function renderMarkdownWithMath(raw: string): string {
       continue;
     }
 
-    // Bullet lists
-    if (/^[-*]\s+/.test(trimmed)) {
+    // Bullet lists (support -, *, •, and &bull;)
+    if (/^(?:[-*]|•|&bull;)\s+/.test(trimmed)) {
       const listItems: string[] = [];
-      while (i < lines.length && /^[-*]\s+/.test(lines[i].trim())) {
+      while (i < lines.length && /^(?:[-*]|•|&bull;)\s+/.test(lines[i].trim())) {
         listItems.push(
-          `<li>${formatInline(lines[i].trim().replace(/^[-*]\s+/, ""))}</li>`
+          `<li>${formatInline(lines[i].trim().replace(/^(?:[-*]|•|&bull;)\s+/, ""))}</li>`
         );
         i++;
       }
@@ -442,21 +658,28 @@ export function renderMarkdownWithMath(raw: string): string {
       continue;
     }
 
-    // Normal paragraph
-    out.push(`<p class="my-1.5 leading-relaxed">${formatInline(trimmed)}</p>`);
+    // Normal paragraph or HTML blocks
+    if (trimmed.startsWith("<") && (trimmed.endsWith(">") || trimmed.includes("</"))) {
+      out.push(formatInline(trimmed));
+    } else {
+      out.push(`<p class="my-1.5 leading-relaxed">${formatInline(trimmed)}</p>`);
+    }
     i++;
   }
 
   let finalHtml = out.join("\n");
 
-  // Restore inline math
-  finalHtml = finalHtml.replace(/@@INLINE_MATH_(\d+)@@/g, (_, idx) => {
-    return inlineMath[parseInt(idx, 10)] || "";
+  // Apply safety badges & final answer styling BEFORE restoring tokens
+  finalHtml = enhanceSolutionHtml(finalHtml);
+
+  // Restore protected code
+  finalHtml = finalHtml.replace(/@@PROTECTED_CODE_(\d+)@@/g, (_, idx) => {
+    return codeBlocks[parseInt(idx, 10)] || "";
   });
 
-  // Restore block math
-  finalHtml = finalHtml.replace(/@@MATH_BLOCK_(\d+)@@/g, (_, idx) => {
-    return mathBlocks[parseInt(idx, 10)] || "";
+  // Restore KaTeX tokens
+  finalHtml = finalHtml.replace(/@@KATEX_TOKEN_(\d+)@@/g, (_, idx) => {
+    return tokens[parseInt(idx, 10)] || "";
   });
 
   markdownMathCache.set(raw, finalHtml);
@@ -474,67 +697,73 @@ export function renderInlineMarkdownWithMath(raw: string): string {
   const cached = inlineMarkdownCache.get(raw);
   if (cached !== undefined) return cached;
 
-  // 0. Sanitize isolated single-symbol display math like $$\phi$$ or $$\gamma$$ into inline math
-  let s = raw.replace(
-    /\$\$(\s*\\[a-zA-Z]+(?:\^\{?[^}]*\}?|_[a-zA-Z0-9{}]+)?\s*)\$\$/g,
-    "$$1$"
-  );
+  let s = raw;
+  const tokens: string[] = [];
+  const codeBlocks: string[] = [];
 
-  // 1. Extract block display math first if any
-  const displayBlocks: string[] = [];
+  function addToken(html: string): string {
+    const t = `@@INLINE_TOKEN_${tokens.length}@@`;
+    tokens.push(html);
+    return t;
+  }
+
+  // Protect code spans
+  s = s.replace(/`([^`\n]+)`/g, (_, code) => {
+    const t = `@@PROTECTED_CODE_${codeBlocks.length}@@`;
+    codeBlocks.push(`<code class="px-1 py-0.5 rounded bg-muted text-xs font-mono">${code}</code>`);
+    return t;
+  });
+
+  // Display math inside inline container: convert to inline or inline-block span
+  s = s.replace(/(?:\$\$|\\{1,2}\[)([\s\S]*?)(?:\$\$|\\{1,2}\])/g, (_, math) => {
+    const clean = cleanLatexString(math);
+    const { cleanMath, trailingBadge } = extractMathSafe(clean);
+    const isShortInline = !cleanMath.includes("\n") && cleanMath.length <= 15 && !cleanMath.includes("=");
+    if (isShortInline) {
+      const rendered = safeRenderKatex(cleanMath, false);
+      return addToken(rendered + (trailingBadge ? ` ${trailingBadge}` : ""));
+    }
+    const rendered = safeRenderKatex(cleanMath, true);
+    return addToken(
+      `<span class="sol-math-block block my-2 text-center">${rendered}${
+        trailingBadge ? `<span class="sol-math-badge-row block">${trailingBadge}</span>` : ""
+      }</span>`
+    );
+  });
+
+  // Inline math
   s = s.replace(
-    /(?:\$\$|\\{1,2}\[)([\s\S]*?)(?:\$\$|\\{1,2}\])/g,
+    /(?:(?<!\$)\$|\\{1,2}\()((?:[^\$\n]|\n(?!\n))+?)(?:(?<!\\)\$|\\{1,2}\))/g,
     (_, math) => {
       const clean = cleanLatexString(math);
-      // If the math expression is a short symbol or single variable (e.g. \phi, \gamma, \alpha, x),
-      // render it as INLINE math instead of creating a huge full-width block inside inline text!
-      const isShortInline =
-        !clean.includes("\n") && clean.length <= 15 && !clean.includes("=");
-      if (isShortInline) {
-        return safeRenderKatex(clean, false);
-      }
-
-      const rendered = safeRenderKatex(clean, true);
-      const token = `@@DISPLAY_MATH_${displayBlocks.length}@@`;
-      displayBlocks.push(
-        `<span class="sol-math-block block my-2 text-center">${rendered}</span>`
-      );
-      return token;
+      const { cleanMath, trailingBadge } = extractMathSafe(clean);
+      const rendered = safeRenderKatex(cleanMath, false);
+      return addToken(rendered + (trailingBadge ? ` ${trailingBadge}` : ""));
     }
   );
 
-  // 2. Extract and render inline math
-  const inlineBlocks: string[] = [];
+  // Greek letters & symbols
   s = s.replace(
-    /(?:\\{1,2}\(([\s\S]*?)\\{1,2}\)|(?<!\$)\$([^\$\n]+)\$(?!\$))/g,
-    (_, p1, p2) => {
-      const c = p1 !== undefined ? p1 : p2;
-      const clean = cleanLatexString(c);
+    /(?<![\$\\])\\(alpha|beta|gamma|delta|epsilon|varepsilon|theta|mu|pi|sigma|tau|phi|omega|Delta)(?:_[a-zA-Z0-9{}]+)?(?![a-zA-Z\$])/g,
+    (match) => {
+      const clean = cleanLatexString(match);
       const rendered = safeRenderKatex(clean, false);
-      const token = `@@INLINE_MATH_${inlineBlocks.length}@@`;
-      inlineBlocks.push(rendered);
-      return token;
+      return addToken(rendered);
     }
   );
 
-  // 3. Format inline markdown (bold, italic, code)
+  // Markdown formatting
   s = s.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
   s = s.replace(/__(.*?)__/g, "<strong>$1</strong>");
-  s = s.replace(/(^|[^\*])\*([^\*]+)\*([^\*]|$)/g, "$1<em>$2</em>$3");
-  s = s.replace(
-    /`([^`]+)`/g,
-    '<code class="px-1 py-0.5 rounded bg-muted text-xs font-mono">$1</code>'
-  );
+  s = s.replace(/(^|[^\*])\*([^\*]+)\*([^\*]|$)/g, '$1<span class="sol-item-label">$2</span>$3');
 
-  // 4. Restore inline math
-  s = s.replace(/@@INLINE_MATH_(\d+)@@/g, (_, idx) => {
-    return inlineBlocks[parseInt(idx, 10)] || "";
-  });
+  s = enhanceSolutionHtml(s);
 
-  // 5. Restore display math
-  s = s.replace(/@@DISPLAY_MATH_(\d+)@@/g, (_, idx) => {
-    return displayBlocks[parseInt(idx, 10)] || "";
-  });
+  // Restore code
+  s = s.replace(/@@PROTECTED_CODE_(\d+)@@/g, (_, idx) => codeBlocks[parseInt(idx, 10)] || "");
+
+  // Restore tokens
+  s = s.replace(/@@INLINE_TOKEN_(\d+)@@/g, (_, idx) => tokens[parseInt(idx, 10)] || "");
 
   inlineMarkdownCache.set(raw, s);
   return s;

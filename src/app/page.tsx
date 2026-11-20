@@ -7,10 +7,12 @@ import { ChecklistView } from "@/components/checklist/checklist-view";
 import { MobileNav } from "@/components/common/mobile-nav";
 import { toast } from "@/components/ui/sonner";
 
-// Statically import only the default subject questions, subject meta, and subjects registry
+// Statically import only the default subject questions, subject meta, clusters, and subjects registry
 import rawQuestions from "@/data/questions.json";
 import rawSubject from "@/data/subject.json";
 import rawSubjects from "@/data/subjects.json";
+import rawClusters from "@/data/canonical.json";
+import rawFormulas from "@/data/formulas.json";
 
 import {
   Question,
@@ -74,6 +76,8 @@ interface SubjectDataset {
 const GEOTECH_DATASET: SubjectDataset = {
   subject: rawSubject as SubjectMeta,
   questions: rawQuestions as Question[],
+  clusters: rawClusters as TopicCluster[],
+  formulas: rawFormulas as MasterFormula[],
 };
 
 // In-memory cache for loaded subject datasets to avoid re-fetching
@@ -87,30 +91,34 @@ async function fetchSubjectDataset(subjectId: string): Promise<SubjectDataset | 
   }
 
   if (subjectId === "dhs") {
-    const [sub, q, f] = await Promise.all([
+    const [sub, q, f, c] = await Promise.all([
       import("@/data/dhs_subject.json"),
       import("@/data/dhs_questions.json"),
       import("@/data/dhs_formulas.json"),
+      import("@/data/dhs_canonical.json"),
     ]);
     const dataset: SubjectDataset = {
       subject: sub.default as SubjectMeta,
       questions: q.default as unknown as Question[],
       formulas: f.default as MasterFormula[],
+      clusters: c.default as unknown as TopicCluster[],
     };
     loadedSubjectsCache["dhs"] = dataset;
     return dataset;
   }
 
   if (subjectId === "rcc") {
-    const [sub, q, f] = await Promise.all([
+    const [sub, q, f, c] = await Promise.all([
       import("@/data/rcc_subject.json"),
       import("@/data/rcc_questions.json"),
       import("@/data/rcc_formulas.json"),
+      import("@/data/rcc_canonical.json"),
     ]);
     const dataset: SubjectDataset = {
       subject: sub.default as SubjectMeta,
       questions: q.default as unknown as Question[],
       formulas: f.default as MasterFormula[],
+      clusters: c.default as unknown as TopicCluster[],
     };
     loadedSubjectsCache["rcc"] = dataset;
     return dataset;
@@ -240,6 +248,7 @@ export default function Home() {
                 questions={currentQuestions}
                 clusters={currentClusters}
                 unitTitles={currentSubject.unit_titles}
+                subjectName={currentSubject.name}
                 storagePrefix={storagePrefix}
                 onNotesCountChange={setNotesCount}
               />
@@ -272,8 +281,34 @@ export default function Home() {
 
       <footer className="py-6 pb-20 md:pb-8 text-center text-xs text-muted-foreground">
         <div className="container">
-          <p>
-            {currentSubject.name} ({currentSubject.code}) &bull; Exam Intelligence &amp; PYQ Mastery Platform
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 font-heading">
+            <span>
+              {currentSubject.name} ({currentSubject.code})
+            </span>
+            <span className="text-muted-foreground/40 select-none">&bull;</span>
+            <span className="inline-flex items-center">
+              <span>Made with</span>
+              <span className="heart-badge" aria-label="love">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </span>
+              <span>by</span>
+              <a
+                href="https://shrid.site"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Visit shrid.site"
+                className="ml-1 font-medium text-foreground no-underline transition-colors hover:underline underline-offset-4"
+              >
+                Shrid Mishra
+              </a>
+            </span>
           </p>
         </div>
       </footer>

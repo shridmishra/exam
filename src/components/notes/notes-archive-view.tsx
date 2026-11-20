@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Download01Icon,
   Upload01Icon,
@@ -9,6 +10,7 @@ import {
   Note01Icon,
   Tick02Icon,
   PencilEdit01Icon,
+  ViewIcon,
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +21,8 @@ import { RichMathText } from "@/components/common/math-renderer";
 import { toast } from "@/components/ui/sonner";
 import { Question } from "@/types";
 import { STORAGE_KEYS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+import { filterSpringTransition } from "@/lib/motion";
 
 interface NotesArchiveViewProps {
   questions: Question[];
@@ -57,14 +61,18 @@ export function NotesArchiveView({
     }
   }, []);
 
-  // Save scratchpad
+  // Save scratchpad (debounced to eliminate main-thread synchronous I/O blocking)
   useEffect(() => {
     if (!hasHydratedRef.current) return;
-    try {
-      localStorage.setItem(STORAGE_KEY_SCRATCHPAD, scratchpad);
-    } catch (e) {
-      console.warn("Error saving scratchpad:", e);
-    }
+    const timer = setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY_SCRATCHPAD, scratchpad);
+      } catch (e) {
+        console.warn("Error saving scratchpad:", e);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [scratchpad]);
 
   // Question lookup map
@@ -259,15 +267,52 @@ export function NotesArchiveView({
               <Note01Icon className="h-4 w-4" />
               General Revision Scratchpad
             </CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setScratchpadPreview(!scratchpadPreview)}
-              className="h-7 text-xs"
-            >
-              <PencilEdit01Icon className="h-3.5 w-3.5 mr-1" />
-              {scratchpadPreview ? "Edit Scratchpad" : "Preview"}
-            </Button>
+            <div className="no-scrollbar inline-flex items-center gap-0.5 rounded-lg bg-secondary/70 p-0.5 relative">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setScratchpadPreview(false)}
+                className={cn(
+                  "relative h-7 px-2.5 text-xs font-medium rounded-md transition-colors select-none",
+                  !scratchpadPreview ? "text-foreground font-semibold bg-transparent" : "bg-transparent text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {!scratchpadPreview && (
+                  <motion.div
+                    layoutId="scratchpad-toggle-pill"
+                    className="absolute inset-0 rounded-md bg-card shadow-2xs ring-1 ring-border/20"
+                    transition={filterSpringTransition}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-1">
+                  <PencilEdit01Icon className="h-3 w-3" />
+                  Edit
+                </span>
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setScratchpadPreview(true)}
+                className={cn(
+                  "relative h-7 px-2.5 text-xs font-medium rounded-md transition-colors select-none",
+                  scratchpadPreview ? "text-foreground font-semibold bg-transparent" : "bg-transparent text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {scratchpadPreview && (
+                  <motion.div
+                    layoutId="scratchpad-toggle-pill"
+                    className="absolute inset-0 rounded-md bg-card shadow-2xs ring-1 ring-border/20"
+                    transition={filterSpringTransition}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-1">
+                  <ViewIcon className="h-3 w-3" />
+                  Preview
+                </span>
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="p-4 pt-2">

@@ -14,6 +14,26 @@ def clean_num(raw: str) -> str:
         return "&bull;"
     return re.sub(r"[\.\)]+$", "", raw) + "."
 
+def apply_safety_badges(text: str) -> str:
+    """Safely replaces parenthetical safety phrases without touching <code> blocks."""
+    if not text:
+        return text
+    code_tokens = []
+    def save_code(m):
+        idx = len(code_tokens)
+        code_tokens.append(m.group(0))
+        return f"@@PROTECTED_CODE_{idx}@@"
+    
+    t = re.sub(r'<code>[\s\S]*?</code>', save_code, text)
+    t = re.sub(
+        r'(?:[ \t]*)(\((?![^)]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)[^)]*?\)|\[(?![^\]]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)[^\]]*?\])(?:\.|\b)?',
+        lambda m: f' <span class="sol-badge-safe"><span class="sol-badge-check">✓</span> {m.group(1).strip("()[]").strip().capitalize()}</span>',
+        t
+    )
+    for idx, code in enumerate(code_tokens):
+        t = t.replace(f"@@PROTECTED_CODE_{idx}@@", code)
+    return t
+
 def format_solution(html: str, math_enhancer=None) -> str:
     """
     Transforms dense solution HTML into clean, un-cardified editorial rows.
@@ -79,7 +99,15 @@ def format_solution(html: str, math_enhancer=None) -> str:
                 formatted.append(f'<div class="sol-heading">{title_clean}:</div><div class="sol-body-text">{desc_clean}{example_html}</div>')
             else:
                 num_html = f'<span class="sol-item-num">{num_str}</span>' if num_str else ""
-                formatted.append(f"""<div class="sol-item-row">
+                
+                # Check for final answer / safety status
+                is_final = bool(re.search(r'\b(?:Net Safe Bearing Capacity|Final Answer|Ans:)\b|\((?![^)]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)[^)]*?\)|\[(?![^\]]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)[^\]]*?\]', f"{title_clean} {desc_clean}", re.IGNORECASE))
+                row_cls = "sol-item-row sol-item-final" if is_final else "sol-item-row"
+
+                # Transform safety parentheticals in description (protecting code blocks)
+                desc_clean = apply_safety_badges(desc_clean)
+
+                formatted.append(f"""<div class="{row_cls}">
     {num_html}
     <div class="sol-item-content">
         <span class="sol-item-title">{title_clean}:</span> 
@@ -100,7 +128,12 @@ def format_solution(html: str, math_enhancer=None) -> str:
             else:
                 desc_clean = re.sub(r'<em>Example:?</em>', '<span class="example-label">Example:</span>', desc_clean, flags=re.IGNORECASE)
 
-            formatted.append(f"""<div class="sol-item-row">
+            is_final = bool(re.search(r'\b(?:Net Safe Bearing Capacity|Final Answer|Ans:)\b|\((?![^)]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)[^)]*?\)|\[(?![^\]]*?\b(?:un|not|in)safe\b)(?:Safe|safe|OK|O\.K\.|Hence safe|Highly Safe|Extremely Safe)[^\]]*?\]', desc_clean, re.IGNORECASE))
+            row_cls = "sol-item-row sol-item-final" if is_final else "sol-item-row"
+
+            desc_clean = apply_safety_badges(desc_clean)
+
+            formatted.append(f"""<div class="{row_cls}">
     <span class="sol-item-num">{num}</span>
     <div class="sol-item-content">
         <span class="sol-item-text">{desc_clean}</span>

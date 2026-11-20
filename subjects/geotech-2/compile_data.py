@@ -47,18 +47,18 @@ questions = [
         "rep_frequency": "2 of 4 Papers",
         "question": r"""A smooth vertical wall, 6 m high supports an inclined non cohesive backfill (&phi; = 32&deg;; &gamma; = 21 kN/m&sup3;) at an angle 10&deg; with horizontal. Compute the total active & passive pressure at the bottom of wall.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
-Wall height H = 6 m, &phi; = 32&deg;, &gamma; = 21 kN/m&sup3;, surcharge slope &beta; = 10&deg;, smooth vertical wall.<br>
+Wall height H = 6 m, \phi = 32^\circ, \gamma = 21\text{ kN/m}^3, surcharge slope \beta = 10^\circ, smooth vertical wall.<br>
 1. <strong>Trigonometric Quantities:</strong><br>
-<code>cos &beta; = cos 10&deg; = 0.9848, cos &phi; = cos 32&deg; = 0.8480</code><br>
-<code>&radic;(cos&sup2;&beta; - cos&sup2;&phi;) = &radic;(0.9848&sup2; - 0.8480&sup2;) = &radic;(0.9698 - 0.7192) = &radic;0.2507 = 0.5007</code><br>
+<code>\cos \beta = \cos 10^\circ = 0.9848, \quad \cos \phi = \cos 32^\circ = 0.8480</code><br>
+<code>\sqrt{\cos^2\beta - \cos^2\phi} = \sqrt{0.9848^2 - 0.8480^2} = \sqrt{0.9698 - 0.7192} = \sqrt{0.2507} = 0.5007</code><br>
 2. <strong>Rankine Earth Pressure Coefficients:</strong><br>
-<code>K_a = cos &beta; \cdot \frac{cos &beta; - \sqrt{cos^2\beta - cos^2\phi}}{cos &beta; + \sqrt{cos^2\beta - cos^2\phi}} = 0.9848 \cdot \frac{0.9848 - 0.5007}{0.9848 + 0.5007} = \frac{0.4767}{1.4855} = <strong>0.3210</strong></code><br>
-<code>K_p = cos &beta; \cdot \frac{cos &beta; + \sqrt{cos^2\beta - cos^2\phi}}{cos &beta; - \sqrt{cos^2\beta - cos^2\phi}} = 0.9848 \cdot \frac{0.9848 + 0.5007}{0.9848 - 0.5007} = \frac{1.4629}{0.4841} = <strong>3.0219</strong></code><br>
+<code>K_a = \cos \beta \cdot \frac{\cos \beta - \sqrt{\cos^2\beta - \cos^2\phi}}{\cos \beta + \sqrt{\cos^2\beta - \cos^2\phi}} = 0.9848 \cdot \frac{0.9848 - 0.5007}{0.9848 + 0.5007} = \frac{0.4767}{1.4855} = \mathbf{0.3210}</code><br>
+<code>K_p = \cos \beta \cdot \frac{\cos \beta + \sqrt{\cos^2\beta - \cos^2\phi}}{\cos \beta - \sqrt{\cos^2\beta - \cos^2\phi}} = 0.9848 \cdot \frac{0.9848 + 0.5007}{0.9848 - 0.5007} = \frac{1.4629}{0.4841} = \mathbf{3.0219}</code><br>
 3. <strong>Pressure Intensities at Bottom of Wall (z = 6 m):</strong><br>
 • <strong>Total Active Earth Pressure:</strong><br>
-<code>p_a = K_a \cdot \gamma \cdot H = 0.3210 \times 21 \times 6 = <strong>40.45 kN/m&sup2;</strong></code> (inclined at &beta; = 10&deg; to horizontal).<br>
+<code>p_a = K_a \cdot \gamma \cdot H = 0.3210 \times 21 \times 6 = \mathbf{40.45\text{ kN/m}^2}</code> (inclined at \beta = 10^\circ to horizontal).<br>
 • <strong>Total Passive Earth Pressure:</strong><br>
-<code>p_p = K_p \cdot \gamma \cdot H = 3.0219 \times 21 \times 6 = <strong>380.76 kN/m&sup2;</strong></code> (inclined at &beta; = 10&deg; to horizontal)."""
+<code>p_p = K_p \cdot \gamma \cdot H = 3.0219 \times 21 \times 6 = \mathbf{380.76\text{ kN/m}^2}</code> (inclined at \beta = 10^\circ to horizontal)."""
     },
     {
         "id": '2025-Q1bii',
@@ -2047,15 +2047,17 @@ b) <strong>Coulomb's Wedge Theory (1776):</strong> Considers equilibrium of a pl
         "rep_frequency": "2 of 4 Papers",
         "question": r"""A smooth vertical wall, 6 m high supports an inclined non-cohesive backfill (&phi; = 32&deg;; &gamma; = 21 kN/m&sup3;) at an angle 10&deg; with horizontal. Compute the total active & passive pressure at the bottom of wall.""",
         "solution": r"""<strong>Given Parameters:</strong><br>
-H = 6 m, &gamma; = 21 kN/m&sup3;, &phi; = 32&deg;, backfill inclination &beta; = 10&deg;, smooth vertical wall.<br>
-<strong>1. Rankine Surcharged Coefficients:</strong><br>
-<code>cos &beta; = cos 10&deg; = 0.9848, cos &phi; = cos 32&deg; = 0.8480</code><br>
-<code>&radic;(cos&sup2;&beta; - cos&sup2;&phi;) = &radic;(0.9698 - 0.7192) = &radic;0.2507 = 0.5007</code><br>
-<code>K<sub>a</sub> = cos &beta; [cos &beta; - &radic;(cos&sup2;&beta; - cos&sup2;&phi;)] / [cos &beta; + &radic;(cos&sup2;&beta; - cos&sup2;&phi;)] = 0.9848 [0.9848 - 0.5007] / [0.9848 + 0.5007] = 0.9848(0.4841) / 1.4855 = <strong>0.3210</strong></code>.<br>
-<code>K<sub>p</sub> = cos &beta; [cos &beta; + &radic;(cos&sup2;&beta; - cos&sup2;&phi;)] / [cos &beta; - &radic;(cos&sup2;&beta; - cos&sup2;&phi;)] = 0.9848(1.4855) / 0.4841 = <strong>3.0219</strong></code>.<br>
-<strong>2. Intensities at Bottom of Wall (z = 6 m):</strong><br>
-Active intensity <code>p<sub>a</sub> = K<sub>a</sub> &middot; &gamma; &middot; H = 0.3210 &times; 21 &times; 6 = <strong>40.45 kN/m&sup2;</strong></code>.<br>
-Passive intensity <code>p<sub>p</sub> = K<sub>p</sub> &middot; &gamma; &middot; H = 3.0219 &times; 21 &times; 6 = <strong>380.76 kN/m&sup2;</strong></code>."""
+H = 6 m, \gamma = 21\text{ kN/m}^3, \phi = 32^\circ, backfill inclination \beta = 10^\circ, smooth vertical wall.<br>
+1. <strong>Rankine Surcharged Coefficients:</strong><br>
+<code>\cos \beta = \cos 10^\circ = 0.9848, \quad \cos \phi = \cos 32^\circ = 0.8480</code><br>
+<code>\sqrt{\cos^2\beta - \cos^2\phi} = \sqrt{0.9698 - 0.7192} = \sqrt{0.2507} = 0.5007</code><br>
+<code>K_a = \cos \beta \cdot \frac{\cos \beta - \sqrt{\cos^2\beta - \cos^2\phi}}{\cos \beta + \sqrt{\cos^2\beta - \cos^2\phi}} = 0.9848 \cdot \frac{0.9848 - 0.5007}{0.9848 + 0.5007} = \frac{0.4767}{1.4855} = \mathbf{0.3210}</code><br>
+<code>K_p = \cos \beta \cdot \frac{\cos \beta + \sqrt{\cos^2\beta - \cos^2\phi}}{\cos \beta - \sqrt{\cos^2\beta - \cos^2\phi}} = 0.9848 \cdot \frac{0.9848 + 0.5007}{0.9848 - 0.5007} = \frac{1.4629}{0.4841} = \mathbf{3.0219}</code><br>
+2. <strong>Intensities at Bottom of Wall (z = 6 m):</strong><br>
+• <strong>Active Intensity:</strong><br>
+<code>p_a = K_a \cdot \gamma \cdot H = 0.3210 \times 21 \times 6 = \mathbf{40.45\text{ kN/m}^2}</code>.<br>
+• <strong>Passive Intensity:</strong><br>
+<code>p_p = K_p \cdot \gamma \cdot H = 3.0219 \times 21 \times 6 = \mathbf{380.76\text{ kN/m}^2}</code>."""
     },
     {
         "id": '2023-Q1bii',

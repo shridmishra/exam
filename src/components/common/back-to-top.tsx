@@ -8,8 +8,21 @@ export function BackToTop() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
+    let isCurrentlyVisible = false;
+
     const handleScroll = () => {
-      setVisible(window.scrollY > 300);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const shouldBeVisible = window.scrollY > 300;
+          if (shouldBeVisible !== isCurrentlyVisible) {
+            isCurrentlyVisible = shouldBeVisible;
+            setVisible(shouldBeVisible);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });

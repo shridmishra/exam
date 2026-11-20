@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useMemo, useDeferredValue } from "react";
+import React, { useState, useMemo, useDeferredValue, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   Search01Icon,
   Cancel01Icon,
-  ArrowReloadHorizontalIcon,
+  RotateCcwIcon,
   Copy01Icon,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import { MathRenderer } from "@/components/common/math-renderer";
 import { toast } from "@/components/ui/sonner";
 import { MasterFormula } from "@/types";
 import { cn } from "@/lib/utils";
+import { filterSpringTransition } from "@/lib/motion";
 import rawDefaultFormulas from "@/data/formulas.json";
 
 interface FormulasViewProps {
@@ -89,7 +91,7 @@ const FormulaCard = React.memo(function FormulaCard({
         {/* Parameters Breakdown */}
         {formula.params && formula.params.length > 0 && (
           <div className="mt-3 space-y-1.5 pt-2">
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground block">
+            <span className="font-heading text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground block">
               Parameters &amp; Units:
             </span>
             <div className="grid grid-cols-1 divide-y divide-border/20 text-xs sm:text-[13px]">
@@ -151,13 +153,13 @@ export function FormulasView({
     });
   }, [formulas, selectedUnit, deferredSearch]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setSelectedUnit("all");
     setSearchQuery("");
     toast.info("Formula filters reset");
-  };
+  }, []);
 
-  const handleCopyFormula = (formula: MasterFormula) => {
+  const handleCopyFormula = useCallback((formula: MasterFormula) => {
     const textToCopy = `${formula.title}\n${formula.latex_main}${
       formula.latex_sub ? `\n${formula.latex_sub}` : ""
     }`;
@@ -165,7 +167,7 @@ export function FormulasView({
     toast.success("Formula copied to clipboard", {
       description: formula.title,
     });
-  };
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -180,27 +182,39 @@ export function FormulasView({
       <div className="flex flex-col gap-3 rounded-2xl bg-card p-3 sm:p-4 shadow-xs sm:flex-row sm:items-center sm:justify-between">
         {/* Left: Unit Pills Segmented Control */}
         <div className="flex min-w-0 items-center gap-2">
-          <span className="w-10 shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
+          <span className="font-heading w-10 shrink-0 text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground/80 select-none">
             Unit
           </span>
           <div className="no-scrollbar inline-flex min-w-0 items-center gap-0.5 overflow-x-auto rounded-lg bg-secondary/70 dark:bg-secondary/50 p-0.5 ring-1 ring-border/25 overscroll-x-contain">
-            {["all", "1", "2", "3", "4", "5"].map((u) => (
-              <Button
-                key={u}
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedUnit(u)}
-                className={cn(
-                  "h-7 shrink-0 whitespace-nowrap rounded-md px-2.5 text-xs font-medium select-none transition-all",
-                  selectedUnit === u
-                    ? "bg-card text-foreground dark:bg-filter-active dark:text-filter-active-foreground font-semibold shadow-2xs ring-1 ring-border/20"
-                    : "bg-transparent text-muted-foreground hover:bg-card/40 dark:hover:bg-card/50 hover:text-foreground"
-                )}
-              >
-                {u === "all" ? "All" : `Unit ${u}`}
-              </Button>
-            ))}
+            {["all", "1", "2", "3", "4", "5"].map((u) => {
+              const isActive = selectedUnit === u;
+              return (
+                <Button
+                  key={u}
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedUnit(u)}
+                  className={cn(
+                    "relative font-heading h-7 shrink-0 whitespace-nowrap rounded-md px-2.5 text-xs font-medium select-none transition-colors",
+                    isActive
+                      ? "text-foreground dark:text-filter-active-foreground font-semibold bg-transparent"
+                      : "bg-transparent text-muted-foreground hover:bg-card/40 dark:hover:bg-card/50 hover:text-foreground"
+                  )}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="formulas-unit-pill"
+                      className="absolute inset-0 rounded-md bg-card text-foreground dark:bg-filter-active dark:text-filter-active-foreground shadow-2xs ring-1 ring-border/20"
+                      transition={filterSpringTransition}
+                    />
+                  )}
+                  <span className="relative z-10">
+                    {u === "all" ? "All" : `Unit ${u}`}
+                  </span>
+                </Button>
+              );
+            })}
           </div>
         </div>
 
@@ -211,9 +225,10 @@ export function FormulasView({
             <Input
               type="text"
               placeholder="Search..."
+              aria-label="Search formulas"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-9 rounded-xl border-0 bg-secondary/50 pl-9 pr-8 text-xs sm:text-[13px] shadow-2xs transition-all hover:bg-secondary/70 focus:bg-secondary/90"
+              className="font-heading h-9 rounded-xl border-0 bg-secondary/50 pl-9 pr-8 text-xs sm:text-[13px] shadow-2xs transition-all hover:bg-secondary/70 focus:bg-secondary/90"
             />
             {searchQuery && (
               <Button
@@ -222,6 +237,7 @@ export function FormulasView({
                 onClick={() => setSearchQuery("")}
                 className="absolute right-1.5 top-1/2 h-6 w-6 -translate-y-1/2 rounded-md text-muted-foreground hover:text-foreground"
                 title="Clear search"
+                aria-label="Clear search"
               >
                 <Cancel01Icon className="h-3.5 w-3.5" />
               </Button>
@@ -230,7 +246,7 @@ export function FormulasView({
 
           <Badge
             variant="subtle"
-            className="h-9 shrink-0 rounded-xl bg-secondary/70 px-2.5 sm:px-3 text-xs font-medium tabular-nums text-foreground whitespace-nowrap"
+            className="font-heading h-9 shrink-0 rounded-xl bg-secondary/70 px-2.5 sm:px-3 text-xs font-medium tabular-nums text-foreground whitespace-nowrap"
           >
             {filteredFormulas.length === formulas.length
               ? `${formulas.length} formulas`
@@ -242,9 +258,9 @@ export function FormulasView({
               variant="ghost"
               size="sm"
               onClick={handleReset}
-              className="h-9 shrink-0 gap-1 rounded-xl px-2.5 sm:px-3 text-xs font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
+              className="font-heading h-9 shrink-0 gap-1 rounded-xl px-2.5 sm:px-3 text-xs font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
             >
-              <ArrowReloadHorizontalIcon className="h-3.5 w-3.5" />
+              <RotateCcwIcon className="h-3.5 w-3.5" />
               <span>Reset</span>
             </Button>
           )}
