@@ -114,18 +114,17 @@ export const QuestionCard = React.memo(
 
       // If clicked an interactive button, checkbox, island, or control, do not toggle
       const target = e.target as HTMLElement | null;
-      if (
-        target &&
-        target.closest(
-          "button, a, input, textarea, select, [role='button'], .action-island, .action-mobile-dropdown, .action-island-mobile-btn, [data-radix-dropdown-menu-trigger], [data-radix-dropdown-menu-content], [role='menuitem']"
-        )
-      ) {
+      if (!target) return;
+
+      const interactive = target.closest(
+        "button, a, input, textarea, select, [role='checkbox'], .action-island, .action-mobile-dropdown, .action-island-mobile-btn, [data-radix-dropdown-menu-trigger], [data-radix-dropdown-menu-content], [role='menuitem']"
+      );
+      if (interactive) {
         return;
       }
 
-      // If the answer is already open and the click occurred inside the question text,
-      // allow selecting text / double-clicking words without collapsing the answer
-      if (isOpen && target && target.closest(".structured-question")) {
+      const roleButton = target.closest("[role='button']");
+      if (roleButton && roleButton !== e.currentTarget) {
         return;
       }
 
@@ -362,7 +361,7 @@ export const QuestionCard = React.memo(
         </div>
 
         {/* Structured Verbatim PYQ Question */}
-        <div className="mt-1 cursor-text select-text">
+        <div className="mt-1 select-text">
           <StructuredQuestion
             content={question.question}
             qNo={question.q_no}

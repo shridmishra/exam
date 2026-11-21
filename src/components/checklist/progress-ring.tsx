@@ -36,9 +36,7 @@ export const ProgressRing = React.memo(function ProgressRing({
         }
       }}
       title={`Overall Completion: ${safeCompleted}/${total} (${percentage}%) • Click to toggle incomplete questions`}
-      className={`relative flex h-[42px] w-[42px] cursor-pointer items-center justify-center rounded-full transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring ${
-        isActiveFilter ? "ring-2 ring-primary" : ""
-      }`}
+      className="relative flex h-[42px] w-[42px] cursor-pointer items-center justify-center rounded-full transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none"
     >
       <svg
         className="h-[42px] w-[42px] -rotate-90"

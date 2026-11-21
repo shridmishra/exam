@@ -44,7 +44,7 @@ const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
 
     const variantCheckedStyles =
       variant === "success"
-        ? "border-success bg-success text-success-foreground"
+        ? "bg-[var(--checkbox-checked-bg)] border-[var(--checkbox-checked-border)] text-[var(--checkbox-checked-fg)] hover:bg-[var(--checkbox-checked-hover-bg)]"
         : "border-primary bg-primary text-primary-foreground";
 
     return (
@@ -62,7 +62,7 @@ const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
           "disabled:cursor-not-allowed disabled:opacity-50",
           "before:absolute before:-inset-1 before:content-['']",
           checked
-            ? cn(variantCheckedStyles, "shadow-2xs")
+            ? cn(variantCheckedStyles, variant === "success" ? "shadow-none" : "shadow-2xs")
             : "bg-[var(--checkbox-bg)] border-[var(--checkbox-border)] hover:bg-[var(--checkbox-hover-bg)] hover:border-[var(--checkbox-hover-border)]",
           className
         )}
@@ -74,7 +74,7 @@ const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
             checked ? "opacity-100 scale-100" : "opacity-0 scale-75"
           )}
         >
-          <Tick02Icon className="h-3 w-3 stroke-[2.5]" />
+          <Tick02Icon className="h-3 w-3 stroke-[2.75]" />
         </span>
       </button>
     );

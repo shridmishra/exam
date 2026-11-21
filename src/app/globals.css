@@ -143,7 +143,7 @@
     --destructive-foreground: 210 40% 98%;
 
     --success: 142 76% 36%;        /* #16a34a emerald-600 */
-    --success-foreground: 0 0% 100%;
+    --success-foreground: 0 0% 0%; /* Black for crisp contrast checkmark against emerald */
 
     --border: 40 12% 88%;
     --input: 40 18% 94%;
@@ -155,6 +155,10 @@
     --checkbox-border: #cbd5e1;
     --checkbox-hover-bg: #f1f5f9;
     --checkbox-hover-border: #94a3b8;
+    --checkbox-checked-bg: rgba(22, 163, 74, 0.12);
+    --checkbox-checked-border: transparent;
+    --checkbox-checked-hover-bg: rgba(22, 163, 74, 0.2);
+    --checkbox-checked-fg: #14532d;
 
     /* Filter Active Pill Tokens (Light Mode) */
     --filter-active-bg: 40 18% 91%;
@@ -268,7 +272,7 @@
     --destructive-foreground: 210 40% 98%;
 
     --success: 142 71% 45%;        /* #10b981 emerald-500 */
-    --success-foreground: 0 0% 100%;
+    --success-foreground: 0 0% 0%; /* Black for crisp contrast checkmark against emerald */
 
     --border: 240 4% 16%;
     --input: 240 4% 12%;
@@ -279,6 +283,10 @@
     --checkbox-border: #52525b;    /* zinc-600, clear crisp visible border */
     --checkbox-hover-bg: #323238;  /* zinc-700/800 */
     --checkbox-hover-border: #71717a; /* zinc-400 */
+    --checkbox-checked-bg: rgba(16, 185, 129, 0.15);
+    --checkbox-checked-border: transparent;
+    --checkbox-checked-hover-bg: rgba(16, 185, 129, 0.24);
+    --checkbox-checked-fg: #34d399;
 
     /* Filter Active Pill Tokens (Dark Mode) */
     --filter-active-bg: 240 4% 18%;
