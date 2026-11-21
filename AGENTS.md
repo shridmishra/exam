@@ -470,4 +470,14 @@ Adhere strictly to the project typography hierarchy specification:
     - Question accordions (`.checklist-solution-content.open`, `.q-solution-content.open`): `@keyframes chkSolSlideOpen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }`
     - Timetable view switchers (`#calendar-view, #table-view, #timeline-view`): `@keyframes timetableViewEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`
 
+---
+
+## 18. Single Main Branch Policy (Never Create New Branches - MANDATORY)
+
+- **Strict `main` Branch Rule**:
+  - AI agents, subagents, and contributors working on this repository must **NEVER** create separate git branches (e.g. `feat/...`, `fix/...`, `test/...`, `patch/...`, etc.).
+  - **ALWAYS** keep all commits, edits, refactors, and feature implementations directly on the `main` branch.
+  - Do not create worktrees or switch off `main`. Keep everything in `main` so the repository maintains a single, clean, linear history.
+
+
 

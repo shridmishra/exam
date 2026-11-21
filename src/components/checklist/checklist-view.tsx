@@ -628,32 +628,34 @@ export function ChecklistView({
               </span>
             )}
           </h1>
-          {completedCount > 0 && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={handleResetProgress}
-              className="h-6 px-2 text-[11px] text-muted-foreground hover:text-destructive"
-              title="Reset completed questions for this subject in your browser"
-            >
-              Reset Done
-            </Button>
-          )}
         </div>
 
         <div className="flex items-center gap-2.5 max-w-full overflow-x-auto no-scrollbar pb-1 overscroll-x-contain sm:ml-auto shrink-0">
-          <ProgressRing
-            completed={completedCount}
-            total={questions.length}
-            onClick={() =>
-              setFilters((prev) => ({
-                ...prev,
-                status: prev.status === "incomplete" ? "all" : "incomplete",
-              }))
-            }
-            isActiveFilter={filters.status === "incomplete"}
-          />
+          <div className="flex items-center gap-1.5 shrink-0">
+            <ProgressRing
+              completed={completedCount}
+              total={questions.length}
+              onClick={() =>
+                setFilters((prev) => ({
+                  ...prev,
+                  status: prev.status === "incomplete" ? "all" : "incomplete",
+                }))
+              }
+              isActiveFilter={filters.status === "incomplete"}
+            />
+            {completedCount > 0 && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleResetProgress}
+                className="h-7 px-2 text-[11px] text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+                title="Reset completed questions for this subject in your browser"
+              >
+                Reset Done
+              </Button>
+            )}
+          </div>
 
           <YearPills
             years={years}

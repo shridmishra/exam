@@ -346,6 +346,14 @@
     - Question accordions (`.checklist-solution-content.open`, `.q-solution-content.open`): `@keyframes chkSolSlideOpen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }`
     - Timetable view switchers (`#calendar-view, #table-view, #timeline-view`): `@keyframes timetableViewEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`
 
+---
+
+### [RULE 20] Single Main Branch Policy (Never Create New Branches)
+- AI agents, subagents, and developers working on this codebase must **NEVER** create separate git branches (`feat/...`, `fix/...`, etc.).
+- **ALWAYS** keep all commits, edits, and features directly on the `main` branch.
+- Keep everything in `main` to maintain a single unified linear history.
+
+
 
 
 
